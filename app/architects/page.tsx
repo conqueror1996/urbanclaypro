@@ -6,11 +6,6 @@ import Footer from '@/components/Footer';
 import StickyBar from '@/components/StickyBar';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ArchitectsCorner from '@/components/ArchitectsCorner';
-import dynamic from 'next/dynamic';
-
-const SampleStudio = dynamic(() => import('@/components/SampleStudio'), {
-    loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
-});
 
 export const metadata: Metadata = {
     title: 'For Architects | UrbanClay',
@@ -180,9 +175,6 @@ export default function ArchitectsPage() {
                         </div>
                     </div>
                 </section>
-
-                {/* SAMPLE STUDIO */}
-                <SampleStudio />
 
                 {/* REUSE ARCHITECTS CORNER COMPONENT FOR CTA */}
                 <ArchitectsCorner />
