@@ -1,0 +1,187 @@
+'use client';
+
+import React, { useRef } from 'react';
+import Image from 'next/image';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import StickyBar from '@/components/StickyBar';
+import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+
+export default function OurStoryContent() {
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end end"]
+    });
+
+    const heroY = useTransform(scrollYProgress, [0, 0.2], ["0%", "50%"]);
+    const imageParallax = useTransform(scrollYProgress, [0.1, 0.4], ["5%", "-5%"]);
+
+    return (
+        <div ref={containerRef} className="min-h-screen bg-[#f5f0eb] text-[#2A1E16] overflow-hidden">
+            <StickyBar />
+            <Header />
+
+            {/* --- FILM GRAIN OVERLAY (Consistent with Kiln) --- */}
+            <div
+                className="fixed inset-0 z-50 pointer-events-none opacity-[0.08] mix-blend-multiply"
+                style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+                }}
+            />
+
+            <div className="pt-20">
+                {/* HERO SECTION */}
+                <section className="relative py-32 md:py-48 overflow-hidden">
+                    {/* Background Gradient Blob */}
+                    <motion.div
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-full bg-[radial-gradient(circle_at_center,#e7dbd1_0%,transparent_60%)] opacity-60 pointer-events-none"
+                        style={{ y: heroY }}
+                    />
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center z-10">
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                            <span className="text-[var(--terracotta)] font-medium tracking-[0.3em] uppercase text-xs md:text-sm mb-6 block">
+                                Est. 2006
+                            </span>
+                            <h1 className="text-5xl md:text-8xl font-serif font-medium text-[#2A1E16] mb-8 leading-[1.1]">
+                                A Legacy of <br />
+                                <span className="italic text-[var(--terracotta)]">Transformation</span>
+                            </h1>
+                        </motion.div>
+
+                        <motion.p
+                            className="text-lg md:text-2xl text-[#5d554f] max-w-2xl mx-auto leading-relaxed font-light"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                            From a modest initiative in Mumbai to a nationwide presence, we are redefining how the world builds with earth.
+                        </motion.p>
+                    </div>
+                </section>
+
+                {/* MAIN CONTENT */}
+                <section className="py-24 bg-white border-y border-[#e5e5e5] relative z-10">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid md:grid-cols-2 gap-16 items-center">
+
+                            {/* Parallax Image */}
+                            <motion.div
+                                className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true, margin: "-100px" }}
+                                transition={{ duration: 0.8 }}
+                            >
+                                <motion.div
+                                    className="absolute inset-0 bg-[#d6cec8]"
+                                    style={{ scale: 1.1, y: imageParallax }}
+                                >
+                                    <Image
+                                        src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800&q=80"
+                                        alt="UrbanClay Heritage"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#b45a3c]/20 to-transparent mix-blend-multiply" />
+                                </motion.div>
+                            </motion.div>
+
+                            <motion.div
+                                className="space-y-8"
+                                initial={{ opacity: 0, x: 30 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8 }}
+                            >
+                                <h2 className="text-4xl font-serif text-[#2A1E16]">Rooted in <span className="italic">Sustainability</span></h2>
+                                <div className="space-y-6 text-lg text-[#5d554f] font-light leading-relaxed">
+                                    <p>
+                                        UrbanClay was founded with the ambition to revolutionize the way we build, aiming to make a lasting impact on both the spaces we create and the world we live in.
+                                    </p>
+                                    <p>
+                                        Today, we proudly serve clients across all major cities in India, including Bangalore, Hyderabad, Delhi, Maharashtra, Kerala, and Gujarat. We’ve completed over <strong>700 projects</strong>, collaborating with top architects to deliver excellence.
+                                    </p>
+                                </div>
+
+                                <div className="p-8 bg-[#f9f7f5] rounded-xl border border-[#e5e5e5]">
+                                    <h3 className="text-xl font-serif text-[var(--terracotta)] mb-3">Our Promise</h3>
+                                    <p className="text-[#5d554f]">
+                                        For every product purchased, we plant <strong>10 trees</strong>. This initiative reflects our deep belief in giving back to the environment.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* STATS SECTION (Animated Counters) */}
+                <section className="py-32 bg-[#2A1E16] text-[#f5f0eb] relative overflow-hidden">
+                    {/* Background Glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--terracotta)]/5 rounded-full blur-[100px] pointer-events-none" />
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                            <StatItem value={17} label="Years of Experience" suffix="+" />
+                            <StatItem value={700} label="Projects Completed" suffix="+" />
+                            <StatItem value={50} label="Cities Covered" suffix="+" />
+                            <StatItem value={10} label="Trees Planted" suffix="k+" />
+                        </div>
+                    </div>
+                </section>
+
+                {/* VISION SECTION */}
+                <section className="py-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className="text-4xl md:text-5xl font-serif text-[#2A1E16] mb-8">Empowering Lives Through Design</h2>
+                        <p className="text-xl text-[#5d554f] leading-relaxed mb-12 font-light">
+                            UrbanClay is more than a company—it’s a legacy. We offer a diverse range of products, from terracotta cladding to hollow clay blocks, all crafted from 100% natural clay.
+                        </p>
+                        <p className="text-xl text-[#5d554f] leading-relaxed font-light">
+                            We invite you to be part of this journey. Explore our sustainable building solutions and discover how UrbanClay can help you create stunning, eco-friendly spaces.
+                        </p>
+                    </motion.div>
+                </section>
+            </div>
+            <Footer />
+        </div>
+    );
+}
+
+// --- Sub-Components ---
+
+function StatItem({ value, label, suffix }: { value: number, label: string, suffix: string }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+    // Simple counting animation
+    const count = useSpring(0, { duration: 2000 });
+
+    React.useEffect(() => {
+        if (isInView) {
+            count.set(value);
+        }
+    }, [isInView, count, value]);
+
+    const displayValue = useTransform(count, (latest) => Math.floor(latest));
+
+    return (
+        <div ref={ref} className="flex flex-col items-center">
+            <div className="text-5xl md:text-7xl font-serif font-bold text-[var(--terracotta)] mb-4 flex items-baseline">
+                <motion.span>{displayValue}</motion.span>
+                <span className="text-3xl md:text-5xl ml-1">{suffix}</span>
+            </div>
+            <div className="text-sm md:text-base text-white/60 uppercase tracking-widest font-medium">{label}</div>
+        </div>
+    );
+}
