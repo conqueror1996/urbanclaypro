@@ -100,7 +100,7 @@ export const metadata: Metadata = {
     images: ['https://urbanclaypro.vercel.app/og-image.png'],
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/icon.png',
     apple: '/apple-icon.png',
   },
   alternates: {
