@@ -510,19 +510,46 @@ export default function KilnAnimation() {
             {/* HAMMER TOOL TOGGLE */}
             <AnimatePresence>
                 {showHammerTool && !isCertified && (
-                    <motion.button
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
-                        onClick={() => setHammerMode(!hammerMode)}
-                        className={`absolute bottom-32 z-30 px-6 py-2 rounded-full font-serif tracking-widest uppercase text-sm font-bold transition-all ${hammerMode
-                            ? 'bg-orange-600 text-white shadow-lg scale-105'
-                            : 'bg-white/80 text-gray-700 hover:bg-white shadow-sm'
-                            }`}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        {hammerMode ? 'Testing Mode Active' : 'Test Quality'}
-                    </motion.button>
+                    <div className="absolute bottom-32 z-30 flex flex-col items-center gap-3">
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="text-xs font-bold text-orange-600 uppercase tracking-widest bg-white/90 px-3 py-1 rounded-full shadow-sm"
+                        >
+                            Brick Vitrified
+                        </motion.div>
+                        <motion.button
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{
+                                opacity: 1,
+                                scale: 1,
+                                boxShadow: "0 0 0 0 rgba(234, 88, 12, 0.7)"
+                            }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            onClick={() => setHammerMode(!hammerMode)}
+                            className={`px-8 py-3 rounded-full font-serif tracking-widest uppercase text-sm font-bold transition-all flex items-center gap-2 ${hammerMode
+                                ? 'bg-orange-600 text-white shadow-lg ring-4 ring-orange-200'
+                                : 'bg-white text-gray-800 shadow-md hover:shadow-xl border border-orange-100'
+                                }`}
+                            style={{
+                                cursor: 'pointer',
+                                animation: !hammerMode ? 'pulse-orange 2s infinite' : 'none'
+                            }}
+                        >
+                            <span className="text-lg">🔨</span>
+                            {hammerMode ? 'Tap Brick to Test' : 'Test Strength'}
+                        </motion.button>
+                        <style jsx>{`
+                            @keyframes pulse-orange {
+                                0% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4); }
+                                70% { box-shadow: 0 0 0 10px rgba(234, 88, 12, 0); }
+                                100% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); }
+                            }
+                        `}</style>
+                    </div>
                 )}
             </AnimatePresence>
 
