@@ -38,6 +38,20 @@ export default function KilnAnimation() {
     const [showHammerTool, setShowHammerTool] = useState(false);
     const [hammerMode, setHammerMode] = useState(false);
     const [isCertified, setIsCertified] = useState(false); // New Certification State
+    const [sparksData, setSparksData] = useState<Array<{ cx: number, delay: number, duration: number }>>([]);
+    const [ashData, setAshData] = useState<Array<{ cx: number, r: number }>>([]);
+
+    useEffect(() => {
+        setSparksData([...Array(12)].map(() => ({
+            cx: 200 + Math.random() * 200,
+            delay: Math.random() * 3,
+            duration: 2 + Math.random() * 2
+        })));
+        setAshData([...Array(8)].map(() => ({
+            cx: 150 + Math.random() * 300,
+            r: Math.random() * 1.5 + 0.5
+        })));
+    }, []);
 
     // --- REALISTIC CERAMIC AUDIO ENGINE ---
     const playClink = () => {
@@ -428,10 +442,10 @@ export default function KilnAnimation() {
                     </g>
 
                     <g ref={sparksRef}>
-                        {[...Array(12)].map((_, i) => (
+                        {sparksData.map((spark, i) => (
                             <circle
                                 key={`spark-${i}`}
-                                cx={200 + Math.random() * 200}
+                                cx={spark.cx}
                                 cy={160}
                                 r={i % 3 === 0 ? 1.5 : 0.8}
                                 fill="#f97316"
@@ -443,8 +457,8 @@ export default function KilnAnimation() {
                     </g>
 
                     <g ref={ashRef}>
-                        {[...Array(8)].map((_, i) => (
-                            <circle key={`ash-${i}`} cx={150 + Math.random() * 300} cy={220} r={Math.random() * 1.5 + 0.5} fill="#44403c" opacity="0.4" className="pointer-events-none" />
+                        {ashData.map((ash, i) => (
+                            <circle key={`ash-${i}`} cx={ash.cx} cy={220} r={ash.r} fill="#44403c" opacity="0.4" className="pointer-events-none" />
                         ))}
                     </g>
                 </svg>
