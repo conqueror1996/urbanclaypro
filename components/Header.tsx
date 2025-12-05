@@ -121,19 +121,22 @@ export default function Header() {
                             className="fixed right-0 top-16 bottom-0 w-64 bg-white border-l border-[var(--line)] shadow-xl md:hidden z-50"
                         >
                             <nav className="flex flex-col p-6 gap-3">
-                                {navLinks.map((link, index) => (
-                                    <motion.a
-                                        key={link.href}
-                                        href={link.href}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="px-5 py-4 rounded-lg hover:bg-[var(--sand)] active:bg-[var(--sand)] transition-colors text-lg font-medium text-[#2A1E16] min-h-[48px] flex items-center"
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.1 + index * 0.05 }}
-                                    >
-                                        {link.label}
-                                    </motion.a>
-                                ))}
+                                {navLinks.map((link, index) => {
+                                    const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+                                    return (
+                                        <motion.a
+                                            key={link.href}
+                                            href={link.href}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className={`px-5 py-4 rounded-lg transition-colors text-lg font-medium min-h-[48px] flex items-center ${isActive ? 'bg-[var(--sand)] text-[var(--terracotta)] font-bold' : 'text-[#2A1E16] hover:bg-[var(--sand)] active:bg-[var(--sand)]'}`}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: 0.1 + index * 0.05 }}
+                                        >
+                                            {link.label}
+                                        </motion.a>
+                                    );
+                                })}
                                 <motion.button
                                     onClick={() => {
                                         setSampleModalOpen(true);
