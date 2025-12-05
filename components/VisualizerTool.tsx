@@ -845,21 +845,22 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                 <div className={`absolute inset-0 z-10 pointer-events-none flex flex-col transition-opacity duration-500 ${isUIHidden ? 'opacity-0' : 'opacity-100'}`}>
 
                     {/* Compact Top Bar */}
-                    <div className="flex justify-between items-center gap-3 pointer-events-auto px-4 py-2 lg:px-6 lg:py-3 bg-gradient-to-b from-[#1C1C1C]/95 to-transparent backdrop-blur-sm">
+                    <div className="flex justify-between items-center gap-2 pointer-events-auto px-3 py-2 lg:px-6 lg:py-3 bg-gradient-to-b from-[#1C1C1C]/95 to-transparent backdrop-blur-sm">
 
                         {/* Brand Mark - Compact */}
-                        <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]" />
-                            <h2 className="text-base lg:text-lg font-serif tracking-tight text-white">UrbanClay <span className="text-[var(--terracotta)] italic font-light">Atelier</span></h2>
+                        <div className="flex items-center gap-2 lg:gap-3">
+                            <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-[var(--terracotta)]" />
+                            <h2 className="text-sm lg:text-lg font-serif tracking-tight text-white">UrbanClay <span className="text-[var(--terracotta)] italic font-light hidden sm:inline">Atelier</span></h2>
                         </div>
 
                         {/* Scene Selector Pills - Compact */}
-                        <div className="flex gap-2 overflow-x-auto no-scrollbar max-w-[60vw]">
+                        <div className="flex gap-2 overflow-x-auto no-scrollbar max-w-[60vw] scrollbar-hide">
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="px-3 py-1.5 lg:px-4 lg:py-2 rounded-full text-[9px] lg:text-[10px] font-bold uppercase tracking-wider transition-all bg-[var(--terracotta)] text-white hover:bg-[#a85638] shadow-md"
+                                className="flex-shrink-0 px-3 py-1.5 lg:px-4 lg:py-2 rounded-full text-[9px] lg:text-[10px] font-bold uppercase tracking-wider transition-all bg-[var(--terracotta)] text-white hover:bg-[#a85638] shadow-md flex items-center gap-1"
                             >
-                                Upload
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                                <span className="hidden sm:inline">Upload</span>
                             </button>
                             <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*" className="hidden" />
 
@@ -867,7 +868,7 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                                 <button
                                     key={scene.id}
                                     onClick={() => { setActiveScene(scene); setUploadedImage(null); }}
-                                    className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-full text-[9px] lg:text-[10px] font-medium transition-all whitespace-nowrap ${activeScene.id === scene.id ? 'bg-[var(--terracotta)]/20 text-[var(--terracotta)] border border-[var(--terracotta)]/30' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                                    className={`flex-shrink-0 px-3 py-1.5 lg:px-4 lg:py-2 rounded-full text-[9px] lg:text-[10px] font-medium transition-all whitespace-nowrap ${activeScene.id === scene.id ? 'bg-[var(--terracotta)]/20 text-[var(--terracotta)] border border-[var(--terracotta)]/30' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
                                 >
                                     {scene.name}
                                 </button>
@@ -889,10 +890,10 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                     </AnimatePresence>
 
                     {/* Bottom Container: Material Library + Summary Panel */}
-                    <div className="absolute bottom-0 left-0 right-0 flex items-end gap-4 lg:gap-6 px-4 lg:px-6 pb-8 lg:pb-6 pointer-events-none">
+                    <div className="absolute bottom-0 left-0 right-0 flex items-end gap-4 lg:gap-6 px-0 lg:px-6 pb-0 lg:pb-6 pointer-events-none">
 
                         {/* Material Library Panel - Compact */}
-                        <div className={`flex-1 max-w-3xl bg-[#20201E]/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col pointer-events-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 ${isPanelMinimized ? 'h-auto' : 'h-[35vh] lg:h-[40vh]'}`}>
+                        <div className={`flex-1 max-w-3xl bg-[#20201E]/95 backdrop-blur-xl rounded-t-2xl lg:rounded-3xl shadow-2xl border-t lg:border border-white/10 overflow-hidden flex flex-col pointer-events-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 ${isPanelMinimized ? 'h-auto' : 'h-[40vh] lg:h-[40vh]'}`}>
 
                             {/* Tabs Header & Controls */}
                             <div className="flex items-center justify-between border-b border-white/5 bg-gradient-to-r from-white/5 to-transparent backdrop-blur-sm pr-2 lg:pr-3 pl-2 lg:pl-3">
