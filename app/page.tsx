@@ -119,7 +119,7 @@ export default async function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--sand)] text-[var(--ink)] overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--sand)] text-[var(--ink)]">
       <JsonLd data={jsonLd} />
       <StickyBar />
       <Header />
