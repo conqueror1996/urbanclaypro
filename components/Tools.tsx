@@ -181,7 +181,7 @@ export default function Tools() {
     const bricks = generateBricks();
 
     return (
-        <section id="visualizer" className="bg-[var(--sand)] border-y border-[var(--line)]">
+        <section id="tools" className="bg-[var(--sand)] border-y border-[var(--line)]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
                 <div className="text-center mb-16">
                     <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Planning Tools</span>
@@ -374,17 +374,7 @@ export default function Tools() {
                     </div>
                 </div>
 
-                {/* Main CTA */}
-                <div className="text-center mt-16">
-                    <Link
-                        href="/visualizer"
-                        className="inline-flex items-center gap-3 px-10 py-5 bg-[#2A1E16] text-white rounded-full text-lg font-medium hover:bg-[#4a3e36] transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 group"
-                    >
-                        Plan My Facade
-                        <span className="group-hover:translate-x-1 transition-transform">→</span>
-                    </Link>
-                    <p className="text-sm text-[#7a6f66] mt-4">Start a guided project flow with our experts</p>
-                </div>
+                {/* Main CTA Removed */}
             </div>
         </section>
     );

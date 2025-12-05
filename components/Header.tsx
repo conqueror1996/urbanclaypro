@@ -6,11 +6,14 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import SampleModal from './SampleModal';
+import { useSampleBox } from '@/context/SampleContext'; // Use context to show badge
+
 export default function Header() {
     const pathname = usePathname();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [sampleModalOpen, setSampleModalOpen] = useState(false);
+    const { box } = useSampleBox(); // Access sample box state
 
     useEffect(() => {
         const handleScroll = () => {
@@ -23,7 +26,6 @@ export default function Header() {
     const navLinks = [
         { href: '/products', label: 'Products' },
         { href: '/projects', label: 'Projects' },
-        { href: '/visualizer', label: 'Visualizer' },
         { href: '/guide', label: 'Selection Guide' },
         { href: '/architects', label: 'For Architects' },
         { href: '/#quote', label: 'Contact' }
@@ -63,13 +65,16 @@ export default function Header() {
 
                 {/* Desktop CTA */}
                 <div className="hidden md:flex items-center gap-4">
-
-
                     <button
                         onClick={() => setSampleModalOpen(true)}
-                        className={`px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 ${isScrolled ? 'bg-[var(--ink)] text-white hover:bg-[#4a3e36]' : 'bg-white text-[var(--ink)] hover:bg-[#f4f1ee]'}`}
+                        className={`px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 relative ${isScrolled ? 'bg-[var(--ink)] text-white hover:bg-[#4a3e36]' : 'bg-white text-[var(--ink)] hover:bg-[#f4f1ee]'}`}
                     >
                         Get Samples
+                        {box.length > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-[var(--terracotta)] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full animate-pulse">
+                                {box.length}
+                            </span>
+                        )}
                     </button>
                 </div>
 
@@ -142,12 +147,17 @@ export default function Header() {
                                         setSampleModalOpen(true);
                                         setMobileMenuOpen(false);
                                     }}
-                                    className="mt-6 px-5 py-4 text-center rounded-full bg-[var(--ink)] text-white font-semibold hover:opacity-90 active:opacity-80 transition-opacity w-full min-h-[52px] text-base"
+                                    className="mt-6 px-5 py-4 text-center rounded-full bg-[var(--ink)] text-white font-semibold hover:opacity-90 active:opacity-80 transition-opacity w-full min-h-[52px] text-base relative"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 + navLinks.length * 0.05 }}
                                 >
                                     Get Samples
+                                    {box.length > 0 && (
+                                        <span className="absolute top-4 right-6 bg-white text-[var(--ink)] text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
+                                            {box.length}
+                                        </span>
+                                    )}
                                 </motion.button>
                             </nav>
                         </motion.div>
