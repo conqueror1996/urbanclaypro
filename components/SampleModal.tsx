@@ -102,35 +102,34 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto overscroll-contain"
+                        className="relative bg-white rounded-xl md:rounded-2xl p-6 md:p-8 max-w-lg w-full shadow-2xl overflow-hidden max-h-[85vh] overflow-y-auto overscroll-contain scrollbar-hide"
                         data-lenis-prevent
                     >
-                        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10 p-2 bg-gray-50 rounded-full transition-colors">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
 
                         {!isSubmitted ? (
                             <>
-                                <h3 className="text-2xl font-serif font-bold text-[#2A1E16] mb-2">Order Sample Box</h3>
-                                <p className="text-[#5d554f] mb-6 font-light">Complete the form below to request your samples.</p>
+                                <h3 className="text-xl md:text-2xl font-serif font-bold text-[#2A1E16] mb-1">Order Sample Box</h3>
+                                <p className="text-[#8c8580] mb-5 font-medium text-xs md:text-sm tracking-wide">Curate your material palette.</p>
 
                                 {/* Selected Samples Display */}
                                 {box.length > 0 && (
-                                    <div className="mb-6 bg-[#f9f9f9] p-4 rounded-xl border border-gray-100">
-                                        <h4 className="text-xs font-bold uppercase tracking-wider text-[#7a6f66] mb-3">Selected Samples ({box.length})</h4>
-                                        <div className="grid grid-cols-4 gap-2">
+                                    <div className="mb-5 bg-[#faf9f8] p-3 rounded-lg border border-[#e9e2da]">
+                                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#a1887f] mb-2">Selected ({box.length})</h4>
+                                        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                                             {box.map((sample) => (
-                                                <div key={sample.id} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200">
+                                                <div key={sample.id} className="relative group w-12 h-12 flex-shrink-0 rounded-md overflow-hidden border border-gray-200 shadow-sm">
                                                     <div
                                                         className="w-full h-full bg-cover bg-center"
                                                         style={{ background: sample.texture.includes('url') ? sample.texture : sample.color }}
                                                     />
                                                     <button
                                                         onClick={() => removeFromBox(sample.id)}
-                                                        className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white"
-                                                        title="Remove"
+                                                        className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white"
                                                     >
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                                     </button>
                                                 </div>
                                             ))}
@@ -138,41 +137,81 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                                     </div>
                                 )}
 
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-[#2A1E16] mb-1">Full Name</label>
-                                            <input type="text" name="name" value={formData.name} onChange={handleChange} className={`w-full px-4 py-2 rounded-lg border ${errors.name ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-[var(--terracotta)] outline-none text-[#2A1E16]`} />
-                                            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                                <form onSubmit={handleSubmit} className="space-y-3">
+                                    <div className="grid grid-cols-1 gap-3">
+                                        <div className="relative group">
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                placeholder="Full Name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.name ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
+                                            />
+                                            {errors.name && <span className="absolute right-3 top-3.5 text-red-400 text-[10px] font-bold uppercase tracking-wider">Required</span>}
                                         </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-[#2A1E16] mb-1">Firm Name</label>
-                                            <input type="text" name="firm" value={formData.firm} onChange={handleChange} className={`w-full px-4 py-2 rounded-lg border ${errors.firm ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-[var(--terracotta)] outline-none text-[#2A1E16]`} />
-                                            {errors.firm && <p className="text-red-500 text-xs mt-1">{errors.firm}</p>}
+
+                                        <div className="relative group">
+                                            <input
+                                                type="text"
+                                                name="firm"
+                                                placeholder="Firm / Studio Name"
+                                                value={formData.firm}
+                                                onChange={handleChange}
+                                                className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.firm ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
+                                            />
+                                            {errors.firm && <span className="absolute right-3 top-3.5 text-red-400 text-[10px] font-bold uppercase tracking-wider">Required</span>}
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="relative group">
+                                                <input
+                                                    type="tel"
+                                                    name="phone"
+                                                    placeholder="Phone"
+                                                    value={formData.phone}
+                                                    onChange={handleChange}
+                                                    className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.phone ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
+                                                />
+                                            </div>
+                                            <div className="relative group">
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    placeholder="Email"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                    className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.email ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="relative group">
+                                            <textarea
+                                                name="address"
+                                                placeholder="Shipping Address"
+                                                value={formData.address}
+                                                onChange={handleChange}
+                                                rows={2}
+                                                className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.address ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] resize-none text-sm transition-all placeholder-gray-400 font-medium`}
+                                            ></textarea>
+                                        </div>
+
+                                        <div className="relative group">
+                                            <textarea
+                                                name="requirements"
+                                                placeholder="Specific Requirements (e.g. Exposed Wirecut Bricks)"
+                                                value={formData.requirements}
+                                                onChange={handleChange}
+                                                rows={2}
+                                                className="w-full px-4 py-3 rounded-lg bg-[#faf9f8] border border-transparent focus:border-[var(--terracotta)] focus:bg-white focus:ring-0 outline-none text-[#2A1E16] resize-none text-sm transition-all placeholder-gray-400 font-medium"
+                                            ></textarea>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-sm font-medium text-[#2A1E16] mb-1">Phone</label>
-                                            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className={`w-full px-4 py-2 rounded-lg border ${errors.phone ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-[var(--terracotta)] outline-none text-[#2A1E16]`} />
-                                            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-[#2A1E16] mb-1">Email</label>
-                                            <input type="email" name="email" value={formData.email} onChange={handleChange} className={`w-full px-4 py-2 rounded-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-[var(--terracotta)] outline-none text-[#2A1E16]`} />
-                                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-[#2A1E16] mb-1">Shipping Address</label>
-                                        <textarea name="address" value={formData.address} onChange={handleChange} rows={2} className={`w-full px-4 py-2 rounded-lg border ${errors.address ? 'border-red-500' : 'border-gray-300'} focus:ring-2 focus:ring-[var(--terracotta)] outline-none text-[#2A1E16] resize-none`} placeholder="Full address with pincode"></textarea>
-                                        {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-[#2A1E16] mb-1">Sample Requirements</label>
-                                        <textarea name="requirements" value={formData.requirements} onChange={handleChange} rows={3} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[var(--terracotta)] outline-none text-[#2A1E16] resize-none" placeholder="e.g., Exposed Wirecut Bricks, Terracotta Jaali (Camp pattern), etc."></textarea>
-                                    </div>
-                                    <button type="submit" className="w-full py-3 bg-[var(--terracotta)] text-white rounded-lg font-semibold hover:bg-[#a85638] transition-colors mt-2">Request Samples</button>
+
+                                    <button type="submit" className="w-full py-3.5 bg-[var(--terracotta)] text-white rounded-lg font-bold uppercase tracking-wider text-xs hover:bg-[#a85638] transition-all shadow-lg shadow-orange-900/10 active:scale-[0.98]">
+                                        Request Sample Box
+                                    </button>
                                 </form>
                             </>
                         ) : (
