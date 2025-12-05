@@ -23,6 +23,7 @@ export default function KilnAnimation() {
     const textureRef = useRef<SVGFETurbulenceElement>(null);
     const sparksRef = useRef<SVGGElement>(null);
     const ashRef = useRef<SVGGElement>(null);
+    const dustRef = useRef<SVGGElement>(null);
     const tempBarRef = useRef<HTMLDivElement>(null);
     const flameIconRef = useRef<HTMLDivElement>(null);
     const tempTextRef = useRef<HTMLDivElement>(null);
@@ -40,6 +41,7 @@ export default function KilnAnimation() {
     const [isCertified, setIsCertified] = useState(false); // New Certification State
     const [sparksData, setSparksData] = useState<Array<{ cx: number, delay: number, duration: number }>>([]);
     const [ashData, setAshData] = useState<Array<{ cx: number, r: number }>>([]);
+    const [dustData, setDustData] = useState<Array<{ cx: number, cy: number, r: number, color: string }>>([]);
 
     useEffect(() => {
         setSparksData([...Array(12)].map(() => ({
@@ -50,6 +52,12 @@ export default function KilnAnimation() {
         setAshData([...Array(8)].map(() => ({
             cx: 150 + Math.random() * 300,
             r: Math.random() * 1.5 + 0.5
+        })));
+        setDustData([...Array(80)].map(() => ({
+            cx: 0,
+            cy: 0,
+            r: Math.random() * 1.0 + 0.2, // Very small particles
+            color: Math.random() > 0.5 ? '#a8a29e' : (Math.random() > 0.5 ? '#d6cbb8' : '#78716c')
         })));
     }, []);
 
@@ -176,6 +184,46 @@ export default function KilnAnimation() {
                     { opacity: 1, scale: 2 },
                     { opacity: 0, scale: 0, duration: 0.5, stagger: 0.02 }
                 );
+            }
+
+            if (dustRef.current) {
+                const dustParticles = Array.from(dustRef.current.children) as SVGElement[];
+
+                // Reset positions to click center
+                gsap.set(dustParticles, {
+                    x: e.nativeEvent.offsetX,
+                    y: e.nativeEvent.offsetY,
+                    scale: 0,
+                    opacity: 0
+                });
+
+                dustParticles.forEach((particle) => {
+                    const angle = Math.random() * Math.PI * 2;
+                    // Cloud-like spread
+                    const velocity = Math.random() * 30 + 5;
+                    const dx = Math.cos(angle) * velocity;
+                    const dy = Math.sin(angle) * velocity - (Math.random() * 15); // Slight upward drift
+
+                    // Burst phase
+                    gsap.to(particle, {
+                        x: `+=${dx}`,
+                        y: `+=${dy}`,
+                        scale: Math.random() * 1 + 0.5,
+                        opacity: Math.random() * 0.6 + 0.2,
+                        duration: 0.2,
+                        ease: "power2.out"
+                    });
+
+                    // Drift & Fade phase
+                    gsap.to(particle, {
+                        x: `+=${dx * 0.5}`, // Continue drifting
+                        y: `-=${Math.random() * 20 + 10}`, // Float up
+                        opacity: 0,
+                        duration: Math.random() * 1.5 + 1,
+                        delay: 0.1,
+                        ease: "power1.out"
+                    });
+                });
             }
         }
 
@@ -366,7 +414,7 @@ export default function KilnAnimation() {
         }, containerRef);
 
         return () => ctx.revert();
-    }, [sparksData, ashData]);
+    }, [sparksData, ashData, dustData]);
 
     useEffect(() => {
         if (temp % 100 === 0 && tempTextRef.current) {
@@ -374,7 +422,7 @@ export default function KilnAnimation() {
         }
     }, [temp]);
 
-    const hammerCursorBase64 = `url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlYTU4MGMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTUgMTJsLTguNSA4LjVjLS44My44My0yLjE3LjgzLTMgMCAwIDAgMCAwIDAgMGEyLjEyIDIuMTIgMCAwIDEgMC0zTDEyIDkiLz48cGF0aCBkPSJNMTcuNjQgMTVMMjIgMTAuNjQiLz48cGF0aCBkPSJNMjAuOTEgMTEuN2wtMS4yNS0xLjI1Yy0uNi0uNi0uOTMtMS40LS45My0yLjI1VjNoLTZ2NS4yYzAgLjg1LS4zMyAxLjY1LS45MyAyLjI1TDEwLjY0IDExLjciLz48L3N2Zz4=') 2 22, crosshair`;
+    const hammerCursorBase64 = `url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlYTU4MGMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTUgMTJsLTguNSA4LjVjLS44My44My0yLjE3LjgzLTMgMCAwIDAgMCAwIDAgMGEyLjEyIDIuMTIgMCAwIDEgMC0zTDEyIDkiLz48cGF0aCBkPSJNMTcuNjQgMTVMMjIgMTAuNjQiLz48cGF0aCBkPSJNMjAuOTEgMTEuN2wtMS4yNS0xLjI1Yy0uNi0uNi0uOTMtMS40LS45My0yLjI1VjNoLTZ2NS4yYzAgLjg1LS4zMyAxLjY1LS45MyAyLjI1TDEwLjY0IDExLjcuLz48L3N2Zz4=') 2 22, crosshair`;
 
     return (
         <section
@@ -468,6 +516,20 @@ export default function KilnAnimation() {
                     <g ref={ashRef}>
                         {ashData.map((ash, i) => (
                             <circle key={`ash-${i}`} cx={ash.cx} cy={220} r={ash.r} fill="#44403c" opacity="0.4" className="pointer-events-none" />
+                        ))}
+                    </g>
+
+                    <g ref={dustRef}>
+                        {dustData.map((dust, i) => (
+                            <circle
+                                key={`dust-${i}`}
+                                cx={0}
+                                cy={0}
+                                r={dust.r}
+                                fill={dust.color}
+                                opacity="0"
+                                className="pointer-events-none"
+                            />
                         ))}
                     </g>
                 </svg>
