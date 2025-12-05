@@ -47,7 +47,10 @@ html.lenis body {
   pointer-events: none;
 }
 
-html,
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
