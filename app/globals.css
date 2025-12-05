@@ -49,6 +49,7 @@ html.lenis body {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -58,6 +59,7 @@ body {
   position: relative;
   width: 100%;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 body::before {
