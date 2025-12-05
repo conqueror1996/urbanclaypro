@@ -511,14 +511,7 @@ export default function KilnAnimation() {
             <AnimatePresence>
                 {showHammerTool && !isCertified && (
                     <div className="absolute bottom-32 z-30 flex flex-col items-center gap-3">
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            className="text-xs font-bold text-orange-600 uppercase tracking-widest bg-white/90 px-3 py-1 rounded-full shadow-sm"
-                        >
-                            Brick Vitrified
-                        </motion.div>
+
                         <motion.button
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{
