@@ -148,11 +148,18 @@ const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(
         };
     }, [sceneId, customBaseImage]);
 
+    const getProxiedUrl = (url: string) => {
+        if (url.includes('cdn.sanity.io')) {
+            return `/api/proxy-image?url=${encodeURIComponent(url)}`;
+        }
+        return url;
+    };
+
     // Load Texture Image
     useEffect(() => {
         const img = new Image();
         img.crossOrigin = "Anonymous";
-        img.src = materialUrl;
+        img.src = getProxiedUrl(materialUrl);
         img.onload = () => setTexture(img);
     }, [materialUrl]);
 
