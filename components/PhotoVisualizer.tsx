@@ -11,6 +11,7 @@ interface PhotoVisualizerProps {
     tolerance?: number;
     brushMode?: 'add' | 'subtract' | 'replace';
     customBaseImage?: string | null;
+    onAutoScale?: (scale: number) => void;
 }
 
 const SCENE_IMAGES: Record<string, string> = {
@@ -37,7 +38,7 @@ export interface PhotoVisualizerHandle {
     canRedo: boolean;
 }
 
-const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(({ materialUrl, sceneId, scale, rotation = 0, tolerance = 45, brushMode = 'add', customBaseImage }, ref) => {
+const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(({ materialUrl, sceneId, scale, rotation = 0, tolerance = 45, brushMode = 'add', customBaseImage, onAutoScale }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [image, setImage] = useState<HTMLImageElement | null>(null);
     const [texture, setTexture] = useState<HTMLImageElement | null>(null);
@@ -205,7 +206,8 @@ const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(
 
                     // Draw a massive rectangle to ensure coverage during rotation
                     // Since we rotate/scale, we need to cover the entire potential view
-                    const big = Math.max(tempCanvas.width, tempCanvas.height) * 4;
+                    // FIX: Divide by scale to ensure we cover the canvas even when scale is tiny (e.g. 0.1)
+                    const big = (Math.max(tempCanvas.width, tempCanvas.height) * 4) / Math.max(scale, 0.01);
                     tempCtx.fillRect(-big, -big, big * 2, big * 2);
 
                     tempCtx.restore();
@@ -378,6 +380,10 @@ const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(
         const width = canvas.width;
         const height = canvas.height;
 
+        // Track bounds for auto-scaling
+        let minY = height;
+        let maxY = 0;
+
         while (stack.length > 0) {
             const [x, y] = stack.pop()!;
             const idx = y * width + x;
@@ -418,6 +424,10 @@ const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(
                 if (x < width - 1) stack.push([x + 1, y]);
                 if (y > 0) stack.push([x, y - 1]);
                 if (y < height - 1) stack.push([x, y + 1]);
+
+                // Update bounds
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
             }
         }
 
@@ -480,6 +490,26 @@ const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(
 
         setMaskCanvas(finalMaskCanvas);
         setIsProcessing(false);
+
+        // Intelligent Auto-Scaling
+        // Only run on fresh start ('replace') or first add (no mask yet) to prevent jumping
+        const shouldAutoScale = onAutoScale && (brushMode === 'replace' || !maskCanvas);
+
+        if (shouldAutoScale && maxY > minY) {
+            const maskHeight = maxY - minY;
+            const relativeHeight = maskHeight / canvas.height;
+
+            // Heuristic: 
+            // If wall is full height (1.0), scale should be around 0.5 - 0.6
+            // If wall is small (0.2), scale should be around 0.15
+            // Formula: relativeHeight * Factor + Base
+
+            // We clamp it to reasonable bounds to avoid extreme tiny/huge bricks
+            const smartScale = Math.max(0.15, Math.min(1.0, relativeHeight * 0.8));
+
+            console.log(`Auto-Scaling: Mask H=${maskHeight} (${(relativeHeight * 100).toFixed(1)}%) -> Scale=${smartScale.toFixed(2)}`);
+            onAutoScale(smartScale);
+        }
     };
 
     return (
@@ -491,13 +521,7 @@ const PhotoVisualizer = forwardRef<PhotoVisualizerHandle, PhotoVisualizerProps>(
                 className={`max-w-full max-h-full object-contain cursor-crosshair transition-opacity ${isProcessing ? 'opacity-50' : 'opacity-100'}`}
             />
 
-            {/* Instructions Overlay */}
-            {!maskCanvas && modelLoaded && (
-                <div className="absolute top-24 left-1/2 -translate-x-1/2 pointer-events-none bg-black/50 backdrop-blur-md text-white/80 px-4 py-2 rounded-full border border-white/20 animate-in fade-in zoom-in duration-700 flex items-center gap-2">
-                    <svg className="w-4 h-4 text-[var(--terracotta)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
-                    <span className="text-xs font-medium">Tap surface to apply</span>
-                </div>
-            )}
+            {/* Instructions Overlay - Handled by Parent */}
 
             {/* Loading State */}
             {!modelLoaded && (

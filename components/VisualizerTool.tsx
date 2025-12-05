@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import NextImage from 'next/image';
 import SampleModal from './SampleModal';
@@ -266,6 +266,35 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
 
     const [isLinearMode, setIsLinearMode] = useState(false);
     const [showMobileHint, setShowMobileHint] = useState(true);
+
+    // Touch Handling for Drawer
+    const touchStart = useRef(0);
+    const touchEnd = useRef(0);
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStart.current = e.targetTouches[0].clientY;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        touchEnd.current = e.targetTouches[0].clientY;
+    };
+
+    const handleTouchEnd = () => {
+        if (!touchStart.current || !touchEnd.current) return;
+        const distance = touchStart.current - touchEnd.current;
+        const isSwipeUp = distance > 50;
+        const isSwipeDown = distance < -50;
+
+        if (isSwipeUp) {
+            setIsPanelMinimized(false); // Expand
+        }
+        if (isSwipeDown) {
+            setIsPanelMinimized(true); // Collapse
+        }
+        // Reset
+        touchStart.current = 0;
+        touchEnd.current = 0;
+    };
 
     // Detect mobile
     useEffect(() => {
@@ -835,6 +864,7 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                             tolerance={tolerance}
                             brushMode={brushMode}
                             customBaseImage={uploadedImage}
+                            onAutoScale={setScale}
                         />
                     </div>
                     {/* Subtle Vignette - Keep outside zoom so it stays fixed */}
@@ -847,8 +877,8 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                     {/* Compact Top Bar */}
                     <div className="flex justify-between items-center gap-2 pointer-events-auto px-3 py-2 lg:px-6 lg:py-3 bg-gradient-to-b from-[#1C1C1C]/95 to-transparent backdrop-blur-sm">
 
-                        {/* Brand Mark - Compact */}
-                        <div className="flex items-center gap-2 lg:gap-3">
+                        {/* Brand Mark - Compact (Hidden on Mobile) */}
+                        <div className="hidden lg:flex items-center gap-2 lg:gap-3">
                             <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-[var(--terracotta)]" />
                             <h2 className="text-sm lg:text-lg font-serif tracking-tight text-white">UrbanClay <span className="text-[var(--terracotta)] italic font-light hidden sm:inline">Atelier</span></h2>
                         </div>
@@ -892,30 +922,54 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                     {/* Bottom Container: Material Library + Summary Panel */}
                     <div className="absolute bottom-0 left-0 right-0 flex items-end gap-4 lg:gap-6 px-0 lg:px-6 pb-0 lg:pb-6 pointer-events-none">
 
-                        {/* Material Library Panel - Compact */}
-                        <div className={`flex-1 max-w-3xl bg-[#20201E]/95 backdrop-blur-xl rounded-t-2xl lg:rounded-3xl shadow-2xl border-t lg:border border-white/10 overflow-hidden flex flex-col pointer-events-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 ${isPanelMinimized ? 'h-auto' : 'h-[40vh] lg:h-[40vh]'}`}>
+                        <div
+                            className={`
+                                flex-1 bg-[#151513]/95 backdrop-blur-xl shadow-2xl overflow-hidden flex flex-col pointer-events-auto transition-all duration-500 ease-out 
+                                
+                                /* Mobile Styles (Drawer) */
+                                fixed bottom-0 left-0 right-0 rounded-t-3xl border-t border-white/10 z-40
+                                ${isPanelMinimized ? 'h-[140px]' : 'h-[60vh]'}
+                                
+                                /* Desktop Styles (Floating Panel) */
+                                lg:relative lg:max-w-3xl lg:rounded-3xl lg:border lg:h-[40vh] lg:transform-none
+                                ${isPanelMinimized ? 'lg:h-auto' : ''}
+                            `}
+                            onTouchStart={handleTouchStart}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
+                        >
 
-                            {/* Tabs Header & Controls */}
-                            <div className="flex items-center justify-between border-b border-white/5 bg-gradient-to-r from-white/5 to-transparent backdrop-blur-sm pr-2 lg:pr-3 pl-2 lg:pl-3">
-                                <div className="flex flex-1 gap-1 py-2">
-                                    {['material', 'grout', 'bond', 'tools'].map((tab) => (
-                                        <button
-                                            key={tab}
-                                            onClick={() => { setActiveTab(tab as any); setIsPanelMinimized(false); }}
-                                            className={`flex-1 py-2.5 lg:py-3 rounded-lg text-[9px] lg:text-[10px] uppercase tracking-wider font-bold transition-all ${activeTab === tab && !isPanelMinimized ? 'text-black bg-white shadow-md' : 'text-white/50 hover:text-white hover:bg-white/5'}`}
-                                        >
-                                            {tab}
-                                        </button>
-                                    ))}
+                            {/* Drawer Handle (Mobile Only) */}
+                            <div
+                                className="lg:hidden w-full flex justify-center py-2 cursor-pointer active:bg-white/5"
+                                onClick={() => setIsPanelMinimized(!isPanelMinimized)}
+                            >
+                                <div className="w-12 h-1.5 rounded-full bg-white/20" />
+                            </div>
+
+                            {/* Tabs Header & Controls - Mobile: Elevated Segmented Control */}
+                            <div className="sticky top-0 z-20 bg-[#151513]/95 backdrop-blur-xl border-b border-white/10 px-4 py-4 lg:px-6 lg:py-4 shadow-lg">
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex-1 flex bg-white/5 rounded-xl p-1 gap-1 overflow-x-auto no-scrollbar">
+                                        {['material', 'grout', 'bond', 'tools'].map((tab) => (
+                                            <button
+                                                key={tab}
+                                                onClick={() => { setActiveTab(tab as any); setIsPanelMinimized(false); }}
+                                                className={`flex-1 py-2.5 px-3 rounded-lg text-[11px] lg:text-[10px] uppercase tracking-wider font-bold transition-all whitespace-nowrap flex justify-center ${activeTab === tab && !isPanelMinimized ? 'bg-[var(--terracotta)] text-white shadow-md' : 'text-white/50 hover:text-white hover:bg-white/5'}`}
+                                            >
+                                                {tab}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Minimize Button (Desktop Only) */}
+                                    <button
+                                        onClick={() => setIsPanelMinimized(!isPanelMinimized)}
+                                        className="hidden lg:block p-2 text-white/40 hover:text-white transition-colors hover:bg-white/5 rounded-lg flex-shrink-0"
+                                    >
+                                        <svg className={`w-4 h-4 transition-transform duration-500 ${isPanelMinimized ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
                                 </div>
-
-                                {/* Minimize Button */}
-                                <button
-                                    onClick={() => setIsPanelMinimized(!isPanelMinimized)}
-                                    className="p-2 text-white/40 hover:text-white transition-colors hover:bg-white/5 rounded-lg"
-                                >
-                                    <svg className={`w-4 h-4 transition-transform duration-500 ${isPanelMinimized ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                                </button>
                             </div>
 
                             {/* Scrollable Content */}
@@ -940,26 +994,45 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
 
                                 {/* MATERIAL TAB */}
                                 {activeTab === 'material' && (
-                                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-4">
-                                        <div className="flex justify-between items-end border-b border-white/10 pb-2.5">
-                                            <div>
-                                                <h3 className="text-base lg:text-xl font-serif text-white mb-0.5">Material Library</h3>
-                                                <p className="text-[9px] lg:text-[10px] text-white/40 font-medium tracking-wide">Select a texture</p>
+                                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20 lg:pb-0">
+                                        {/* Header Section with Quick Scale */}
+                                        <div className="mb-8 lg:mb-6 px-1">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div>
+                                                    <h3 className="text-2xl lg:text-xl font-serif font-bold text-white mb-1">Material Library</h3>
+                                                    <p className="text-sm text-white/40 font-medium">Select a texture to apply</p>
+                                                </div>
+                                                {/* Quick Scale Slider */}
+                                                <div className="w-32">
+                                                    <div className="flex justify-between text-[10px] font-bold tracking-wide uppercase mb-1.5">
+                                                        <label className="text-white/60">Scale</label>
+                                                        <span className="text-[var(--terracotta)]">{scale.toFixed(2)}x</span>
+                                                    </div>
+                                                    <div className="relative h-2 bg-white/10 rounded-full overflow-hidden touch-none">
+                                                        <div className="absolute top-0 left-0 h-full bg-[var(--terracotta)] rounded-full" style={{ width: `${(scale / 1.5) * 100}%` }} />
+                                                        <input
+                                                            type="range" min="0.1" max="1.5" step="0.05" value={scale}
+                                                            onChange={(e) => setScale(Number(e.target.value))}
+                                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <span className="text-xs font-mono text-[var(--terracotta)] bg-[var(--terracotta)]/10 px-3 py-1 rounded-full">{materials.length} ITEMS</span>
                                         </div>
 
                                         {/* Grouped Categories */}
                                         {Object.entries(groupedMaterials).map(([category, items]) => (
-                                            <div key={category} className="space-y-4 mb-8 border-b border-white/5 pb-6 last:border-0 last:mb-0 last:pb-0">
-                                                <div className="flex items-center gap-2.5">
-                                                    <h4 className="text-[9px] lg:text-[10px] font-bold text-white/50 uppercase tracking-[0.12em]">{category}</h4>
+                                            <div key={category} className="mb-10 last:mb-0">
+                                                <div className="flex items-center gap-4 mb-4">
+                                                    <h4 className="text-xs font-bold text-[var(--terracotta)] uppercase tracking-[0.15em] whitespace-nowrap">{category}</h4>
                                                     <div className="h-px flex-1 bg-white/10" />
                                                 </div>
-                                                <div className="flex gap-2.5 overflow-x-auto pb-2.5 -mx-3 lg:-mx-5 px-3 lg:px-5 snap-x snap-mandatory no-scrollbar touch-pan-x">
+
+                                                <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 snap-x snap-mandatory no-scrollbar touch-pan-x">
                                                     {items.map((m) => {
                                                         const isLoading = loadingImages.has(m.id);
                                                         const isLoaded = loadedImages.has(m.id);
+                                                        const isActive = activeMaterial.id === m.id;
 
                                                         return (
                                                             <button
@@ -968,32 +1041,48 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                                                                     setActiveMaterial(m);
                                                                     // Scene will auto-switch via useEffect
                                                                 }}
-                                                                className={`relative group flex-shrink-0 w-16 h-16 lg:w-24 lg:h-24 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${activeMaterial.id === m.id ? 'ring-2 ring-[var(--terracotta)] scale-105 shadow-lg z-10' : 'hover:scale-105 hover:shadow-md opacity-70 hover:opacity-100'}`}
+                                                                className={`
+                                                                    relative group flex-shrink-0 w-28 lg:w-24 flex flex-col gap-2 text-left snap-start transition-all duration-300
+                                                                    ${isActive ? 'opacity-100 scale-100' : 'opacity-60 hover:opacity-100'}
+                                                                `}
                                                             >
-                                                                {/* Skeleton Loader */}
-                                                                {isLoading && (
-                                                                    <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/10 to-white/5 animate-shimmer" />
-                                                                )}
+                                                                {/* Image Card */}
+                                                                <div className={`
+                                                                    relative w-28 h-28 lg:w-24 lg:h-24 rounded-2xl overflow-hidden shadow-lg transition-all duration-300
+                                                                    ${isActive ? 'ring-2 ring-[var(--terracotta)] ring-offset-2 ring-offset-[#151513]' : 'border border-white/10'}
+                                                                `}>
+                                                                    {/* Skeleton Loader */}
+                                                                    {isLoading && (
+                                                                        <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/10 to-white/5 animate-shimmer" />
+                                                                    )}
 
-                                                                {/* Image */}
-                                                                <NextImage
-                                                                    src={m.texture}
-                                                                    alt={m.name}
-                                                                    fill
-                                                                    className={`object-cover transition-all duration-700 ${isLoaded ? 'opacity-100 group-hover:scale-110 group-active:scale-100' : 'opacity-0'}`}
-                                                                    loading="lazy"
-                                                                    sizes="(max-width: 768px) 128px, (max-width: 1024px) 160px, 176px"
-                                                                />
+                                                                    {/* Image */}
+                                                                    <NextImage
+                                                                        src={m.texture}
+                                                                        alt={m.name}
+                                                                        fill
+                                                                        className={`object-cover transition-all duration-700 ${isLoaded ? 'opacity-100 group-hover:scale-110' : 'opacity-0'}`}
+                                                                        loading="lazy"
+                                                                        sizes="112px"
+                                                                    />
 
-                                                                {/* Hover Overlay */}
-                                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                                                    <span className="text-[10px] font-bold text-white tracking-wide leading-tight text-left">{m.name}</span>
+                                                                    {/* Active Checkmark */}
+                                                                    {isActive && (
+                                                                        <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[var(--terracotta)] flex items-center justify-center shadow-md">
+                                                                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
 
-                                                                {/* Active Indicator */}
-                                                                {activeMaterial.id === m.id && (
-                                                                    <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--terracotta)] shadow-[0_0_8px_var(--terracotta)]" />
-                                                                )}
+                                                                {/* Label */}
+                                                                <div className="px-1">
+                                                                    <span className={`block text-[11px] font-bold leading-tight truncate ${isActive ? 'text-white' : 'text-white/60'}`}>
+                                                                        {m.name.split(' - ')[1] || m.name}
+                                                                    </span>
+                                                                    <span className="text-[9px] text-white/30 truncate block mt-0.5">
+                                                                        {m.dimensions ? `${m.dimensions.w}x${m.dimensions.h}mm` : 'Standard'}
+                                                                    </span>
+                                                                </div>
                                                             </button>
                                                         );
                                                     })}
@@ -1232,74 +1321,69 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                     </div>
                 </div>
 
-                {/* Persistent Controls - Responsive Positioning */}
-                <div className="absolute top-16 right-4 lg:top-auto lg:bottom-8 lg:right-8 z-50 pointer-events-auto flex flex-col gap-3 scale-90 origin-right lg:scale-100">
-                    {/* Keyboard Shortcuts Toggle */}
-                    <button
-                        onClick={() => setShowKeyboardShortcuts(!showKeyboardShortcuts)}
-                        className="p-3 rounded-full backdrop-blur-xl border bg-[#20201E]/90 border-white/10 text-white/70 hover:text-white hover:border-white/20 transition-all duration-300 shadow-2xl"
-                        title="Keyboard Shortcuts (?)"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </button>
+                {/* Floating Mini Toolbar (Mobile & Desktop) */}
+                <div className={`absolute z-50 pointer-events-auto flex flex-col gap-3 transition-all duration-300 ${isUIHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'} 
+                    ${isMobile ? 'top-20 right-4' : 'bottom-8 right-8'}
+                `}>
+                    {/* Grouped Controls Container */}
+                    <div className="flex flex-col gap-2 bg-black/40 backdrop-blur-xl p-1.5 rounded-2xl border border-white/10 shadow-2xl">
 
-                    {/* UI Toggle (Eye Icon) */}
-                    <button
-                        onClick={() => setIsUIHidden(!isUIHidden)}
-                        className={`p-3 rounded-full backdrop-blur-xl border transition-all duration-300 shadow-2xl ${isUIHidden ? 'bg-[var(--terracotta)] border-[var(--terracotta)] text-white hover:bg-[#a85638]' : 'bg-[#20201E]/90 border-white/10 text-white/70 hover:text-white hover:border-white/20'}`}
-                        title={isUIHidden ? "Show Interface (H)" : "Hide Interface (H)"}
-                    >
-                        {isUIHidden ? (
+                        {/* Zoom In */}
+                        <button
+                            onClick={() => setZoomLevel(prev => Math.min(prev + 0.1, 2))}
+                            className="p-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                        </button>
+
+                        {/* Reset Zoom */}
+                        <button
+                            onClick={() => setZoomLevel(1)}
+                            className="p-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                        >
+                            <span className="text-[10px] font-mono font-bold">{Math.round(zoomLevel * 100)}%</span>
+                        </button>
+
+                        {/* Zoom Out */}
+                        <button
+                            onClick={() => setZoomLevel(prev => Math.max(prev - 0.1, 0.5))}
+                            className="p-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
+                        </button>
+
+                        <div className="h-px bg-white/10 mx-2 my-0.5" />
+
+                        {/* UI Toggle */}
+                        <button
+                            onClick={() => setIsUIHidden(!isUIHidden)}
+                            className={`p-2.5 rounded-xl transition-all ${isUIHidden ? 'text-[var(--terracotta)] bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/10'}`}
+                        >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        ) : (
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
-                        )}
-                    </button>
+                        </button>
+                    </div>
                 </div>
 
-                {/* Zoom Controls (Left Side) */}
-                <div className={`absolute left-4 top-1/2 -translate-y-1/2 z-50 pointer-events-auto flex flex-col gap-3 bg-black/40 backdrop-blur-md rounded-full p-2 border border-white/10 shadow-xl scale-75 origin-left lg:scale-100 transition-opacity duration-300 ${isUIHidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                    <button
-                        onClick={() => setZoomLevel(prev => Math.min(prev + 0.1, 2))}
-                        className="p-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
-                        title="Zoom In"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" /></svg>
-                    </button>
-                    <div className="text-[10px] text-white/40 text-center font-mono px-2">{Math.round(zoomLevel * 100)}%</div>
-                    <button
-                        onClick={() => setZoomLevel(prev => Math.max(prev - 0.1, 0.5))}
-                        className="p-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
-                        title="Zoom Out"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" /></svg>
-                    </button>
-                    <div className="h-px bg-white/10 my-1" />
-                    <button
-                        onClick={() => setZoomLevel(1)}
-                        className="p-3 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
-                        title="Reset Zoom"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                    </button>
-                </div>
-
-                {/* Mobile Hint Toast */}
+                {/* Mobile Hint Toast - Sticky CTA */}
                 <AnimatePresence>
                     {!isUIHidden && showMobileHint && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 20 }}
-                            className="absolute bottom-24 left-1/2 -translate-x-1/2 z-40 pointer-events-auto md:hidden"
+                            className="fixed bottom-32 left-0 right-0 z-40 pointer-events-auto md:hidden flex justify-center px-6"
                         >
-                            <div className="flex items-center gap-3 px-4 py-2 bg-black/60 backdrop-blur-md rounded-full border border-white/10 shadow-lg">
-                                <span className="text-[10px] font-medium text-white/90 whitespace-nowrap">Tap surface to apply</span>
+                            <div className="flex items-center gap-4 pl-5 pr-2 py-2.5 bg-[#1C1C1C] rounded-full border border-[var(--terracotta)]/30 shadow-2xl shadow-black/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 rounded-full bg-[var(--terracotta)] animate-pulse" />
+                                    <span className="text-xs font-bold text-white uppercase tracking-wide">Tap surface to apply</span>
+                                </div>
+                                <div className="h-4 w-px bg-white/10" />
                                 <button
                                     onClick={() => setShowMobileHint(false)}
-                                    className="p-1 rounded-full hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+                                    className="p-1.5 rounded-full hover:bg-white/10 text-white/40 hover:text-white transition-colors"
                                 >
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                 </button>
                             </div>
                         </motion.div>
