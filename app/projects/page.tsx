@@ -41,7 +41,7 @@ export default async function ProjectsPage() {
                 {/* INTERACTIVE MAP */}
                 <ProjectAtlas projects={projects} />
 
-                <Projects projects={projects} showLink={false} />
+                <Projects projects={projects} showLink={false} layoutMode="mixed" />
             </div>
             <Footer />
         </div>
