@@ -6,9 +6,11 @@ import WallStyler from './WallStyler';
 interface ProductToolsProps {
     category: string;
     productTitle: string;
+    productImageUrl?: string;
+    variantImages?: string[];
 }
 
-export default function ProductTools({ category, productTitle }: ProductToolsProps) {
+export default function ProductTools({ category, productTitle, productImageUrl, variantImages }: ProductToolsProps) {
     const [area, setArea] = useState('');
     const [tileBox, setTileBox] = useState('');
     const [boxes, setBoxes] = useState<number | null>(null);
@@ -25,7 +27,7 @@ export default function ProductTools({ category, productTitle }: ProductToolsPro
     };
 
     // Only show Wall Styler for these categories
-    const showWallStyler = ['Facade', 'Interior', 'Flooring', 'Contemporary', 'Brick'].some(c => category.includes(c));
+    const showWallStyler = ['Facade', 'Interior', 'Flooring', 'Contemporary', 'Brick', 'Paver'].some(c => category?.includes(c) || productTitle.includes('Brick'));
 
     const calculateCoverage = () => {
         const areaValue = parseFloat(area || '0');
@@ -105,7 +107,11 @@ export default function ProductTools({ category, productTitle }: ProductToolsPro
                 {/* WALL STYLER - Replaces Grout Advisor */}
                 {showWallStyler && (
                     <div className="h-full min-h-[500px]">
-                        <WallStyler initialColor={getBrickColor()} />
+                        <WallStyler
+                            initialColor={getBrickColor()}
+                            productImageUrl={productImageUrl}
+                            variantImages={variantImages}
+                        />
                     </div>
                 )}
             </div>

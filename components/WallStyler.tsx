@@ -1,19 +1,33 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface WallStylerProps {
     initialColor?: string;
+    productImageUrl?: string;
+    variantImages?: string[];
 }
 
 type Pattern = 'stretcher' | 'header' | 'flemish' | 'english' | 'stack' | 'basket';
 
-export default function WallStyler({ initialColor = '#b45a3c' }: WallStylerProps) {
+export default function WallStyler({ initialColor = '#b45a3c', productImageUrl, variantImages = [] }: WallStylerProps) {
     const [pattern, setPattern] = useState<Pattern>('stretcher');
     const [groutColor, setGroutColor] = useState('#efe5d6'); // Default: Almond
     const [groutWidth, setGroutWidth] = useState(3);
     const [brickColor, setBrickColor] = useState(initialColor);
+
+    // Combine main image and variants into a single gallery
+    const allImages = React.useMemo(() => {
+        const images: string[] = [];
+        if (productImageUrl) images.push(productImageUrl);
+        if (variantImages) images.push(...variantImages);
+        // Deduplicate
+        return Array.from(new Set(images));
+    }, [productImageUrl, variantImages]);
+
+    const [activeTextureIndex, setActiveTextureIndex] = useState(0);
+    const activeTexture = allImages.length > 0 ? allImages[activeTextureIndex] : null;
 
     // --- Constants ---
     const groutMap: Record<string, string> = {
@@ -36,17 +50,35 @@ export default function WallStyler({ initialColor = '#b45a3c' }: WallStylerProps
     // --- Logic: Generate Bricks ---
     const tileStyle = {
         backgroundColor: brickColor,
-        backgroundImage: `
-            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"),
-            linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%)
-        `,
+        backgroundImage: activeTexture
+            ? `url("${activeTexture}")`
+            : `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"), linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%)`,
+        backgroundSize: activeTexture ? 'cover' : 'auto',
+        backgroundPosition: 'center',
         boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.2), inset -1px -1px 2px rgba(0,0,0,0.2), 2px 2px 4px rgba(0,0,0,0.1)',
+        transition: 'background-image 0.3s ease'
     };
 
     const generateBricks = () => {
         const bricks: { col: number; row: number; w: number; h: number; key: string }[] = [];
         const rows = 12;
         const cols = 12;
+
+        if (pattern === 'basket') {
+            for (let r = 0; r < rows; r += 4) {
+                for (let c = 0; c < cols; c += 4) {
+                    const isAlt = ((r / 4) + (c / 4)) % 2 !== 0;
+                    if (!isAlt) {
+                        bricks.push({ col: c, row: r, w: 2, h: 4, key: `${r}-${c}-v1` });
+                        bricks.push({ col: c + 2, row: r, w: 2, h: 4, key: `${r}-${c}-v2` });
+                    } else {
+                        bricks.push({ col: c, row: r, w: 4, h: 2, key: `${r}-${c}-h1` });
+                        bricks.push({ col: c, row: r + 2, w: 4, h: 2, key: `${r}-${c}-h2` });
+                    }
+                }
+            }
+            return bricks;
+        }
 
         for (let r = 0; r < rows; r += 2) {
             let c = 0;
@@ -126,19 +158,6 @@ export default function WallStyler({ initialColor = '#b45a3c' }: WallStylerProps
                         break;
                     }
                 }
-            } else if (pattern === 'basket') {
-                for (let r = 0; r < rows; r += 4) {
-                    for (let c = 0; c < cols; c += 4) {
-                        const isAlt = ((r / 4) + (c / 4)) % 2 !== 0;
-                        if (!isAlt) {
-                            bricks.push({ col: c, row: r, w: 2, h: 4, key: `${r}-${c}-v1` });
-                            bricks.push({ col: c + 2, row: r, w: 2, h: 4, key: `${r}-${c}-v2` });
-                        } else {
-                            bricks.push({ col: c, row: r, w: 4, h: 2, key: `${r}-${c}-h1` });
-                            bricks.push({ col: c, row: r + 2, w: 4, h: 2, key: `${r}-${c}-h2` });
-                        }
-                    }
-                }
             }
         }
         return bricks;
@@ -148,14 +167,38 @@ export default function WallStyler({ initialColor = '#b45a3c' }: WallStylerProps
 
     return (
         <div className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-[var(--line)] h-full flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-[var(--sand)] rounded-lg text-[var(--terracotta)]">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <div className="flex flex-col gap-4 mb-4">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-[var(--sand)] rounded-lg text-[var(--terracotta)]">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-[#2A1E16]">Real-Time Styler</h4>
+                        <p className="text-xs text-gray-500">Pick a variant & tweak pattern</p>
+                    </div>
                 </div>
-                <div>
-                    <h4 className="font-bold text-[#2A1E16]">Pattern Preview</h4>
-                    <p className="text-xs text-gray-500">Visualize bonds & grouts</p>
-                </div>
+
+                {/* Variant Thumbnails Gallery */}
+                {allImages.length > 0 && (
+                    <div className="flex gap-2 bg-gray-50 p-2 rounded-xl overflow-x-auto">
+                        {allImages.map((img, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setActiveTextureIndex(idx)}
+                                className={`flex-shrink-0 w-12 h-12 rounded-lg border-2 overflow-hidden transition-all ${idx === activeTextureIndex
+                                        ? 'border-[var(--terracotta)] scale-105 shadow-md'
+                                        : 'border-transparent opacity-70 hover:opacity-100 hover:scale-105'
+                                    }`}
+                            >
+                                <img
+                                    src={img}
+                                    alt={`Variant ${idx + 1}`}
+                                    className="w-full h-full object-cover"
+                                />
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <div className="flex-grow flex flex-col gap-6">
@@ -166,28 +209,31 @@ export default function WallStyler({ initialColor = '#b45a3c' }: WallStylerProps
                 >
                     <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-tr from-black/5 to-white/10 mix-blend-overlay"></div>
                     <div className="w-full h-full p-4 overflow-hidden relative">
-                        <div
-                            className="absolute inset-0 grid grid-cols-12 auto-rows-fr"
-                            style={{ gap: `${groutWidth}px` }}
-                        >
-                            {bricks.map((b) => (
-                                <motion.div
-                                    key={b.key}
-                                    layoutId={`tile-${b.key}`}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.4 }}
-                                    className="relative rounded-[1px]"
-                                    style={{
-                                        ...tileStyle,
-                                        gridColumnStart: b.col + 1,
-                                        gridColumnEnd: `span ${b.w}`,
-                                        gridRowStart: b.row + 1,
-                                        gridRowEnd: `span ${b.h}`,
-                                    }}
-                                />
-                            ))}
-                        </div>
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeTextureIndex}
+                                className="absolute inset-0 grid grid-cols-12 auto-rows-fr"
+                                style={{ gap: `${groutWidth}px` }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                {bricks.map((b) => (
+                                    <motion.div
+                                        key={b.key}
+                                        layoutId={`tile-${b.key}`}
+                                        className="relative rounded-[1px]"
+                                        style={{
+                                            ...tileStyle,
+                                            gridColumnStart: b.col + 1,
+                                            gridColumnEnd: `span ${b.w}`,
+                                            gridRowStart: b.row + 1,
+                                            gridRowEnd: `span ${b.h}`,
+                                        }}
+                                    />
+                                ))}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
 

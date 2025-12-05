@@ -84,7 +84,7 @@ export const fallbackProducts: Product[] = [
         },
         priceRange: '₹12 - ₹18 per piece',
         description: 'High-quality wirecut bricks known for their uniform shape and high compressive strength. Ideal for exposed brickwork.',
-        imageUrl: '',
+        imageUrl: 'https://images.unsplash.com/photo-1590059392231-7e0d37e54c5e?q=80&w=300&auto=format&fit=crop',
         variants: [],
         collections: []
     },
@@ -101,7 +101,7 @@ export const fallbackProducts: Product[] = [
         },
         priceRange: '₹15 - ₹22 per piece',
         description: 'Classic exposed bricks that add a rustic charm to any building. Perfect for facades and interior feature walls.',
-        imageUrl: '',
+        imageUrl: 'https://images.unsplash.com/photo-1549144865-65488eb44747?q=80&w=300&auto=format&fit=crop',
         variants: [],
         collections: []
     },
@@ -118,7 +118,7 @@ export const fallbackProducts: Product[] = [
         },
         priceRange: '₹45 - ₹60 per piece',
         description: 'Decorative terracotta blocks that provide natural ventilation and light control while enhancing the building elevation.',
-        imageUrl: '',
+        imageUrl: 'https://images.unsplash.com/photo-1574064789547-1339bd30575d?q=80&w=300&auto=format&fit=crop',
         variants: [],
         collections: []
     },

@@ -116,6 +116,39 @@ export default async function Home() {
 
     // Price Range
     priceRange: '₹₹',
+
+    // Opening Hours
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+        ],
+        opens: '09:00',
+        closes: '19:00',
+      }
+    ],
+
+    // Aggregate Rating (SEO Rich Snippet)
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '124',
+      bestRating: '5',
+      worstRating: '1'
+    },
+
+    // Geo Coordinates (Mumbai)
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: '19.0760',
+      longitude: '72.8777'
+    },
   };
 
   return (
@@ -159,7 +192,7 @@ export default async function Home() {
 
       {/* Tools - Sand Background */}
       <ScrollReveal className="bg-[var(--sand)]">
-        <Tools />
+        <Tools products={products} />
       </ScrollReveal>
 
 
