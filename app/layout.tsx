@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Fraunces, Outfit } from "next/font/google";
+import { Epilogue, Inter } from "next/font/google";
 import "./globals.css";
 import SplashLoader from "@/components/SplashLoader";
 import PageTransition from "@/components/PageTransition";
 
-const fraunces = Fraunces({
+const epilogue = Epilogue({
   subsets: ["latin"],
-  variable: "--font-serif",
+  variable: "--font-epilogue",
   display: "swap",
 });
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -139,7 +139,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${outfit.variable} ${fraunces.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${epilogue.variable} font-sans antialiased`} suppressHydrationWarning>
         <SampleProvider>
           <SmoothScroll />
           <SplashLoader />
