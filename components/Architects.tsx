@@ -22,27 +22,27 @@ export default function Architects() {
                 <div className="absolute top-0 right-0 w-96 h-96 bg-[#b45a3c] opacity-10 blur-[100px] rounded-full transform translate-x-1/2 -translate-y-1/2"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#f4f1ee] opacity-5 blur-[80px] rounded-full transform -translate-x-1/2 translate-y-1/2"></div>
 
-                <div className="relative z-10 p-10 md:p-16 grid lg:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-semibold tracking-wider uppercase mb-6 border border-white/10">
+                <div className="relative z-10 p-6 md:p-16 grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+                    <div className="text-center lg:text-left">
+                        <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-[10px] md:text-xs font-semibold tracking-wider uppercase mb-4 md:mb-6 border border-white/10">
                             Professional Resources
                         </span>
-                        <h3 className="text-3xl md:text-5xl font-serif mb-6 leading-tight">
-                            For Architects & <br /> Designers
+                        <h3 className="text-2xl md:text-5xl font-serif mb-4 md:mb-6 leading-tight">
+                            For Architects & <br className="hidden md:block" /> Designers
                         </h3>
-                        <p className="text-lg text-white/70 mb-10 leading-relaxed max-w-md">
+                        <p className="text-sm md:text-lg text-white/70 mb-8 md:mb-10 leading-relaxed max-w-md mx-auto lg:mx-0">
                             Streamline your workflow with our comprehensive technical library. Download high-res textures, BIM objects, and detailed specification sheets.
                         </p>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start">
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="btn-secondary border-none shadow-lg hover:shadow-xl"
+                                className="btn-secondary border-none shadow-lg hover:shadow-xl w-full sm:w-auto py-3 md:py-4 text-sm md:text-base"
                             >
                                 Access Technical Library
                             </button>
                             <motion.button
                                 onClick={() => setIsSampleModalOpen(true)}
-                                className="px-8 py-4 rounded-full border border-white/20 hover:bg-white/10 transition-colors font-medium backdrop-blur-sm"
+                                className="px-8 py-3 md:py-4 rounded-full border border-white/20 hover:bg-white/10 transition-colors font-medium backdrop-blur-sm w-full sm:w-auto text-sm md:text-base"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >

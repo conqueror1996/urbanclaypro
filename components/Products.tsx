@@ -176,71 +176,78 @@ export default function Products({ products, featuredOnly = false }: ProductsPro
                     className={`grid grid-cols-1 md:grid-cols-2 gap-8 ${featuredOnly ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}
                 >
                     {variantsToShow.map((variant, index) => (
-                        <Link href={`/products/${variant.slug}?variant=${encodeURIComponent(variant.name)}`} key={index} className="group block">
-                            <div className="bg-white rounded-2xl p-4 border border-transparent shadow-sm hover:border-[var(--line)] hover:shadow-xl transition-all duration-500 h-full flex flex-col">
-                                {/* Color Block / Image Placeholder */}
-                                <div
-                                    className="aspect-[4/3] rounded-xl mb-6 relative overflow-hidden shadow-inner bg-[#f0e8e2]"
-                                    style={{ backgroundColor: variant.color || '#f0e8e2' }}
-                                >
-                                    {/* Show Image if available, else Texture Overlay */}
-                                    {variant.imageUrl ? (
-                                        <Image
-                                            src={variant.imageUrl}
-                                            alt={variant.name}
-                                            fill
-                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                        />
-                                    ) : (
-                                        <>
-                                            <div className="absolute inset-0 opacity-20 mix-blend-multiply"
-                                                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.2' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E")` }}
+                        <div key={index} className="group block h-full">
+                            <div className="bg-white rounded-2xl p-4 border border-transparent shadow-sm hover:border-[var(--line)] hover:shadow-xl transition-all duration-500 h-full flex flex-col relative">
+                                <Link href={`/products/${variant.slug}?variant=${encodeURIComponent(variant.name)}`} className="flex-grow flex flex-col">
+                                    {/* Color Block / Image Placeholder */}
+                                    <div
+                                        className="aspect-[4/3] rounded-xl mb-6 relative overflow-hidden shadow-inner bg-[#f0e8e2]"
+                                        style={{ backgroundColor: variant.color || '#f0e8e2' }}
+                                    >
+                                        {/* Show Image if available, else Texture Overlay */}
+                                        {variant.imageUrl ? (
+                                            <Image
+                                                src={variant.imageUrl}
+                                                alt={variant.name}
+                                                fill
+                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
                                             />
-                                            <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                        </>
-                                    )}
-                                </div>
-
-                                {/* Content */}
-                                <div className="flex flex-col flex-grow">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="text-lg font-serif font-bold text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">
-                                            {variant.name}
-                                        </h3>
+                                        ) : (
+                                            <>
+                                                <div className="absolute inset-0 opacity-20 mix-blend-multiply"
+                                                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.2' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E")` }}
+                                                />
+                                                <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                            </>
+                                        )}
                                     </div>
 
-                                    <div className="flex items-center gap-2 mb-6">
-                                        <span className="text-[10px] uppercase tracking-wider font-bold text-[#7a6f66] bg-[#f4f1ee] px-2 py-1 rounded">
-                                            {variant.tag || activeTab}
-                                        </span>
-                                    </div>
-
-                                    <div className="mt-auto pt-4 border-t border-[var(--line)] flex items-center justify-end gap-4 text-xs font-medium text-[#7a6f66] group-hover:text-[var(--terracotta)] transition-colors">
-                                        <span>View Details</span>
-                                        <div className="flex items-center gap-3">
-                                            <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                    console.log('Adding to box:', variant.name); // Debug log
-                                                    addToBox({
-                                                        id: variant.slug + '-' + variant.name,
-                                                        name: variant.name,
-                                                        color: variant.color || '#b45a3c',
-                                                        texture: variant.imageUrl ? `url('${variant.imageUrl}')` : (variant.color || '#b45a3c')
-                                                    });
-                                                }}
-                                                className="w-8 h-8 rounded-full bg-[#f4f1ee] hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center transition-colors z-20 relative"
-                                                title="Add to Sample Box"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                                            </button>
-                                            <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                                    {/* Content */}
+                                    <div className="flex flex-col flex-grow">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h3 className="text-lg font-serif font-bold text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">
+                                                {variant.name}
+                                            </h3>
                                         </div>
+
+                                        <div className="flex items-center gap-2 mb-6">
+                                            <span className="text-[10px] uppercase tracking-wider font-bold text-[#7a6f66] bg-[#f4f1ee] px-2 py-1 rounded">
+                                                {variant.tag || activeTab}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+
+                                {/* Footer Actions */}
+                                <div className="mt-auto pt-4 border-t border-[var(--line)] flex items-center justify-end gap-4 text-xs font-medium text-[#7a6f66] group-hover:text-[var(--terracotta)] transition-colors">
+                                    <Link href={`/products/${variant.slug}?variant=${encodeURIComponent(variant.name)}`}>
+                                        <span>View Details</span>
+                                    </Link>
+                                    <div className="flex items-center gap-3">
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                console.log('Adding to box:', variant.name);
+                                                addToBox({
+                                                    id: variant.slug + '-' + variant.name,
+                                                    name: variant.name,
+                                                    color: variant.color || '#b45a3c',
+                                                    texture: variant.imageUrl ? `url('${variant.imageUrl}')` : (variant.color || '#b45a3c')
+                                                });
+                                            }}
+                                            className="w-8 h-8 rounded-full bg-[#f4f1ee] hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center transition-colors z-20 relative cursor-pointer"
+                                            title="Add to Sample Box"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                        </button>
+                                        <Link href={`/products/${variant.slug}?variant=${encodeURIComponent(variant.name)}`}>
+                                            <span className="transform group-hover:translate-x-1 transition-transform inline-block">→</span>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     ))}
 
                     {variantsToShow.length === 0 && (

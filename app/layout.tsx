@@ -132,6 +132,10 @@ import SmoothScroll from '@/components/SmoothScroll';
 
 import { SampleProvider } from '@/context/SampleContext';
 
+import GlobalSampleModal from '@/components/GlobalSampleModal';
+
+// ... imports
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -146,6 +150,7 @@ export default function RootLayout({
           <PageTransition>{children}</PageTransition>
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
           <WebVitalsReporter />
+          <GlobalSampleModal />
         </SampleProvider>
       </body>
     </html>

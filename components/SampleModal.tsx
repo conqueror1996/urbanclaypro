@@ -81,8 +81,9 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
         e.preventDefault();
         if (!validate()) return;
 
-        const message = `*New Sample Request*%0A%0A*Name:* ${formData.name}%0A*Firm:* ${formData.firm}%0A*Phone:* ${formData.phone}%0A*Email:* ${formData.email}%0A*Address:* ${formData.address}%0A*Requirements:* ${formData.requirements}`;
-        window.open(`https://wa.me/918080081951?text=${message}`, '_blank');
+        const rawMessage = `*New Sample Request*\n\n*Name:* ${formData.name}\n*Firm:* ${formData.firm}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email}\n*Address:* ${formData.address}\n*Requirements:* ${formData.requirements}`;
+        const encodedMessage = encodeURIComponent(rawMessage);
+        window.open(`https://wa.me/918080081951?text=${encodedMessage}`, '_blank');
         setIsSubmitted(true);
     };
 
@@ -101,7 +102,8 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="relative bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+                        className="relative bg-white rounded-2xl p-8 max-w-lg w-full shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto overscroll-contain"
+                        data-lenis-prevent
                     >
                         <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>

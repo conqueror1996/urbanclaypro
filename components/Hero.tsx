@@ -3,12 +3,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import SampleModal from './SampleModal';
 import Image from 'next/image';
 import TextReveal from './TextReveal';
 import HeroVisual from './HeroVisual';
-
-
+import { useSampleBox } from '@/context/SampleContext';
 
 interface HeroProps {
     data?: {
@@ -19,7 +17,7 @@ interface HeroProps {
 }
 
 export default function Hero({ data }: HeroProps) {
-    const [sampleModalOpen, setSampleModalOpen] = useState(false);
+    const { setBoxOpen } = useSampleBox();
     const [isHoveringText, setIsHoveringText] = useState(false);
 
     return (
@@ -59,7 +57,7 @@ export default function Hero({ data }: HeroProps) {
 
                             <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">
                                 <motion.button
-                                    onClick={() => setSampleModalOpen(true)}
+                                    onClick={() => setBoxOpen(true)}
                                     className="btn-terracotta min-h-[48px] md:min-h-[56px]"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
@@ -120,8 +118,6 @@ export default function Hero({ data }: HeroProps) {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
                 </motion.div>
             </section >
-
-            <SampleModal isOpen={sampleModalOpen} onClose={() => setSampleModalOpen(false)} />
         </>
     );
 }

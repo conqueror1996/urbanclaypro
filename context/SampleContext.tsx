@@ -45,8 +45,8 @@ export function SampleProvider({ children }: { children: ReactNode }) {
     const addToBox = (sample: Sample) => {
         if (box.length < 4 && !box.find(s => s.id === sample.id)) {
             setBox([...box, sample]);
-            setBoxOpen(true); // Auto-open box when adding
         }
+        setBoxOpen(true); // Always open box when clicking add
     };
 
     const removeFromBox = (id: string) => {
