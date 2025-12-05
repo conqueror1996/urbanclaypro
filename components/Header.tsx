@@ -39,7 +39,7 @@ export default function Header() {
                         width={120}
                         height={40}
                         className="h-8 md:h-12 w-auto group-hover:scale-105 transition-transform duration-300"
-                        style={{ width: 'auto' }}
+                        style={{ width: 'auto', height: 'auto' }}
                         priority
                     />
                 </Link>

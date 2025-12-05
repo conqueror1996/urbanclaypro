@@ -297,7 +297,17 @@ export default function KilnAnimation() {
 
             tl.to(scrollHintRef.current, { opacity: 0, duration: 0.5 }, 0);
 
-            if (sparksRef.current) {
+        }, containerRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    // Separate effect for dynamic particles (Sparks & Ash)
+    useEffect(() => {
+        if (!containerRef.current || sparksData.length === 0) return;
+
+        const ctx = gsap.context(() => {
+            if (sparksRef.current && sparksRef.current.children.length > 0) {
                 const sparks = Array.from(sparksRef.current.children) as SVGElement[];
                 sparks.forEach((spark, i) => {
                     const isForeground = i % 3 === 0;
@@ -342,7 +352,7 @@ export default function KilnAnimation() {
                 });
             }
 
-            if (ashRef.current) {
+            if (ashRef.current && ashRef.current.children.length > 0) {
                 gsap.to(ashRef.current.children, {
                     y: -200,
                     x: () => Math.random() * 60 - 30,
@@ -353,11 +363,10 @@ export default function KilnAnimation() {
                     ease: "linear"
                 });
             }
-
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [sparksData, ashData]);
 
     useEffect(() => {
         if (temp % 100 === 0 && tempTextRef.current) {
@@ -424,8 +433,8 @@ export default function KilnAnimation() {
                 >
                     <ellipse ref={shadowRef} cx="300" cy="280" rx="250" ry="50" fill="#000" fillOpacity="0.1" filter="url(#dofBlur)" />
 
-                    <g ref={timelineGroupRef} style={{ transformOrigin: 'center center' }}>
-                        <g ref={interactionGroupRef} style={{ transformOrigin: 'center center' }}>
+                    <g ref={timelineGroupRef} className="will-change-transform" style={{ transformOrigin: 'center center' }}>
+                        <g ref={interactionGroupRef} className="will-change-transform" style={{ transformOrigin: 'center center' }}>
                             <g filter="url(#heatDistortion)">
                                 <path ref={topFaceRef} d="M100 120 L450 80 L500 100 L150 140 Z" fill="#d1d5db" />
                                 <path ref={rightFaceRef} d="M500 100 L500 160 L150 200 L150 140 Z" fill="#6b7280" />
