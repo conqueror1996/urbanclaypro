@@ -26,9 +26,13 @@
   --font-serif: var(--font-serif);
 }
 
-html.lenis,
+html.lenis {
+  height: auto;
+}
+
 html.lenis body {
   height: auto;
+  overflow: hidden !important;
 }
 
 .lenis.lenis-smooth {
