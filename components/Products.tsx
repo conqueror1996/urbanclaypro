@@ -222,6 +222,7 @@ export default function Products({ products, featuredOnly = false }: ProductsPro
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     e.stopPropagation();
+                                                    console.log('Adding to box:', variant.name); // Debug log
                                                     addToBox({
                                                         id: variant.slug + '-' + variant.name,
                                                         name: variant.name,
@@ -229,7 +230,7 @@ export default function Products({ products, featuredOnly = false }: ProductsPro
                                                         texture: variant.imageUrl ? `url('${variant.imageUrl}')` : (variant.color || '#b45a3c')
                                                     });
                                                 }}
-                                                className="w-8 h-8 rounded-full bg-[#f4f1ee] hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center transition-colors"
+                                                className="w-8 h-8 rounded-full bg-[#f4f1ee] hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center transition-colors z-20 relative"
                                                 title="Add to Sample Box"
                                             >
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
