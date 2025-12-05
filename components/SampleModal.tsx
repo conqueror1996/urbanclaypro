@@ -109,8 +109,8 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
 
                         {!isSubmitted ? (
                             <>
-                                <h3 className="text-2xl font-bold text-[#2A1E16] mb-2">Order Sample Box</h3>
-                                <p className="text-[#5d554f] mb-6">Complete the form below to request your samples.</p>
+                                <h3 className="text-2xl font-serif font-bold text-[#2A1E16] mb-2">Order Sample Box</h3>
+                                <p className="text-[#5d554f] mb-6 font-light">Complete the form below to request your samples.</p>
 
                                 {/* Selected Samples Display */}
                                 {box.length > 0 && (
@@ -178,8 +178,8 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                 </div>
-                                <h3 className="text-2xl font-bold text-[#2A1E16] mb-2">Order Placed!</h3>
-                                <p className="text-[#5d554f] mb-6">We've received your sample request. Our team will coordinate the dispatch shortly.</p>
+                                <h3 className="text-2xl font-serif font-bold text-[#2A1E16] mb-2">Order Placed!</h3>
+                                <p className="text-[#5d554f] mb-6 font-light">We've received your sample request. Our team will coordinate the dispatch shortly.</p>
                                 <button onClick={onClose} className="w-full py-3 bg-[var(--terracotta)] text-white rounded-lg font-semibold hover:bg-[#a85638] transition-colors">Close</button>
                             </div>
                         )}
