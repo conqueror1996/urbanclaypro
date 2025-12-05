@@ -475,7 +475,7 @@ export default function KilnAnimation() {
                     onPointerUp={handlePointerUp}
                     onPointerLeave={handlePointerUp}
                     style={{
-                        touchAction: 'none',
+                        touchAction: 'pan-y',
                         cursor: hammerMode ? hammerCursorBase64 : undefined
                     }}
                 >

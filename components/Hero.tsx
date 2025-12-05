@@ -95,15 +95,11 @@ export default function Hero({ data }: HeroProps) {
                         </motion.div>
 
                         {/* Right Column: Visual with Heat Haze & Embers */}
-                        <motion.div
+                        <div
                             className="relative h-full min-h-[400px] lg:min-h-[600px] w-full"
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
                         >
                             <HeroVisual imageUrl={data?.heroImageUrl} />
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
 
