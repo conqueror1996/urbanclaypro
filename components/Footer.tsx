@@ -79,6 +79,33 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
+            {/* Sub-footer Strip */}
+            <a
+                href="https://superbuildindia.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-[#F7F7F7] border-t border-[#E5E5E5] py-4 text-center group transition-colors duration-300 hover:bg-[#F0F0F0]"
+            >
+                <div className="flex items-center justify-center gap-3">
+                    {/* Minimal Building + Checkmark Icon */}
+                    <svg
+                        className="w-5 h-5 text-[#6B6B6B] opacity-80 group-hover:text-[#B14A2A] group-hover:opacity-100 transition-all duration-300"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z" />
+                        <path d="M9 14l2 2 4-4" />
+                    </svg>
+                    <p className="text-[#2A1E16] text-[14px] md:text-[15px] font-medium flex items-center gap-2 group-hover:text-[#B14A2A] transition-colors duration-300">
+                        Meet SuperBuild – Your Trusted Personal Contractor
+                        <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+                    </p>
+                </div>
+            </a>
         </footer>
     );
 }

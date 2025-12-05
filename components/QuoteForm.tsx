@@ -198,6 +198,30 @@ Sent from UrbanClay Website`;
                                         </select>
                                     </div>
 
+                                    {/* SuperBuild Inline Nudge */}
+                                    <div
+                                        className="w-full bg-white border border-gray-100 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-4"
+                                        data-partner="superbuild"
+                                        data-placement="quote-inline"
+                                    >
+                                        <div className="flex-shrink-0 text-gray-400">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                        </div>
+                                        <div className="flex-grow text-sm text-gray-700 leading-snug">
+                                            Need help executing your project? Meet our execution partner, <span className="font-medium">SuperBuild</span>.
+                                        </div>
+                                        <a
+                                            href="https://superbuildindia.com"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-sm font-medium text-[#2A1E16] hover:text-[#B14A2A] transition-colors whitespace-nowrap flex items-center gap-1 self-end sm:self-auto"
+                                        >
+                                            Explore Now <span>→</span>
+                                        </a>
+                                    </div>
+
                                     <button
                                         type="button"
                                         onClick={nextStep}

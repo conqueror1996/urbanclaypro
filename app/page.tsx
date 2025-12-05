@@ -17,7 +17,6 @@ const Tools = dynamic(() => import('@/components/Tools'));
 const QuoteForm = dynamic(() => import('@/components/QuoteForm'));
 const Footer = dynamic(() => import('@/components/Footer'));
 const OurStoryTeaser = dynamic(() => import('@/components/OurStoryTeaser'));
-const SuperBuildBanner = dynamic(() => import('@/components/SuperBuildBanner'));
 
 
 
@@ -166,7 +165,6 @@ export default async function Home() {
 
       {/* Footer Section */}
       <ScrollReveal className="bg-white">
-        <SuperBuildBanner />
         <KilnPreview />
         <Footer />
       </ScrollReveal>
