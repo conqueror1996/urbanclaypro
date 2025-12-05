@@ -118,10 +118,10 @@ export default function Products({ products, featuredOnly = false }: ProductsPro
         : dynamicVariants;
 
     return (
-        <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-48">
+        <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 lg:py-48">
             {/* HEADER */}
             <motion.div
-                className="text-center mb-16 md:mb-24"
+                className="text-center mb-10 md:mb-16 lg:mb-24"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -130,13 +130,13 @@ export default function Products({ products, featuredOnly = false }: ProductsPro
                 <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">
                     {featuredOnly ? 'Curated Collections' : 'Complete Catalogue'}
                 </span>
-                <h2 className="text-3xl md:text-5xl font-serif text-[#2A1E16]">
+                <h2 className="text-2xl md:text-3xl lg:text-5xl font-serif text-[#2A1E16]">
                     {featuredOnly ? 'Signature Clay Products' : 'Explore Our Range'}
                 </h2>
             </motion.div>
 
             {/* TABS */}
-            <div className="flex justify-center mb-12 md:mb-20">
+            <div className="flex justify-center mb-8 md:mb-12 lg:mb-20">
                 <div className={`
                     inline-flex bg-[#f4f1ee] p-1.5 rounded-full border border-[var(--line)]
                     overflow-x-auto max-w-full scrollbar-hide

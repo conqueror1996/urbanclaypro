@@ -30,15 +30,15 @@ export default function Header() {
     ];
 
     return (
-        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled || mobileMenuOpen ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_2px_20px_-5px_rgba(0,0,0,0.03)] pt-5 pb-3' : 'bg-transparent border-transparent pt-7 pb-5'}`}>
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between">
+        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled || mobileMenuOpen ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_2px_20px_-5px_rgba(0,0,0,0.03)] py-3 md:pt-5 md:pb-3' : 'bg-transparent border-transparent py-4 md:pt-7 md:pb-5'}`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                 <Link href="/" className="flex items-center group">
                     <Image
                         src="/urbanclay-logo.png"
                         alt="UrbanClay Logo"
-                        width={146}
-                        height={48}
-                        className="h-12 w-auto group-hover:scale-105 transition-transform duration-300"
+                        width={120}
+                        height={40}
+                        className="h-8 md:h-12 w-auto group-hover:scale-105 transition-transform duration-300"
                         style={{ width: 'auto' }}
                         priority
                     />

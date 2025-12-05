@@ -845,19 +845,19 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                 <div className={`absolute inset-0 z-10 pointer-events-none flex flex-col transition-opacity duration-500 ${isUIHidden ? 'opacity-0' : 'opacity-100'}`}>
 
                     {/* Compact Top Bar */}
-                    <div className="flex justify-between items-center gap-4 pointer-events-auto px-6 py-3 bg-gradient-to-b from-[#1C1C1C]/95 to-transparent backdrop-blur-sm">
+                    <div className="flex justify-between items-center gap-3 pointer-events-auto px-4 py-2 lg:px-6 lg:py-3 bg-gradient-to-b from-[#1C1C1C]/95 to-transparent backdrop-blur-sm">
 
                         {/* Brand Mark - Compact */}
                         <div className="flex items-center gap-3">
                             <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]" />
-                            <h2 className="text-lg font-serif tracking-tight text-white">UrbanClay <span className="text-[var(--terracotta)] italic font-light">Atelier</span></h2>
+                            <h2 className="text-base lg:text-lg font-serif tracking-tight text-white">UrbanClay <span className="text-[var(--terracotta)] italic font-light">Atelier</span></h2>
                         </div>
 
                         {/* Scene Selector Pills - Compact */}
                         <div className="flex gap-2 overflow-x-auto no-scrollbar max-w-[60vw]">
                             <button
                                 onClick={() => fileInputRef.current?.click()}
-                                className="px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all bg-[var(--terracotta)] text-white hover:bg-[#a85638] shadow-md"
+                                className="px-3 py-1.5 lg:px-4 lg:py-2 rounded-full text-[9px] lg:text-[10px] font-bold uppercase tracking-wider transition-all bg-[var(--terracotta)] text-white hover:bg-[#a85638] shadow-md"
                             >
                                 Upload
                             </button>
@@ -867,7 +867,7 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                                 <button
                                     key={scene.id}
                                     onClick={() => { setActiveScene(scene); setUploadedImage(null); }}
-                                    className={`px-4 py-2 rounded-full text-[10px] font-medium transition-all whitespace-nowrap ${activeScene.id === scene.id ? 'bg-[var(--terracotta)]/20 text-[var(--terracotta)] border border-[var(--terracotta)]/30' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                                    className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-full text-[9px] lg:text-[10px] font-medium transition-all whitespace-nowrap ${activeScene.id === scene.id ? 'bg-[var(--terracotta)]/20 text-[var(--terracotta)] border border-[var(--terracotta)]/30' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
                                 >
                                     {scene.name}
                                 </button>
@@ -892,7 +892,7 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                     <div className="absolute bottom-0 left-0 right-0 flex items-end gap-4 lg:gap-6 px-4 lg:px-6 pb-8 lg:pb-6 pointer-events-none">
 
                         {/* Material Library Panel - Compact */}
-                        <div className={`flex-1 max-w-3xl bg-[#20201E]/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col pointer-events-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 ${isPanelMinimized ? 'h-auto' : 'h-[45vh] lg:h-[40vh]'}`}>
+                        <div className={`flex-1 max-w-3xl bg-[#20201E]/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col pointer-events-auto transition-all duration-500 ease-out transform translate-y-0 opacity-100 ${isPanelMinimized ? 'h-auto' : 'h-[35vh] lg:h-[40vh]'}`}>
 
                             {/* Tabs Header & Controls */}
                             <div className="flex items-center justify-between border-b border-white/5 bg-gradient-to-r from-white/5 to-transparent backdrop-blur-sm pr-2 lg:pr-3 pl-2 lg:pl-3">
@@ -967,7 +967,7 @@ export default function VisualizerTool({ products }: VisualizerToolProps) {
                                                                     setActiveMaterial(m);
                                                                     // Scene will auto-switch via useEffect
                                                                 }}
-                                                                className={`relative group flex-shrink-0 w-20 h-20 lg:w-24 lg:h-24 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${activeMaterial.id === m.id ? 'ring-2 ring-[var(--terracotta)] scale-105 shadow-lg z-10' : 'hover:scale-105 hover:shadow-md opacity-70 hover:opacity-100'}`}
+                                                                className={`relative group flex-shrink-0 w-16 h-16 lg:w-24 lg:h-24 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 ${activeMaterial.id === m.id ? 'ring-2 ring-[var(--terracotta)] scale-105 shadow-lg z-10' : 'hover:scale-105 hover:shadow-md opacity-70 hover:opacity-100'}`}
                                                             >
                                                                 {/* Skeleton Loader */}
                                                                 {isLoading && (

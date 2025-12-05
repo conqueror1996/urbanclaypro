@@ -28,7 +28,7 @@ export default function Hero({ data }: HeroProps) {
                 {/* Animated Background - Kiln Glow (Removed KilnDistort) */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[var(--sand)] to-white opacity-50 pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-16 lg:pt-52 lg:pb-24 relative z-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 md:pt-40 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
@@ -44,12 +44,12 @@ export default function Hero({ data }: HeroProps) {
                                 <h1 className="sr-only">Premium Terracotta for Facades & Interiors</h1>
                                 <TextReveal
                                     text={data?.heroHeading || 'Premium Terracotta for Facades & Interiors'}
-                                    className="text-[42px] sm:text-5xl lg:text-[64px] font-serif font-medium leading-[1.05] text-[#2A1E16] tracking-tight"
+                                    className="text-3xl sm:text-5xl lg:text-[64px] font-serif font-medium leading-[1.05] text-[#2A1E16] tracking-tight"
                                 />
                             </div>
 
                             <motion.p
-                                className="mt-8 text-lg md:text-xl text-[#5d554f] font-light leading-relaxed max-w-lg"
+                                className="mt-6 md:mt-8 text-base md:text-xl text-[#5d554f] font-light leading-relaxed max-w-lg"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -57,10 +57,10 @@ export default function Hero({ data }: HeroProps) {
                                 {data?.heroSubheading || 'Crafted for timeless spaces, engineered for performance.'}
                             </motion.p>
 
-                            <div className="mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4">
+                            <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">
                                 <motion.button
                                     onClick={() => setSampleModalOpen(true)}
-                                    className="btn-terracotta min-h-[56px]"
+                                    className="btn-terracotta min-h-[48px] md:min-h-[56px]"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
@@ -68,7 +68,7 @@ export default function Hero({ data }: HeroProps) {
                                 </motion.button>
                                 <Link href="/visualizer">
                                     <motion.button
-                                        className="btn-secondary min-h-[56px] gap-2 group"
+                                        className="btn-secondary min-h-[48px] md:min-h-[56px] gap-2 group"
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                     >
