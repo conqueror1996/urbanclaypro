@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@sanity/client';
 
-const client = createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-    token: process.env.SANITY_API_TOKEN,
-    apiVersion: '2024-01-01',
-    useCdn: false,
-});
-
 export async function POST(req: NextRequest) {
     // 1. Auth Check
     const token = req.cookies.get('uc_admin_token')?.value;
@@ -17,6 +9,15 @@ export async function POST(req: NextRequest) {
     }
 
     try {
+        // Initialize Sanity client at runtime to avoid build-time env var issues
+        const client = createClient({
+            projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '22qqjddz',
+            dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+            token: process.env.SANITY_API_TOKEN,
+            apiVersion: '2024-01-01',
+            useCdn: false,
+        });
+
         const formData = await req.formData();
         const file = formData.get('file') as File;
 
