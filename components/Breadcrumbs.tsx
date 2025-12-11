@@ -1,58 +1,50 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 export default function Breadcrumbs() {
     const pathname = usePathname();
-    const paths = pathname.split('/').filter(path => path);
+    const searchParams = useSearchParams();
 
-    if (paths.length === 0) return null;
+    const parts = pathname.split('/').filter(p => p);
 
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: paths.map((path, index) => ({
-            '@type': 'ListItem',
-            position: index + 1,
-            name: path.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-            item: `https://urbanclay.in/${paths.slice(0, index + 1).join('/')}`
-        }))
+    // Custom label mapping for slug
+    const formatLabel = (slug: string) => {
+        return slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     };
 
-    return (
-        <nav aria-label="Breadcrumb" className="mb-6">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            <ol className="flex items-center space-x-2 text-sm text-[#7a6f66]">
-                <li>
-                    <Link href="/" className="hover:text-[var(--terracotta)] transition-colors">
-                        Home
-                    </Link>
-                </li>
-                {paths.map((path, index) => {
-                    const href = `/${paths.slice(0, index + 1).join('/')}`;
-                    const isLast = index === paths.length - 1;
-                    const label = path.replace(/-/g, ' ');
+    const variantName = searchParams.get('variant');
 
-                    return (
-                        <li key={path} className="flex items-center">
-                            <span className="mx-2 text-gray-400">/</span>
-                            {isLast ? (
-                                <span className="font-medium text-[#2A1E16] capitalize" aria-current="page">
-                                    {label}
-                                </span>
-                            ) : (
-                                <Link href={href} className="hover:text-[var(--terracotta)] transition-colors capitalize">
-                                    {label}
-                                </Link>
-                            )}
-                        </li>
-                    );
-                })}
-            </ol>
+    return (
+        <nav className="flex items-center text-xs font-bold uppercase tracking-widest text-gray-500 overflow-x-auto whitespace-nowrap">
+            <Link href="/" className="hover:text-[var(--terracotta)] transition-colors">Home</Link>
+
+            {parts.map((part, idx) => {
+                const path = `/${parts.slice(0, idx + 1).join('/')}`;
+                const isLast = idx === parts.length - 1 && !variantName;
+
+                return (
+                    <React.Fragment key={path}>
+                        <span className="mx-2 text-gray-300">/</span>
+                        {isLast ? (
+                            <span className="text-[var(--terracotta)]">{formatLabel(part)}</span>
+                        ) : (
+                            <Link href={path} className="hover:text-[var(--terracotta)] transition-colors">
+                                {formatLabel(part)}
+                            </Link>
+                        )}
+                    </React.Fragment>
+                );
+            })}
+
+            {variantName && (
+                <>
+                    <span className="mx-2 text-gray-300">/</span>
+                    <span className="text-[var(--terracotta)]">{variantName}</span>
+                </>
+            )}
         </nav>
     );
 }

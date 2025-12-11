@@ -18,44 +18,43 @@ try {
 }
 
 export interface Product {
+    _id: string;
     slug: string;
     title: string;
     subtitle: string;
+    price?: string;
     tag: string;
+    category?: {
+        title: string;
+        slug: string;
+        description?: string;
+    };
     specs: {
         size: string;
+        coverage?: string;
+        application?: string;
         waterAbsorption: string;
         compressiveStrength: string;
         firingTemperature: string;
+        weight?: string;
+        thickness?: string;
+        efflorescence?: string;
     };
     priceRange: string;
     description: string;
     images?: any[];
     imageUrl?: string;
     variants?: {
+        _key: string;
         name: string;
+        slug: string; // Added slug
         imageUrl: string;
+        imageRef?: string;
         altText?: string;
         gallery?: string[];
+        galleryRefs?: string[];
     }[];
-    collections?: {
-        name: string;
-        description?: string;
-        priceRange?: string;
-        specs?: {
-            size?: string;
-            thickness?: string;
-            coverage?: string;
-            weight?: string;
-            waterAbsorption?: string;
-            compressiveStrength?: string;
-        };
-        variants: {
-            name: string;
-            imageUrl: string;
-            gallery?: string[];
-        }[];
-    }[];
+
     resources?: {
         technicalSheets?: { title: string; fileUrl: string }[];
         bimModels?: { title: string; fileUrl: string }[];
@@ -67,79 +66,15 @@ export interface Product {
         imageUrl: string;
         location?: string;
     }[];
+    seo?: {
+        metaTitle?: string;
+        metaDescription?: string;
+        keywords?: string[];
+        aiInsights?: string;
+        lastAutomatedUpdate?: string;
+        openGraphImage?: string;
+    };
 }
-
-// Fallback Products
-export const fallbackProducts: Product[] = [
-    {
-        slug: 'wirecut-bricks',
-        title: 'Wirecut Bricks',
-        subtitle: 'Precision & Durability',
-        tag: 'Best Seller',
-        specs: {
-            size: '9" x 4" x 3"',
-            waterAbsorption: '< 10%',
-            compressiveStrength: '> 35 N/mm²',
-            firingTemperature: '1000°C'
-        },
-        priceRange: '₹12 - ₹18 per piece',
-        description: 'High-quality wirecut bricks known for their uniform shape and high compressive strength. Ideal for exposed brickwork.',
-        imageUrl: 'https://images.unsplash.com/photo-1590059392231-7e0d37e54c5e?q=80&w=300&auto=format&fit=crop',
-        variants: [],
-        collections: []
-    },
-    {
-        slug: 'exposed-bricks',
-        title: 'Exposed Bricks',
-        subtitle: 'Rustic & Timeless',
-        tag: 'Trending',
-        specs: {
-            size: '9" x 4" x 3"',
-            waterAbsorption: '< 12%',
-            compressiveStrength: '> 25 N/mm²',
-            firingTemperature: '950°C'
-        },
-        priceRange: '₹15 - ₹22 per piece',
-        description: 'Classic exposed bricks that add a rustic charm to any building. Perfect for facades and interior feature walls.',
-        imageUrl: 'https://images.unsplash.com/photo-1549144865-65488eb44747?q=80&w=300&auto=format&fit=crop',
-        variants: [],
-        collections: []
-    },
-    {
-        slug: 'terracotta-jaalis',
-        title: 'Terracotta Jaalis',
-        subtitle: 'Ventilation & Aesthetics',
-        tag: 'New Arrival',
-        specs: {
-            size: '8" x 8" x 2.5"',
-            waterAbsorption: '< 15%',
-            compressiveStrength: '> 15 N/mm²',
-            firingTemperature: '900°C'
-        },
-        priceRange: '₹45 - ₹60 per piece',
-        description: 'Decorative terracotta blocks that provide natural ventilation and light control while enhancing the building elevation.',
-        imageUrl: 'https://images.unsplash.com/photo-1574064789547-1339bd30575d?q=80&w=300&auto=format&fit=crop',
-        variants: [],
-        collections: []
-    },
-    {
-        slug: 'linear-cladding',
-        title: 'Linear Cladding',
-        subtitle: 'Sleek & Modern',
-        tag: 'Architectural',
-        specs: {
-            size: '300mm x 50mm x 20mm',
-            waterAbsorption: '< 6%',
-            compressiveStrength: '> 40 N/mm²',
-            firingTemperature: '1100°C'
-        },
-        priceRange: '₹80 - ₹120 per sqft',
-        description: 'Long format linear bricks for a contemporary, horizontal aesthetic.',
-        imageUrl: 'https://images.unsplash.com/photo-1620626012053-1c167f7ebc8d?q=80&w=300&auto=format&fit=crop',
-        variants: [],
-        collections: []
-    }
-];
 
 // GROQ Queries
 const productsQuery = groq`*[_type == "product"] {
@@ -148,18 +83,13 @@ const productsQuery = groq`*[_type == "product"] {
   "slug": slug.current,
   subtitle,
   tag,
+  "category": category->{ title, "slug": slug.current, description },
   specs,
   priceRange,
   description,
   "imageUrl": images[0].asset->url,
-  "variants": variants[]{ name, "imageUrl": image.asset->url, "altText": image.alt, "gallery": gallery[].asset->url },
-  "collections": collections[]{
-    name,
-    description,
-    priceRange,
-    specs,
-    "variants": variants[]{ name, "imageUrl": image.asset->url, "gallery": gallery[].asset->url }
-  },
+  "variants": variants[]{ _key, name, "slug": slug.current, "imageUrl": image.asset->url, "imageRef": image.asset._ref, "altText": image.alt, "gallery": gallery[].asset->url, "galleryRefs": gallery[].asset._ref },
+
   "resources": {
     "technicalSheets": resources.technicalSheets[]{ title, "fileUrl": asset->url },
     "bimModels": resources.bimModels[]{ title, "fileUrl": asset->url },
@@ -170,6 +100,12 @@ const productsQuery = groq`*[_type == "product"] {
     "slug": slug.current,
     "imageUrl": image.asset->url,
     location
+  },
+  "seo": {
+    "metaTitle": seo.metaTitle,
+    "metaDescription": seo.metaDescription,
+    "keywords": seo.keywords,
+    "openGraphImage": seo.openGraphImage.asset->url
   }
 }`;
 
@@ -177,24 +113,25 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
   ...,
   "slug": slug.current,
   "images": images[].asset->url,
-  "variants": variants[]{ name, "imageUrl": image.asset->url, "altText": image.alt, "gallery": gallery[].asset->url },
-  "collections": collections[]{
-    name,
-    description,
-    priceRange,
-    specs,
-    "variants": variants[]{ name, "imageUrl": image.asset->url, "gallery": gallery[].asset->url }
-  },
+  "variants": variants[]{ _key, name, "slug": slug.current, "imageUrl": image.asset->url, "altText": image.alt, "gallery": gallery[].asset->url },
+
   "resources": {
     "technicalSheets": resources.technicalSheets[]{ title, "fileUrl": asset->url },
     "bimModels": resources.bimModels[]{ title, "fileUrl": asset->url },
     "productCatalogues": resources.productCatalogues[]{ title, "fileUrl": asset->url }
   },
+  "category": category->{ title, "slug": slug.current, description },
   "relatedProjects": *[_type == "project" && references(^._id)] {
     title,
     "slug": slug.current,
     "imageUrl": image.asset->url,
     location
+  },
+  "seo": {
+    "metaTitle": seo.metaTitle,
+    "metaDescription": seo.metaDescription,
+    "keywords": seo.keywords,
+    "openGraphImage": seo.openGraphImage.asset->url
   }
 }`;
 
@@ -203,15 +140,27 @@ export async function getProducts(): Promise<Product[]> {
     try {
         console.log('Fetching products from Sanity...');
         const products = await client.fetch(productsQuery, {}, { next: { revalidate: 60 } });
+
         if (!products || products.length === 0) {
-            console.warn('No products found in Sanity, using fallback data.');
-            return fallbackProducts;
+            console.warn('No products found in Sanity.');
+            return [];
         }
+
         console.log(`Fetched ${products.length} products from Sanity.`);
         return products;
     } catch (error) {
         console.error('Error fetching products:', error);
-        return fallbackProducts;
+        return [];
+    }
+}
+
+export async function getCategories(): Promise<string[]> {
+    try {
+        const categories = await client.fetch(groq`*[_type == "category"] | order(title asc) { title }`, {}, { next: { revalidate: 60 } });
+        return categories.map((c: any) => c.title);
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return [];
     }
 }
 
@@ -219,14 +168,27 @@ export async function getProduct(slug: string): Promise<Product | undefined> {
     try {
         const product = await client.fetch(productBySlugQuery, { slug }, { next: { revalidate: 60 } });
         if (!product) {
-            return fallbackProducts.find(p => p.slug === slug);
+            return undefined;
         }
         return product;
     } catch (error) {
         console.error('Error fetching product:', error);
-        return fallbackProducts.find(p => p.slug === slug);
+        return undefined;
     }
 }
+
+export async function getRelatedProducts(category: string, currentSlug: string): Promise<Product[]> {
+    const products = await getProducts();
+    // Filter by category match (simple string match for now)
+    return products
+        .filter(p => (p.tag === category || p.category?.title === category || p.category?.slug === category) && p.slug !== currentSlug)
+        .slice(0, 4);
+}
+
+export async function getCollectionBySlug(collectionSlug: string): Promise<Product | undefined> {
+    return getProduct(collectionSlug);
+}
+
 
 // Project Interface
 export interface Project {
@@ -237,42 +199,14 @@ export interface Project {
     description: string;
     imageUrl?: string;
     gallery?: string[];
-    productsUsed?: string[];
+    productsUsed?: {
+        title: string;
+        slug: string;
+        imageUrl: string;
+        category: string;
+    }[];
 }
 
-// Fallback Projects
-export const fallbackProjects: Project[] = [
-    {
-        slug: 'bhairavi-residence',
-        title: 'Bhairavi Residence',
-        location: 'Juhu, Mumbai',
-        type: 'Residential',
-        description: 'Exposed brick facade using 9×3×18mm tiles with almond-cream grout for a timeless aesthetic.',
-        imageUrl: '',
-        gallery: ['', '', ''],
-        productsUsed: ['Exposed Brick Tiles']
-    },
-    {
-        slug: 'courtyard-cafe',
-        title: 'Courtyard Café',
-        location: 'Koregaon Park, Pune',
-        type: 'Hospitality',
-        description: 'Terracotta jaali walls providing ventilation and light play in the central courtyard.',
-        imageUrl: '',
-        gallery: ['', '', ''],
-        productsUsed: ['Terracotta Jaali']
-    },
-    {
-        slug: 'tech-park-lobby',
-        title: 'Tech Park Lobby',
-        location: 'Whitefield, Bangalore',
-        type: 'Commercial',
-        description: 'Linear brick tiles creating a sleek, modern feature wall in the main reception area.',
-        imageUrl: '',
-        gallery: ['', '', ''],
-        productsUsed: ['Linear Brick Tiles']
-    }
-];
 
 const projectsQuery = groq`*[_type == "project"] {
   _id,
@@ -283,7 +217,12 @@ const projectsQuery = groq`*[_type == "project"] {
   description,
   "imageUrl": image.asset->url,
   "gallery": gallery[].asset->url,
-  "productsUsed": productsUsed[]->title
+  "productsUsed": productsUsed[]->{
+    title,
+    "slug": slug.current,
+    "imageUrl": images[0].asset->url, 
+    "category": category->slug.current
+  }
 }`;
 
 const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0] {
@@ -291,32 +230,35 @@ const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0
   "slug": slug.current,
   "imageUrl": image.asset->url,
   "gallery": gallery[].asset->url,
-  "productsUsed": productsUsed[]->title
+  "productsUsed": productsUsed[]->{
+    title,
+    "slug": slug.current,
+    "imageUrl": images[0].asset->url,
+    "category": category->slug.current
+  }
 }`;
 
 export async function getProjects(): Promise<Project[]> {
     try {
         const projects = await client.fetch(projectsQuery, {}, { next: { revalidate: 60 } });
-        if (!projects || projects.length === 0) {
-            return fallbackProjects;
-        }
-        return projects;
+        return projects || [];
     } catch (error) {
         console.error('Error fetching projects:', error);
-        return fallbackProjects;
+        return [];
     }
 }
+
 
 export async function getProject(slug: string): Promise<Project | undefined> {
     try {
         const project = await client.fetch(projectBySlugQuery, { slug }, { next: { revalidate: 3600 } });
         if (!project) {
-            return fallbackProjects.find(p => p.slug === slug);
+            return undefined;
         }
         return project;
     } catch (error) {
         console.error('Error fetching project:', error);
-        return fallbackProjects.find(p => p.slug === slug);
+        return undefined;
     }
 }
 

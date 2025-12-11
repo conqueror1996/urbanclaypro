@@ -2,12 +2,13 @@ import { defineField, defineType } from 'sanity'
 
 export default defineType({
     name: 'product',
-    title: 'Product',
+    title: 'Product Range',
     type: 'document',
     fields: [
         defineField({
             name: 'title',
-            title: 'Title',
+            title: 'Collection Name',
+            description: 'The name of this collection (e.g. Handmade Brick, Wirecut Brick)',
             type: 'string',
             validation: (rule) => rule.required(),
         }),
@@ -28,7 +29,8 @@ export default defineType({
         }),
         defineField({
             name: 'tag',
-            title: 'Tag / Category',
+            title: 'Category',
+            description: 'The top-level category this collection belongs to',
             type: 'string',
             options: {
                 list: [
@@ -41,7 +43,15 @@ export default defineType({
                     { title: 'Clay Floor Tiles', value: 'Floor Tiles' },
                 ],
             },
-            validation: (rule) => rule.required(),
+            // Legacy field, keeping for now to avoid breaking existing data immediately
+            hidden: true,
+        }),
+        defineField({
+            name: 'category',
+            title: 'Category Reference',
+            description: 'Select the category this collection belongs to (Replaces the old dropdown)',
+            type: 'reference',
+            to: [{ type: 'category' }],
         }),
         defineField({
             name: 'priceRange',
@@ -55,8 +65,13 @@ export default defineType({
             type: 'text',
         }),
         defineField({
+            name: 'seo',
+            title: 'SEO Settings',
+            type: 'seo',
+        }),
+        defineField({
             name: 'images',
-            title: 'Images',
+            title: 'Range Images',
             type: 'array',
             of: [
                 {
@@ -74,20 +89,42 @@ export default defineType({
         }),
         defineField({
             name: 'variants',
-            title: 'Available Colors & Textures',
+            title: 'Variants (Colors/Finishes)',
+            description: 'Individual color variants within this collection (e.g., Deep Rustic Red, Charcoal Smoky)',
             type: 'array',
             of: [
                 {
+                    name: 'variant',
                     type: 'object',
+                    title: 'Variant',
                     fields: [
                         {
                             name: 'name',
-                            title: 'Name',
+                            title: 'Variant Name',
+                            type: 'string',
+                            validation: (rule) => rule.required(),
+                        },
+                        {
+                            name: 'family',
+                            title: 'Family Group',
+                            description: 'Optional: Group variants together (e.g. "Rustic Red Series")',
                             type: 'string',
                         },
                         {
+                            name: 'slug',
+                            title: 'Variant Slug',
+                            type: 'slug',
+                            options: {
+                                source: (doc, options) => {
+                                    const parent = options.parent as { name?: string };
+                                    return parent?.name || '';
+                                },
+                                maxLength: 96,
+                            },
+                        },
+                        {
                             name: 'image',
-                            title: 'Image',
+                            title: 'Variant Image',
                             type: 'image',
                             options: { hotspot: true },
                             fields: [
@@ -108,91 +145,17 @@ export default defineType({
                     preview: {
                         select: {
                             title: 'name',
+                            subtitle: 'family',
                             media: 'image'
+                        },
+                        prepare({ title, subtitle, media }) {
+                            return {
+                                title: title,
+                                subtitle: subtitle ? `Family: ${subtitle}` : 'Single Variant',
+                                media: media
+                            }
                         }
                     }
-                }
-            ]
-        }),
-        defineField({
-            name: 'collections',
-            title: 'Collections',
-            description: 'Group variants into tabs (e.g., Smooth, Linear, Rustic)',
-            type: 'array',
-            of: [
-                {
-                    type: 'object',
-                    title: 'Collection',
-                    fields: [
-                        defineField({
-                            name: 'name',
-                            title: 'Collection Name',
-                            type: 'string',
-                        }),
-                        defineField({
-                            name: 'description',
-                            title: 'Description',
-                            type: 'text',
-                            rows: 3
-                        }),
-                        defineField({
-                            name: 'priceRange',
-                            title: 'Price Range',
-                            type: 'string',
-                            placeholder: '₹85 - ₹120 / sq.ft',
-                        }),
-                        defineField({
-                            name: 'specs',
-                            title: 'Specifications',
-                            type: 'object',
-                            fields: [
-                                defineField({ name: 'size', title: 'Size', type: 'string' }),
-                                defineField({ name: 'thickness', title: 'Thickness', type: 'string' }),
-                                defineField({ name: 'coverage', title: 'Coverage', type: 'string' }),
-                                defineField({ name: 'weight', title: 'Weight', type: 'string' }),
-                                defineField({ name: 'waterAbsorption', title: 'Water Absorption', type: 'string' }),
-                                defineField({ name: 'compressiveStrength', title: 'Compressive Strength', type: 'string' }),
-                            ],
-                        }),
-                        {
-                            name: 'variants',
-                            title: 'Variants',
-                            type: 'array',
-                            of: [
-                                {
-                                    type: 'object',
-                                    fields: [
-                                        { name: 'name', title: 'Name', type: 'string' },
-                                        {
-                                            name: 'image',
-                                            title: 'Image',
-                                            type: 'image',
-                                            options: { hotspot: true },
-                                            fields: [
-                                                {
-                                                    name: 'alt',
-                                                    type: 'string',
-                                                    title: 'Alternative Text',
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: 'gallery',
-                                            title: 'Additional Images',
-                                            type: 'array',
-                                            of: [{ type: 'image', options: { hotspot: true } }]
-                                        }
-                                    ],
-                                    preview: {
-                                        select: {
-                                            title: 'name',
-                                            media: 'image'
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    ]
                 }
             ]
         }),
@@ -209,6 +172,7 @@ export default defineType({
                 defineField({ name: 'compressiveStrength', title: 'Compressive Strength', type: 'string' }),
                 defineField({ name: 'firingTemperature', title: 'Firing Temperature', type: 'string' }),
                 defineField({ name: 'efflorescence', title: 'Efflorescence', type: 'string' }),
+                defineField({ name: 'application', title: 'Application', type: 'string' }),
             ],
         }),
         defineField({
@@ -219,7 +183,6 @@ export default defineType({
                 defineField({
                     name: 'technicalSheets',
                     title: 'Technical Sheets',
-                    description: 'Upload Technical Data Sheets, Installation Guides, etc.',
                     type: 'array',
                     of: [{
                         type: 'file',
@@ -232,7 +195,6 @@ export default defineType({
                 defineField({
                     name: 'bimModels',
                     title: 'BIM & 3D Models',
-                    description: 'Upload .zip, .rvt, .obj files',
                     type: 'array',
                     of: [{
                         type: 'file',
@@ -245,7 +207,6 @@ export default defineType({
                 defineField({
                     name: 'productCatalogues',
                     title: 'Product Catalogues',
-                    description: 'Upload Product Brochures and Catalogues',
                     type: 'array',
                     of: [{
                         type: 'file',

@@ -184,6 +184,10 @@ import GlobalSampleModal from '@/components/GlobalSampleModal';
 
 // ... imports
 
+import SecurityProvider from "@/components/SecurityProvider";
+
+// ... imports
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -192,14 +196,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${epilogue.variable} font-sans antialiased`} suppressHydrationWarning>
-        <SampleProvider>
-          <SmoothScroll />
-          <SplashLoader />
-          <PageTransition>{children}</PageTransition>
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
-          <WebVitalsReporter />
-          <GlobalSampleModal />
-        </SampleProvider>
+        <SecurityProvider>
+          <SampleProvider>
+            <SmoothScroll />
+            <SplashLoader />
+            <PageTransition>{children}</PageTransition>
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
+            <WebVitalsReporter />
+            <GlobalSampleModal />
+          </SampleProvider>
+        </SecurityProvider>
       </body>
     </html>
   );

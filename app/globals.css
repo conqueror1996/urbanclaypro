@@ -53,7 +53,7 @@ html.lenis body {
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  scroll-padding-top: 100px;
 }
 
 body {

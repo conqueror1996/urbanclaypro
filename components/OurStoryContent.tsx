@@ -18,7 +18,7 @@ export default function OurStoryContent() {
     const imageParallax = useTransform(scrollYProgress, [0.1, 0.4], ["5%", "-5%"]);
 
     return (
-        <div ref={containerRef} className="min-h-screen bg-[#f5f0eb] text-[#2A1E16] overflow-hidden">
+        <div ref={containerRef} className="min-h-screen bg-[#f5f0eb] text-[#2A1E16]">
             <StickyBar />
             <Header />
 
@@ -32,7 +32,7 @@ export default function OurStoryContent() {
 
             <div className="pt-20">
                 {/* HERO SECTION */}
-                <section className="relative py-32 md:py-48 overflow-hidden">
+                <section className="relative py-32 md:py-48 overflow-hidden w-full">
                     {/* Background Gradient Blob */}
                     <motion.div
                         className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-full bg-[radial-gradient(circle_at_center,#e7dbd1_0%,transparent_60%)] opacity-60 pointer-events-none"
@@ -66,7 +66,7 @@ export default function OurStoryContent() {
                 </section>
 
                 {/* MAIN CONTENT */}
-                <section className="py-24 bg-white border-y border-[#e5e5e5] relative z-10">
+                <section className="py-24 bg-white border-y border-[#e5e5e5] relative z-10 overflow-hidden">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid md:grid-cols-2 gap-16 items-center">
 
@@ -135,8 +135,10 @@ export default function OurStoryContent() {
                     </div>
                 </section>
 
+                <HorizontalTimeline />
+
                 {/* VISION SECTION */}
-                <section className="py-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <section className="py-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-[#f5f0eb] relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -155,6 +157,67 @@ export default function OurStoryContent() {
             </div>
             <Footer />
         </div>
+    );
+}
+
+const TIMELINE_EVENTS = [
+    { year: '2006', title: 'The Beginning', description: 'Founded in a small workshop in Mumbai with a single kiln and a vision to revive terracotta.' },
+    { year: '2010', title: 'First Major Project', description: 'Commissioned for the landmark "Red Stone House" in Bangalore, putting UrbanClay on the map.' },
+    { year: '2015', title: 'Innovation Lab', description: 'Launched our dedicated R&D facility to develop weather-resistant and structural clay products.' },
+    { year: '2018', title: 'Pan-India Expansion', description: 'Established supply chains across 20+ cities, becoming a trusted partner for top architects.' },
+    { year: '2021', title: 'Sustainability Pledge', description: 'Committed to Carbon Neutrality by 2030. Planted our 10,000th tree.' },
+    { year: '2024', title: 'Global Reach', description: 'Started exporting premium facade panels to the Middle East and Southeast Asia.' },
+];
+
+function HorizontalTimeline() {
+    const targetRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        offset: ["start start", "end end"]
+    });
+
+    const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]);
+
+    return (
+        <section ref={targetRef} className="relative h-[400vh] bg-[#2A1E16] text-[#f5f0eb]">
+            <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-full pt-32 px-8 md:px-24">
+                    <div className="relative z-10 pointer-events-none">
+                        <span className="text-[var(--terracotta)] font-medium tracking-[0.3em] uppercase text-xs md:text-sm block mb-2">
+                            Our Journey
+                        </span>
+                        <h2 className="text-4xl md:text-6xl font-serif text-white">Milestones</h2>
+                    </div>
+                </div>
+
+                <motion.div style={{ x }} className="flex gap-12 md:gap-24 px-8 md:px-24 pt-32 mt-20">
+                    {TIMELINE_EVENTS.map((event, i) => (
+                        <div key={i} className="relative group min-w-[300px] md:min-w-[500px] flex flex-col justify-start">
+                            {/* Line Connector */}
+                            <div className="absolute top-8 left-0 w-full h-[1px] bg-white/20" />
+                            <div className="absolute top-8 left-0 w-3 h-3 rounded-full bg-[var(--terracotta)] -translate-y-1/2 ring-4 ring-[#2A1E16]" />
+
+                            <div className="pt-16">
+                                <span className="text-6xl md:text-9xl font-serif font-black text-white/5 absolute -top-12 left-0 pointer-events-none select-none">
+                                    {event.year}
+                                </span>
+                                <div className="text-3xl md:text-4xl font-serif text-[var(--terracotta)] mb-4 relative z-10">
+                                    {event.year}
+                                </div>
+                                <h3 className="text-2xl md:text-3xl font-serif font-medium text-white mb-4">
+                                    {event.title}
+                                </h3>
+                                <p className="text-white/60 text-lg leading-relaxed max-w-sm font-light">
+                                    {event.description}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                    {/* End Padding */}
+                    <div className="min-w-[20vw]" />
+                </motion.div>
+            </div>
+        </section>
     );
 }
 

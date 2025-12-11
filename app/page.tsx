@@ -9,7 +9,7 @@ import { getProducts, getProjects, getHomePageData } from '@/lib/products';
 
 const KilnPreview = dynamic(() => import('@/components/KilnAnimation'));
 
-const Products = dynamic(() => import('@/components/Products'));
+const SignatureCollection = dynamic(() => import('@/components/SignatureCollection'));
 const Architects = dynamic(() => import('@/components/Architects'));
 const Projects = dynamic(() => import('@/components/Projects'));
 const ProjectAtlas = dynamic(() => import('@/components/ProjectAtlas'));
@@ -163,9 +163,9 @@ export default async function Home() {
         <div className="h-px w-full bg-gradient-to-r from-transparent via-[var(--terracotta)] to-transparent" />
       </div>
 
-      {/* Products - White Background */}
+      {/* Signature Collections */}
       <ScrollReveal className="bg-white">
-        <Products products={products} featuredOnly={true} />
+        <SignatureCollection products={products} />
       </ScrollReveal>
 
       {/* Our Story - Sand Background (Already set in component, but ensuring flow) */}

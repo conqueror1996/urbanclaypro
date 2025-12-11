@@ -1,0 +1,8 @@
+{
+    "crons": [
+        {
+            "path": "/api/cron/optimize-seo",
+            "schedule": "0 0 30 * *"
+        }
+    ]
+}

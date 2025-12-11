@@ -26,12 +26,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     // Dynamic Product pages
-    const productPages = products.map((product) => ({
-        url: `${baseUrl}/products/${product.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.9,
-    }));
+    const productPages = products.map((product) => {
+        const categorySlug = product.category?.slug || product.tag?.toLowerCase().replace(/\s+/g, '-') || 'products';
+        return {
+            url: `${baseUrl}/products/${categorySlug}/${product.slug}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        };
+    });
 
     // Dynamic Project pages
     const projectPages = projects.map((project) => ({

@@ -109,7 +109,6 @@ export default function ProductTools({ category, productTitle, productImageUrl, 
                     <div className="h-full min-h-[500px]">
                         <WallStyler
                             initialColor={getBrickColor()}
-                            productImageUrl={productImageUrl}
                             variantImages={variantImages}
                         />
                     </div>
