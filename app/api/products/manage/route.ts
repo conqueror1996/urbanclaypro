@@ -143,11 +143,12 @@ export async function POST(req: NextRequest) {
         }
 
         if (action === 'add_variant') {
-            const { productId, name, imageAssetId, galleryAssetIds } = data;
+            const { productId, name, family, imageAssetId, galleryAssetIds } = data;
 
             const newVariant = {
                 _key: crypto.randomUUID(),
                 name,
+                family: family || undefined,
                 image: imageAssetId ? {
                     _type: 'image',
                     asset: { _type: 'reference', _ref: imageAssetId }
@@ -199,6 +200,19 @@ export async function POST(req: NextRequest) {
             // Using insert replace
             await client.patch(productId)
                 .insert('replace', `variants[_key=="${variantKey}"]`, [variantUpdate])
+                .commit();
+
+            revalidatePath('/dashboard/products');
+            revalidatePath('/products');
+            return NextResponse.json({ success: true });
+        }
+
+        if (action === 'delete_variant') {
+            const { productId, variantKey } = data;
+
+            // Remove the variant from the variants array
+            await client.patch(productId)
+                .unset([`variants[_key=="${variantKey}"]`])
                 .commit();
 
             revalidatePath('/dashboard/products');

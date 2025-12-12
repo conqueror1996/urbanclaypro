@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-export default function Breadcrumbs() {
+export default function Breadcrumbs({ range }: { range?: string }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
@@ -31,9 +31,18 @@ export default function Breadcrumbs() {
                         {isLast ? (
                             <span className="text-[var(--terracotta)]">{formatLabel(part)}</span>
                         ) : (
-                            <Link href={path} className="hover:text-[var(--terracotta)] transition-colors">
-                                {formatLabel(part)}
-                            </Link>
+                            <>
+                                <Link href={path} className="hover:text-[var(--terracotta)] transition-colors">
+                                    {formatLabel(part)}
+                                </Link>
+                                {/* Insert Range if present and we just rendered the category (second to last item) */}
+                                {range && idx === parts.length - 2 && (
+                                    <>
+                                        <span className="mx-2 text-gray-300">/</span>
+                                        <span className="text-[#5d554f] cursor-default">{range}</span>
+                                    </>
+                                )}
+                            </>
                         )}
                     </React.Fragment>
                 );

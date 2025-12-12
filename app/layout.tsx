@@ -3,6 +3,7 @@ import { Epilogue, Inter } from "next/font/google";
 import "./globals.css";
 import SplashLoader from "@/components/SplashLoader";
 import PageTransition from "@/components/PageTransition";
+import ResourceHints from "@/components/ResourceHints";
 
 const epilogue = Epilogue({
   subsets: ["latin"],
@@ -195,6 +196,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <ResourceHints />
+      </head>
       <body className={`${inter.variable} ${epilogue.variable} font-sans antialiased`} suppressHydrationWarning>
         <SecurityProvider>
           <SampleProvider>

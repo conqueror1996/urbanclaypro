@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getProjects, Project } from '@/lib/products';
+import { authenticatedFetch } from '@/lib/auth-utils';
 
 type ViewMode = 'list' | 'create' | 'edit';
 
@@ -35,7 +36,7 @@ export default function ProjectDashboardPage() {
     const handleCreateProject = async (title: string, location: string, type: string) => {
         if (!title) return;
         try {
-            const res = await fetch('/api/products/manage', {
+            const res = await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'create_project',
@@ -175,7 +176,7 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await fetch('/api/products/manage', {
+            await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'update_project',
@@ -197,7 +198,7 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
         if (!confirm(`Are you sure you want to delete "${project.title}"? This cannot be undone.`)) return;
 
         try {
-            await fetch('/api/products/manage', {
+            await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'delete_document',
@@ -217,7 +218,7 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
         fd.append('file', file);
 
         try {
-            const upRes = await fetch('/api/upload', { method: 'POST', body: fd });
+            const upRes = await authenticatedFetch('/api/upload', { method: 'POST', body: fd });
             const upJson = await upRes.json();
             if (!upJson.success) throw new Error("Upload failed");
 
@@ -250,7 +251,7 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
                 updateBody.data.assetId = assetId;
             }
 
-            await fetch('/api/products/manage', { method: 'POST', body: JSON.stringify(updateBody) });
+            await authenticatedFetch('/api/products/manage', { method: 'POST', body: JSON.stringify(updateBody) });
             onRefresh();
 
         } catch (e) { alert("Upload failed"); }

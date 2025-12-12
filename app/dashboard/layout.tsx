@@ -13,6 +13,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     useEffect(() => {
         if (typeof window !== 'undefined' && localStorage.getItem('uc_admin_auth') === 'true') {
             setIsAuthenticated(true);
+            // Restore cookie if missing (e.g., after browser restart or cookie cleared)
+            const storedPassword = localStorage.getItem('uc_admin_password');
+            if (storedPassword && !document.cookie.includes('uc_admin_token=')) {
+                document.cookie = `uc_admin_token=${storedPassword}; path=/; max-age=31536000; SameSite=Lax`;
+            }
         }
     }, []);
 
@@ -21,8 +26,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         if (password === 'clay2025' || password === 'admin') {
             setIsAuthenticated(true);
             localStorage.setItem('uc_admin_auth', 'true');
+            localStorage.setItem('uc_admin_password', password);
             // Store token in cookie for API access
-            document.cookie = `uc_admin_token=${password}; path=/; max-age=31536000; SameSite=Strict`;
+            document.cookie = `uc_admin_token=${password}; path=/; max-age=31536000; SameSite=Lax`;
         } else {
             alert('Invalid Access key');
         }
@@ -31,6 +37,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const handleLogout = () => {
         setIsAuthenticated(false);
         localStorage.removeItem('uc_admin_auth');
+        localStorage.removeItem('uc_admin_password');
         document.cookie = 'uc_admin_token=; path=/; max-age=0;';
     };
 

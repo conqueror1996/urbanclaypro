@@ -54,6 +54,13 @@ export default defineType({
             to: [{ type: 'category' }],
         }),
         defineField({
+            name: 'range',
+            title: 'Range/Collection',
+            description: 'Group products into ranges (e.g., Handmade Collection, Wirecut Collection, Extruded Collection)',
+            type: 'string',
+            placeholder: 'e.g., Handmade Collection',
+        }),
+        defineField({
             name: 'priceRange',
             title: 'Price Range',
             type: 'string',

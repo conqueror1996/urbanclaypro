@@ -37,54 +37,63 @@ export default function CollectionVariants({ variants, title }: CollectionVarian
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {variants.map((variant, index) => (
-                    <motion.div
-                        key={`${variant.slug}-${index}`}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                        <Link
-                            href={`/products/${variant.categorySlug || 'products'}/${variant.slug}`}
-                            className="group block"
+            {/* Horizontal Scrollable Row */}
+            <div className="relative -mx-4 md:mx-0">
+                <div className="flex gap-6 overflow-x-auto pb-4 px-4 md:px-0 snap-x snap-mandatory scrollbar-hide">
+                    {variants.map((variant, index) => (
+                        <motion.div
+                            key={`${variant.slug}-${index}`}
+                            initial={{ opacity: 0, x: 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5, delay: index * 0.05 }}
+                            className="flex-shrink-0 w-64 snap-start"
                         >
-                            <div className="aspect-[3/4] relative bg-[#f4f1ee] overflow-hidden rounded-sm mb-4">
-                                {variant.imageUrl ? (
-                                    <Image
-                                        src={variant.imageUrl}
-                                        alt={variant.name}
-                                        fill
-                                        className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                                    />
-                                ) : (
-                                    <div className="absolute inset-0 flex items-center justify-center text-[#2A1E16]/20">
-                                        <span className="text-xs font-bold uppercase">No Image</span>
+                            <Link
+                                href={`/products/${variant.categorySlug || 'products'}/${variant.slug}`}
+                                className="group block"
+                            >
+                                <div className="aspect-[3/4] relative bg-[#f4f1ee] overflow-hidden rounded-2xl mb-4 shadow-sm group-hover:shadow-xl transition-all duration-500">
+                                    {variant.imageUrl ? (
+                                        <Image
+                                            src={variant.imageUrl}
+                                            alt={variant.name}
+                                            fill
+                                            className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                                        />
+                                    ) : (
+                                        <div className="absolute inset-0 flex items-center justify-center text-[#2A1E16]/20">
+                                            <span className="text-xs font-bold uppercase">No Image</span>
+                                        </div>
+                                    )}
+
+                                    {/* Hover Overlay */}
+                                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <span className="bg-white text-[#2A1E16] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg">
+                                            View
+                                        </span>
                                     </div>
-                                )}
-
-                                {/* Hover Overlay */}
-                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span className="bg-white text-[#2A1E16] px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-lg">
-                                        View
-                                    </span>
                                 </div>
-                            </div>
 
-                            <div className="text-center">
-                                <h3 className="text-lg font-serif text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">
-                                    {variant.name}
-                                </h3>
-                                {variant.priceRange && (
-                                    <p className="text-xs text-gray-400 font-medium mt-1">
-                                        {variant.priceRange.split('/')[0]} / sq.ft
-                                    </p>
-                                )}
-                            </div>
-                        </Link>
-                    </motion.div>
-                ))}
+                                <div className="text-center px-2">
+                                    <h3 className="text-lg font-serif text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors line-clamp-2">
+                                        {variant.name}
+                                    </h3>
+                                    {variant.priceRange && (
+                                        <p className="text-xs text-gray-400 font-medium mt-1">
+                                            {variant.priceRange.split('/')[0]} / sq.ft
+                                        </p>
+                                    )}
+                                </div>
+                            </Link>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* Scroll Indicator (optional) */}
+                {variants.length > 4 && (
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-gradient-to-l from-white via-white to-transparent w-20 h-full pointer-events-none hidden md:block" />
+                )}
             </div>
         </section>
     );

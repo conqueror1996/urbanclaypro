@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import StickyBar from '@/components/StickyBar';
+
 import Tools from '@/components/Tools';
 import { Metadata } from 'next';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -49,7 +49,7 @@ export default function ResourcesPage() {
     return (
         <main className="min-h-screen bg-[var(--sand)] pt-24 pb-20">
             <JsonLd data={jsonLd} />
-            <StickyBar />
+
             <Header />
 
             {/* HEADER */}

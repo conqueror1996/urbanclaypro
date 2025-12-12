@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import CategoryManager from '@/components/admin/CategoryManager';
+import { authenticatedFetch } from '@/lib/auth-utils';
 // import { client } from '@/lib/sanity.client'; // Removed unused import
 
 interface Category {
@@ -27,7 +28,7 @@ export default function Page() {
             // Let's use `writeClient` via API to ensure we get fresh data not cached ISR.
 
             // Actually, we can just use the manage API with a new intent for full objects
-            const res = await fetch('/api/products/manage?intent=categories_full');
+            const res = await authenticatedFetch('/api/products/manage?intent=categories_full');
             const data = await res.json();
             if (Array.isArray(data)) {
                 setCategories(data);

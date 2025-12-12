@@ -30,7 +30,8 @@ html.lenis {
   height: auto;
 }
 
-html.lenis body {
+/* Exclude Sanity Studio from Lenis smooth scroll to allow proper scrolling */
+html.lenis body:not(:has(#sanity)) {
   height: auto;
   overflow: hidden !important;
 }
@@ -64,6 +65,10 @@ body {
   width: 100%;
   line-height: 1.6;
   /* Premium spaciousness */
+  /* Performance optimization */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body::before {
@@ -78,6 +83,8 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   opacity: 0.4;
   mix-blend-mode: multiply;
+  /* Performance: Use will-change sparingly */
+  will-change: opacity;
 }
 
 h1,
@@ -112,17 +119,26 @@ h4 {
   font-family: var(--font-sans);
 }
 
-/* Premium Button Styles */
+/* Premium Button Styles with GPU Acceleration */
 .btn-primary {
   @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#2A1E16] text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:bg-[#4a3e36] active:scale-95;
+  transform: translateZ(0);
+  /* GPU acceleration */
+  backface-visibility: hidden;
 }
 
 .btn-secondary {
   @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-[#2A1E16] border border-[#e9e2da] font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:border-[#2A1E16] hover:-translate-y-0.5 active:scale-95;
+  transform: translateZ(0);
+  /* GPU acceleration */
+  backface-visibility: hidden;
 }
 
 .btn-terracotta {
   @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-[var(--terracotta)] text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-[#a85638] hover:-translate-y-0.5 active:scale-95;
+  transform: translateZ(0);
+  /* GPU acceleration */
+  backface-visibility: hidden;
 }
 
 /* Typography Refinements */
@@ -206,8 +222,42 @@ html::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Shimmer animation utility */
+/* Shimmer animation utility with GPU acceleration */
 .animate-shimmer {
   background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
+  transform: translateZ(0);
+  /* GPU acceleration */
+  will-change: background-position;
+}
+
+/* Performance: CSS Containment for isolated components */
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+.contain-strict {
+  contain: strict;
+}
+
+/* Performance: Optimize images */
+img {
+  content-visibility: auto;
+}
+
+/* Performance: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

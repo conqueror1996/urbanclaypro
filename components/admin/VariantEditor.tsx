@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { authenticatedFetch } from '@/lib/auth-utils';
 
 interface VariantEditorProps {
     variant: {
@@ -16,9 +17,10 @@ interface VariantEditorProps {
     };
     onClose: () => void;
     onSave: (data: { variantKey: string, name: string; family?: string; imageAssetId: string; galleryAssetIds: string[] }) => Promise<void>;
+    onDelete: (variantKey: string) => Promise<void>;
 }
 
-export default function VariantEditor({ variant, onClose, onSave }: VariantEditorProps) {
+export default function VariantEditor({ variant, onClose, onSave, onDelete }: VariantEditorProps) {
     const [name, setName] = useState(variant.name);
     const [family, setFamily] = useState(variant.family || '');
     // State for main image
@@ -37,6 +39,7 @@ export default function VariantEditor({ variant, onClose, onSave }: VariantEdito
     const [galleryItems, setGalleryItems] = useState<{ url: string; assetId: string }[]>(initialGallery);
     const [isSaving, setIsSaving] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const mainFileInputRef = useRef<HTMLInputElement>(null);
     const galleryFileInputRef = useRef<HTMLInputElement>(null);
@@ -50,7 +53,7 @@ export default function VariantEditor({ variant, onClose, onSave }: VariantEdito
         try {
             const formData = new FormData();
             formData.append('file', file);
-            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const res = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
             const json = await res.json();
 
             if (json.success) {
@@ -74,7 +77,7 @@ export default function VariantEditor({ variant, onClose, onSave }: VariantEdito
             const uploadPromises = Array.from(files).map(async (file) => {
                 const formData = new FormData();
                 formData.append('file', file);
-                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const res = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
                 return res.json();
             });
 
@@ -123,6 +126,16 @@ export default function VariantEditor({ variant, onClose, onSave }: VariantEdito
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            await onDelete(variant._key);
+            onClose();
+        } catch (e) {
+            console.error(e);
+            alert('Failed to delete variant');
+        }
+    };
+
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <motion.div
@@ -137,9 +150,18 @@ export default function VariantEditor({ variant, onClose, onSave }: VariantEdito
                         <h3 className="text-2xl font-serif font-bold text-[#1a1512]">Edit Variant</h3>
                         <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">Update photos and details</p>
                     </div>
-                    <button onClick={onClose} className="hover:bg-gray-200 p-2 rounded-full transition-colors">
-                        <svg className="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setShowDeleteConfirm(true)}
+                            className="hover:bg-red-50 p-2 rounded-full transition-colors group"
+                            title="Delete Variant"
+                        >
+                            <svg className="w-5 h-5 text-gray-400 group-hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                        <button onClick={onClose} className="hover:bg-gray-200 p-2 rounded-full transition-colors">
+                            <svg className="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-8 space-y-8">
@@ -235,6 +257,51 @@ export default function VariantEditor({ variant, onClose, onSave }: VariantEdito
                     </button>
                 </div>
             </motion.div>
+
+            {/* Delete Confirmation Modal */}
+            <AnimatePresence>
+                {showDeleteConfirm && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-10"
+                        onClick={() => setShowDeleteConfirm(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+                        >
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Delete Variant?</h3>
+                                <p className="text-gray-600 mb-6">
+                                    Are you sure you want to delete <strong>"{variant.name}"</strong>? This action cannot be undone.
+                                </p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShowDeleteConfirm(false)}
+                                        className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleDelete}
+                                        className="flex-1 px-4 py-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors shadow-lg"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

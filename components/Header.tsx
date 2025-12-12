@@ -15,7 +15,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Exposed Bricks',
         subtitle: 'Authentic Masonry',
-        href: '/products/exposed-bricks',
+        href: '/products?category=Exposed%20Brick',
         // In a real app, use real asset URLs. Using colors/gradients for abstract premium feel if images missing.
         color: 'from-[#b45a3c] to-[#96472d]',
         image: '/images/menu-exposed.jpg'
@@ -23,21 +23,21 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Brick Tiles',
         subtitle: 'Cladding Veneers',
-        href: '/products/brick-walls',
+        href: '/products?category=Brick%20Tiles',
         color: 'from-[#8c7b70] to-[#5d554f]',
         image: '/images/menu-cladding.jpg'
     },
     {
         title: 'Terracotta Jaali',
         subtitle: 'Breathable Screens',
-        href: '/products/jaali',
+        href: '/products?category=Jaali',
         color: 'from-[#d6cbb8] to-[#bfae96]',
         image: '/images/menu-jaali.jpg'
     },
     {
         title: 'Floor Tiles',
         subtitle: 'Earthy Grounding',
-        href: '/products/floor-tiles',
+        href: '/products?category=Floor%20Tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
         textColor: 'text-[#2A1E16]',
         image: '/images/menu-floor.jpg'
@@ -45,7 +45,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Roof Tiles',
         subtitle: 'Heritage Roofing',
-        href: '/products/roof-tiles',
+        href: '/products?category=Roof%20Tiles',
         color: 'from-[#2A1E16] to-[#1a1512]',
         image: '/images/menu-roof.jpg'
     }
@@ -58,6 +58,21 @@ export default function Header() {
     const [sampleModalOpen, setSampleModalOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const { box } = useSampleBox();
+    const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+    const handleMouseEnter = (dropdown: string) => {
+        if (closeTimeoutRef.current) {
+            clearTimeout(closeTimeoutRef.current);
+            closeTimeoutRef.current = null;
+        }
+        setActiveDropdown(dropdown);
+    };
+
+    const handleMouseLeave = () => {
+        closeTimeoutRef.current = setTimeout(() => {
+            setActiveDropdown(null);
+        }, 150); // 150ms delay to bridge gaps
+    };
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -79,7 +94,13 @@ export default function Header() {
                 ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] py-4'
                 : 'bg-transparent border-transparent py-6'
                 }`}
-            onMouseLeave={() => setActiveDropdown(null)}
+            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => {
+                if (closeTimeoutRef.current) {
+                    clearTimeout(closeTimeoutRef.current);
+                    closeTimeoutRef.current = null;
+                }
+            }}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
                 <Link href="/" className="flex items-center group relative z-50">
@@ -102,7 +123,8 @@ export default function Header() {
                             <div
                                 key={link.href}
                                 className="relative h-full flex items-center"
-                                onMouseEnter={() => link.hasDropdown ? setActiveDropdown('products') : setActiveDropdown(null)}
+
+                                onMouseEnter={() => link.hasDropdown ? handleMouseEnter('products') : handleMouseLeave()}
                             >
                                 <Link
                                     href={link.href}
@@ -161,7 +183,13 @@ export default function Header() {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2, ease: 'easeOut' }}
                         className="hidden md:block absolute top-full left-0 right-0 bg-white border-t border-[var(--line)] shadow-2xl z-40 overflow-hidden"
-                        onMouseLeave={() => setActiveDropdown(null)}
+                        onMouseEnter={() => {
+                            if (closeTimeoutRef.current) {
+                                clearTimeout(closeTimeoutRef.current);
+                                closeTimeoutRef.current = null;
+                            }
+                        }}
+                        onMouseLeave={handleMouseLeave}
                     >
                         <div className="max-w-7xl mx-auto px-8 py-12">
                             <div className="grid grid-cols-12 gap-12">

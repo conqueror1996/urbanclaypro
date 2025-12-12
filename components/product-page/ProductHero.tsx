@@ -98,7 +98,7 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                     {/* 1. Header & Title (Desktop) */}
                     <div className="hidden md:block">
                         <div className="flex items-center gap-3 mb-4">
-                            <span className="px-3 py-1 bg-[#F5EEE7] text-[var(--terracotta)] text-[10px] uppercase font-bold tracking-widest rounded-full">
+                            <span className="px-3 py-1 border border-[#2A1E16]/30 text-[#2A1E16] text-[10px] uppercase font-bold tracking-widest rounded-md">
                                 {product.tag || 'New Arrival'}
                             </span>
                             {/* Badges */}
@@ -137,27 +137,44 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                         </div>
                     </div>
 
-                    {/* 3. Variant Selector (Chips) */}
+                    {/* 3. Variant Selector (Material Swatches) */}
                     {product.variants && product.variants.length > 0 && (
-                        <div>
-                            <span className="text-xs font-bold uppercase tracking-widest text-[#9C8C74] mb-4 block">Available Finishes</span>
-                            <div className="flex flex-wrap gap-3">
+                        <div className="space-y-4">
+                            <span className="text-xs font-bold uppercase tracking-widest text-[#9C8C74]">Available Finishes</span>
+                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                 {product.variants.map((v, i) => {
                                     const isSelected = selectedVariantName === v.name;
                                     return (
                                         <Link
                                             key={i}
                                             href={`?variant=${encodeURIComponent(v.name)}`}
-                                            className={`flex items-center gap-3 pr-4 rounded-full border transition-all ${isSelected ? 'bg-[#2A1E16] border-[#2A1E16] text-white shadow-lg transform scale-105' : 'bg-white border-[#EBE5E0] hover:border-[#2A1E16] text-[#2A1E16]'}`}
+                                            className={`group relative flex items-center gap-3 p-2 rounded-xl border transition-all duration-300 ${isSelected
+                                                ? 'border-[#2A1E16] bg-[#FAF8F6] ring-1 ring-[#2A1E16]'
+                                                : 'border-transparent bg-[#F9F7F5] hover:border-[#D6CEC5] hover:bg-white hover:shadow-sm'
+                                                }`}
                                         >
-                                            <div className="w-10 h-10 rounded-full overflow-hidden relative border-2 border-white">
-                                                {v.imageUrl ? <Image src={v.imageUrl} alt={v.name} fill className="object-cover" /> : <div className="bg-gray-200 w-full h-full" />}
+                                            {/* Selection Indicator Dot */}
+                                            {isSelected && (
+                                                <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#2A1E16]" />
+                                            )}
+
+                                            <div className="w-10 h-10 shrink-0 rounded-lg overflow-hidden relative shadow-sm">
+                                                {v.imageUrl ? (
+                                                    <Image
+                                                        src={v.imageUrl}
+                                                        alt={v.name}
+                                                        fill
+                                                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                                    />
+                                                ) : (
+                                                    <div className="bg-[#EBE5E0] w-full h-full" />
+                                                )}
                                             </div>
-                                            <div className="flex flex-col text-left py-1">
-                                                <span className="text-xs font-bold uppercase tracking-wide leading-none">{v.name}</span>
-                                                {/* Optional mini-desc */}
-                                                <span className={`text-[9px] mt-0.5 leading-none ${isSelected ? 'text-white/60' : 'text-gray-400'}`}>Standard Grade</span>
-                                            </div>
+
+                                            <span className={`text-xs font-bold uppercase tracking-wide leading-tight transition-colors ${isSelected ? 'text-[#2A1E16]' : 'text-[#5d554f] group-hover:text-[#2A1E16]'
+                                                }`}>
+                                                {v.name}
+                                            </span>
                                         </Link>
                                     )
                                 })}

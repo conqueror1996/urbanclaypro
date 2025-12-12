@@ -1,8 +1,21 @@
 import type { NextConfig } from "next";
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Performance Optimizations */
   reactCompiler: true,
+
+  // Compression
+  compress: true,
+
+  // Production optimizations
+  productionBrowserSourceMaps: false,
+
+  // Image optimization
   images: {
     remotePatterns: [
       {
@@ -14,11 +27,25 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
     ],
+    formats: ['image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
+
+  // Experimental features for performance
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      '@sanity/image-url',
+    ],
+  },
+
+  // Headers for caching and security
   headers: async () => {
     return [
       {
-        source: '/:all*(svg|jpg|png)',
+        source: '/:all*(svg|jpg|png|webp|avif|gif|ico)',
         locale: false,
         headers: [
           {
@@ -45,8 +72,26 @@ const nextConfig: NextConfig = {
           }
         ],
       },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          }
+        ],
+      },
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=120',
+          }
+        ],
+      },
     ];
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

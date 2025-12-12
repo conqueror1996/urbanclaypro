@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "analyze": "ANALYZE=true npm run build",
+    "build:analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -35,6 +37,7 @@
     "web-vitals": "^5.1.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.0.10",
     "@tailwindcss/postcss": "^4",
     "@types/html2canvas": "^0.5.35",
     "@types/node": "^20",

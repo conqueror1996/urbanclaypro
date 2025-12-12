@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import StickyBar from '@/components/StickyBar';
+
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 
 export default function OurStoryContent() {
@@ -19,7 +19,7 @@ export default function OurStoryContent() {
 
     return (
         <div ref={containerRef} className="min-h-screen bg-[#f5f0eb] text-[#2A1E16]">
-            <StickyBar />
+
             <Header />
 
             {/* --- FILM GRAIN OVERLAY (Consistent with Kiln) --- */}

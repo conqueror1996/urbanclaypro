@@ -7,7 +7,7 @@ try {
         apiVersion: '2024-11-28',
         dataset: 'production',
         projectId: '22qqjddz',
-        useCdn: false,
+        useCdn: false, // Keep CDN disabled in development for faster updates
     });
 } catch (e) {
     console.error("Sanity client creation failed:", e);
@@ -29,6 +29,7 @@ export interface Product {
         slug: string;
         description?: string;
     };
+    range?: string; // Range/Collection grouping (e.g., "Handmade Collection")
     specs: {
         size: string;
         coverage?: string;
@@ -47,6 +48,7 @@ export interface Product {
     variants?: {
         _key: string;
         name: string;
+        family?: string; // Family group for grouping variants
         slug: string; // Added slug
         imageUrl: string;
         imageRef?: string;
@@ -84,11 +86,12 @@ const productsQuery = groq`*[_type == "product"] {
   subtitle,
   tag,
   "category": category->{ title, "slug": slug.current, description },
+  range,
   specs,
   priceRange,
   description,
   "imageUrl": images[0].asset->url,
-  "variants": variants[]{ _key, name, "slug": slug.current, "imageUrl": image.asset->url, "imageRef": image.asset._ref, "altText": image.alt, "gallery": gallery[].asset->url, "galleryRefs": gallery[].asset._ref },
+  "variants": variants[]{ _key, name, family, "slug": slug.current, "imageUrl": image.asset->url, "imageRef": image.asset._ref, "altText": image.alt, "gallery": gallery[].asset->url, "galleryRefs": gallery[].asset._ref },
 
   "resources": {
     "technicalSheets": resources.technicalSheets[]{ title, "fileUrl": asset->url },
@@ -113,7 +116,7 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
   ...,
   "slug": slug.current,
   "images": images[].asset->url,
-  "variants": variants[]{ _key, name, "slug": slug.current, "imageUrl": image.asset->url, "altText": image.alt, "gallery": gallery[].asset->url },
+  "variants": variants[]{ _key, name, family, "slug": slug.current, "imageUrl": image.asset->url, "altText": image.alt, "gallery": gallery[].asset->url },
 
   "resources": {
     "technicalSheets": resources.technicalSheets[]{ title, "fileUrl": asset->url },

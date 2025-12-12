@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getProducts, Product } from '@/lib/products';
+import { authenticatedFetch } from '@/lib/auth-utils';
 
 // Types for our robust hierarchy
 type ViewMode = 'list' | 'create' | 'edit';
@@ -39,7 +40,7 @@ export default function ProductDashboardPage() {
     const handleCreateProduct = async (title: string, category: string) => {
         if (!title) return;
         try {
-            const res = await fetch('/api/products/manage', {
+            const res = await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'create_product',
@@ -59,12 +60,17 @@ export default function ProductDashboardPage() {
         } catch (e) { alert('Failed to create'); }
     };
 
-    const groupedProducts = products.reduce((acc, product: any) => {
-        const cat = product.tag || product.category || 'Uncategorized';
-        if (!acc[cat]) acc[cat] = [];
-        acc[cat].push(product);
+    // Group products by Category → Range → Series
+    const hierarchicalProducts = products.reduce((acc, product: any) => {
+        const category = product.tag || product.category?.title || 'Uncategorized';
+        const range = product.range || 'Ungrouped';
+
+        if (!acc[category]) acc[category] = {};
+        if (!acc[category][range]) acc[category][range] = [];
+        acc[category][range].push(product);
+
         return acc;
-    }, {} as Record<string, Product[]>);
+    }, {} as Record<string, Record<string, Product[]>>);
 
     return (
         <div className="h-[calc(100vh-80px)] flex gap-8">
@@ -73,7 +79,7 @@ export default function ProductDashboardPage() {
                 <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
                     <div>
                         <h2 className="font-bold text-[#1a1512] font-serif text-xl">Catalog Hierarchy</h2>
-                        <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">Category &gt; Range</p>
+                        <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">Category → Series → Variant</p>
                     </div>
                     <button
                         onClick={() => { setSelectedProduct(null); setViewMode('create'); }}
@@ -89,37 +95,83 @@ export default function ProductDashboardPage() {
                             {[1, 2, 3].map(i => <div key={i} className="h-16 bg-gray-100/80 animate-pulse rounded-2xl" />)}
                         </div>
                     ) : (
-                        Object.entries(groupedProducts).map(([category, items]) => (
+                        Object.entries(hierarchicalProducts).map(([category, ranges]) => (
                             <div key={category}>
+                                {/* Category Header */}
                                 <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
                                     <span className="w-1 h-1 rounded-full bg-gray-400"></span>
                                     {category}
                                 </h3>
-                                <div className="space-y-2 pl-4 border-l border-gray-100 ml-1">
-                                    {items.map(product => (
-                                        <div
-                                            key={product._id}
-                                            onClick={() => { setSelectedProduct(product); setViewMode('edit'); }}
-                                            className={`group p-3 rounded-xl border transition-all cursor-pointer flex items-center gap-3 ${selectedProduct?._id === product._id
-                                                ? 'bg-orange-50 border-[var(--terracotta)] ring-1 ring-[var(--terracotta)]'
-                                                : 'bg-white border-gray-100 hover:border-gray-300 hover:shadow-sm'
-                                                }`}
-                                        >
-                                            <div className="w-10 h-10 rounded-lg bg-gray-200 flex-shrink-0 overflow-hidden">
-                                                {/* Placeholder for image */}
-                                                {(product as any).imageUrl && (
-                                                    // eslint-disable-next-line @next/next/no-img-element
-                                                    <img src={(product as any).imageUrl} alt="" className="w-full h-full object-cover" />
-                                                )}
-                                            </div>
-                                            <div className="overflow-hidden">
-                                                <h4 className={`font-bold text-sm truncate ${selectedProduct?._id === product._id ? 'text-[#2A1E16]' : 'text-gray-700'}`}>{product.title}</h4>
-                                                <p className="text-[10px] text-gray-400 truncate mt-0.5">
-                                                    Range / Series
-                                                </p>
-                                            </div>
-                                            <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+
+                                {/* Ranges */}
+                                <div className="space-y-4 pl-4 border-l border-gray-100 ml-1">
+                                    {Object.entries(ranges).map(([rangeName, products]) => (
+                                        <div key={rangeName}>
+                                            {/* Range Header */}
+                                            <h4 className="text-[9px] font-bold text-blue-500 uppercase tracking-widest mb-2 px-2 flex items-center gap-2">
+                                                <span className="w-0.5 h-0.5 rounded-full bg-blue-400"></span>
+                                                {rangeName}
+                                            </h4>
+
+                                            {/* Series (Products) */}
+                                            <div className="space-y-2 pl-4 border-l border-blue-100 ml-1">
+                                                {(products as Product[]).map(product => (
+                                                    <div key={product._id}>
+                                                        {/* Series Card */}
+                                                        <div
+                                                            onClick={() => { setSelectedProduct(product); setViewMode('edit'); }}
+                                                            className={`group p-3 rounded-xl border transition-all cursor-pointer ${selectedProduct?._id === product._id
+                                                                ? 'bg-orange-50 border-[var(--terracotta)] ring-1 ring-[var(--terracotta)]'
+                                                                : 'bg-white border-gray-100 hover:border-gray-300 hover:shadow-sm'
+                                                                }`}
+                                                        >
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-10 h-10 rounded-lg bg-gray-200 flex-shrink-0 overflow-hidden">
+                                                                    {(product as any).imageUrl && (
+                                                                        // eslint-disable-next-line @next/next/no-img-element
+                                                                        <img src={(product as any).imageUrl} alt="" className="w-full h-full object-cover" />
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex-1 overflow-hidden">
+                                                                    <h4 className={`font-bold text-sm truncate ${selectedProduct?._id === product._id ? 'text-[#2A1E16]' : 'text-gray-700'}`}>
+                                                                        {product.title}
+                                                                    </h4>
+                                                                    <p className="text-[10px] text-gray-400 truncate mt-0.5">
+                                                                        Series • {(product as any).variants?.length || 0} variants
+                                                                    </p>
+                                                                </div>
+                                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Variants (shown when series is selected) */}
+                                                        {selectedProduct?._id === product._id && (product as any).variants?.length > 0 && (
+                                                            <div className="mt-2 ml-4 pl-4 border-l border-orange-200 space-y-1">
+                                                                {(product as any).variants.map((variant: any, idx: number) => (
+                                                                    <div
+                                                                        key={variant._key || idx}
+                                                                        className="flex items-center gap-2 p-2 rounded-lg hover:bg-orange-50/50 transition-colors text-xs"
+                                                                    >
+                                                                        <div className="w-6 h-6 rounded bg-gray-100 flex-shrink-0 overflow-hidden">
+                                                                            {variant.imageUrl && (
+                                                                                // eslint-disable-next-line @next/next/no-img-element
+                                                                                <img src={variant.imageUrl} alt="" className="w-full h-full object-cover" />
+                                                                            )}
+                                                                        </div>
+                                                                        <span className="text-gray-600 truncate flex-1">{variant.name}</span>
+                                                                        {variant.family && (
+                                                                            <span className="text-[9px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">
+                                                                                {variant.family}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))}
                                             </div>
                                         </div>
                                     ))}
@@ -149,7 +201,7 @@ export default function ProductDashboardPage() {
                     )}
 
                     {viewMode === 'edit' && selectedProduct && (
-                        <ProductEditor product={selectedProduct} key={selectedProduct._id} onRefresh={refresh} />
+                        <ProductEditor product={selectedProduct} existingProducts={products} key={selectedProduct._id} onRefresh={refresh} />
                     )}
 
                     {viewMode === 'create' && (
@@ -173,7 +225,7 @@ function CreateProductWizard({ onCancel, onCreate }: { onCancel: () => void, onC
     useEffect(() => {
         async function loadCategories() {
             try {
-                const res = await fetch('/api/products/manage?intent=categories');
+                const res = await authenticatedFetch('/api/products/manage?intent=categories');
                 const data = await res.json();
                 if (Array.isArray(data) && data.length > 0) {
                     setCategories(data);
@@ -280,7 +332,7 @@ import DeleteConfirmationModal from '@/components/admin/DeleteConfirmationModal'
 
 // ... existing code ...
 
-export function ProductEditor({ product, onRefresh }: { product: Product, onRefresh: () => void }) {
+export function ProductEditor({ product, existingProducts, onRefresh }: { product: Product, existingProducts: Product[], onRefresh: () => void }) {
     const [activeTab, setActiveTab] = useState<'details' | 'products' | 'specs' | 'assets' | 'seo'>('details');
     const [form, setForm] = useState(product);
     const [isSaving, setIsSaving] = useState(false);
@@ -297,7 +349,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await fetch('/api/products/manage', {
+            await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'update_product',
@@ -305,6 +357,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
                         _id: form._id,
                         title: form.title,
                         tag: form.tag,
+                        range: (form as any).range,
                         priceRange: form.priceRange,
                         description: form.description,
                         specs: form.specs || {},
@@ -325,7 +378,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
         // if (!confirm(`Are you sure you want to delete "${product.title}"? This cannot be undone.`)) return;
 
         try {
-            const res = await fetch('/api/products/manage', {
+            const res = await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'delete_document',
@@ -347,7 +400,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
 
     const handleUpdateVariant = async (data: { variantKey: string, name: string; family?: string; imageAssetId: string; galleryAssetIds: string[] }) => {
         try {
-            const res = await fetch('/api/products/manage', {
+            const res = await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'update_variant',
@@ -372,7 +425,32 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
             }
         } catch (e) {
             console.error(e);
-            alert("Failed to update variant");
+            alert("Failed to update variant: " + (e as Error).message);
+        }
+    };
+
+    const handleDeleteVariant = async (variantKey: string) => {
+        try {
+            const res = await authenticatedFetch('/api/products/manage', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'delete_variant',
+                    data: {
+                        productId: form._id,
+                        variantKey
+                    }
+                })
+            });
+            const json = await res.json();
+            if (json.success) {
+                onRefresh();
+                setEditingVariant(null);
+            } else {
+                throw new Error(json.error || "Failed to delete variant");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Failed to delete variant: " + (e as Error).message);
         }
     };
 
@@ -383,7 +461,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
         const uploadPromises = files.map(async (file) => {
             const formData = new FormData();
             formData.append('file', file);
-            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const res = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
             return res.json();
         });
 
@@ -396,7 +474,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
         const mainAssetId = assetIds[0];
         const galleryAssetIds = assetIds.slice(1);
 
-        await fetch('/api/products/manage', {
+        await authenticatedFetch('/api/products/manage', {
             method: 'POST',
             body: JSON.stringify({
                 action: 'add_variant',
@@ -420,7 +498,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
         setIsGeneratingSeo(true);
         setAiSuggestion(null);
         try {
-            const res = await fetch('/api/ai/generate-seo', {
+            const res = await authenticatedFetch('/api/ai/generate-seo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -540,6 +618,7 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
                                         variant={editingVariant}
                                         onClose={() => setEditingVariant(null)}
                                         onSave={handleUpdateVariant}
+                                        onDelete={handleDeleteVariant}
                                     />
                                 )}
                             </AnimatePresence>
@@ -624,11 +703,11 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
                                                     const formData = new FormData();
                                                     formData.append('file', file);
                                                     try {
-                                                        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                                                        const res = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
                                                         const json = await res.json();
                                                         if (json.success) {
                                                             // Immediately update backend
-                                                            await fetch('/api/products/manage', {
+                                                            await authenticatedFetch('/api/products/manage', {
                                                                 method: 'POST',
                                                                 body: JSON.stringify({
                                                                     action: 'update_product',
@@ -656,25 +735,60 @@ export function ProductEditor({ product, onRefresh }: { product: Product, onRefr
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Range Name (Variant Name)</label>
-                                    <input type="text" value={form.title || ""} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" />
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Series Name</label>
+                                    <input type="text" value={form.title || ""} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" placeholder="e.g., Handmade Brick" />
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Category</label>
-                                        <select value={form.tag || ""} onChange={e => setForm({ ...form, tag: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3">
-                                            <option value="" disabled>Select a Category...</option>
-                                            <option value="Brick Wall Tiles">Brick Wall Tiles</option>
-                                            <option value="Exposed Bricks">Exposed Bricks</option>
-                                            <option value="Jaali">Jaali</option>
-                                            <option value="Roof Tile">Roof Tiles</option>
-                                            <option value="Floor Tiles">Floor Tiles</option>
-                                        </select>
+                                        <input
+                                            list="category-options"
+                                            type="text"
+                                            value={form.tag || ""}
+                                            onChange={e => setForm({ ...form, tag: e.target.value })}
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3"
+                                            placeholder="Select or Type New Category..."
+                                        />
+                                        <datalist id="category-options">
+                                            {/* Standard Categories */}
+                                            <option value="Brick Wall Tiles" />
+                                            <option value="Exposed Bricks" />
+                                            <option value="Jaali" />
+                                            <option value="Roof Tile" />
+                                            <option value="Floor Tiles" />
+                                            <option value="Terracotta Panels" />
+                                            <option value="Clay Ceiling Tile" />
+                                            {/* Dynamic Categories from existing products */}
+                                            {Array.from(new Set(existingProducts.map(p => p.tag))).filter(tag =>
+                                                tag &&
+                                                ![
+                                                    "Brick Wall Tiles",
+                                                    "Exposed Bricks",
+                                                    "Jaali",
+                                                    "Roof Tile",
+                                                    "Floor Tiles",
+                                                    "Terracotta Panels",
+                                                    "Clay Ceiling Tile"
+                                                ].includes(tag)
+                                            ).map(tag => (
+                                                <option key={tag} value={tag} />
+                                            ))}
+                                        </datalist>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Price Range Display</label>
-                                        <input type="text" value={form.priceRange || ""} onChange={e => setForm({ ...form, priceRange: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" />
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Range/Collection</label>
+                                        <input
+                                            type="text"
+                                            value={(form as any).range || ""}
+                                            onChange={e => setForm({ ...form, range: e.target.value } as any)}
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3"
+                                            placeholder="e.g., Handmade Collection"
+                                        />
                                     </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Price Range Display</label>
+                                    <input type="text" value={form.priceRange || ""} onChange={e => setForm({ ...form, priceRange: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Description</label>

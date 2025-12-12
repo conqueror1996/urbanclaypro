@@ -11,9 +11,11 @@ interface Project {
 
 interface ProductShowcaseProps {
     projects: Project[];
+    title?: string;
+    description?: string;
 }
 
-export default function ProductShowcase({ projects }: ProductShowcaseProps) {
+export default function ProductShowcase({ projects, title, description }: ProductShowcaseProps) {
     if (!projects || projects.length === 0) return null;
 
     return (
@@ -21,10 +23,10 @@ export default function ProductShowcase({ projects }: ProductShowcaseProps) {
             <div className="flex items-end justify-between mb-8">
                 <div>
                     <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#2A1E16]">
-                        See it in Action
+                        {title || 'See it in Action'}
                     </h2>
                     <p className="text-[#5d554f] mt-2">
-                        Real-world applications and design inspiration.
+                        {description || 'Real-world applications and design inspiration.'}
                     </p>
                 </div>
                 {/* Optional: View All Projects Link */}

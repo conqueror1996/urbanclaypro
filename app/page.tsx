@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import StickyBar from '@/components/StickyBar';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -154,7 +153,6 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-[var(--sand)] text-[var(--ink)]">
       <JsonLd data={jsonLd} />
-      <StickyBar />
       <Header />
       <Hero data={homePageData} />
 

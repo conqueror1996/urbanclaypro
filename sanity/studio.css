@@ -1,0 +1,38 @@
+/* Sanity Studio Custom Styles */
+/* Ensure proper scrolling in all studio views */
+
+/* Override any global styles that might interfere */
+#sanity {
+    overflow: auto !important;
+    height: 100vh !important;
+}
+
+/* Ensure document lists are scrollable */
+[data-ui="Pane"] {
+    overflow-y: auto !important;
+    max-height: 100vh !important;
+}
+
+/* Ensure the main content area is scrollable */
+[data-testid="pane-content"] {
+    overflow-y: auto !important;
+}
+
+/* Custom scrollbar for studio */
+#sanity *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#sanity *::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#sanity *::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#sanity *::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

@@ -13,11 +13,13 @@ export const structure: StructureResolver = (S) =>
                 .child(
                     S.documentTypeList('category')
                         .title('Categories')
+                        .defaultOrdering([{ field: 'displayOrder', direction: 'asc' }, { field: 'title', direction: 'asc' }])
                         .child(categoryId =>
                             S.documentList()
                                 .title('Products in Category')
                                 .filter('_type == "product" && category._ref == $categoryId')
                                 .params({ categoryId })
+                                .defaultOrdering([{ field: 'title', direction: 'asc' }])
                                 .initialValueTemplates([
                                     S.initialValueTemplateItem('product-by-category', { categoryId })
                                 ])

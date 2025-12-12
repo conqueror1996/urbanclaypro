@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { authenticatedFetch } from '@/lib/auth-utils';
 
 interface ProcessedFile {
     file: File;
@@ -54,7 +55,7 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
             if (form.imageFile) {
                 const formData = new FormData();
                 formData.append('file', form.imageFile.file);
-                const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+                const uploadRes = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
                 const uploadJson = await uploadRes.json();
                 if (uploadJson.success) assetId = uploadJson.asset._id;
             }
@@ -71,7 +72,7 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
                 }
             };
 
-            const res = await fetch('/api/products/manage', {
+            const res = await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -97,7 +98,7 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
     const handleDelete = async (id: string, title: string) => {
         if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
         try {
-            await fetch('/api/products/manage', {
+            await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
                 body: JSON.stringify({
                     action: 'delete_document',
