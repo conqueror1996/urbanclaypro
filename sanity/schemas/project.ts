@@ -66,5 +66,12 @@ export default defineType({
             type: 'array',
             of: [{ type: 'reference', to: [{ type: 'product' }] }],
         }),
+        defineField({
+            name: 'isFeatured',
+            title: 'Is Featured Project',
+            type: 'boolean',
+            description: 'Check this to make this the featured project at the top of the Projects page.',
+            initialValue: false,
+        }),
     ],
 })

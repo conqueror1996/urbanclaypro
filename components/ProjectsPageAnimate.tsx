@@ -13,6 +13,7 @@ interface Project {
     imageUrl: string;
     location?: string;
     category?: string; // If available, else we mock
+    isFeatured?: boolean;
 }
 
 interface ProjectsPageAnimateProps {
@@ -40,7 +41,8 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
         : categorizedProjects.filter(p => p.category === filter || p.location?.includes(filter));
 
     // Featured Project (First one)
-    const featuredProject = categorizedProjects[0];
+    // Featured Project (marked in CMS or fallback to first)
+    const featuredProject = categorizedProjects.find(p => p.isFeatured) || categorizedProjects[0];
 
     return (
         <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-20">
@@ -121,8 +123,8 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                                 key={cat}
                                 onClick={() => setFilter(cat)}
                                 className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${filter === cat
-                                        ? 'bg-[var(--terracotta)] text-white shadow-lg shadow-[var(--terracotta)]/20'
-                                        : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
+                                    ? 'bg-[var(--terracotta)] text-white shadow-lg shadow-[var(--terracotta)]/20'
+                                    : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
                                     }`}
                             >
                                 {cat}

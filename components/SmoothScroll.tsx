@@ -8,8 +8,9 @@ export default function SmoothScroll() {
     const pathname = usePathname();
 
     useEffect(() => {
-        // Don't initialize Lenis on studio routes or dashboard
-        if (pathname?.startsWith('/studio') || pathname?.startsWith('/dashboard')) {
+        // Don't initialize Lenis on studio, dashboard, or mobile devices (native scroll is better for mobile)
+        const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
+        if (pathname?.startsWith('/studio') || pathname?.startsWith('/dashboard') || isMobile) {
             return;
         }
 

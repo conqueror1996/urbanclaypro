@@ -88,7 +88,12 @@ export default function ProjectDashboardPage() {
                                 </div>
                                 <div className="overflow-hidden flex-1">
                                     <h4 className={`font-bold text-sm truncate ${selectedProject?.slug === project.slug ? 'text-[#2A1E16]' : 'text-gray-900'}`}>{project.title}</h4>
-                                    <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">{project.location} • {project.type}</p>
+                                    <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider flex items-center gap-2">
+                                        {(project as any).isFeatured && <span className="text-[var(--terracotta)] font-bold">★ Featured</span>}
+                                        <span>{project.location}</span>
+                                        <span>•</span>
+                                        <span>{project.type}</span>
+                                    </p>
                                     <div className="flex gap-2 mt-2">
                                         {project.gallery && (
                                             <span className="text-[10px] px-1.5 py-0.5 bg-gray-100 rounded text-gray-500 font-bold">{project.gallery.length} Photos</span>
@@ -185,7 +190,8 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
                         title: form.title,
                         location: form.location,
                         type: form.type,
-                        description: form.description
+                        description: form.description,
+                        isFeatured: (form as any).isFeatured
                     }
                 })
             });
@@ -268,7 +274,10 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
             <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-start bg-gray-50/30">
                 <div>
                     <h1 className="text-3xl font-serif text-[#1a1512]">{form.title}</h1>
-                    <div className="flex gap-4 mt-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+                    <div className="flex gap-4 mt-2 text-xs font-bold uppercase tracking-wider text-gray-400 items-center">
+                        {(project as any).isFeatured && (
+                            <span className="bg-[var(--terracotta)] text-white px-2 py-0.5 rounded-full">Featured</span>
+                        )}
                         <span>{form.location}</span>
                         <span>•</span>
                         <span>{form.type}</span>
@@ -295,7 +304,22 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
 
             <div className="flex-1 overflow-y-auto p-8 space-y-8">
                 <div className="grid grid-cols-2 gap-6">
-                    <div className="col-span-2">
+                    <div className="col-span-2 space-y-4">
+                        <div className="flex items-center justify-between bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                            <div>
+                                <h4 className="font-bold text-sm text-[#2A1E16]">Featured Project</h4>
+                                <p className="text-xs text-gray-500">Enable this to display this project as the main hero on the Projects page.</p>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only peer"
+                                    checked={(form as any).isFeatured || false}
+                                    onChange={e => setForm({ ...form, isFeatured: e.target.checked } as any)}
+                                />
+                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--terracotta)]"></div>
+                            </label>
+                        </div>
                         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Main Image</label>
                         <div className="h-64 bg-gray-100 rounded-xl overflow-hidden relative group cursor-pointer border-2 border-transparent hover:border-[var(--terracotta)] transition-colors">
                             {/* eslint-disable-next-line @next/next/no-img-element */}

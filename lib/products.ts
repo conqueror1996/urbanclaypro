@@ -208,6 +208,7 @@ export interface Project {
         imageUrl: string;
         category: string;
     }[];
+    isFeatured?: boolean;
 }
 
 
@@ -217,6 +218,7 @@ const projectsQuery = groq`*[_type == "project"] {
   "slug": slug.current,
   location,
   type,
+  "isFeatured": isFeatured,
   description,
   "imageUrl": image.asset->url,
   "gallery": gallery[].asset->url,
