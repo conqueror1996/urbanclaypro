@@ -32,6 +32,7 @@ export async function submitLead(formData: any) {
             _type: 'lead',
             role: formData.role,
             product: formData.product,
+            firmName: formData.firmName,
             city: formData.city,
             quantity: formData.quantity,
             timeline: formData.timeline,

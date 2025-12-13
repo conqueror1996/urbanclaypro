@@ -16,6 +16,12 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'firmName',
+      title: 'Firm Name',
+      type: 'string',
+      description: 'Name of the firm for Architects, Builders, or Contractors',
+    }),
+    defineField({
       name: 'city',
       title: 'City',
       type: 'string',

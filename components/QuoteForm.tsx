@@ -12,6 +12,7 @@ export default function QuoteForm() {
     const [formData, setFormData] = useState({
         role: 'Architect',
         product: 'Exposed Brick Tiles',
+        firmName: '',
         city: '',
         quantity: '',
         timeline: '',
@@ -124,6 +125,7 @@ export default function QuoteForm() {
         const message = `*New Quote Request*
 ----------------
 *Role:* ${formData.role}
+*Firm Name:* ${formData.firmName || 'N/A'}
 *Product:* ${formData.product}
 *City:* ${formData.city}
 *Quantity:* ${formData.quantity}
@@ -189,6 +191,20 @@ Sent from UrbanClay Website`;
                                             <option value="Contractor">Contractor</option>
                                         </select>
                                     </div>
+
+                                    {/* Conditional Firm Name Input */}
+                                    {['Architect', 'Builder', 'Contractor'].includes(formData.role) && (
+                                        <div className="space-y-1">
+                                            <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Firm Name</label>
+                                            <input
+                                                name="firmName"
+                                                value={formData.firmName}
+                                                onChange={handleChange}
+                                                placeholder="Enter firm name"
+                                                className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16]"
+                                            />
+                                        </div>
+                                    )}
 
                                     <div className="space-y-1">
                                         <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Interested in...</label>
@@ -292,18 +308,18 @@ Sent from UrbanClay Website`;
                                         />
                                     </div>
 
-                                    <div className="flex gap-3 mt-4">
+                                    <div className="flex flex-col-reverse sm:flex-row gap-3 mt-4">
                                         <button
                                             type="button"
                                             onClick={prevStep}
-                                            className="flex-1 py-4 rounded-full border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+                                            className="w-full sm:flex-1 py-4 rounded-full border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
                                         >
                                             Back
                                         </button>
                                         <button
                                             type="button"
                                             onClick={nextStep}
-                                            className="flex-[2] py-4 rounded-full bg-[var(--ink)] text-white font-medium hover:opacity-90 transition-opacity"
+                                            className="w-full sm:flex-[2] py-4 rounded-full bg-[var(--ink)] text-white font-medium hover:opacity-90 transition-opacity"
                                         >
                                             Next Step
                                         </button>
@@ -342,18 +358,18 @@ Sent from UrbanClay Website`;
                                         ></textarea>
                                     </div>
 
-                                    <div className="flex gap-3 mt-4">
+                                    <div className="flex flex-col-reverse sm:flex-row gap-3 mt-4">
                                         <button
                                             type="button"
                                             onClick={prevStep}
-                                            className="flex-1 py-4 rounded-full border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
+                                            className="w-full sm:flex-1 py-4 rounded-full border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
                                         >
                                             Back
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="flex-[2] py-4 rounded-full bg-[var(--terracotta)] text-white font-medium hover:bg-[#a85638] transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                            className="w-full sm:flex-[2] py-4 rounded-full bg-[var(--terracotta)] text-white font-medium hover:bg-[#a85638] transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
                                             {isSubmitting ? (
                                                 <span>Processing...</span>
