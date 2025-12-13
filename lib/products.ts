@@ -333,3 +333,32 @@ export async function getGuideData(): Promise<GuideData | null> {
         return null;
     }
 }
+
+export interface Resource {
+    _id: string;
+    title: string;
+    description?: string;
+    type: string;
+    url?: string;
+    size?: string;
+    _createdAt: string;
+}
+
+export async function getResources(): Promise<Resource[]> {
+    try {
+        const query = groq`*[_type == "resource"] | order(_createdAt desc) {
+            _id,
+            title,
+            description,
+            type,
+            "url": file.asset->url,
+            size,
+            _createdAt
+        }`;
+        const resources = await client.fetch(query, {}, { next: { revalidate: 60 } });
+        return resources || [];
+    } catch (error) {
+        console.error('Error fetching resources:', error);
+        return [];
+    }
+}

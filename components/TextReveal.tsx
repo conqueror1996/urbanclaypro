@@ -8,7 +8,7 @@ interface TextRevealProps {
     delay?: number;
 }
 
-export default function TextReveal({ text, className = '', delay = 0 }: TextRevealProps) {
+export default function TextReveal({ text, className = '', delay = 0, highlightWords = [], highlightClass = 'text-[var(--terracotta)]' }: TextRevealProps & { highlightWords?: string[], highlightClass?: string }) {
     // Split text into words
     const words = text.split(' ');
 
@@ -49,11 +49,19 @@ export default function TextReveal({ text, className = '', delay = 0 }: TextReve
             whileInView="visible"
             viewport={{ once: true }}
         >
-            {words.map((word, index) => (
-                <motion.span variants={child} key={index} className="mr-[0.25em]">
-                    {word}
-                </motion.span>
-            ))}
+            {words.map((word, index) => {
+                const isHighlighted = highlightWords.some(hw => word.toLowerCase().includes(hw.toLowerCase()));
+
+                return (
+                    <motion.span
+                        variants={child}
+                        key={index}
+                        className={`mr-[0.25em] ${isHighlighted ? highlightClass : ''}`}
+                    >
+                        {word}
+                    </motion.span>
+                );
+            })}
         </motion.h1>
     );
 }

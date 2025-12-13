@@ -9,6 +9,8 @@ import guide from './guide'
 import lead from './lead'
 import seo from './seo'
 
+import resource from './resource'
+
 export const schema: { types: SchemaTypeDefinition[] } = {
-    types: [product, project, homePage, category, guide, lead, seo],
+    types: [product, project, homePage, category, guide, lead, seo, resource],
 }

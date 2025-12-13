@@ -18,7 +18,7 @@ export default function Breadcrumbs({ range }: { range?: string }) {
     const variantName = searchParams.get('variant');
 
     return (
-        <nav className="flex items-center text-xs font-bold uppercase tracking-widest text-gray-500 overflow-x-auto whitespace-nowrap">
+        <nav className="flex items-center text-xs font-bold uppercase tracking-widest text-gray-500 overflow-x-auto whitespace-nowrap scrollbar-hide">
             <Link href="/" className="hover:text-[var(--terracotta)] transition-colors">Home</Link>
 
             {parts.map((part, idx) => {

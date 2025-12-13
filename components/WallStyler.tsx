@@ -50,73 +50,121 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
     // --- GENERATORS ---
     // CSS Grid generator based on pattern
     // Return Object for style and String for class
+    // CSS Grid generator based on pattern
+    // Return Object for style and String for class
     const getGridStyles = (): { className: string; style: React.CSSProperties } => {
         const baseClass = "absolute inset-0 grid p-8 transition-all duration-700 ease-in-out gap-[2px]";
 
         switch (pattern) {
             case 'stack':
                 return {
-                    className: `${baseClass} auto-rows-[30px] content-center`,
-                    style: { gridTemplateColumns: 'repeat(10, 1fr)' }
+                    className: `${baseClass} content-start`,
+                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
                 };
             case 'herringbone':
+                // Diagonal Stretcher approximation for stability
                 return {
-                    className: `${baseClass} auto-rows-[20px] content-center rotate-45 scale-150`,
-                    style: { gridTemplateColumns: 'repeat(15, 1fr)' }
+                    className: `${baseClass} content-center rotate-45 scale-150`,
+                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
                 };
             case 'basket':
+                // BLOCKS: 3x1 aspect ratio implies 3 stacked bricks = Square.
+                // We render Squares.
                 return {
-                    className: `${baseClass} auto-rows-[30px] content-center`,
-                    style: { gridTemplateColumns: 'repeat(20, 1fr)' }
+                    className: `${baseClass} content-start`,
+                    style: { gridTemplateColumns: 'repeat(8, 1fr)' }
                 };
             case 'spanish':
                 return {
-                    className: `${baseClass} auto-rows-[30px] content-center`,
-                    style: { gridTemplateColumns: 'repeat(20, 1fr)' }
+                    className: `${baseClass} content-start`,
+                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
                 };
-            default: // stretcher
+            default: // stretcher (Default 3:1)
                 return {
-                    className: `${baseClass} auto-rows-[30px] content-center`,
-                    style: { gridTemplateColumns: 'repeat(10, 1fr)' }
+                    className: `${baseClass} content-start`,
+                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
                 };
         }
     };
 
     // --- RENDER HELPERS ---
     const renderBricks = () => {
-        // Render 400 bricks to fill the view
+
+        // SPECIAL CASE: BASKETWEAVE (Block Based)
+        if (pattern === 'basket') {
+            // Render 64 blocks (8 cols * 8 rows approx) covering the area
+            return Array.from({ length: 100 }).map((_, i) => {
+                // Checkerboard Logic
+                // Col count = 8.
+                const col = i % 8;
+                const row = Math.floor(i / 8);
+                const isVertical = (col + row) % 2 === 0; // Checkerboard parity
+
+                return (
+                    <div key={`basket-block-${i}`} className="relative aspect-square flex flex-col gap-[2px]">
+                        {/* We render 3 bricks inside this square block */}
+                        {/* If Vertical: Flex Row of 3 tall bricks. If Horizontal: Flex Col of 3 wide bricks. */}
+
+                        <div className={`w-full h-full flex ${isVertical ? 'flex-row' : 'flex-col'} gap-[2px]`}>
+                            {Array.from({ length: 3 }).map((__, bIdx) => {
+                                // Random variation for each micro-brick
+                                const randomVal = Math.sin((i * 3 + bIdx) * 12.9898);
+                                const deterministicRandom = (randomVal + 1) / 2;
+
+                                return (
+                                    <div
+                                        key={bIdx}
+                                        className="relative flex-1 rounded-[1px] overflow-hidden w-full h-full"
+                                        style={{
+                                            backgroundColor: brickTone,
+                                            boxShadow: '0 1px 2px -1px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0,0,0,0.02)'
+                                        }}
+                                    >
+                                        <div className="absolute inset-0"
+                                            style={{
+                                                backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAlJyBoZWlnaHQ9JzIwMCUnPjxmaWx0ZXIgaWQ9J24nPjxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjUnIG51bU9jdGF2ZXM9JzEnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd0cmFuc3BhcmVudCcvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nMC4yJy8+PC9zdmc+')",
+                                                filter: `brightness(${(0.95 + deterministicRandom * 0.1).toFixed(4)})`,
+                                                opacity: 0.6,
+                                                mixBlendMode: 'multiply'
+                                            }}
+                                        />
+                                        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/20" />
+                                        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/20" />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            });
+        }
+
+        // STANDARD BRICKS (Stretcher, Stack, Herringbone)
+        // Render enough bricks to fill. 12 cols * 20 rows = 240. increased to 400 for safety.
         return Array.from({ length: 400 }).map((_, i) => {
             // Pattern specific classes
-            let spanClass = "";
+            let spanClass = "col-span-1 aspect-[3/1]"; // Default 3:1 Ratio (9inch x 3inch)
             let offsetClass = "";
 
-            // STRETCHER: Standard 1/10 width. Offset every other row.
+            // STRETCHER: Shift every other row. 12 cols.
             if (pattern === 'stretcher') {
-                const row = Math.floor(i / 10);
+                const row = Math.floor(i / 12);
                 if (row % 2 !== 0) offsetClass = "translate-x-[50%]";
             }
 
-            // STACK: No offset.
+            // STACK: No offset. Default 3:1.
 
-            // BASKET
-            if (pattern === 'basket') {
-                const group = Math.floor(i / 2);
-                if (group % 2 === 0) {
-                    spanClass = "col-span-2 row-span-1"; // Horizontal 
-                } else {
-                    spanClass = "col-span-1 row-span-2"; // Vertical
-                }
-            }
-
-            // HERRINGBONE
+            // HERRINGBONE (Rotated Stretcher)
+            // Same logic as stretcher, but container is rotated.
             if (pattern === 'herringbone') {
-                spanClass = "col-span-2";
+                const row = Math.floor(i / 12);
+                if (row % 2 !== 0) offsetClass = "translate-x-[50%]";
             }
 
             // SPANISH
             if (pattern === 'spanish') {
-                spanClass = "col-span-2";
-                const row = Math.floor(i / 10);
+                // Long bricks? Or mixed. Keeping simple stretcher-like with different offset.
+                const row = Math.floor(i / 12);
                 if (row % 2 !== 0) offsetClass = "translate-x-[25%]";
             }
 
@@ -141,8 +189,11 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                             mixBlendMode: 'multiply'
                         }}
                     />
-                    <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }} />
-                    <div className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ backgroundColor: 'rgba(0,0,0,0.15)' }} />
+                    {/* Bevel highlights for depth (15mm feel) */}
+                    <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/20" />
+                    <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/20" />
+                    <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-white/10" />
+                    <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-black/10" />
                 </div>
             );
         });
@@ -243,12 +294,12 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
 
                         {/* PATTERN TAPE */}
                         {activeTab === 'pattern' && (
-                            <div className="flex gap-6 items-center justify-center h-full px-4 animate-in slide-in-from-bottom-2 fade-in duration-300">
+                            <div className="flex gap-6 items-center justify-start md:justify-center overflow-x-auto h-full px-4 animate-in slide-in-from-bottom-2 fade-in duration-300 scrollbar-hide">
                                 {patterns.map(p => (
                                     <button
                                         key={p.id}
                                         onClick={() => setPattern(p.id)}
-                                        className={`flex flex-col items-center gap-1 group outline-none transition-all duration-300 ${pattern === p.id ? 'opacity-100 scale-105' : 'opacity-50 hover:opacity-100'}`}
+                                        className={`flex flex-col items-center gap-1 group outline-none transition-all duration-300 shrink-0 ${pattern === p.id ? 'opacity-100 scale-105' : 'opacity-50 hover:opacity-100'}`}
                                     >
                                         <div className={`w-9 h-9 rounded-full border border-white/20 flex items-center justify-center transition-all ${pattern === p.id ? 'bg-white text-black shadow-lg' : 'text-white bg-white/5'}`}>
                                             {p.icon}
@@ -263,12 +314,12 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
 
                         {/* COLOR TAPE */}
                         {activeTab === 'color' && (
-                            <div className="flex gap-4 items-center justify-center h-full animate-in slide-in-from-bottom-2 fade-in duration-300">
+                            <div className="flex gap-4 items-center justify-start md:justify-center overflow-x-auto h-full px-4 animate-in slide-in-from-bottom-2 fade-in duration-300 scrollbar-hide">
                                 {colors.map(c => (
                                     <button
                                         key={c.name}
                                         onClick={() => setBrickTone(c.hex)}
-                                        className={`flex flex-col items-center gap-1 group outline-none ${brickTone === c.hex ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
+                                        className={`flex flex-col items-center gap-1 group outline-none shrink-0 ${brickTone === c.hex ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
                                     >
                                         <div
                                             className={`w-8 h-8 rounded-full border-2 transition-all shadow-sm ${brickTone === c.hex ? 'border-white scale-110' : 'border-transparent'}`}
@@ -284,12 +335,12 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
 
                         {/* GROUT TAPE */}
                         {activeTab === 'grout' && (
-                            <div className="flex gap-4 items-center justify-center h-full animate-in slide-in-from-bottom-2 fade-in duration-300">
+                            <div className="flex gap-4 items-center justify-start md:justify-center overflow-x-auto h-full px-4 animate-in slide-in-from-bottom-2 fade-in duration-300 scrollbar-hide">
                                 {grouts.map(g => (
                                     <button
                                         key={g.name}
                                         onClick={() => setGroutColor(g.hex)}
-                                        className={`w-8 h-8 rounded-full border-2 transition-all relative group ${groutColor === g.hex ? 'border-[var(--terracotta)] scale-125' : 'border-white/20 hover:scale-110'}`}
+                                        className={`w-8 h-8 rounded-full border-2 transition-all relative group shrink-0 ${groutColor === g.hex ? 'border-[var(--terracotta)] scale-125' : 'border-white/20 hover:scale-110'}`}
                                         style={{ backgroundColor: g.hex }}
                                     >
                                         <span className="text-[9px] text-white uppercase opacity-0 group-hover:opacity-100 absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black px-2 py-1 rounded transition-opacity">

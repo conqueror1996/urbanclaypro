@@ -10,8 +10,9 @@ export default function CoverageCalculator() {
 
     const calculateCoverage = () => {
         const areaValue = parseFloat(area || '0');
-        const tileBoxValue = parseFloat(tileBox || '10');
-        if (areaValue > 0 && tileBoxValue > 0) {
+        const tileBoxValue = 10; // Standard coverage per box (hardcoded for simplicity)
+
+        if (areaValue > 0) {
             // Formula: (Area * 1.10) / Box Coverage -> Ceil
             const calculatedBoxes = Math.ceil((areaValue * 1.10) / tileBoxValue);
             setBoxes(calculatedBoxes);
@@ -51,21 +52,7 @@ export default function CoverageCalculator() {
                         </div>
                     </div>
 
-                    <div className="group">
-                        <label className="block text-xs font-bold text-[#5d554f] mb-2 uppercase tracking-wider">
-                            Coverage per Box
-                        </label>
-                        <div className="relative">
-                            <input
-                                type="number"
-                                placeholder="e.g. 10"
-                                value={tileBox}
-                                onChange={(e) => setTileBox(e.target.value)}
-                                className="w-full bg-[#FAF7F5] border border-transparent hover:border-[#e9e2da] focus:border-[var(--terracotta)] focus:bg-white p-4 pr-16 rounded-xl font-mono text-xl font-medium focus:outline-none transition-all placeholder:text-gray-300"
-                            />
-                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 pointer-events-none uppercase bg-white/50 px-2 py-1 rounded">sq.ft/box</span>
-                        </div>
-                    </div>
+                    {/* Default assumption: 1 Box = 10 sq.ft. Hidden for simplicity per user request */}
                 </div>
 
                 <AnimatePresence>
@@ -92,7 +79,7 @@ export default function CoverageCalculator() {
                 {boxes === null && (
                     <button
                         onClick={calculateCoverage}
-                        disabled={!area || !tileBox}
+                        disabled={!area}
                         className="w-full py-4 bg-[var(--terracotta)] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold tracking-wide hover:bg-[#a85638] transition-all shadow-md mt-2"
                     >
                         Calculate

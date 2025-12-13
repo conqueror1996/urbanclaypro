@@ -348,7 +348,7 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
                     </div>
                     <div>
                         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Type</label>
-                        <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3">
+                        <select value={form.type || 'Residential'} onChange={e => setForm({ ...form, type: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3">
                             <option>Residential</option>
                             <option>Commercial</option>
                             <option>Hospitality</option>

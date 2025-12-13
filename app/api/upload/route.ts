@@ -26,7 +26,9 @@ export async function POST(req: NextRequest) {
         }
 
         const buffer = await file.arrayBuffer();
-        const asset = await client.assets.upload('image', Buffer.from(buffer), {
+        const assetType = file.type.startsWith('image/') ? 'image' : 'file';
+
+        const asset = await client.assets.upload(assetType, Buffer.from(buffer), {
             filename: file.name
         });
 

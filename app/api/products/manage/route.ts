@@ -268,6 +268,41 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: true });
         }
 
+        // ==========================================
+        // RESOURCES
+        // ==========================================
+
+        if (action === 'create_resource') {
+            const { title, type, description } = data;
+            const doc = {
+                _type: 'resource',
+                title,
+                type,
+                description: description || '',
+            };
+            const result = await client.create(doc);
+            revalidatePath('/dashboard/resources');
+            return NextResponse.json({ success: true, resource: result });
+        }
+
+        if (action === 'update_resource') {
+            const { _id, ...fields } = data;
+
+            // Handle file upload specifically if present (though usually handled by separate upload + link)
+            // If fields contains 'fileAssetId', we need to link it.
+            if (fields.fileAssetId) {
+                fields.file = { _type: 'file', asset: { _type: 'reference', _ref: fields.fileAssetId } };
+                delete fields.fileAssetId;
+            }
+
+            Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key]);
+
+            await client.patch(_id).set(fields).commit();
+            revalidatePath('/dashboard/resources');
+            revalidatePath('/resources'); // Revalidate public page
+            return NextResponse.json({ success: true });
+        }
+
         if (action === 'delete_document') {
             const { id } = data;
             await client.delete(id);

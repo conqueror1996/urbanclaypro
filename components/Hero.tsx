@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import TextReveal from './TextReveal';
 import HeroVisual from './HeroVisual';
-import { useSampleBox } from '@/context/SampleContext';
+
 
 interface HeroProps {
     data?: {
@@ -17,7 +17,7 @@ interface HeroProps {
 }
 
 export default function Hero({ data }: HeroProps) {
-    const { setBoxOpen } = useSampleBox();
+
     const [isHoveringText, setIsHoveringText] = useState(false);
 
     return (
@@ -39,9 +39,10 @@ export default function Hero({ data }: HeroProps) {
                                 onMouseLeave={() => setIsHoveringText(false)}
                                 className="cursor-default"
                             >
-                                <h1 className="sr-only">Premium Terracotta for Facades & Interiors</h1>
+                                <h1 className="sr-only">India’s most specified terracotta facade system for architects.</h1>
                                 <TextReveal
-                                    text={data?.heroHeading || 'Premium Terracotta for Facades & Interiors'}
+                                    text={data?.heroHeading || 'India’s most specified terracotta facade system for architects.'}
+                                    highlightWords={['terracotta']}
                                     className="text-3xl sm:text-5xl lg:text-[64px] font-serif font-medium leading-[1.05] text-[#2A1E16] tracking-tight"
                                 />
                             </div>
@@ -57,12 +58,12 @@ export default function Hero({ data }: HeroProps) {
 
                             <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">
                                 <motion.button
-                                    onClick={() => setBoxOpen(true)}
+                                    onClick={() => document.getElementById('quote')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="btn-terracotta min-h-[48px] md:min-h-[56px]"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    Get Samples
+                                    Specify for Your Project
                                 </motion.button>
                             </div>
 

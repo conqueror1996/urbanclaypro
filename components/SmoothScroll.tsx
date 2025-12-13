@@ -15,12 +15,12 @@ export default function SmoothScroll() {
         }
 
         const lenis = new Lenis({
-            duration: 1.2,
+            duration: 0.85, // Was 1.2. Lower = Snappier/Faster settling (Less "slow")
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             orientation: 'vertical',
             gestureOrientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 1,
+            wheelMultiplier: 1.15, // Was 1. Higher = moves more pixels per scroll tick
             touchMultiplier: 2,
         });
 

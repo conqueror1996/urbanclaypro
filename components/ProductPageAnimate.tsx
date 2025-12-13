@@ -21,14 +21,24 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     const { addToBox } = useSampleBox();
     const { scrollY } = useScroll();
 
-    // Parallax & Fade Effects for Hero
-    const heroY = useTransform(scrollY, [0, 500], [0, 100]);
-    const heroOpacity = useTransform(scrollY, [0, 600], [1, 0.4]);
+    // Parallax Logic moved below with isMobile check
 
     // Active Variant State
     const initialVariant = variantName ? product.variants?.find(v => v.name === variantName) : null;
     const [selectedVariant, setSelectedVariant] = useState(initialVariant);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
+
+    React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Active Parallax only on Desktop
+    const heroY = useTransform(scrollY, [0, 500], [0, isMobile ? 0 : 100]);
+    const heroOpacity = useTransform(scrollY, [0, 600], [1, 0.4]);
 
     // Image Handling
     const galleryImages = selectedVariant
@@ -47,64 +57,96 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     return (
         <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-32 lg:pb-0">
 
-            {/* --- HERO SECTION: Clean, Centered, Editorial --- */}
-            <section className="relative min-h-[90vh] flex flex-col pt-32 pb-20 px-6 max-w-[1800px] mx-auto">
-                <div className="flex justify-center mb-8 opacity-60 relative z-10">
-                    <Breadcrumbs range={product.range} />
-                </div>
+            {/* --- HERO SECTION: Studio Split Layout --- */}
+            <section className="relative min-h-[90vh] flex flex-col pt-32 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto">
 
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="text-center relative z-10 max-w-4xl mx-auto mb-16"
-                >
-                    <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
-                        {product.category?.title || 'Collection'}
-                    </span>
-                    <h1 className="text-4xl md:text-5xl lg:text-8xl font-serif text-[#EBE5E0] leading-[0.9] mb-8">
-                        {product.title}
-                    </h1>
-                    <p className="text-xl text-white/60 font-light leading-relaxed max-w-2xl mx-auto">
-                        {product.subtitle || 'Premium handcrafted clay for timeless architecture.'}
-                    </p>
-                </motion.div>
+                <div className="flex-1 grid lg:grid-cols-12 gap-12 lg:gap-24 items-center">
 
-                {/* Hero Image / Gallery */}
-                <motion.div
-                    style={{ y: heroY, opacity: heroOpacity }}
-                    className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-[3rem] overflow-hidden bg-[#241e1a] shadow-2xl border border-white/5"
-                >
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeImage}
-                            initial={{ opacity: 0, scale: 1.05 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.8 }}
-                            className="absolute inset-0"
-                        >
-                            {activeImage && (
-                                <Image
-                                    src={activeImage}
-                                    alt={product.title}
-                                    fill
-                                    className="object-contain p-8 md:p-16"
-                                    priority
-                                />
-                            )}
-                        </motion.div>
-                    </AnimatePresence>
-
-                    {/* Simple Bottom Controls */}
-                    {displayImages.length > 1 && (
-                        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-20 bg-black/40 backdrop-blur-md px-6 py-3 rounded-full border border-white/10">
-                            <button onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)} className="hover:text-[var(--terracotta)] transition-colors">←</button>
-                            <span className="text-xs font-mono opacity-60">{activeImageIndex + 1} / {displayImages.length}</span>
-                            <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="hover:text-[var(--terracotta)] transition-colors">→</button>
+                    {/* LEFT: Tyopgraphy & Context */}
+                    <div className="lg:col-span-5 relative z-10 flex flex-col justify-center">
+                        <div className="mb-8">
+                            <Breadcrumbs range={product.range} />
                         </div>
-                    )}
-                </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <span className="inline-block px-4 py-2 mb-8 border border-white/10 rounded-full bg-white/5 text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-[10px]">
+                                {product.category?.title || 'Collection'}
+                            </span>
+
+                            <h1 className="text-5xl md:text-7xl font-serif text-[#EBE5E0] leading-[1.1] mb-8 tracking-tight">
+                                {product.title}
+                            </h1>
+
+                            <p className="text-lg text-white/60 font-light leading-relaxed mb-10 max-w-xl border-l-2 border-[var(--terracotta)] pl-6">
+                                {product.subtitle || 'Premium handcrafted clay for timeless architecture. Engineered for durability and designed for elegance.'}
+                            </p>
+
+                            <div className="flex items-center gap-4 text-xs font-mono text-white/30 uppercase tracking-widest">
+                                <span>Est. 2024</span>
+                                <div className="w-12 h-px bg-white/10" />
+                                <span>UrbanClay Studio</span>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* RIGHT: Product Visual "Sample" */}
+                    <div className="lg:col-span-7 w-full h-full min-h-[50vh] flex items-center">
+                        <div className="relative w-full aspect-[4/3] rounded-[3rem] overflow-hidden bg-[#120d0b] border border-white/5 shadow-2xl group">
+
+                            {/* Background Gradient for Depth */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0" />
+
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={activeImage}
+                                    initial={{ opacity: 0, scale: 1.05 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                    className="absolute inset-0 z-10 p-8 md:p-12"
+                                >
+                                    <div className="relative w-full h-full shadow-2xl rounded-2xl overflow-hidden">
+                                        {activeImage && (
+                                            <Image
+                                                src={activeImage}
+                                                alt={product.title}
+                                                fill
+                                                className="object-cover"
+                                                priority
+                                                quality={95}
+                                            />
+                                        )}
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
+
+                            {/* Gallery Toolbar - Floating at bottom */}
+                            {displayImages.length > 1 && (
+                                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/40 backdrop-blur-md px-2 py-2 rounded-full border border-white/10">
+                                    <button
+                                        onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)}
+                                        className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors"
+                                    >
+                                        ←
+                                    </button>
+                                    <span className="text-[10px] font-mono font-medium text-white/60 w-16 text-center">
+                                        {activeImageIndex + 1} / {displayImages.length}
+                                    </span>
+                                    <button
+                                        onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)}
+                                        className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors"
+                                    >
+                                        →
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </section>
 
             {/* --- OVERVIEW & CONFIGURATOR: Luxury Studio Layout --- */}
@@ -154,8 +196,21 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="flex items-center gap-4 mb-8">
                                 <span className="text-[var(--terracotta)] text-5xl font-serif">03</span>
                                 <div className="h-px w-24 bg-white/10" />
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Estimation</span>
+                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Visualizer & Estimation</span>
                             </div>
+
+                            {/* Pattern Visualizer */}
+                            <div className="mb-12">
+                                <h3 className="text-2xl font-serif mb-6 text-[#EBE5E0]">Pattern Studio</h3>
+                                <p className="text-white/60 mb-6 font-light">
+                                    Visualize different bonding patterns and grout combinations.
+                                </p>
+                                <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                                    <PatternVisualizer title={product.title} />
+                                </div>
+                            </div>
+
+                            {/* Coverage Calculator */}
                             <div className="bg-[#EBE5E0] text-[#1a1512] rounded-[2rem] p-8 md:p-12 relative overflow-hidden">
                                 <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-4 block">Calculator</span>
                                 <h3 className="text-3xl font-serif mb-6">Quantity Estimator</h3>
@@ -218,16 +273,17 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                                     <button
                                         onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
-                                        className="hidden lg:flex w-full py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold uppercase tracking-widest text-xs transition-all items-center justify-center gap-2"
+                                        className="hidden lg:flex w-full py-4 bg-transparent hover:bg-white/5 text-white border border-white/20 hover:border-[var(--terracotta)] rounded-xl font-bold uppercase tracking-widest text-xs transition-all items-center justify-center gap-2 group"
                                     >
-                                        <span>+ Add Sample</span>
+                                        <span className="group-hover:text-[var(--terracotta)] transition-colors">+ Add Sample</span>
                                     </button>
 
                                     <a
                                         href={`https://wa.me/918080081951?text=Inquiry for ${product.title}`}
-                                        className="hidden lg:flex w-full py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl font-bold uppercase tracking-widest text-xs transition-colors items-center justify-center gap-2"
+                                        className="hidden lg:flex w-full py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl font-bold uppercase tracking-widest text-xs transition-all items-center justify-center gap-2 relative overflow-hidden group shadow-lg shadow-orange-900/20 hover:shadow-orange-900/40 transform hover:-translate-y-0.5"
                                     >
-                                        Get Quote
+                                        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                                        <span className="relative z-10">Get Quote</span>
                                     </a>
 
                                     <p className="text-[10px] text-center text-white/30 pt-2 leading-relaxed">
@@ -317,18 +373,18 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             )}
 
             {/* --- MOBILE STICKY DOCK (Items hidden on desktop) --- */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#1a1512]/90 backdrop-blur-xl border-t border-white/10 z-50 flex items-center gap-3">
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#1a1512]/80 backdrop-blur-xl border-t border-white/10 z-50 flex items-center gap-3 safe-area-pb">
                 <button
                     onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
-                    className="flex-1 py-3 bg-white/10 text-white rounded-lg font-bold uppercase tracking-widest text-xs active:scale-95 transition-transform"
+                    className="flex-1 py-3.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform"
                 >
                     + Sample
                 </button>
                 <a
                     href={quoteUrl}
-                    className="flex-[2] py-3 bg-[var(--terracotta)] text-white rounded-lg text-center font-bold uppercase tracking-widest text-xs active:scale-95 transition-transform shadow-lg shadow-orange-900/20"
+                    className="flex-[2] py-3.5 bg-[var(--terracotta)] text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform shadow-lg shadow-orange-900/20 relative overflow-hidden"
                 >
-                    Get Quote
+                    <span className="relative z-10">Get Quote</span>
                 </a>
             </div>
 
