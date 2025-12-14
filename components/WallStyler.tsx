@@ -20,22 +20,11 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
     const [pattern, setPattern] = useState<Pattern>('stretcher');
     const [brickTone, setBrickTone] = useState(initialColor);
     const [groutColor, setGroutColor] = useState('#e6d5c9');
-    const [scale, setScale] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
-    const [isZoomed, setIsZoomed] = useState(false); // Restored for Desktop
 
     useEffect(() => {
         const checkMobile = () => {
-            const mobile = window.innerWidth < 768;
-            setIsMobile(mobile);
-            // On mobile, force zoom state logic (visual adaptation)
-            if (mobile) {
-                setScale(1.4);
-                setIsZoomed(true); // Technically "zoomed" relative to base
-            } else {
-                setScale(1);
-                setIsZoomed(false);
-            }
+            setIsMobile(window.innerWidth < 768);
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -72,7 +61,8 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
     // --- GENERATORS ---
     // CSS Grid generator based on pattern
     const getGridStyles = (): { className: string; style: React.CSSProperties } => {
-        const baseClass = "absolute inset-0 grid p-4 md:p-8 transition-all duration-700 ease-in-out gap-[1px] md:gap-[2px]";
+        // REMOVED gap-x-[3px] and gap-x-[6px] -> Only keeping gap-y for horizontal rows
+        const baseClass = "absolute inset-0 grid p-4 md:p-8 transition-all duration-700 ease-in-out gap-y-[3px] md:gap-y-[6px]";
 
         switch (pattern) {
             case 'stack':
@@ -118,8 +108,8 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                 const isVertical = (col + row) % 2 === 0;
 
                 return (
-                    <div key={`basket-block-${i}`} className="relative aspect-square w-full flex flex-col gap-[1px] md:gap-[2px]">
-                        <div className={`w-full h-full flex ${isVertical ? 'flex-row' : 'flex-col'} gap-[1px] md:gap-[2px]`}>
+                    <div key={`basket-block-${i}`} className="relative aspect-square w-full flex flex-col gap-[3px] md:gap-[6px]">
+                        <div className={`w-full h-full flex ${isVertical ? 'flex-row' : 'flex-col'} gap-[3px] md:gap-[6px]`}>
                             {Array.from({ length: 3 }).map((__, bIdx) => {
                                 const randomVal = Math.sin((i * 3 + bIdx) * 12.9898);
                                 const deterministicRandom = (randomVal + 1) / 2;
@@ -127,10 +117,10 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                                 return (
                                     <div
                                         key={bIdx}
-                                        className="relative flex-1 rounded-[1px] overflow-hidden w-full h-full"
+                                        className="relative flex-1 rounded-[1px] overflow-hidden min-w-0 min-h-0"
                                         style={{
                                             backgroundColor: brickTone,
-                                            boxShadow: '0 1px 2px -1px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0,0,0,0.02)'
+                                            boxShadow: '2px 2px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2)'
                                         }}
                                     >
                                         <div className="absolute inset-0"
@@ -141,8 +131,10 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                                                 mixBlendMode: 'multiply'
                                             }}
                                         />
-                                        <div className="absolute top-0 left-0 right-0 h-[0.5px] bg-white/20" />
-                                        <div className="absolute bottom-0 left-0 right-0 h-[0.5px] bg-black/20" />
+                                        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/40" />
+                                        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/40" />
+                                        <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-white/30" />
+                                        <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-black/30" />
                                     </div>
                                 );
                             })}
@@ -172,24 +164,32 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
             return (
                 <div
                     key={`${pattern}-${i}`}
-                    className={`relative rounded-[1px] overflow-hidden ${spanClass} ${offsetClass}`}
+                    // Added border-r to simulate vertical grout (attached to the brick, so it staggers)
+                    // relative -> flex container to manage width
+                    className={`relative ${spanClass} ${offsetClass} box-border border-r-[3px] md:border-r-[6px] border-transparent`}
                     style={{
-                        backgroundColor: brickTone,
-                        boxShadow: '0 1px 2px -1px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0,0,0,0.02)'
+                        // We apply the color to the INNER part, not the wrapper
                     }}
                 >
-                    <div className="absolute inset-0"
+                    <div className="w-full h-full relative rounded-[1px] overflow-hidden"
                         style={{
-                            backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAlJyBoZWlnaHQ9JzIwMCUnPjxmaWx0ZXIgaWQ9J24nPjxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjUnIG51bU9jdGF2ZXM9JzEnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd0cmFuc3BhcmVudCcvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nMC4yJy8+PC9zdmc+')",
-                            filter: `brightness(${(0.95 + deterministicRandom * 0.1).toFixed(4)})`,
-                            opacity: 0.6,
-                            mixBlendMode: 'multiply'
-                        }}
-                    />
-                    <div className="absolute top-0 left-0 right-0 h-[0.5px] bg-white/20" />
-                    <div className="absolute bottom-0 left-0 right-0 h-[0.5px] bg-black/20" />
-                    <div className="absolute top-0 bottom-0 left-0 w-[0.5px] bg-white/10" />
-                    <div className="absolute top-0 bottom-0 right-0 w-[0.5px] bg-black/10" />
+                            backgroundColor: brickTone,
+                            boxShadow: '3px 3px 6px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.2)'
+                        }}>
+
+                        <div className="absolute inset-0"
+                            style={{
+                                backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAlJyBoZWlnaHQ9JzIwMCUnPjxmaWx0ZXIgaWQ9J24nPjxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjUnIG51bU9jdGF2ZXM9JzEnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd0cmFuc3BhcmVudCcvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nMC4yJy8+PC9zdmc+')",
+                                filter: `brightness(${(0.95 + deterministicRandom * 0.1).toFixed(4)})`,
+                                opacity: 0.6,
+                                mixBlendMode: 'multiply'
+                            }}
+                        />
+                        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/40" />
+                        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/40" />
+                        <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-white/30" />
+                        <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-black/30" />
+                    </div>
                 </div>
             );
         });
@@ -224,12 +224,7 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
             {/* --- 1. THE VIEWPORT (WALL) --- */}
             <div
                 ref={wallRef}
-                className={`flex-grow relative overflow-hidden ${isMobile ? 'cursor-default' : 'cursor-zoom-in active:cursor-grabbing'}`}
-                onClick={() => {
-                    if (!isMobile) {
-                        setIsZoomed(!isZoomed);
-                    }
-                }}
+                className="flex-grow relative overflow-hidden cursor-default"
             >
                 {/* Backing Grout */}
                 <div
@@ -247,7 +242,7 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                 <motion.div
                     className={gridConfig.className}
                     style={gridConfig.style}
-                    animate={{ scale: isMobile ? 1.4 : (isZoomed ? 1.4 : 1) }}
+                    animate={{ scale: 1.4 }}
                     transition={{ type: 'spring', damping: 30, stiffness: 100 }}
                 >
                     {renderBricks()}
@@ -259,7 +254,6 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                     className="absolute top-8 left-8 z-20 pointer-events-none mix-blend-difference text-xs font-mono uppercase tracking-widest"
                     style={{ color: 'rgba(255,255,255,0.5)' }}
                 >
-                    <div>Mode: {isZoomed ? 'Macro Detail' : 'Full Facade'}</div>
                     <div className="mt-1">Light Angle: 45°</div>
                 </div>
                 {/* Watermark Label - Visible in Export */}

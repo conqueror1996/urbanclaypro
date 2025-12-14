@@ -83,12 +83,12 @@ export default function OurStoryContent() {
                                     style={{ scale: 1.1, y: imageParallax }}
                                 >
                                     <Image
-                                        src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800&q=80"
-                                        alt="UrbanClay Heritage"
+                                        src="/images/sustainability-sprout.png"
+                                        alt="UrbanClay Sustainability - New Life from Red Soil"
                                         fill
                                         className="object-cover"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[#b45a3c]/20 to-transparent mix-blend-multiply" />
+                                    <div className="absolute inset-0 bg-black/20" />
                                 </motion.div>
                             </motion.div>
 

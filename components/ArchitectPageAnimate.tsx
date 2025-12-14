@@ -65,10 +65,10 @@ export default function ArchitectPageAnimate() {
                     className="absolute inset-0 z-0"
                 >
                     <Image
-                        src="https://images.unsplash.com/photo-1486744360430-81f802f2398a?auto=format&fit=crop&q=80"
-                        alt="Architectural Studio"
+                        src="/images/architect-hero-confidence.png"
+                        alt="Architectural Confidence - Delivered Project"
                         fill
-                        className="object-cover object-center brightness-[0.3]"
+                        className="object-cover object-center brightness-[0.4]"
                         priority
                     />
                     <div className="absolute inset-0 bg-[#1a1512]/60 mix-blend-multiply" />
@@ -211,21 +211,21 @@ export default function ArchitectPageAnimate() {
                             {/* Main Detail Image with Parallax-like feel */}
                             <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl relative group">
                                 <Image
-                                    src="https://images.unsplash.com/photo-1621255743452-f47285a86375?auto=format&fit=crop&q=80"
-                                    alt="Detail Shot"
+                                    src="/images/bespoke-precision.png"
+                                    alt="Precision Engineering - Caliper on Clay"
                                     fill
                                     className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
                                 />
 
                                 {/* Overlay Gradient - Subtle cinematic feel */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#2A1E16]/80 via-transparent to-transparent opacity-80" />
+                                <div className="absolute inset-0 bg-black/40" />
 
                                 {/* Interactive Loupe/Focus Ring Effect */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-white/30 rounded-full backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none flex items-center justify-center">
                                     <div className="w-1 h-1 bg-white rounded-full shadow-[0_0_10px_white]" />
                                 </div>
 
-                                <div className="absolute bottom-8 left-8 right-8 text-white">
+                                <div className="absolute top-10 left-8 right-8 text-white">
                                     <div className="w-12 h-[1px] bg-[var(--terracotta)] mb-6" />
                                     <p className="font-serif text-3xl italic leading-tight mb-4 text-[#f0ebe6]">"God is in the details"</p>
                                     <div className="flex items-center gap-3 opacity-80">

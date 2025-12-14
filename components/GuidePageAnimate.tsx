@@ -58,10 +58,10 @@ export default function GuidePageAnimate() {
                     className="absolute inset-0 z-0"
                 >
                     <Image
-                        src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80"
-                        alt="Clay Texture"
+                        src="/images/guide-hero-dark.png"
+                        alt="Clay Nuance - Sphere and Rock"
                         fill
-                        className="object-cover object-center brightness-[0.4]"
+                        className="object-cover object-center"
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#1a1512]/30 via-transparent to-[#1a1512]" />
