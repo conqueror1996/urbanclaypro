@@ -133,8 +133,8 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                     </div>
                 </div>
 
-                {/* GALLERY GRID */}
-                <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* GALLERY GRID (Masonry) */}
+                <motion.div layout className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
                     <AnimatePresence>
                         {filteredProjects.filter(p => p !== featuredProject).map((project) => (
                             <motion.div
@@ -144,25 +144,28 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 transition={{ duration: 0.4 }}
-                                className="group"
+                                className="group break-inside-avoid mb-8"
                             >
                                 <Link href={`/projects/${project.slug}`} className="block">
-                                    <div className="aspect-[3/4] md:aspect-square relative overflow-hidden rounded-xl bg-white/5 mb-4 group-hover:shadow-2xl transition-all duration-500">
+                                    <div className="relative overflow-hidden rounded-xl bg-white/5 mb-4 group-hover:shadow-2xl transition-all duration-500">
                                         {project.imageUrl ? (
                                             <Image
                                                 src={project.imageUrl}
                                                 alt={project.title}
-                                                fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
+                                                width={800}
+                                                height={1000} // Aspect ratio will be natural due to height-auto
+                                                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest">No visual</div>
+                                            <div className="aspect-[3/4] w-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest bg-[#2A1E16]">No visual</div>
                                         )}
 
-                                        {/* Hover Overlay */}
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                            <div className="w-16 h-16 rounded-full border border-white/30 flex items-center justify-center backdrop-blur-sm transform scale-50 group-hover:scale-100 transition-transform duration-500">
-                                                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                        {/* Hover Overlay - "Shop The Look" Style */}
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4">
+                                            <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                                <span className="px-6 py-3 bg-white text-[#1a1512] text-xs font-bold uppercase tracking-widest rounded-full shadow-lg hover:bg-[var(--terracotta)] hover:text-white transition-colors">
+                                                    View Project
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -170,9 +173,12 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                                     <div>
                                         <div className="flex items-center justify-between mb-1">
                                             <h3 className="text-xl font-serif text-[#EBE5E0] group-hover:text-[var(--terracotta)] transition-colors">{project.title}</h3>
-                                            <span className="text-[10px] uppercase tracking-widest text-white/30 border border-white/10 px-2 py-0.5 rounded-full">{project.category}</span>
                                         </div>
-                                        <p className="text-sm text-white/50">{project.location || 'India'}</p>
+                                        <div className="flex items-center gap-3 text-sm text-white/50">
+                                            <span>{project.location || 'India'}</span>
+                                            <span className="w-1 h-1 rounded-full bg-white/20" />
+                                            <span className="uppercase tracking-wider text-[10px] text-white/30 border border-white/10 px-2 py-0.5 rounded-full">{project.category}</span>
+                                        </div>
                                     </div>
                                 </Link>
                             </motion.div>
