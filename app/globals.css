@@ -261,3 +261,8 @@ img {
     scroll-behavior: auto !important;
   }
 }
+
+/* Safe Area Utility for Mobile */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}

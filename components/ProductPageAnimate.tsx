@@ -9,6 +9,7 @@ import { useSampleBox } from '@/context/SampleContext';
 import CoverageCalculator from '@/components/product-page/CoverageCalculator';
 import PatternVisualizer from '@/components/product-page/PatternVisualizer';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import QuoteModal from '@/components/QuoteModal';
 
 interface ProductPageAnimateProps {
     product: Product;
@@ -26,6 +27,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     const [selectedVariant, setSelectedVariant] = useState(initialVariant);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
+    const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
     useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -56,12 +58,17 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
         <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-32 lg:pb-0">
 
             {/* --- HERO SECTION: Studio Split Layout --- */}
-            <section className="relative min-h-[90vh] flex flex-col pt-32 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto overflow-hidden md:overflow-visible">
+            <section className="relative min-h-[90vh] flex flex-col pt-24 lg:pt-32 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto overflow-hidden md:overflow-visible">
+
+                {/* Breadcrumbs - Always Top */}
+                <div className="w-full mb-6 z-20 relative px-2">
+                    <Breadcrumbs range={product.range} />
+                </div>
 
                 <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-12 lg:gap-24 items-center w-full">
 
-                    {/* LEFT: Product Visual "Sample" (Desktop Order 1, Mobile Order 2) */}
-                    <div className="lg:col-span-7 w-full flex flex-col lg:block items-center justify-center lg:items-center lg:h-full lg:min-h-[50vh] order-2 lg:order-1">
+                    {/* LEFT: Product Visual "Sample" (Desktop Order 1, Mobile Order 1 - Visual First) */}
+                    <div className="lg:col-span-7 w-full flex flex-col lg:block items-center justify-center lg:items-center lg:h-full lg:min-h-[50vh] order-1 lg:order-1">
                         <div className="relative w-[90%] max-w-sm lg:w-full lg:max-w-none mx-auto aspect-square lg:aspect-[4/3] rounded-[2rem] lg:rounded-[3rem] overflow-hidden bg-[#120d0b] border border-white/5 shadow-2xl group flex items-center justify-center">
 
                             {/* Background Gradient for Depth */}
@@ -134,57 +141,13 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             </div>
                         )}
 
-                        {/* Mobile Collection Selector (Range Siblings) */}
-                        <div className="w-full mt-6 lg:hidden">
-                            <p className="text-xs font-bold uppercase tracking-widest text-[var(--terracotta)] mb-3 text-center">
-                                {product.range || product.category?.title || 'Collection'}
-                            </p>
-                            <div className="flex overflow-x-auto gap-4 pb-4 px-2 scrollbar-hide snap-x justify-start md:justify-center">
-                                {/* Current Product (Active) */}
-                                <Link
-                                    href={`/products/${product.slug}`}
-                                    className="relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all snap-center border-[var(--terracotta)] shadow-[0_0_15px_rgba(180,90,60,0.3)] scale-105"
-                                >
-                                    {product.imageUrl ? (
-                                        <Image src={product.imageUrl} alt={product.title} fill className="object-cover" />
-                                    ) : (
-                                        <div className="w-full h-full bg-[#3a3430]" />
-                                    )}
-                                </Link>
-
-                                {/* Sibling Products (In same Range or Category) */}
-                                {relatedProducts && relatedProducts.length > 0 && relatedProducts.map((rel) => (
-                                    <Link
-                                        key={rel.slug}
-                                        href={`/products/${rel.slug}`}
-                                        className="relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 border-white/10 opacity-70 hover:opacity-100 transition-all snap-center"
-                                    >
-                                        {rel.imageUrl ? (
-                                            <Image src={rel.imageUrl} alt={rel.title} fill className="object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full bg-[#3a3430]" />
-                                        )}
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Mobile Description (Below Image) */}
-                        <div className="mt-8 lg:hidden text-center px-4">
-                            <p className="text-base text-white/60 font-light leading-relaxed mb-6">
-                                {product.subtitle || 'Premium handcrafted clay for timeless architecture. Engineered for durability and designed for elegance.'}
-                            </p>
-                            <div className="flex items-center justify-center gap-4 text-xs font-mono text-white/30 uppercase tracking-widest">
-                                <span>UrbanClay Studio</span>
-                            </div>
-                        </div>
+                        {/* Mobile Collection Selector (Range Siblings) - Moved below title/specs on mobile now */}
                     </div>
 
-                    {/* RIGHT: Typography & Context (Desktop Order 2, Mobile Order 1) */}
-                    <div className="lg:col-span-5 relative z-10 flex flex-col justify-center items-center lg:items-start text-center lg:text-left order-1 lg:order-2">
-                        <div className="mb-8 w-full flex justify-center lg:justify-start">
-                            <Breadcrumbs range={product.range} />
-                        </div>
+
+
+                    {/* RIGHT: Typography & Context (Desktop Order 2, Mobile Order 2) */}
+                    <div className="lg:col-span-5 relative z-10 flex flex-col justify-center items-center lg:items-start text-center lg:text-left order-2 lg:order-2">
 
                         <motion.div
                             initial={{ opacity: 0, y: 40 }}
@@ -208,6 +171,75 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 <span>Est. 2024</span>
                                 <span className="w-1 h-1 rounded-full bg-white/20" />
                                 <span>Made in India</span>
+                            </div>
+
+                            {/* --- MOBILE CONTENT BLOCK (Variants, Description, Collection) --- */}
+                            <div className="lg:hidden w-full flex flex-col gap-8 mb-8">
+
+                                {/* 1. Mobile Variant Selector */}
+                                {product.variants && product.variants.length > 0 && (
+                                    <div className="w-full">
+                                        <div className="flex justify-between items-baseline mb-3 px-1">
+                                            <span className="text-xs font-bold uppercase tracking-widest text-white/50">Select Finish</span>
+                                            {selectedVariant && <span className="text-[var(--terracotta)] text-xs font-bold uppercase">{selectedVariant.name}</span>}
+                                        </div>
+                                        <div className="grid grid-cols-4 gap-3">
+                                            {product.variants.map((v, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => handleVariantSelect(v.name)}
+                                                    className={`group relative aspect-square rounded-lg overflow-hidden border transition-all ${selectedVariant?.name === v.name ? 'border-[var(--terracotta)] ring-1 ring-[var(--terracotta)]' : 'border-white/10 hover:border-white/40'}`}
+                                                    title={v.name}
+                                                >
+                                                    {v.imageUrl ? (
+                                                        <Image src={v.imageUrl} alt={v.name} fill className="object-cover" />
+                                                    ) : (
+                                                        <div className="w-full h-full bg-[#3a3430]" />
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* 2. Mobile Description */}
+                                <p className="text-base text-white/70 font-light leading-relaxed text-center px-2">
+                                    {product.description || 'Premium handcrafted clay for timeless architecture. Engineered for durability and designed for elegance. Each piece matches international standards for strength and aesthetics.'}
+                                </p>
+
+                                {/* 3. Mobile Collection Row */}
+                                <div className="w-full pt-4 border-t border-white/5">
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-4 text-center">
+                                        More in {product.range || 'Collection'}
+                                    </p>
+                                    <div className="flex overflow-x-auto gap-3 pb-2 px-1 scrollbar-hide snap-x justify-start">
+                                        {/* Current Product Highlight */}
+                                        <Link
+                                            href={`/products/${product.slug}`}
+                                            className="relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border border-[var(--terracotta)] shadow-sm opacity-100"
+                                        >
+                                            {product.imageUrl ? (
+                                                <Image src={product.imageUrl} alt={product.title} fill className="object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-[#3a3430]" />
+                                            )}
+                                        </Link>
+
+                                        {relatedProducts && relatedProducts.length > 0 && relatedProducts.map((rel) => (
+                                            <Link
+                                                key={rel.slug}
+                                                href={`/products/${rel.slug}`}
+                                                className="relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border border-white/10 opacity-60 hover:opacity-100 transition-all snap-center"
+                                            >
+                                                {rel.imageUrl ? (
+                                                    <Image src={rel.imageUrl} alt={rel.title} fill className="object-cover" />
+                                                ) : (
+                                                    <div className="w-full h-full bg-[#3a3430]" />
+                                                )}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Desktop Actions (Primary) */}
@@ -386,71 +418,73 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             </section>
 
             {/* --- CURATED PALETTE (Related) --- */}
-            {relatedProducts && relatedProducts.length > 0 && (
-                <section className="py-20 md:py-32 border-t border-white/5 relative bg-[#1f1a16]">
-                    <div className="max-w-[1800px] mx-auto px-4 md:px-6 relative z-10">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-8">
-                            <div>
-                                <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-4 block">The Collection</span>
-                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#EBE5E0]">
-                                    Curated Palette
-                                </h2>
+            {
+                relatedProducts && relatedProducts.length > 0 && (
+                    <section className="py-20 md:py-32 border-t border-white/5 relative bg-[#1f1a16]">
+                        <div className="max-w-[1800px] mx-auto px-4 md:px-6 relative z-10">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-8">
+                                <div>
+                                    <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-4 block">The Collection</span>
+                                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-[#EBE5E0]">
+                                        Curated Palette
+                                    </h2>
+                                </div>
+                                <p className="text-white/40 max-w-md text-sm leading-relaxed text-right md:text-left">
+                                    Complementary textures and tones selected to work in harmony with {product.title}.
+                                </p>
                             </div>
-                            <p className="text-white/40 max-w-md text-sm leading-relaxed text-right md:text-left">
-                                Complementary textures and tones selected to work in harmony with {product.title}.
-                            </p>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-                            {relatedProducts.slice(0, 4).map((bgProduct, idx) => (
-                                <Link href={`/products/${bgProduct.slug}`} key={bgProduct.slug} className="group block">
-                                    <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-[#120d0b] rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-500 border border-white/5 group-hover:border-[var(--terracotta)]/50">
-                                        {bgProduct.imageUrl ? (
-                                            <Image
-                                                src={bgProduct.imageUrl}
-                                                alt={bgProduct.title}
-                                                fill
-                                                className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest">No Image</div>
-                                        )}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+                                {relatedProducts.slice(0, 4).map((bgProduct, idx) => (
+                                    <Link href={`/products/${bgProduct.slug}`} key={bgProduct.slug} className="group block">
+                                        <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-[#120d0b] rounded-2xl shadow-lg group-hover:shadow-2xl transition-all duration-500 border border-white/5 group-hover:border-[var(--terracotta)]/50">
+                                            {bgProduct.imageUrl ? (
+                                                <Image
+                                                    src={bgProduct.imageUrl}
+                                                    alt={bgProduct.title}
+                                                    fill
+                                                    className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest">No Image</div>
+                                            )}
 
-                                        {/* Minimal Overlay */}
-                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all duration-500" />
+                                            {/* Minimal Overlay */}
+                                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all duration-500" />
 
-                                        {/* Number Badge */}
-                                        <div className="absolute top-4 left-4 text-xs font-mono text-white/60 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            0{idx + 1}
+                                            {/* Number Badge */}
+                                            <div className="absolute top-4 left-4 text-xs font-mono text-white/60 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                0{idx + 1}
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex justify-between items-start pt-2">
-                                        <div>
-                                            <h3 className="text-lg font-serif text-[#EBE5E0] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{bgProduct.title}</h3>
-                                            <p className="text-white/40 text-xs uppercase tracking-wider">{bgProduct.category?.title}</p>
+                                        <div className="flex justify-between items-start pt-2">
+                                            <div>
+                                                <h3 className="text-lg font-serif text-[#EBE5E0] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{bgProduct.title}</h3>
+                                                <p className="text-white/40 text-xs uppercase tracking-wider">{bgProduct.category?.title}</p>
+                                            </div>
+                                            <span className="text-white/20 group-hover:translate-x-1 transition-transform duration-300">→</span>
                                         </div>
-                                        <span className="text-white/20 group-hover:translate-x-1 transition-transform duration-300">→</span>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    </Link>
+                                ))}
+                            </div>
 
-                        {/* Sticky CTA on Scroll (Bottom of Collection) */}
-                        <div className="mt-24 flex justify-center flex-col items-center gap-6">
-                            <p className="text-white/40 text-sm font-light">Need something custom?</p>
-                            <div className="flex gap-4">
-                                <Link href="/products" className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest border border-white/10">
-                                    Explore Full Catalogue
-                                </Link>
-                                <a href="https://wa.me/918080081951" className="px-8 py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-900/20">
-                                    Chat with Architect
-                                </a>
+                            {/* Sticky CTA on Scroll (Bottom of Collection) */}
+                            <div className="mt-24 flex justify-center flex-col items-center gap-6">
+                                <p className="text-white/40 text-sm font-light">Need something custom?</p>
+                                <div className="flex gap-4">
+                                    <Link href="/products" className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest border border-white/10">
+                                        Explore Full Catalogue
+                                    </Link>
+                                    <a href="https://wa.me/918080081951" className="px-8 py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-full transition-all duration-300 text-xs font-bold uppercase tracking-widest shadow-lg shadow-orange-900/20">
+                                        Chat with Architect
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-            )}
+                    </section>
+                )
+            }
 
             {/* --- MOBILE STICKY DOCK (Items hidden on desktop) --- */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#1a1512]/80 backdrop-blur-xl border-t border-white/10 z-50 flex items-center gap-3 safe-area-pb">
@@ -460,14 +494,21 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                 >
                     + Sample
                 </button>
-                <a
-                    href={quoteUrl}
+                <button
+                    onClick={() => setIsQuoteModalOpen(true)}
                     className="flex-[2] py-3.5 bg-[var(--terracotta)] text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform shadow-lg shadow-orange-900/20 relative overflow-hidden"
                 >
                     <span className="relative z-10">Get Quote</span>
-                </a>
+                </button>
             </div>
 
-        </main>
+            <QuoteModal
+                isOpen={isQuoteModalOpen}
+                onClose={() => setIsQuoteModalOpen(false)}
+                productName={product.title}
+                variantName={selectedVariant?.name}
+            />
+
+        </main >
     );
 }
