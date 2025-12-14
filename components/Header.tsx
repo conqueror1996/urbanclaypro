@@ -161,10 +161,12 @@ export default function Header() {
                     </button>
                 </div>
 
-                {/* Mobile Menu Button */}
+                {/* Mobile Menu Button - THUMB OPTIMIZED */}
                 <button
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className="md:hidden p-2 -mr-2 text-[#2A1E16] hover:bg-black/5 rounded-lg transition-colors z-50"
+                    className="md:hidden p-3 -mr-2 text-[#2A1E16] hover:bg-black/5 rounded-xl transition-colors z-50 min-w-[48px] min-h-[48px] flex items-center justify-center active:scale-95"
+                    aria-label="Toggle mobile menu"
+                    aria-expanded={mobileMenuOpen}
                 >
                     <div className="w-6 h-5 flex flex-col justify-between">
                         <span className={`w-full h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
@@ -273,24 +275,24 @@ export default function Header() {
                                     {/* Products Dropdown (Expanded by default or accordion) */}
                                     <div className="py-2">
                                         <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Products</h4>
-                                        <div className="pl-2 flex flex-col gap-3 border-l-2 border-gray-100">
+                                        <div className="pl-2 flex flex-col gap-2 border-l-2 border-gray-100">
                                             {PRODUCT_CATEGORIES.map((cat, idx) => (
                                                 <Link
                                                     key={idx}
                                                     href={cat.href}
                                                     onClick={() => setMobileMenuOpen(false)}
-                                                    className="flex items-center justify-between group"
+                                                    className="min-h-[48px] py-3 flex items-center justify-between group active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2"
                                                 >
-                                                    <span className="text-[15px] font-serif text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">
+                                                    <span className="text-base font-serif text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">
                                                         {cat.title}
                                                     </span>
-                                                    <span className="text-[9px] uppercase tracking-wider text-gray-400">{cat.subtitle}</span>
+                                                    <span className="text-[10px] uppercase tracking-wider text-gray-400">{cat.subtitle}</span>
                                                 </Link>
                                             ))}
                                             <Link
                                                 href="/products"
                                                 onClick={() => setMobileMenuOpen(false)}
-                                                className="mt-2 text-xs font-bold uppercase tracking-widest text-[var(--terracotta)] flex items-center gap-2"
+                                                className="mt-2 min-h-[44px] py-3 text-xs font-bold uppercase tracking-widest text-[var(--terracotta)] flex items-center gap-2"
                                             >
                                                 View All Products →
                                             </Link>
@@ -299,32 +301,35 @@ export default function Header() {
 
                                     <div className="h-px bg-gray-100 my-2" />
 
-                                    {/* Other Links */}
+                                    {/* Other Links - THUMB OPTIMIZED */}
                                     {navLinks.filter(l => l.label !== 'Products').map((link) => (
                                         <Link
                                             key={link.href}
                                             href={link.href}
                                             onClick={() => setMobileMenuOpen(false)}
-                                            className="py-3 text-lg font-serif font-medium text-[#2A1E16] flex justify-between items-center border-b border-gray-50 last:border-0"
+                                            className="min-h-[52px] py-4 text-lg font-serif font-medium text-[#2A1E16] flex justify-between items-center border-b border-gray-50 last:border-0 active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2"
                                         >
                                             {link.label}
+                                            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                         </Link>
                                     ))}
                                 </nav>
 
-                                <div className="mt-auto pt-8">
+                                <div className="mt-auto pt-8 space-y-4">
                                     <button
                                         onClick={() => {
                                             setSampleModalOpen(true);
                                             setMobileMenuOpen(false);
                                         }}
-                                        className="w-full py-4 bg-[var(--terracotta)] text-white font-bold rounded-xl uppercase tracking-wider text-sm shadow-lg shadow-orange-900/10 flex items-center justify-center gap-2"
+                                        className="w-full min-h-[52px] py-4 bg-[var(--terracotta)] text-white font-bold rounded-xl uppercase tracking-wider text-sm shadow-lg shadow-orange-900/10 flex items-center justify-center gap-2 active:scale-95 transition-transform"
+                                        aria-label="Get samples"
                                     >
-                                        Get Samples {box.length > 0 && <span className="bg-white text-[var(--terracotta)] w-5 h-5 rounded-full flex items-center justify-center text-xs">{box.length}</span>}
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                                        Get Samples {box.length > 0 && <span className="bg-white text-[var(--terracotta)] w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">{box.length}</span>}
                                     </button>
-                                    <div className="mt-6 text-center">
-                                        <p className="text-xs text-gray-400">Need help?</p>
-                                        <a href="tel:+918080081951" className="text-sm font-medium text-[#2A1E16] mt-1 block">+91 80800 81951</a>
+                                    <div className="text-center pt-2">
+                                        <p className="text-xs text-gray-400 mb-2">Need help?</p>
+                                        <a href="tel:+918080081951" className="text-base font-medium text-[#2A1E16] block min-h-[44px] flex items-center justify-center hover:text-[var(--terracotta)] transition-colors">+91 80800 81951</a>
                                     </div>
                                 </div>
                             </div>

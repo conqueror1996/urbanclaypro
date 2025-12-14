@@ -150,7 +150,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                 )}
             </motion.div>
 
-            {/* TABS - Totem Style */}
+            {/* TABS - Totem Style - MOBILE OPTIMIZED */}
             <div className="flex justify-center mb-16">
                 <div className={`
                         inline-flex bg-white p-1.5 rounded-full border border-[var(--line)] shadow-sm
@@ -163,8 +163,10 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                             <button
                                 key={tab.name}
                                 onClick={() => handleTabClick(tab.name)}
-                                className={`relative px-5 py-2.5 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-bold tracking-wider uppercase transition-all duration-300 whitespace-nowrap flex-shrink-0 z-10 ${isActive ? 'text-white' : 'text-[#5d554f] hover:text-[#2A1E16] hover:bg-gray-50'
+                                className={`relative px-5 py-3 md:px-6 md:py-3 min-h-[48px] rounded-full text-xs md:text-sm font-bold tracking-wider uppercase transition-all duration-300 whitespace-nowrap flex-shrink-0 z-10 active:scale-95 flex items-center justify-center ${isActive ? 'text-white' : 'text-[#5d554f] hover:text-[#2A1E16] hover:bg-gray-50'
                                     }`}
+                                aria-label={`Filter by ${tab.name}`}
+                                aria-pressed={isActive}
                             >
                                 {isActive && (
                                     <motion.div
@@ -245,7 +247,8 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                         });
                                                     }
                                                 }}
-                                                className="px-5 py-2 rounded-lg border border-[#EBE5E0] bg-white text-xs font-bold text-[#2A1E16] hover:border-[#2A1E16] hover:shadow-lg transition-all uppercase tracking-wider transform hover:-translate-y-0.5"
+                                                className="min-h-[48px] px-5 py-3 rounded-xl border-2 border-[#EBE5E0] bg-white text-xs font-bold text-[#2A1E16] hover:border-[#2A1E16] hover:shadow-lg transition-all uppercase tracking-wider transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center"
+                                                aria-label={`Jump to ${range} collection`}
                                             >
                                                 {range}
                                             </button>
@@ -294,7 +297,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                                     </>
                                                                 )}
 
-                                                                {/* Floating Add to Box */}
+                                                                {/* Floating Add to Box - MOBILE OPTIMIZED */}
                                                                 <button
                                                                     onClick={(e) => {
                                                                         e.preventDefault();
@@ -306,10 +309,11 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                                             texture: variant.imageUrl ? `url('${variant.imageUrl}')` : (variant.color || '#b45a3c')
                                                                         });
                                                                     }}
-                                                                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-[var(--ink)] shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center z-20"
+                                                                    className="absolute top-4 right-4 min-w-[48px] min-h-[48px] w-12 h-12 rounded-full bg-white/90 backdrop-blur text-[var(--ink)] shadow-lg opacity-0 translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-500 hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center z-20 active:scale-95 touch-target md:opacity-0 opacity-100"
                                                                     title="Add Sample"
+                                                                    aria-label={`Add ${variant.name} to sample box`}
                                                                 >
-                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                                                                 </button>
 
                                                                 {/* View Details Badge */}

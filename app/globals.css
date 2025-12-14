@@ -262,7 +262,122 @@ img {
   }
 }
 
-/* Safe Area Utility for Mobile */
+/* Safe Area Utilities for Mobile - Enhanced */
 .safe-area-pb {
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-pt {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-pl {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-pr {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Mobile Touch Target Utilities */
+.touch-target {
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.touch-target-lg {
+  min-width: 52px;
+  min-height: 52px;
+}
+
+/* Enhance Mobile Tap Interaction */
+@media (max-width: 768px) {
+
+  /* Remove tap highlight on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  /* Better touch target sizing for buttons and links */
+  button,
+  a {
+    min-height: 44px;
+  }
+
+  /* Improve scrolling performance on mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent text selection on interactive elements */
+  button,
+  [role="button"],
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Improve font rendering on mobile */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+  }
+
+  /* Optimize input fields for mobile */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+    /* Prevent zoom on focus in iOS */
+  }
+}
+
+/* Active State for Mobile Buttons */
+@media (hover: none) and (pointer: coarse) {
+
+  button:active,
+  a:active,
+  [role="button"]:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}
+
+/* Prevent overscroll on fixed elements */
+.prevent-overscroll {
+  overscroll-behavior: contain;
+}
+
+/* Mobile-friendly spacing utilities */
+@media (max-width: 768px) {
+  .mobile-px-safe {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .mobile-py-safe {
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Thumb-zone optimization (bottom 1/3 of screen easier to reach) */
+.thumb-zone {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+/* Improve scroll snap on mobile */
+.snap-scroll-mobile {
+  scroll-snap-type: x mandatory;
+  scroll-padding: 1rem;
+}
+
+.snap-scroll-mobile>* {
+  scroll-snap-align: center;
 }

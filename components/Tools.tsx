@@ -1,8 +1,13 @@
 'use client';
 
 import React from 'react';
-import WallStyler from './WallStyler';
+import dynamic from 'next/dynamic';
 import { Product } from '@/lib/products';
+
+const WallStyler = dynamic(() => import('./WallStyler'), {
+    ssr: false,
+    loading: () => <div className="w-full h-full bg-[#1a1512] animate-pulse rounded-3xl" />
+});
 
 interface ToolsProps {
     products?: Product[];

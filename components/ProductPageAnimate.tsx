@@ -120,23 +120,27 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             )}
                         </div>
 
-                        {/* Gallery Toolbar - Below Container (Mobile Only) */}
+                        {/* Gallery Toolbar - Below Container (Mobile Only) - THUMB OPTIMIZED */}
                         {displayImages.length > 1 && (
-                            <div className="lg:hidden flex items-center gap-6 mt-6 bg-white/5 px-6 py-3 rounded-full border border-white/10">
+                            <div className="lg:hidden flex items-center justify-center gap-4 mt-8">
                                 <button
                                     onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)}
-                                    className="w-8 h-8 flex items-center justify-center hover:text-[var(--terracotta)] text-white transition-colors"
+                                    className="w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-[var(--terracotta)] text-white rounded-full transition-all active:scale-95 border border-white/20"
+                                    aria-label="Previous image"
                                 >
-                                    ←
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
                                 </button>
-                                <span className="text-xs font-mono font-medium text-white/60 w-12 text-center">
-                                    {activeImageIndex + 1} / {displayImages.length}
-                                </span>
+                                <div className="px-6 py-2 bg-white/5 rounded-full border border-white/10">
+                                    <span className="text-sm font-mono font-medium text-white/80">
+                                        {activeImageIndex + 1} / {displayImages.length}
+                                    </span>
+                                </div>
                                 <button
                                     onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)}
-                                    className="w-8 h-8 flex items-center justify-center hover:text-[var(--terracotta)] text-white transition-colors"
+                                    className="w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-[var(--terracotta)] text-white rounded-full transition-all active:scale-95 border border-white/20"
+                                    aria-label="Next image"
                                 >
-                                    →
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                 </button>
                             </div>
                         )}
@@ -244,14 +248,14 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                             {/* Desktop Actions (Primary) */}
                             <div className="hidden lg:flex flex-col w-full gap-4 mb-10">
-                                <a
-                                    href={`https://wa.me/918080081951?text=Inquiry for ${product.title}`}
+                                <button
+                                    onClick={() => setIsQuoteModalOpen(true)}
                                     className="w-full py-5 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl font-bold uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-3 relative overflow-hidden group shadow-lg shadow-orange-900/20 hover:shadow-orange-900/40 transform hover:-translate-y-0.5"
                                 >
                                     <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
                                     <span className="relative z-10">Get Quote</span>
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                </a>
+                                </button>
 
                                 <button
                                     onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
@@ -486,19 +490,25 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                 )
             }
 
-            {/* --- MOBILE STICKY DOCK (Items hidden on desktop) --- */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#1a1512]/80 backdrop-blur-xl border-t border-white/10 z-50 flex items-center gap-3 safe-area-pb">
+            {/* --- MOBILE STICKY DOCK (Items hidden on desktop) - THUMB OPTIMIZED --- */}
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 px-4 pt-3 pb-safe bg-[#1a1512]/95 backdrop-blur-xl border-t border-white/10 z-50 flex items-center gap-3" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
                 <button
                     onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
-                    className="flex-1 py-3.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform"
+                    className="flex-1 min-h-[52px] py-4 bg-white/5 border-2 border-white/10 text-white rounded-xl font-bold uppercase tracking-wider text-xs active:scale-95 transition-all active:bg-white/10 flex items-center justify-center gap-2"
+                    aria-label="Add sample to box"
                 >
-                    + Sample
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                    Sample
                 </button>
                 <button
                     onClick={() => setIsQuoteModalOpen(true)}
-                    className="flex-[2] py-3.5 bg-[var(--terracotta)] text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform shadow-lg shadow-orange-900/20 relative overflow-hidden"
+                    className="flex-[2] min-h-[52px] py-4 bg-[var(--terracotta)] text-white rounded-xl text-center font-bold uppercase tracking-wider text-sm active:scale-95 transition-all shadow-lg shadow-orange-900/30 relative overflow-hidden active:bg-[#a85638]"
+                    aria-label="Get quote for product"
                 >
-                    <span className="relative z-10">Get Quote</span>
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                        Get Quote
+                    </span>
                 </button>
             </div>
 

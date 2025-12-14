@@ -17,6 +17,7 @@ export default function QuoteModal({ isOpen, onClose, productName, variantName }
 
     // Initial State
     const [formData, setFormData] = useState({
+        name: '',
         role: 'Architect',
         product: productName,
         firmName: '',
@@ -28,6 +29,7 @@ export default function QuoteModal({ isOpen, onClose, productName, variantName }
     });
 
     const [errors, setErrors] = useState({
+        name: '',
         city: '',
         quantity: '',
         contact: ''
@@ -42,7 +44,7 @@ export default function QuoteModal({ isOpen, onClose, productName, variantName }
                 notes: variantName ? `Variant: ${variantName}` : ''
             }));
             setCurrentStep(1);
-            setErrors({ city: '', quantity: '', contact: '' });
+            setErrors({ name: '', city: '', quantity: '', contact: '' });
         }
     }, [isOpen, productName, variantName]);
 
@@ -58,6 +60,13 @@ export default function QuoteModal({ isOpen, onClose, productName, variantName }
     const validateStep = (step: number) => {
         let isValid = true;
         const newErrors = { ...errors };
+
+        if (step === 1) {
+            if (!formData.name.trim()) {
+                newErrors.name = 'Name is required';
+                isValid = false;
+            }
+        }
 
         if (step === 2) {
             if (!formData.city.trim()) {
@@ -107,6 +116,7 @@ export default function QuoteModal({ isOpen, onClose, productName, variantName }
         // 2. Open WhatsApp
         const message = `*New Quote Request*
 ----------------
+*Name:* ${formData.name}
 *Product:* ${formData.product}
 *Variant:* ${variantName || 'N/A'}
 *Role:* ${formData.role}
@@ -173,6 +183,18 @@ Sent from UrbanClay Website`;
                                 exit={{ opacity: 0, x: -20 }}
                                 className="space-y-4"
                             >
+                                <div>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">Your Name</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        placeholder="Enter your full name"
+                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-[#EBE5E0] focus:border-[var(--terracotta)] outline-none ${errors.name ? 'border-red-500' : 'border-white/10'}`}
+                                    />
+                                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                                </div>
                                 <div>
                                     <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">I am a...</label>
                                     <select
