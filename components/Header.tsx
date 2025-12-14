@@ -255,7 +255,6 @@ export default function Header() {
                             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                             className="fixed left-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-white shadow-2xl md:hidden z-[60] overflow-y-auto overscroll-contain"
                             data-lenis-prevent
-                            data-lenis-prevent
                         >
                             <div className="p-6 flex flex-col gap-6">
                                 {/* Header in Menu */}
