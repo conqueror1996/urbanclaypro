@@ -164,14 +164,14 @@ export default function Header() {
                 {/* Mobile Menu Button - THUMB OPTIMIZED */}
                 <button
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className="md:hidden p-3 -mr-2 text-[#2A1E16] hover:bg-black/5 rounded-xl transition-colors z-50 min-w-[48px] min-h-[48px] flex items-center justify-center active:scale-95"
+                    className={`md:hidden p-3 -mr-2 rounded-xl transition-colors z-50 min-w-[48px] min-h-[48px] flex items-center justify-center active:scale-95 ${isScrolled || mobileMenuOpen || pathname === '/' ? 'text-[#2A1E16] hover:bg-black/5' : 'text-white hover:bg-white/10'}`}
                     aria-label="Toggle mobile menu"
                     aria-expanded={mobileMenuOpen}
                 >
-                    <div className="w-6 h-5 flex flex-col justify-between">
-                        <span className={`w-full h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                    <div className="w-6 h-5 flex flex-col justify-between relative">
+                        <span className={`w-full h-0.5 bg-current transition-all duration-300 transform origin-center ${mobileMenuOpen ? 'rotate-45 absolute top-1/2 -translate-y-1/2' : ''}`} />
                         <span className={`w-full h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
-                        <span className={`w-full h-0.5 bg-current transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2.5' : ''}`} />
+                        <span className={`w-full h-0.5 bg-current transition-all duration-300 transform origin-center ${mobileMenuOpen ? '-rotate-45 absolute top-1/2 -translate-y-1/2' : ''}`} />
                     </div>
                 </button>
             </div>
@@ -261,13 +261,15 @@ export default function Header() {
                             <div className="p-6 flex flex-col gap-6">
                                 {/* Header in Menu */}
                                 <div className="flex items-center justify-between mb-2">
-                                    <Image
-                                        src="/urbanclay-logo.png"
-                                        alt="UrbanClay"
-                                        width={120}
-                                        height={32}
-                                        className="h-8 w-auto"
-                                    />
+                                    <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                                        <Image
+                                            src="/urbanclay-logo.png"
+                                            alt="UrbanClay"
+                                            width={120}
+                                            height={32}
+                                            className="h-8 w-auto"
+                                        />
+                                    </Link>
                                     {/* Redundant close button removed, using main header toggle instead */}
                                 </div>
 
@@ -276,19 +278,22 @@ export default function Header() {
                                     <div className="py-2">
                                         <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Products</h4>
                                         <div className="pl-2 flex flex-col gap-2 border-l-2 border-gray-100">
-                                            {PRODUCT_CATEGORIES.map((cat, idx) => (
-                                                <Link
-                                                    key={idx}
-                                                    href={cat.href}
-                                                    onClick={() => setMobileMenuOpen(false)}
-                                                    className="min-h-[48px] py-3 flex items-center justify-between group active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2"
-                                                >
-                                                    <span className="text-base font-serif text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">
-                                                        {cat.title}
-                                                    </span>
-                                                    <span className="text-[10px] uppercase tracking-wider text-gray-400">{cat.subtitle}</span>
-                                                </Link>
-                                            ))}
+                                            {PRODUCT_CATEGORIES.map((cat, idx) => {
+                                                const isActive = pathname === cat.href || (cat.href.includes('?') && pathname === cat.href.split('?')[0] && window.location.search === cat.href.split('?')[1]);
+                                                return (
+                                                    <Link
+                                                        key={idx}
+                                                        href={cat.href}
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                        className={`min-h-[48px] py-3 flex items-center justify-between group active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2 ${isActive ? 'bg-gray-50' : ''}`}
+                                                    >
+                                                        <span className={`text-base font-serif transition-colors ${isActive ? 'text-[var(--terracotta)] font-bold' : 'text-[#2A1E16] group-hover:text-[var(--terracotta)]'}`}>
+                                                            {cat.title}
+                                                        </span>
+                                                        <span className="text-[10px] uppercase tracking-wider text-gray-400">{cat.subtitle}</span>
+                                                    </Link>
+                                                );
+                                            })}
                                             <Link
                                                 href="/products"
                                                 onClick={() => setMobileMenuOpen(false)}
@@ -302,17 +307,20 @@ export default function Header() {
                                     <div className="h-px bg-gray-100 my-2" />
 
                                     {/* Other Links - THUMB OPTIMIZED */}
-                                    {navLinks.filter(l => l.label !== 'Products').map((link) => (
-                                        <Link
-                                            key={link.href}
-                                            href={link.href}
-                                            onClick={() => setMobileMenuOpen(false)}
-                                            className="min-h-[52px] py-4 text-lg font-serif font-medium text-[#2A1E16] flex justify-between items-center border-b border-gray-50 last:border-0 active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2"
-                                        >
-                                            {link.label}
-                                            <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                                        </Link>
-                                    ))}
+                                    {navLinks.filter(l => l.label !== 'Products').map((link) => {
+                                        const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+                                        return (
+                                            <Link
+                                                key={link.href}
+                                                href={link.href}
+                                                onClick={() => setMobileMenuOpen(false)}
+                                                className={`min-h-[52px] py-4 text-lg font-serif font-medium flex justify-between items-center border-b border-gray-50 last:border-0 active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2 ${isActive ? 'text-[var(--terracotta)] font-bold bg-gray-50' : 'text-[#2A1E16]'}`}
+                                            >
+                                                {link.label}
+                                                <svg className={`w-4 h-4 ${isActive ? 'text-[var(--terracotta)]' : 'text-gray-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                            </Link>
+                                        );
+                                    })}
                                 </nav>
 
                                 <div className="mt-auto pt-8 space-y-4">

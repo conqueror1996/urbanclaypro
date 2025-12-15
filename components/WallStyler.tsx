@@ -57,41 +57,39 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
 
     // --- GENERATORS ---
     // CSS Grid generator based on pattern
-    // Return Object for style and String for class
-    // --- GENERATORS ---
-    // CSS Grid generator based on pattern
     const getGridStyles = (): { className: string; style: React.CSSProperties } => {
         // REMOVED gap-x-[3px] and gap-x-[6px] -> Only keeping gap-y for horizontal rows
         const baseClass = "absolute inset-0 grid p-4 md:p-8 transition-all duration-700 ease-in-out gap-y-[3px] md:gap-y-[6px]";
+        const cols = isMobile ? 'repeat(4, 1fr)' : 'repeat(12, 1fr)';
 
         switch (pattern) {
             case 'stack':
                 return {
                     className: `${baseClass} content-start`,
-                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
+                    style: { gridTemplateColumns: cols }
                 };
             case 'herringbone':
                 // Diagonal Stretcher approximation for stability
                 return {
-                    className: `${baseClass} content-center rotate-45 scale-150`,
-                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
+                    className: `${baseClass} content-center rotate-45 ${isMobile ? 'scale-[2]' : 'scale-150'}`,
+                    style: { gridTemplateColumns: cols }
                 };
             case 'basket':
                 // BLOCKS: 3x1 aspect ratio implies 3 stacked bricks = Square.
                 // We render Squares.
                 return {
                     className: `${baseClass} content-start`,
-                    style: { gridTemplateColumns: 'repeat(8, 1fr)' }
+                    style: { gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(8, 1fr)' }
                 };
             case 'spanish':
                 return {
                     className: `${baseClass} content-start`,
-                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
+                    style: { gridTemplateColumns: cols }
                 };
             default: // stretcher (Default 3:1)
                 return {
                     className: `${baseClass} content-start`,
-                    style: { gridTemplateColumns: 'repeat(12, 1fr)' }
+                    style: { gridTemplateColumns: cols }
                 };
         }
     };

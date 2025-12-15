@@ -58,7 +58,7 @@ export default function ArchitectPageAnimate() {
             <SampleModal isOpen={sampleModalOpen} onClose={() => setSampleModalOpen(false)} />
 
             {/* --- HERO SECTION --- */}
-            <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+            <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden py-32">
                 {/* Background */}
                 <motion.div
                     style={{ y: heroY, opacity: heroOpacity }}

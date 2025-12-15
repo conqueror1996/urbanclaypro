@@ -22,9 +22,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
     };
 
     const boxRequirements = box.map(getSampleDescription).join(', ');
-    const defaultRequirements = initialRequirements
-        ? `${initialRequirements}${box.length > 0 ? `, ${boxRequirements}` : ''}`
-        : boxRequirements;
+    const defaultRequirements = initialRequirements || '';
 
     const [formData, setFormData] = useState({
         name: '',
@@ -35,24 +33,8 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
         requirements: defaultRequirements
     });
 
-    // Update requirements when box changes, but only if user hasn't manually edited it significantly
-    // (Simplification: Just append box items if they aren't there)
-    React.useEffect(() => {
-        if (box.length > 0) {
-            setFormData(prev => {
-                const currentReqs = prev.requirements;
-                const newItems = box
-                    .filter(s => !currentReqs.includes(s.name))
-                    .map(getSampleDescription)
-                    .join(', ');
-
-                return {
-                    ...prev,
-                    requirements: currentReqs ? (newItems ? `${currentReqs}, ${newItems}` : currentReqs) : newItems
-                };
-            });
-        }
-    }, [box]);
+    // Auto-fill logic removed as per request to keep form clean.
+    // Box items are now appended directly during submission.
 
     const [errors, setErrors] = useState({ name: '', firm: '', phone: '', email: '', address: '' });
 
@@ -81,7 +63,11 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
         e.preventDefault();
         if (!validate()) return;
 
-        const rawMessage = `*New Sample Request*\n\n*Name:* ${formData.name}\n*Firm:* ${formData.firm}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email}\n*Address:* ${formData.address}\n*Requirements:* ${formData.requirements}`;
+        const finalRequirements = formData.requirements
+            ? `${formData.requirements}${box.length > 0 ? `\n(Tray: ${boxRequirements})` : ''}`
+            : (box.length > 0 ? `Tray: ${boxRequirements}` : 'None');
+
+        const rawMessage = `*New Sample Request*\n\n*Name:* ${formData.name}\n*Firm:* ${formData.firm}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email}\n*Address:* ${formData.address}\n*Requirements:* ${finalRequirements}`;
         const encodedMessage = encodeURIComponent(rawMessage);
         window.open(`https://wa.me/918080081951?text=${encodedMessage}`, '_blank');
         setIsSubmitted(true);
@@ -103,7 +89,8 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                         animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 30, rotateX: 10 }}
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                        className="relative bg-[#f5f0eb] rounded-2xl md:rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl overflow-hidden max-h-[85vh] overflow-y-auto overscroll-contain scrollbar-hide border border-white/50"
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        className="relative bg-[#f5f0eb] rounded-xl md:rounded-3xl p-5 md:p-8 max-w-lg w-full shadow-2xl overflow-hidden max-h-[85vh] overflow-y-auto overscroll-contain scrollbar-hide border border-white/50"
                         data-lenis-prevent
                     >
                         {/* Noise Overlay */}
@@ -144,10 +131,12 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                                                         transition={{ delay: i * 0.1 }}
                                                         className="relative group w-16 h-16 flex-shrink-0 cursor-pointer"
                                                     >
-                                                        <div
-                                                            className="w-full h-full rounded-lg shadow-md border border-black/5 bg-cover bg-center transform transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg"
-                                                            style={{ background: sample.texture.includes('url') ? sample.texture : sample.color }}
-                                                        />
+                                                        <a href={`/products/${sample.id}`} className="block w-full h-full">
+                                                            <div
+                                                                className="w-full h-full rounded-lg shadow-md border border-black/5 bg-cover bg-center transform transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-lg"
+                                                                style={{ backgroundImage: sample.texture.includes('url') ? sample.texture : `none`, backgroundColor: sample.color }}
+                                                            />
+                                                        </a>
                                                         {/* Subtle thickness effect */}
                                                         <div
                                                             className="absolute -bottom-1 left-0 w-full h-full rounded-lg bg-black/20 -z-10"
@@ -155,7 +144,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                                                         />
 
                                                         <button
-                                                            onClick={() => removeFromBox(sample.id)}
+                                                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); removeFromBox(sample.id); }}
                                                             className="absolute -top-2 -right-2 w-5 h-5 bg-white text-red-500 rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 scale-75 group-hover:scale-100 z-10"
                                                         >
                                                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -166,85 +155,84 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                                                     </motion.div>
                                                 ))}
 
-                                                {/* Add More Placeholder */}
-                                                <button onClick={onClose} className="flex-shrink-0 w-16 h-16 rounded-lg border-2 border-dashed border-[#d6cbb8] flex flex-col items-center justify-center text-[#a1887f] hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] transition-colors group">
+                                                {/* Add More Placeholder -> Redirects to Catalogue */}
+                                                <a href="/products" className="flex-shrink-0 w-16 h-16 rounded-lg border-2 border-dashed border-[#d6cbb8] flex flex-col items-center justify-center text-[#a1887f] hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] transition-colors group">
                                                     <span className="text-xl mb-0.5 group-hover:scale-110 transition-transform">+</span>
                                                     <span className="text-[8px] font-bold uppercase">Add</span>
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
                                     )}
 
-                                    <form onSubmit={handleSubmit} className="space-y-4">
-                                        <div className="grid grid-cols-1 gap-3">
-                                            <div className="relative group">
+                                    <form onSubmit={handleSubmit} className="space-y-3">
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="relative group col-span-1">
                                                 <input
                                                     type="text"
                                                     name="name"
-                                                    placeholder="Full Name"
+                                                    placeholder="Name"
                                                     value={formData.name}
                                                     onChange={handleChange}
-                                                    className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.name ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
+                                                    className={`w-full px-3 py-2.5 rounded-lg bg-[#faf9f8] border ${errors.name ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-xs transition-all placeholder-gray-400 font-medium`}
                                                 />
-                                                {errors.name && <span className="absolute right-3 top-3.5 text-red-400 text-[10px] font-bold uppercase tracking-wider">Required</span>}
+                                                {errors.name && <span className="absolute right-2 top-2 text-red-400 text-[9px] font-bold uppercase">!</span>}
                                             </div>
 
-                                            <div className="relative group">
+                                            <div className="relative group col-span-1">
                                                 <input
                                                     type="text"
                                                     name="firm"
-                                                    placeholder="Firm / Studio Name"
+                                                    placeholder="Firm"
                                                     value={formData.firm}
                                                     onChange={handleChange}
-                                                    className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.firm ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
+                                                    className={`w-full px-3 py-2.5 rounded-lg bg-[#faf9f8] border ${errors.firm ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-xs transition-all placeholder-gray-400 font-medium`}
                                                 />
-                                                {errors.firm && <span className="absolute right-3 top-3.5 text-red-400 text-[10px] font-bold uppercase tracking-wider">Required</span>}
+                                                {errors.firm && <span className="absolute right-2 top-2 text-red-400 text-[9px] font-bold uppercase">!</span>}
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-3">
-                                                <div className="relative group">
-                                                    <input
-                                                        type="tel"
-                                                        name="phone"
-                                                        placeholder="Phone"
-                                                        value={formData.phone}
-                                                        onChange={handleChange}
-                                                        className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.phone ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
-                                                    />
-                                                </div>
-                                                <div className="relative group">
-                                                    <input
-                                                        type="email"
-                                                        name="email"
-                                                        placeholder="Email"
-                                                        value={formData.email}
-                                                        onChange={handleChange}
-                                                        className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.email ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-sm transition-all placeholder-gray-400 font-medium`}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="relative group">
-                                                <textarea
-                                                    name="address"
-                                                    placeholder="Shipping Address"
-                                                    value={formData.address}
+                                            <div className="relative group col-span-1">
+                                                <input
+                                                    type="tel"
+                                                    name="phone"
+                                                    placeholder="Phone"
+                                                    value={formData.phone}
                                                     onChange={handleChange}
-                                                    rows={2}
-                                                    className={`w-full px-4 py-3 rounded-lg bg-[#faf9f8] border ${errors.address ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] resize-none text-sm transition-all placeholder-gray-400 font-medium`}
-                                                ></textarea>
+                                                    className={`w-full px-3 py-2.5 rounded-lg bg-[#faf9f8] border ${errors.phone ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-xs transition-all placeholder-gray-400 font-medium`}
+                                                />
                                             </div>
 
-                                            <div className="relative group">
-                                                <textarea
-                                                    name="requirements"
-                                                    placeholder="Specific Requirements (e.g. Exposed Wirecut Bricks)"
-                                                    value={formData.requirements}
+                                            <div className="relative group col-span-1">
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    placeholder="Email"
+                                                    value={formData.email}
                                                     onChange={handleChange}
-                                                    rows={2}
-                                                    className="w-full px-4 py-3 rounded-lg bg-[#faf9f8] border border-transparent focus:border-[var(--terracotta)] focus:bg-white focus:ring-0 outline-none text-[#2A1E16] resize-none text-sm transition-all placeholder-gray-400 font-medium"
-                                                ></textarea>
+                                                    className={`w-full px-3 py-2.5 rounded-lg bg-[#faf9f8] border ${errors.email ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] text-xs transition-all placeholder-gray-400 font-medium`}
+                                                />
                                             </div>
+                                        </div>
+
+                                        <div className="relative group">
+                                            <textarea
+                                                name="address"
+                                                placeholder="Shipping Address"
+                                                value={formData.address}
+                                                onChange={handleChange}
+                                                rows={2}
+                                                className={`w-full px-3 py-2.5 rounded-lg bg-[#faf9f8] border ${errors.address ? 'border-red-300 bg-red-50' : 'border-transparent focus:border-[var(--terracotta)]'} focus:bg-white focus:ring-0 outline-none text-[#2A1E16] resize-none text-xs transition-all placeholder-gray-400 font-medium`}
+                                            ></textarea>
+                                        </div>
+
+                                        <div className="relative group">
+                                            <textarea
+                                                name="requirements"
+                                                placeholder="Notes / Specifics (Optional)"
+                                                value={formData.requirements}
+                                                onChange={handleChange}
+                                                rows={1}
+                                                className="w-full px-3 py-2.5 rounded-lg bg-[#faf9f8] border border-transparent focus:border-[var(--terracotta)] focus:bg-white focus:ring-0 outline-none text-[#2A1E16] resize-none text-xs transition-all placeholder-gray-400 font-medium"
+                                            ></textarea>
                                         </div>
 
                                         <button type="submit" className="w-full py-3.5 bg-[var(--terracotta)] text-white rounded-lg font-bold uppercase tracking-wider text-xs hover:bg-[#a85638] transition-all shadow-lg shadow-orange-900/10 active:scale-[0.98]">

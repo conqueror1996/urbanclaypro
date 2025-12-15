@@ -183,6 +183,27 @@ export default defineType({
             ],
         }),
         defineField({
+            name: 'texturePackage',
+            title: 'PBR Texture Package',
+            type: 'object',
+            group: 'details',
+            fields: [
+                defineField({
+                    name: 'seamlessPreview',
+                    title: 'Seamless Preview (4K)',
+                    type: 'image',
+                    description: 'A seamless tileable image of the texture.',
+                    options: { hotspot: true }
+                }),
+                defineField({
+                    name: 'downloadFile',
+                    title: 'Texture Maps (ZIP)',
+                    type: 'file',
+                    description: 'Zip file containing Albedo, Normal, Roughness, Displacement maps.'
+                })
+            ]
+        }),
+        defineField({
             name: 'resources',
             title: 'Downloads & Resources',
             type: 'object',

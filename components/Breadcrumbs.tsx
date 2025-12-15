@@ -18,8 +18,8 @@ export default function Breadcrumbs({ range }: { range?: string }) {
     const variantName = searchParams.get('variant');
 
     return (
-        <nav className="flex flex-wrap items-center justify-center lg:justify-start text-[10px] md:text-xs font-bold uppercase tracking-wide md:tracking-widest text-gray-500">
-            <Link href="/" className="hover:text-[var(--terracotta)] transition-colors">Home</Link>
+        <nav className="flex flex-nowrap items-center justify-start text-[10px] md:text-xs font-bold uppercase tracking-wide md:tracking-widest text-gray-500 leading-none">
+            <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center">Home</Link>
 
             {parts.map((part, idx) => {
                 const path = `/${parts.slice(0, idx + 1).join('/')}`;
@@ -27,19 +27,19 @@ export default function Breadcrumbs({ range }: { range?: string }) {
 
                 return (
                     <React.Fragment key={path}>
-                        <span className="mx-2 text-gray-300">/</span>
+                        <span className="mx-2 text-gray-300 text-[10px] flex items-center">/</span>
                         {isLast ? (
-                            <span className="text-[var(--terracotta)]">{formatLabel(part)}</span>
+                            <span className="text-[var(--terracotta)] flex items-center whitespace-nowrap">{formatLabel(part)}</span>
                         ) : (
                             <>
-                                <Link href={path} className="hover:text-[var(--terracotta)] transition-colors">
+                                <Link href={path} className="hover:text-[var(--terracotta)] transition-colors flex items-center whitespace-nowrap">
                                     {formatLabel(part)}
                                 </Link>
                                 {/* Insert Range if present and we just rendered the category (second to last item) */}
                                 {range && idx === parts.length - 2 && (
                                     <>
-                                        <span className="mx-2 text-gray-300">/</span>
-                                        <span className="text-[#5d554f] cursor-default">{range}</span>
+                                        <span className="mx-2 text-gray-300 text-[10px] flex items-center">/</span>
+                                        <span className="text-[#5d554f] cursor-default flex items-center whitespace-nowrap">{range}</span>
                                     </>
                                 )}
                             </>
@@ -50,8 +50,8 @@ export default function Breadcrumbs({ range }: { range?: string }) {
 
             {variantName && (
                 <>
-                    <span className="mx-2 text-gray-300">/</span>
-                    <span className="text-[var(--terracotta)]">{variantName}</span>
+                    <span className="mx-2 text-gray-300 text-[10px] flex items-center">/</span>
+                    <span className="text-[var(--terracotta)] flex items-center whitespace-nowrap">{variantName}</span>
                 </>
             )}
         </nav>

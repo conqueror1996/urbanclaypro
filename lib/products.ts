@@ -362,3 +362,19 @@ export async function getResources(): Promise<Resource[]> {
         return [];
     }
 }
+
+export async function getTextures(): Promise<any[]> {
+    try {
+        const query = groq`*[_type == "product" && defined(texturePackage.seamlessPreview)] {
+            _id,
+            title,
+            "previewUrl": texturePackage.seamlessPreview.asset->url,
+            "downloadUrl": texturePackage.downloadFile.asset->url
+        }`;
+        const textures = await client.fetch(query, {}, { next: { revalidate: 60 } });
+        return textures || [];
+    } catch (error) {
+        console.error('Error fetching textures:', error);
+        return [];
+    }
+}

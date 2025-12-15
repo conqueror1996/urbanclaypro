@@ -5,14 +5,20 @@ import { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
 import ArchitectsCorner from '@/components/ArchitectsCorner';
 import ScrollReveal from '@/components/ScrollReveal';
+import MaterialCalculator from '@/components/resources/MaterialCalculator';
+
 
 
 export const metadata: Metadata = {
     title: 'Resources & Tools | UrbanClay',
-    description: 'Calculators, installation guides, and technical downloads for architects and builders.',
+    description: 'Calculators, installation guides, and technical documentation for architects and builders.',
 };
 
+import { getResources, getTextures } from '@/lib/products';
+
 export default async function ResourcesPage() {
+    const resources = await getResources();
+    const textures = await getTextures();
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -61,6 +67,12 @@ export default async function ResourcesPage() {
                 </ScrollReveal>
             </div>
 
+            {/* SECTION 1: MATERIAL CALCULATOR (New Feature) */}
+            <ScrollReveal className="py-12 max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
+                <MaterialCalculator />
+            </ScrollReveal>
+
+
 
 
             {/* SECTION 2: TECHNICAL DOWNLOADS */}
@@ -70,31 +82,41 @@ export default async function ResourcesPage() {
                         <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-3 block">Documentation</span>
                         <h2 className="text-3xl md:text-4xl font-serif text-white">Installation & Technical</h2>
                     </div>
-                    <a href="/downloads/urbanclay-master-catalog.pdf" className="px-6 py-3 border border-white/20 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)]/10 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all">
-                        Download Master Catalog
+                    {/* Link to the Digital Monograph Page we just built */}
+                    <a href="/catalogue" target="_blank" className="px-6 py-3 border border-white/20 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)]/10 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all">
+                        View Digital Monograph 2025
                     </a>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[
-                        { title: 'Brick Cladding Guide', desc: 'Substrate prep & adhesion methods.', size: '4.2 MB', bg: 'bg-gradient-to-br from-white/5 to-transparent' },
-                        { title: 'Ventilated Facade Manual', desc: 'Clip systems & structural framing.', size: '12 MB', bg: 'bg-gradient-to-br from-white/5 to-transparent' },
-                        { title: 'Jaali Installation', desc: 'Vertical stacking & mortar ratios.', size: '2.8 MB', bg: 'bg-gradient-to-br from-white/5 to-transparent' },
-                        { title: 'Maintenance & Care', desc: 'Sealing and cleaning protocols.', size: '1.5 MB', bg: 'bg-gradient-to-br from-white/5 to-transparent' },
-                        { title: 'Sustainability Report', desc: 'EPD & LEED contribution data.', size: '5.1 MB', bg: 'bg-gradient-to-br from-white/5 to-transparent' },
-                        { title: 'Warranty Terms', desc: '25-year structural warranty details.', size: '0.8 MB', bg: 'bg-gradient-to-br from-white/5 to-transparent' },
-                    ].map((item, i) => (
-                        <div key={i} className={`group p-8 rounded-[2rem] border border-white/5 hover:border-white/20 transition-all cursor-pointer relative overflow-hidden ${item.bg}`}>
-                            <div className="absolute top-4 right-4 p-2 bg-white/5 rounded-full text-white/40 group-hover:text-[var(--terracotta)] group-hover:bg-white/10 transition-all">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                            </div>
-                            <div className="mt-8">
-                                <h3 className="text-xl font-serif text-white mb-2 group-hover:text-[var(--terracotta)] transition-colors">{item.title}</h3>
-                                <p className="text-sm text-white/60 mb-6">{item.desc}</p>
-                                <span className="text-[10px] font-mono text-white/30 border border-white/10 px-2 py-1 rounded uppercase">PDF • {item.size}</span>
-                            </div>
+                    {/* Render Real Sanity Resources */}
+                    {resources.length > 0 ? (
+                        resources.map((item) => (
+                            <a
+                                key={item._id}
+                                href={item.url ? `${item.url}?dl=` : '#'}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group p-8 rounded-[2rem] border border-white/5 hover:border-white/20 transition-all cursor-pointer relative overflow-hidden bg-gradient-to-br from-white/5 to-transparent"
+                            >
+                                <div className="absolute top-4 right-4 p-2 bg-white/5 rounded-full text-white/40 group-hover:text-[var(--terracotta)] group-hover:bg-white/10 transition-all">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                </div>
+                                <div className="mt-8">
+                                    <h3 className="text-xl font-serif text-white mb-2 group-hover:text-[var(--terracotta)] transition-colors">{item.title}</h3>
+                                    <p className="text-sm text-white/60 mb-6 line-clamp-2">{item.description}</p>
+                                    <span className="text-[10px] font-mono text-white/30 border border-white/10 px-2 py-1 rounded uppercase">
+                                        {item.type} {item.size ? `• ${item.size}` : ''}
+                                    </span>
+                                </div>
+                            </a>
+                        ))
+                    ) : (
+                        // Fallback/Empty State if nothing in Sanity yet
+                        <div className="col-span-full py-12 text-center text-white/40 italic font-light">
+                            No technical documents uploaded yet. Access the Digital Monograph above.
                         </div>
-                    ))}
+                    )}
                 </div>
             </ScrollReveal>
 
