@@ -38,6 +38,7 @@ export async function submitLead(formData: any) {
             timeline: formData.timeline,
             contact: formData.contact,
             notes: formData.notes,
+            requirement: formData.notes, // Storing the variant/requirement string here as well for clarity in CMS
             seriousness: seriousness,
             isSerious: isSerious,
             status: 'new',

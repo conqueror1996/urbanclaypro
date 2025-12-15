@@ -135,7 +135,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: 'https://urbanclaypro.vercel.app/og-image.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'UrbanClay - Premium Terracotta Tiles & Jaali Panels India',
@@ -146,7 +146,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'UrbanClay - Premium Terracotta Tiles India',
     description: 'Low-efflorescence clay brick tiles & jaali panels. Pan-India delivery to all major cities.',
-    images: ['https://urbanclaypro.vercel.app/og-image.png'],
+    images: ['/og-image.png'],
   },
   icons: {
     icon: '/icon.png',

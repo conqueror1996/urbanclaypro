@@ -29,7 +29,7 @@ export const metadata: Metadata = {
         url: 'https://urbanclay.in/projects',
         type: 'website',
         locale: 'en_IN',
-        images: ['https://urbanclay.in/og-projects.jpg'], // Assuming you might have a general OG image or will use one of the projects
+        images: ['https://urbanclay.in/images/premium-terracotta-facade.png'],
     }
 };
 

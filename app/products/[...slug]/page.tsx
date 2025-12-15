@@ -79,14 +79,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             siteName: 'UrbanClay',
             locale: 'en_IN',
             type: 'website',
-            images: product.seo?.openGraphImage || product.imageUrl ? [
+            images: (product.seo?.openGraphImage || product.imageUrl) ? [
                 {
-                    url: (product as any).seo?.openGraphImage || product.imageUrl, // Cast to avoid strict type error if openGraphImage structure differs, though Sanity usually returns full object or url depending on query
+                    url: (product as any).seo?.openGraphImage || product.imageUrl,
                     width: 1200,
                     height: 630,
                     alt: product.title,
                 }
-            ] : [],
+            ] : [
+                {
+                    url: 'https://urbanclay.in/og-image.png',
+                    width: 1200,
+                    height: 630,
+                    alt: product.title
+                }
+            ],
         },
         twitter: {
             card: 'summary_large_image',

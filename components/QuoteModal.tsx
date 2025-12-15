@@ -123,7 +123,7 @@ export default function QuoteModal({ isOpen, onClose, productName, variantName }
 *City:* ${formData.city}
 *Quantity:* ${formData.quantity}
 *Contact:* ${formData.contact}
-*Notes:* ${formData.notes}
+*Requirements:* ${formData.notes}
 ----------------
 Sent from UrbanClay Website`;
 

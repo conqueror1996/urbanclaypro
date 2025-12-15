@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { submitLead } from '@/app/actions/submit-lead';
 
 import { useSampleBox } from '@/context/SampleContext';
 
@@ -59,13 +60,31 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
         if (errors[name as keyof typeof errors]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) return;
 
         const finalRequirements = formData.requirements
-            ? `${formData.requirements}${box.length > 0 ? `\n(Tray: ${boxRequirements})` : ''}`
-            : (box.length > 0 ? `Tray: ${boxRequirements}` : 'None');
+            ? `${formData.requirements}${box.length > 0 ? `\n\n(Tray Items: ${boxRequirements})` : ''}`
+            : (box.length > 0 ? `Tray Items: ${boxRequirements}` : 'None');
+
+        // 1. Submit to CMS (Server Action)
+        try {
+            await submitLead({
+                role: 'Architect', // Defaulting to Architect/User for sample requests or we could add a selector
+                name: formData.name,
+                firmName: formData.firm,
+                contact: formData.phone, // Mapping phone to contact
+                // email: formData.email, // Note: Schema might not have email yet, but we can pass it if we update schema later
+                city: formData.address.split(',').pop()?.trim() || 'India', // Simple heuristics for city
+                quantity: 'Sample Box',
+                product: 'Sample Request',
+                notes: `Address: ${formData.address}\n\nRequirements: ${finalRequirements}`, // Combine address and reqs for context
+            });
+        } catch (err) {
+            console.error('Failed to save lead:', err);
+            // Continue to WhatsApp anyway so user flow isn't broken
+        }
 
         const rawMessage = `*New Sample Request*\n\n*Name:* ${formData.name}\n*Firm:* ${formData.firm}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email}\n*Address:* ${formData.address}\n*Requirements:* ${finalRequirements}`;
         const encodedMessage = encodeURIComponent(rawMessage);
@@ -88,7 +107,6 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                         initial={{ opacity: 0, scale: 0.9, y: 30, rotateX: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 30, rotateX: 10 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                         className="relative bg-[#f5f0eb] rounded-xl md:rounded-3xl p-5 md:p-8 max-w-lg w-full shadow-2xl overflow-hidden max-h-[85vh] overflow-y-auto overscroll-contain scrollbar-hide border border-white/50"
                         data-lenis-prevent

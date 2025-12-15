@@ -47,6 +47,12 @@ export default defineType({
       type: 'text',
     }),
     defineField({
+      name: 'requirement',
+      title: 'Requirement Details',
+      type: 'text',
+      description: 'Specific variation or custom requirement asked by the user',
+    }),
+    defineField({
       name: 'isSerious',
       title: 'Is Serious Client?',
       type: 'boolean',

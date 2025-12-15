@@ -6,12 +6,35 @@ import JsonLd from '@/components/JsonLd';
 import ArchitectsCorner from '@/components/ArchitectsCorner';
 import ScrollReveal from '@/components/ScrollReveal';
 import MaterialCalculator from '@/components/resources/MaterialCalculator';
+import TextureLibrary from '@/components/resources/TextureLibrary';
 
 
 
 export const metadata: Metadata = {
     title: 'Resources & Tools | UrbanClay',
     description: 'Calculators, installation guides, and technical documentation for architects and builders.',
+    openGraph: {
+        title: 'Resources & Technical Tools | UrbanClay',
+        description: 'Access material calculators, installation guides, and technical specifications for architectural terracotta projects.',
+        url: 'https://urbanclay.in/resources',
+        siteName: 'UrbanClay',
+        locale: 'en_IN',
+        type: 'website',
+        images: [
+            {
+                url: 'https://urbanclay.in/images/architect-hero-confidence.png',
+                width: 1200,
+                height: 630,
+                alt: 'UrbanClay Architectural Resources',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Resources & Technical Tools | UrbanClay',
+        description: 'Access material calculators, installation guides, and technical specifications.',
+        images: ['https://urbanclay.in/images/architect-hero-confidence.png'],
+    },
 };
 
 import { getResources, getTextures } from '@/lib/products';
@@ -72,6 +95,11 @@ export default async function ResourcesPage() {
                 <MaterialCalculator />
             </ScrollReveal>
 
+            {/* SECTION 1.5: TEXTURE LIBRARY */}
+            <ScrollReveal className="py-12 max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
+                <TextureLibrary textures={textures} />
+            </ScrollReveal>
+
 
 
 
@@ -82,10 +110,6 @@ export default async function ResourcesPage() {
                         <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-3 block">Documentation</span>
                         <h2 className="text-3xl md:text-4xl font-serif text-white">Installation & Technical</h2>
                     </div>
-                    {/* Link to the Digital Monograph Page we just built */}
-                    <a href="/catalogue" target="_blank" className="px-6 py-3 border border-white/20 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)]/10 text-white rounded-full text-xs font-bold uppercase tracking-widest transition-all">
-                        View Digital Monograph 2025
-                    </a>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
