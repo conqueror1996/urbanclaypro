@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { analyzeImage } from '@/utils/analyze-image';
+import { analyzeProductImage } from '@/app/actions/analyze-product-image';
 import Image from 'next/image';
 
 
@@ -34,7 +34,10 @@ export default function VariantCreator({ onClose, onSave }: VariantCreatorProps)
 
             // Trigger AI on main image
             try {
-                const result = await analyzeImage(mainFile);
+                const formData = new FormData();
+                formData.append('file', mainFile);
+
+                const result = await analyzeProductImage(formData);
                 setAnalysis(result);
                 setName(result.suggestedName);
                 setStep('review');
