@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 import Link from 'next/link';
+import TrafficPulse from '@/components/TrafficPulse';
 
 export default function DashboardPage() {
     const [stats, setStats] = useState({
@@ -67,6 +68,11 @@ export default function DashboardPage() {
                 <div className="flex gap-3">
                     <button onClick={() => window.location.reload()} className="bg-[var(--terracotta)] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-orange-900/10 hover:bg-[#a85638] transition-colors">Refresh Data</button>
                 </div>
+            </div>
+
+            {/* TRAFFIC FOOTPRINT SECTION */}
+            <div className="mb-8">
+                <TrafficPulse />
             </div>
 
             {/* REAL SALES STATS */}

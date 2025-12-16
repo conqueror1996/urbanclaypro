@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
 import dynamic from 'next/dynamic';
@@ -27,7 +27,7 @@ interface ProductPageAnimateProps {
 
 export default function ProductPageAnimate({ product, relatedProducts, quoteUrl, variantName }: ProductPageAnimateProps) {
     const { addToBox } = useSampleBox();
-    const { scrollY } = useScroll();
+
 
     // Active Variant State
     const initialVariant = variantName ? product.variants?.find(v => v.name === variantName) : null;
@@ -44,7 +44,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     }, []);
 
     // Active Parallax only on Desktop
-    const heroY = useTransform(scrollY, [0, 500], [0, isMobile ? 0 : 100]);
+
 
     // Image Handling
     const galleryImages = selectedVariant
@@ -122,7 +122,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0" />
 
-                            <AnimatePresence mode="wait">
+                            <AnimatePresence>
                                 <motion.div
                                     key={activeImage}
                                     initial={{ opacity: 0, scale: 1.05 }}
@@ -137,6 +137,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                                 src={activeImage}
                                                 alt={product.title}
                                                 fill
+                                                sizes="(max-width: 768px) 100vw, 50vw"
                                                 className="object-cover"
                                                 priority
                                                 quality={95}
@@ -280,7 +281,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         <div className="grid grid-cols-4 gap-3">
                                             {product.variants.map((v, i) => (
                                                 <button key={i} onClick={() => handleVariantSelect(v.name)} className={`group/btn relative aspect-square rounded-lg overflow-hidden border transition-all duration-300 ${selectedVariant?.name === v.name ? 'border-[var(--terracotta)] ring-1 ring-[var(--terracotta)]' : 'border-white/10 hover:border-white/40'}`}>
-                                                    {v.imageUrl ? <Image src={v.imageUrl} alt={v.name} fill className="object-cover transition-transform group-hover/btn:scale-110" /> : <div className="w-full h-full bg-[#3a3430]" />}
+                                                    {v.imageUrl ? <Image src={v.imageUrl} alt={v.name} fill sizes="64px" className="object-cover transition-transform group-hover/btn:scale-110" /> : <div className="w-full h-full bg-[#3a3430]" />}
                                                 </button>
                                             ))}
                                         </div>
@@ -317,7 +318,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             {relatedProducts.slice(0, 4).map((bgProduct) => (
                                 <Link href={`/products/${bgProduct.slug}`} key={bgProduct.slug} className="group block">
                                     <div className="aspect-[3/4] bg-[#241e1a] rounded-xl overflow-hidden relative mb-4">
-                                        {bgProduct.imageUrl && <Image src={bgProduct.imageUrl} alt={bgProduct.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />}
+                                        {bgProduct.imageUrl && <Image src={bgProduct.imageUrl} alt={bgProduct.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-700" />}
                                     </div>
                                     <h4 className="text-white font-serif">{bgProduct.title}</h4>
                                 </Link>

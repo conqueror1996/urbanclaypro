@@ -20,11 +20,11 @@ export default function VariantCreator({ onClose, onSave }: VariantCreatorProps)
     const [family, setFamily] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
+    const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const selectedFiles = Array.from(e.target.files);
+    const processFiles = async (selectedFiles: File[]) => {
+        if (selectedFiles.length > 0) {
             setFiles(selectedFiles);
 
             // Use first image for preview/analysis
@@ -102,19 +102,47 @@ export default function VariantCreator({ onClose, onSave }: VariantCreatorProps)
                                 </div>
 
                                 <div
+                                    onDragOver={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setIsDragging(true);
+                                    }}
+                                    onDragLeave={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setIsDragging(false);
+                                    }}
+                                    onDrop={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setIsDragging(false);
+                                        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                                            const selectedFiles = Array.from(e.dataTransfer.files);
+                                            processFiles(selectedFiles);
+                                        }
+                                    }}
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="border-2 border-dashed border-gray-200 rounded-3xl p-12 cursor-pointer hover:border-[var(--terracotta)] hover:bg-[#FAF8F6] transition-all group relative overflow-hidden"
+                                    className={`border-2 border-dashed rounded-3xl p-12 cursor-pointer transition-all group relative overflow-hidden ${isDragging
+                                        ? 'border-[var(--terracotta)] bg-[#FAF8F6] scale-105'
+                                        : 'border-gray-200 hover:border-[var(--terracotta)] hover:bg-[#FAF8F6]'
+                                        }`}
                                 >
                                     <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300 ring-1 ring-gray-100">
                                         <svg className="w-8 h-8 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                     </div>
-                                    <p className="font-bold text-[#2A1E16] text-lg">Drop image here</p>
+                                    <p className="font-bold text-[#2A1E16] text-lg">
+                                        {isDragging ? 'Drop to Upload' : 'Drop image here'}
+                                    </p>
                                     <p className="text-xs text-gray-400 mt-2 font-medium uppercase tracking-wider">or click to browse</p>
 
                                     {/* Decoration */}
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-orange-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                                    <div className={`absolute inset-0 bg-gradient-to-tr from-orange-50/50 to-transparent transition-opacity pointer-events-none ${isDragging ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
                                 </div>
-                                <input ref={fileInputRef} type="file" hidden accept="image/*" multiple onChange={handleFileSelect} />
+                                <input ref={fileInputRef} type="file" hidden accept="image/*" multiple onChange={(e) => {
+                                    if (e.target.files && e.target.files.length > 0) {
+                                        processFiles(Array.from(e.target.files));
+                                    }
+                                }} />
                             </motion.div>
                         )}
 

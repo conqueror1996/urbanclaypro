@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -20,20 +20,25 @@ const toSlug = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
 export default function ProductsPageAnimate({ products }: ProductsPageAnimateProps) {
     const { addToBox } = useSampleBox();
     const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
 
     // 1. EXTRACT CATEGORIES
-    const uniqueCategories = Array.from(new Set(products.map(p => {
-        return p.category?.title || p.tag || 'Uncategorized';
-    }))).filter(c => c !== 'Uncategorized').sort();
+    const uniqueCategories = useMemo(() => {
+        return Array.from(new Set(products.map(p => {
+            return p.category?.title || p.tag || 'Uncategorized';
+        }))).filter(c => c !== 'Uncategorized').sort();
+    }, [products]);
 
-    const tabs = [
+    const tabs = useMemo(() => [
         { name: 'All', filter: 'All' },
         ...uniqueCategories.map(cat => ({ name: cat, filter: cat }))
-    ];
+    ], [uniqueCategories]);
 
     // 2. ACTIVE TAB STATE
     const [activeTab, setActiveTab] = useState('All');
 
+    // Sync activeTab with URL params
     useEffect(() => {
         const catParam = searchParams.get('category');
         if (catParam) {
@@ -43,13 +48,26 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                 toSlug(t.name) === catParam ||
                 t.name.toLowerCase() === catParam.toLowerCase()
             );
-            if (match) setActiveTab(match.name);
+            if (match) {
+                setActiveTab(match.name);
+            }
+        } else {
+            setActiveTab('All');
         }
     }, [searchParams, tabs]);
 
     const handleTabClick = (tabName: string) => {
         setActiveTab(tabName);
-        // Optional: Update URL without reload could go here
+
+        const params = new URLSearchParams(searchParams.toString());
+        if (tabName === 'All') {
+            params.delete('category');
+        } else {
+            params.set('category', toSlug(tabName));
+        }
+
+        // Update URL to allow sharing
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
     // 3. FILTER LOGIC
@@ -100,7 +118,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                 </div>
 
                 {/* --- PRODUCTS GRID --- */}
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                     <motion.div
                         key={activeTab}
                         initial={{ opacity: 0, y: 20 }}
@@ -124,6 +142,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                 src={product.imageUrl}
                                                 alt={product.title}
                                                 fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                                 className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%] group-hover:grayscale-0"
                                             />
                                         ) : (

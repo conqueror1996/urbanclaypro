@@ -118,7 +118,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
 
                 {/* CONTENT AREA */}
                 <div className="min-h-[400px]">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence>
                         <motion.div
                             key={activeTab}
                             initial={{ opacity: 0, scale: 0.98 }}
@@ -197,6 +197,7 @@ function ProductCard({ product, categoryId, index }: { product: Product, categor
                                 src={image}
                                 alt={product.title}
                                 fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                 className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
                             />
                             {/* Overlay Gradient */}

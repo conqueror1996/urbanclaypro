@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import SampleModal from './SampleModal';
 import { useSampleBox } from '@/context/SampleContext'; // Use context to show badge
 
 // ... imports remain the same
@@ -51,13 +50,22 @@ const PRODUCT_CATEGORIES = [
     }
 ];
 
+const navLinks = [
+    { href: '/products', label: 'Products', hasDropdown: true },
+    { href: '/projects', label: 'Projects' },
+    { href: '/guide', label: 'Selection Guide' },
+    { href: '/architects', label: 'For Architects' },
+    { href: '/#quote', label: 'Contact' }
+];
+
+
 export default function Header() {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [sampleModalOpen, setSampleModalOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-    const { box } = useSampleBox();
+    const { box, setBoxOpen } = useSampleBox();
     const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
     const handleMouseEnter = (dropdown: string) => {
@@ -80,13 +88,7 @@ export default function Header() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navLinks = [
-        { href: '/products', label: 'Products', hasDropdown: true },
-        { href: '/projects', label: 'Projects' },
-        { href: '/guide', label: 'Selection Guide' },
-        { href: '/architects', label: 'For Architects' },
-        { href: '/#quote', label: 'Contact' }
-    ];
+
 
     return (
         <header
@@ -129,7 +131,7 @@ export default function Header() {
                                 <Link
                                     href={link.href}
                                     className={`text-[13px] uppercase tracking-[0.05em] font-medium transition-colors duration-300 py-4 ${isActive || activeDropdown === 'products' && link.hasDropdown
-                                        ? 'text-[var(--terracotta)] font-bold'
+                                        ? 'text-[var(--terracotta)]'
                                         : 'text-[#5d554f] hover:text-[#2A1E16]'
                                         }`}
                                 >
@@ -143,7 +145,7 @@ export default function Header() {
                 {/* Desktop CTA */}
                 <div className="hidden md:flex items-center gap-4 relative z-50">
                     <button
-                        onClick={() => setSampleModalOpen(true)}
+                        onClick={() => setBoxOpen(true)}
                         className={`
                             px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-300 
                             shadow-lg hover:shadow-orange-900/10 transform hover:-translate-y-0.5 relative overflow-hidden group
@@ -279,7 +281,7 @@ export default function Header() {
                                         <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Products</h4>
                                         <div className="pl-2 flex flex-col gap-2 border-l-2 border-gray-100">
                                             {PRODUCT_CATEGORIES.map((cat, idx) => {
-                                                const isActive = pathname === cat.href || (cat.href.includes('?') && pathname === cat.href.split('?')[0] && window.location.search === cat.href.split('?')[1]);
+                                                const isActive = pathname === cat.href || (cat.href.includes('?') && pathname === cat.href.split('?')[0] && searchParams.toString() === cat.href.split('?')[1]);
                                                 return (
                                                     <Link
                                                         key={idx}
@@ -326,7 +328,7 @@ export default function Header() {
                                 <div className="mt-auto pt-8 space-y-4">
                                     <button
                                         onClick={() => {
-                                            setSampleModalOpen(true);
+                                            setBoxOpen(true);
                                             setMobileMenuOpen(false);
                                         }}
                                         className="w-full min-h-[52px] py-4 bg-[var(--terracotta)] text-white font-bold rounded-xl uppercase tracking-wider text-sm shadow-lg shadow-orange-900/10 flex items-center justify-center gap-2 active:scale-95 transition-transform"
@@ -345,8 +347,6 @@ export default function Header() {
                     </>
                 )}
             </AnimatePresence>
-
-            <SampleModal isOpen={sampleModalOpen} onClose={() => setSampleModalOpen(false)} />
         </header>
     );
 }

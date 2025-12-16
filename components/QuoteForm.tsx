@@ -113,7 +113,7 @@ export default function QuoteForm() {
             // Save to CMS first
             const result = await submitLead(formData);
             if (result.success && result.isSerious) {
-                console.log('Serious lead logged');
+
             }
         } catch (error) {
             console.error('Failed to save lead:', error);

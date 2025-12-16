@@ -65,33 +65,30 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const metaTitle = product.seo?.metaTitle || `${product.title} - ${product.subtitle} | UrbanClay India`;
     const metaDesc = product.seo?.metaDescription || product.description?.slice(0, 160) || `Buy premium ${product.title} from UrbanClay. ${product.subtitle}. Delivery across India including Mumbai, Delhi, Bangalore.`;
 
+    // Fix Canonical URL construction
+    const canonicalPath = Array.isArray(slug) ? slug.join('/') : slug;
+
     return {
         title: metaTitle,
         description: metaDesc,
         keywords: uniqueKeywords,
         alternates: {
-            canonical: `https://urbanclay.in/products/${slug}`,
+            canonical: `https://urbanclay.in/products/${canonicalPath}`,
         },
         openGraph: {
             title: metaTitle,
             description: metaDesc,
-            url: `https://urbanclay.in/products/${slug}`,
+            url: `https://urbanclay.in/products/${canonicalPath}`,
             siteName: 'UrbanClay',
             locale: 'en_IN',
             type: 'website',
-            images: (product.seo?.openGraphImage || product.imageUrl) ? [
+            images: [
                 {
-                    url: (product as any).seo?.openGraphImage || product.imageUrl,
+                    // Prioritize CMS manual override, else use dynamic API generation
+                    url: (product as any).seo?.openGraphImage || `/api/og?slug=${productSlug}`,
                     width: 1200,
                     height: 630,
                     alt: product.title,
-                }
-            ] : [
-                {
-                    url: 'https://urbanclay.in/og-image.png',
-                    width: 1200,
-                    height: 630,
-                    alt: product.title
                 }
             ],
         },
@@ -99,7 +96,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             card: 'summary_large_image',
             title: `${product.title} | UrbanClay India`,
             description: product.description?.slice(0, 200),
-            images: product.imageUrl ? [product.imageUrl] : [],
+            images: [(product as any).seo?.openGraphImage || `/api/og?slug=${productSlug}`],
         },
         robots: {
             index: true,
@@ -121,6 +118,8 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
 
     // Handle both catch-all array and simple string scenarios
     const productSlug = Array.isArray(slug) ? slug[slug.length - 1] : slug;
+    const categoryPath = Array.isArray(slug) && slug.length > 1 ? slug[0] : (slug.length === 1 ? 'products' : 'products');
+
     const product = await getProduct(productSlug);
 
     if (!product) {
@@ -144,54 +143,88 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
 
     const categoryIdentifier = product.category?.slug || product.tag;
     const relatedProducts = await getRelatedProducts(categoryIdentifier, productSlug);
+    const canonicalUrl = `https://urbanclay.in/products/${Array.isArray(slug) ? slug.join('/') : slug}`;
 
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: product.title,
-        description: product.description,
-        image: product.imageUrl ? [product.imageUrl] : [],
-        url: `https://urbanclay.in/products/${productSlug}`,
-        brand: {
-            '@type': 'Brand',
-            name: 'UrbanClay'
-        },
-        manufacturer: {
-            '@type': 'Organization',
-            name: 'UrbanClay',
-            logo: {
-                '@type': 'ImageObject',
-                url: 'https://urbanclay.in/urbanclay-logo.png'
-            }
-        },
-        offers: {
-            '@type': 'Offer',
-            priceCurrency: 'INR',
-            availability: 'https://schema.org/InStock',
-            url: `https://urbanclay.in/products/${productSlug}`,
-            areaServed: {
-                '@type': 'Country',
-                name: 'India'
+        '@graph': [
+            {
+                '@type': 'BreadcrumbList',
+                'itemListElement': [
+                    {
+                        '@type': 'ListItem',
+                        'position': 1,
+                        'name': 'Home',
+                        'item': 'https://urbanclay.in'
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 2,
+                        'name': 'Products',
+                        'item': 'https://urbanclay.in/products'
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 3,
+                        'name': product.category?.title || 'Collection',
+                        'item': `https://urbanclay.in/products?category=${product.category?.slug || 'all'}`
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 4,
+                        'name': product.title,
+                        'item': canonicalUrl
+                    }
+                ]
             },
-            seller: {
-                '@type': 'Organization',
-                name: 'UrbanClay'
+            {
+                '@type': 'Product',
+                name: product.title,
+                description: product.description,
+                image: product.imageUrl ? [product.imageUrl] : [],
+                url: canonicalUrl,
+                brand: {
+                    '@type': 'Brand',
+                    name: 'UrbanClay'
+                },
+                manufacturer: {
+                    '@type': 'Organization',
+                    name: 'UrbanClay',
+                    logo: {
+                        '@type': 'ImageObject',
+                        url: 'https://urbanclay.in/urbanclay-logo.png'
+                    }
+                },
+                offers: {
+                    '@type': 'Offer',
+                    priceCurrency: 'INR',
+                    availability: 'https://schema.org/InStock',
+                    url: canonicalUrl,
+                    areaServed: {
+                        '@type': 'Country',
+                        name: 'India'
+                    },
+                    seller: {
+                        '@type': 'Organization',
+                        name: 'UrbanClay'
+                    }
+                },
+                // Adding aggregate rating to boost CTR in search results (based on verified reviews)
+                aggregateRating: {
+                    '@type': 'AggregateRating',
+                    ratingValue: '4.8',
+                    reviewCount: '12',
+                    bestRating: '5',
+                    worstRating: '1'
+                },
+                category: product.category?.title || product.tag,
+                material: 'Terracotta',
+                countryOfOrigin: {
+                    '@type': 'Country',
+                    name: 'India'
+                }
             }
-        },
-        // Adding aggregate rating to boost CTR in search results (based on verified reviews)
-        aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.8',
-            reviewCount: '12',
-            bestRating: '5',
-            worstRating: '1'
-        },
-        category: product.category?.title || product.tag,
-        material: 'Terracotta',
-        countryOfOrigin: {
-            '@type': 'Country',
-            name: 'India'
-        }
+        ]
     };
 
     const whatsappMessage = `Hi UrbanClay, I'm interested in ${product.title}${typeof variant === 'string' ? ` (${variant})` : ''}. Please share more details.`;

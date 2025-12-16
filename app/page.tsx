@@ -28,126 +28,141 @@ export default async function Home() {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    '@id': 'https://urbanclay.in',
-    name: 'UrbanClay',
-    legalName: 'UrbanClay',
-    url: 'https://urbanclay.in',
-    logo: 'https://urbanclay.in/urbanclay-logo.png',
-    image: 'https://urbanclay.in/urbanclay-logo.png',
-    description: 'Leading manufacturer and supplier of premium terracotta tiles, clay brick tiles, jaali panels, and architectural cladding across India. Serving architects, builders, and contractors nationwide.',
-
-    // Contact Information
-    telephone: '+91-8080081951',
-    email: 'sales@urbanclay.in',
-
-    // Address
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: 'Mumbai',
-      addressRegion: 'Maharashtra',
-      addressCountry: 'IN',
-    },
-
-    // Service Areas - Major Indian Cities
-    areaServed: [
-      { '@type': 'City', name: 'Mumbai', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Delhi', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Bangalore', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Pune', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Hyderabad', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Chennai', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Kolkata', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Ahmedabad', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Gurgaon', addressCountry: 'IN' },
-      { '@type': 'City', name: 'Noida', addressCountry: 'IN' },
-      { '@type': 'Country', name: 'India' },
-    ],
-
-    // Products/Services Offered
-    hasOfferCatalog: {
-      '@type': 'OfferCatalog',
-      name: 'Terracotta & Clay Products',
-      itemListElement: [
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Product',
-            name: 'Terracotta Tiles',
-            description: 'Low-efflorescence clay brick tiles for facades and interiors',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Product',
-            name: 'Jaali Panels',
-            description: 'Decorative terracotta jaali panels for ventilation and aesthetics',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Product',
-            name: 'Exposed Bricks',
-            description: 'Wirecut, pressed, and handmade exposed clay bricks',
-          },
-        },
-      ],
-    },
-
-    // Social Media
-    sameAs: [
-      'https://www.linkedin.com/company/urbanclay',
-      'https://www.instagram.com/urbanclay',
-      'https://twitter.com/urbanclay',
-      'https://www.facebook.com/urbanclay',
-    ],
-
-    // Contact Point
-    contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: '+91-8080081951',
-      contactType: 'customer service',
-      areaServed: 'IN',
-      availableLanguage: ['English', 'Hindi'],
-    },
-
-    // Price Range
-    priceRange: '₹₹',
-
-    // Opening Hours
-    openingHoursSpecification: [
+    '@graph': [
       {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: [
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday',
-          'Saturday'
+        '@type': 'WebSite',
+        '@id': 'https://urbanclay.in/#website',
+        name: 'UrbanClay',
+        url: 'https://urbanclay.in',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://urbanclay.in/products?search={search_term_string}',
+          'query-input': 'required name=search_term_string'
+        }
+      },
+      {
+        '@type': 'LocalBusiness',
+        '@id': 'https://urbanclay.in/#place',
+        name: 'UrbanClay',
+        legalName: 'UrbanClay',
+        url: 'https://urbanclay.in',
+        logo: 'https://urbanclay.in/urbanclay-logo.png',
+        image: 'https://urbanclay.in/urbanclay-logo.png',
+        description: 'Leading manufacturer and supplier of premium terracotta tiles, clay brick tiles, jaali panels, and architectural cladding across India. Serving architects, builders, and contractors nationwide.',
+
+        // Contact Information
+        telephone: '+91-8080081951',
+        email: 'sales@urbanclay.in',
+
+        // Address
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Mumbai',
+          addressRegion: 'Maharashtra',
+          addressCountry: 'IN',
+        },
+
+        // Service Areas - Major Indian Cities
+        areaServed: [
+          { '@type': 'City', name: 'Mumbai', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Delhi', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Bangalore', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Pune', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Hyderabad', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Chennai', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Kolkata', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Ahmedabad', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Gurgaon', addressCountry: 'IN' },
+          { '@type': 'City', name: 'Noida', addressCountry: 'IN' },
+          { '@type': 'Country', name: 'India' },
         ],
-        opens: '09:00',
-        closes: '19:00',
+
+        // Products/Services Offered
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: 'Terracotta & Clay Products',
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Product',
+                name: 'Terracotta Tiles',
+                description: 'Low-efflorescence clay brick tiles for facades and interiors',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Product',
+                name: 'Jaali Panels',
+                description: 'Decorative terracotta jaali panels for ventilation and aesthetics',
+              },
+            },
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'Product',
+                name: 'Exposed Bricks',
+                description: 'Wirecut, pressed, and handmade exposed clay bricks',
+              },
+            },
+          ],
+        },
+
+        // Social Media
+        sameAs: [
+          'https://www.linkedin.com/company/urbanclay',
+          'https://www.instagram.com/urbanclay',
+          'https://twitter.com/urbanclay',
+          'https://www.facebook.com/urbanclay',
+        ],
+
+        // Contact Point
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+91-8080081951',
+          contactType: 'customer service',
+          areaServed: 'IN',
+          availableLanguage: ['English', 'Hindi'],
+        },
+
+        // Price Range
+        priceRange: '₹₹',
+
+        // Opening Hours
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: [
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday'
+            ],
+            opens: '09:00',
+            closes: '19:00',
+          }
+        ],
+
+        // Aggregate Rating (SEO Rich Snippet)
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '4.8',
+          reviewCount: '124',
+          bestRating: '5',
+          worstRating: '1'
+        },
+
+        // Geo Coordinates (Mumbai)
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: '19.0760',
+          longitude: '72.8777'
+        },
       }
-    ],
-
-    // Aggregate Rating (SEO Rich Snippet)
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      reviewCount: '124',
-      bestRating: '5',
-      worstRating: '1'
-    },
-
-    // Geo Coordinates (Mumbai)
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: '19.0760',
-      longitude: '72.8777'
-    },
+    ]
   };
 
   return (

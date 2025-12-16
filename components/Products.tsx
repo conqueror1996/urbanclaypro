@@ -183,7 +183,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
             </div>
 
             {/* GRID */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
                 <motion.div
                     key={activeTab}
                     initial={{ opacity: 0, y: 20 }}
@@ -286,6 +286,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                                         src={variant.imageUrl}
                                                                         alt={variant.name}
                                                                         fill
+                                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                                                                         className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
                                                                     />
                                                                 ) : (

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Epilogue, Inter } from "next/font/google";
 import "./globals.css";
 import SplashLoader from "@/components/SplashLoader";
@@ -16,6 +16,19 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  minimumScale: 1,
+  userScalable: true,
+  viewportFit: 'cover', // For notched devices (iPhone X+)
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FAF7F3' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1512' },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://urbanclay.in'),
@@ -171,18 +184,6 @@ export const metadata: Metadata = {
     // google: 'your-google-verification-code',
     // yandex: 'your-yandex-verification-code',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    minimumScale: 1,
-    userScalable: true,
-    viewportFit: 'cover', // For notched devices (iPhone X+)
-  },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FAF7F3' },
-    { media: '(prefers-color-scheme: dark)', color: '#1a1512' },
-  ],
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

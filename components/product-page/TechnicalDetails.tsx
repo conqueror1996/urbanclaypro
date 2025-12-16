@@ -88,15 +88,15 @@ export default function TechnicalDetails({ product }: TechnicalDetailsProps) {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.98 }}
                                     transition={{ duration: 0.3 }}
-                                    className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8"
+                                    className="grid grid-cols-1 sm:grid-cols-2 gap-x-12"
                                 >
                                     {Object.entries(product.specs || {}).map(([key, value]) => (
-                                        <div key={key} className="flex flex-col border-b border-[#F0EBE6] pb-3 last:border-0 sm:last:border-0 last:pb-0">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-2">
+                                        <div key={key} className="flex items-baseline justify-between border-b border-[#F0EBE6] py-3">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2 shrink-0">
                                                 <span className="w-1 h-1 rounded-full bg-[var(--terracotta)]/40"></span>
                                                 {key.replace(/([A-Z])/g, ' $1').trim()}
                                             </span>
-                                            <span className="font-serif text-lg text-[#2A1E16]">
+                                            <span className="font-serif text-base text-[#2A1E16] text-right ml-4">
                                                 {typeof value === 'string' ? value : JSON.stringify(value)}
                                             </span>
                                         </div>

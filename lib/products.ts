@@ -139,6 +139,11 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
 }`;
 
 // Fetch functions
+import { enhanceProducts, enhanceProduct } from './seo-content';
+
+// ... (existing imports)
+
+// Fetch functions
 export async function getProducts(): Promise<Product[]> {
     try {
         console.log('Fetching products from Sanity...');
@@ -150,7 +155,8 @@ export async function getProducts(): Promise<Product[]> {
         }
 
         console.log(`Fetched ${products.length} products from Sanity.`);
-        return products;
+        // Enhanced via SEO Content Module
+        return enhanceProducts(products);
     } catch (error) {
         console.error('Error fetching products:', error);
         return [];
@@ -173,7 +179,8 @@ export async function getProduct(slug: string): Promise<Product | undefined> {
         if (!product) {
             return undefined;
         }
-        return product;
+        // Enhanced via SEO Content Module
+        return enhanceProduct(product);
     } catch (error) {
         console.error('Error fetching product:', error);
         return undefined;
