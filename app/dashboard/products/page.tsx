@@ -398,7 +398,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
         }
     };
 
-    const handleUpdateVariant = async (data: { variantKey: string, name: string; family?: string; imageAssetId: string; galleryAssetIds: string[] }) => {
+    const handleUpdateVariant = async (data: { variantKey: string, name: string; family?: string; badge?: string; imageAssetId: string; galleryAssetIds: string[] }) => {
         try {
             const res = await authenticatedFetch('/api/products/manage', {
                 method: 'POST',
@@ -410,6 +410,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                         data: {
                             name: data.name,
                             family: data.family,
+                            badge: data.badge,
                             imageAssetId: data.imageAssetId,
                             galleryAssetIds: data.galleryAssetIds
                         }

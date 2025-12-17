@@ -11,6 +11,7 @@ interface Variant {
     slug: string;
     categorySlug?: string;
     priceRange?: string;
+    badge?: string;
 }
 
 interface CollectionVariantsProps {
@@ -73,6 +74,12 @@ export default function CollectionVariants({ variants, title }: CollectionVarian
                                             View
                                         </span>
                                     </div>
+
+                                    {variant.badge && (
+                                        <div className={`absolute top-2 left-2 px-2 py-1 text-[9px] font-bold uppercase text-white rounded shadow-sm ${variant.badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
+                                            {variant.badge}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="text-center px-2">

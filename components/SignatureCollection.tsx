@@ -197,8 +197,9 @@ function ProductCard({ product, categoryId, index }: { product: Product, categor
                                 src={image}
                                 alt={product.title}
                                 fill
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                                sizes="(max-width: 1024px) 50vw, 25vw"
                                 className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
+                                suppressHydrationWarning
                             />
                             {/* Overlay Gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

@@ -172,11 +172,14 @@ export async function POST(req: NextRequest) {
 
         if (action === 'update_variant') {
             const { productId, variantKey, data: variantData } = data;
-            const { name, family, imageAssetId, galleryAssetIds } = variantData;
+
 
             // Construct new variant object (partial update not easy with array, so we replace)
             // But to replace, we need to know what to keep.
             // Actually, for now, we just update name and images.
+            // Badge is now included in variantData.
+
+            const { name, family, badge, imageAssetId, galleryAssetIds } = variantData;
 
             // We can use a deep patch if we want, but replacing the item is easier if we have all data.
             // We'll construct the object similar to add_variant, but keeping the key.
@@ -186,6 +189,7 @@ export async function POST(req: NextRequest) {
                 _type: 'object', // Explicitly set type if needed, usually inferred
                 name,
                 family: family || undefined,
+                badge: badge || undefined,
                 image: imageAssetId ? {
                     _type: 'image',
                     asset: { _type: 'reference', _ref: imageAssetId }

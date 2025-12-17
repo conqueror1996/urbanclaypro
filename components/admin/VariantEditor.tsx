@@ -16,7 +16,7 @@ interface VariantEditorProps {
         galleryRefs?: string[];
     };
     onClose: () => void;
-    onSave: (data: { variantKey: string, name: string; family?: string; imageAssetId: string; galleryAssetIds: string[] }) => Promise<void>;
+    onSave: (data: { variantKey: string, name: string; family?: string; badge?: string; imageAssetId: string; galleryAssetIds: string[] }) => Promise<void>;
     onDelete: (variantKey: string) => Promise<void>;
 }
 
@@ -37,6 +37,7 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
     }));
 
     const [galleryItems, setGalleryItems] = useState<{ url: string; assetId: string }[]>(initialGallery);
+    const [badge, setBadge] = useState((variant as any).badge || '');
     const [isSaving, setIsSaving] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -45,6 +46,37 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
     const galleryFileInputRef = useRef<HTMLInputElement>(null);
 
     // ... (upload handlers unchanged)
+    const [isDragging, setIsDragging] = useState(false);
+
+    const uploadFiles = async (files: FileList | File[]) => {
+        if (!files || files.length === 0) return;
+
+        setIsUploading(true);
+        try {
+            const uploadPromises = Array.from(files).map(async (file) => {
+                const formData = new FormData();
+                formData.append('file', file);
+                const res = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
+                return res.json();
+            });
+
+            const results = await Promise.all(uploadPromises);
+            const newItems = results
+                .filter(r => r.success)
+                .map((r, i) => ({
+                    url: URL.createObjectURL(files[i]),
+                    assetId: r.asset._id
+                }));
+
+            setGalleryItems(prev => [...prev, ...newItems]);
+        } catch (err) {
+            console.error(err);
+            alert('Failed to upload images');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -68,39 +100,44 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
         }
     };
 
-    const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (!files || files.length === 0) return;
+    const handleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            uploadFiles(e.target.files);
+        }
+    };
 
-        setIsUploading(true);
-        try {
-            const uploadPromises = Array.from(files).map(async (file) => {
-                const formData = new FormData();
-                formData.append('file', file);
-                const res = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
-                return res.json();
-            });
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    };
 
-            const results = await Promise.all(uploadPromises);
-            const newItems = results
-                .filter(r => r.success)
-                .map((r, i) => ({
-                    url: URL.createObjectURL(files[i]), // or use returned url if available, but objectURL faster for preview
-                    assetId: r.asset._id
-                }));
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    };
 
-            setGalleryItems(prev => [...prev, ...newItems]);
-        } catch (err) {
-            console.error(err);
-            alert('Failed to upload images');
-        } finally {
-            setIsUploading(false);
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+            // Filter for images
+            const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            if (imageFiles.length > 0) {
+                uploadFiles(imageFiles);
+            }
         }
     };
 
     const removeGalleryItem = (index: number) => {
         setGalleryItems(prev => prev.filter((_, i) => i !== index));
     };
+
+    // ... (rest is same until render) ...
 
     const handleSaveClick = async () => {
         if (!name || !mainImageAssetId) {
@@ -114,6 +151,7 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                 variantKey: variant._key,
                 name,
                 family: family || undefined,
+                badge: badge || undefined,
                 imageAssetId: mainImageAssetId,
                 galleryAssetIds: galleryItems.map(g => g.assetId).filter(Boolean)
             });
@@ -185,6 +223,23 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                                 placeholder="e.g. Red Series"
                             />
                         </div>
+
+                        <div className="grid grid-cols-2 gap-6 mt-6">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Badge</label>
+                                <select
+                                    value={badge}
+                                    onChange={e => setBadge(e.target.value)}
+                                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[var(--terracotta)] text-lg font-medium appearance-none"
+                                >
+                                    <option value="">None</option>
+                                    <option value="New">New</option>
+                                    <option value="Premium">Premium</option>
+                                    <option value="Hot">Hot</option>
+                                    <option value="Best Seller">Best Seller</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -203,12 +258,17 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span className="text-white text-sm font-bold bg-black/20 backdrop-blur-md px-3 py-1 rounded-full">Change Photo</span>
                                 </div>
+                                {badge && (
+                                    <div className={`absolute top-2 right-2 px-2 py-1 text-[10px] font-bold uppercase text-white rounded shadow-sm z-20 ${badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
+                                        {badge}
+                                    </div>
+                                )}
                                 {isUploading && <div className="absolute inset-0 bg-white/50 flex items-center justify-center"><div className="w-8 h-8 border-4 border-[var(--terracotta)] border-t-transparent rounded-full animate-spin" /></div>}
                             </div>
                             <input ref={mainFileInputRef} type="file" hidden accept="image/*" onChange={handleMainImageUpload} />
                         </div>
 
-                        {/* Gallery */}
+                        {/* Gallery - With Drag & Drop */}
                         <div className="col-span-2">
                             <div className="flex justify-between items-center mb-2">
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">Gallery Images</label>
@@ -221,7 +281,12 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                                 </button>
                             </div>
 
-                            <div className="grid grid-cols-4 gap-4">
+                            <div
+                                className={`grid grid-cols-4 gap-4 p-4 rounded-xl transition-all border-2 border-dashed ${isDragging ? 'border-[var(--terracotta)] bg-[var(--terracotta)]/5 ring-4 ring-[var(--terracotta)]/20' : 'border-transparent'}`}
+                                onDragOver={handleDragOver}
+                                onDragLeave={handleDragLeave}
+                                onDrop={handleDrop}
+                            >
                                 {galleryItems.map((item, idx) => (
                                     <div key={idx} className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative group border border-gray-200">
                                         <Image src={item.url} alt="" fill className="object-cover" />
@@ -235,9 +300,13 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                                 ))}
                                 <button
                                     onClick={() => galleryFileInputRef.current?.click()}
-                                    className="aspect-square bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)]/5 transition-all"
+                                    className="aspect-square bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)]/5 transition-all text-center p-2"
                                 >
-                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+
+                                    <div className="flex flex-col items-center gap-1">
+                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                        <span className="text-[10px] font-bold uppercase">Or Drop Here</span>
+                                    </div>
                                 </button>
                             </div>
                             <input ref={galleryFileInputRef} type="file" hidden accept="image/*" multiple onChange={handleGalleryUpload} />

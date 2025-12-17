@@ -85,21 +85,20 @@ export function enhanceProduct(product: Product): Product {
     }
 
     // 2. Optimization Logic
-    // Only replace if the existing description is short (under 50 words) OR if we want to force the upgrade
-    const wordCount = product.description ? product.description.split(/\s+/).length : 0;
+    // STRICT USER CONTROL: If the user has entered ANY description in the CMS, respect it 100%.
+    // Do not append or fallback to generic content, even if the user's text is short.
+    if (product.description && product.description.trim().length > 0) {
+        return product;
+    }
 
-    // We append the rich description to the existing one if it exists but is short,
-    // Or we completely replace it if we found a high-quality match and the current one is "generic".
-    // For this task, we will PREPEND the rich generic content to ensure the "300 words" goal is matched
-    // while keeping specific technical specs from the CMS if any.
-
+    // Only strictly fallback if the CMS field is undefined or completely empty.
     if (richDescription) {
         // Clean whitespace
         richDescription = richDescription.replace(/^\s+|\s+$/g, '').replace(/\n\s+/g, '\n');
 
         return {
             ...product,
-            description: `${richDescription}\n\n${product.description || ''}`,
+            description: product.description ? `${product.description}\n\n${richDescription}` : richDescription,
             seo: {
                 ...product.seo,
                 metaDescription: product.seo?.metaDescription || richDescription.slice(0, 160).replace(/\n/g, ' ') + '...'

@@ -117,73 +117,173 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                     </div>
                 </div>
 
-                {/* --- PRODUCTS GRID --- */}
-                <AnimatePresence>
+                {/* --- PRODUCTS DISPLAY --- */}
+                <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 md:gap-y-16"
+                        className={activeTab === 'All' ? "space-y-32" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 md:gap-y-16"}
                     >
-                        {matchingProducts.length > 0 ? (
-                            matchingProducts.map((product) => (
-                                <Link
-                                    href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
-                                    key={product.slug}
-                                    className="group flex flex-col"
-                                >
-                                    {/* Image Card */}
-                                    <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden bg-[#241e1a] mb-6 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-colors">
-                                        {/* Main Image */}
-                                        {product.imageUrl ? (
-                                            <Image
-                                                src={product.imageUrl}
-                                                alt={product.title}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                                                className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%] group-hover:grayscale-0"
-                                            />
-                                        ) : (
-                                            <div className="absolute inset-0 flex items-center justify-center text-white/10 text-xs tracking-widest uppercase">
-                                                No Preview
+                        {/* SCENARIO 1: HIERARCHICAL VIEW (When 'All' tab is active) */}
+                        {activeTab === 'All' ? (
+                            Object.entries(
+                                matchingProducts.reduce((acc, p) => {
+                                    const cat = p.category?.title || p.tag || 'Uncategorized';
+                                    if (!acc[cat]) acc[cat] = [];
+                                    acc[cat].push(p);
+                                    return acc;
+                                }, {} as Record<string, Product[]>)
+                            ).sort().map(([category, categoryProducts]) => (
+                                <div key={category} className="section-category">
+                                    {/* CATEGORY HEADER */}
+                                    <div className="flex items-end gap-6 mb-12 border-b border-white/10 pb-6">
+                                        <h2 className="text-5xl md:text-7xl font-serif text-[#EBE5E0]/10 font-bold uppercase tracking-tighter leading-none select-none">
+                                            {category.split(' ')[0]}
+                                        </h2>
+                                        <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-4 ml-[-20px] bg-[#1a1512] px-2 z-10">
+                                            {category}
+                                        </span>
+                                    </div>
+
+                                    <div className="space-y-20">
+                                        {categoryProducts.map((product) => (
+                                            <div key={product._id} className="section-series">
+                                                {/* SERIES HEADER */}
+                                                <div className="flex items-center gap-4 mb-8">
+                                                    <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></div>
+                                                    <h3 className="text-2xl md:text-3xl font-serif text-[#EBE5E0]">
+                                                        {product.title} <span className="text-white/30 text-lg font-sans font-light italic ml-2">Series</span>
+                                                    </h3>
+                                                    <div className="h-px bg-white/5 flex-1 ml-4" />
+                                                    <Link
+                                                        href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
+                                                        className="text-white/30 text-[10px] font-bold uppercase tracking-widest hover:text-[var(--terracotta)] transition-colors"
+                                                    >
+                                                        View Details
+                                                    </Link>
+                                                </div>
+
+                                                {/* VARIANTS GRID */}
+                                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-12 gap-y-16">
+                                                    {(product.variants && product.variants.length > 0 ? product.variants : [{
+                                                        _key: 'main',
+                                                        name: 'Standard',
+                                                        imageUrl: product.imageUrl,
+                                                        badge: null
+                                                    }]).map((variant: any, idx: number) => (
+                                                        <Link
+                                                            key={`${product._id}-${idx}`}
+                                                            href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
+                                                            className="group flex flex-col"
+                                                        >
+                                                            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-4 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-colors shadow-lg">
+                                                                {variant.imageUrl ? (
+                                                                    <Image
+                                                                        src={variant.imageUrl}
+                                                                        alt={variant.name}
+                                                                        fill
+                                                                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                                                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                                                                        suppressHydrationWarning
+                                                                    />
+                                                                ) : (
+                                                                    <div className="absolute inset-0 flex items-center justify-center text-white/10 text-xs tracking-widest uppercase">
+                                                                        No Image
+                                                                    </div>
+                                                                )}
+
+                                                                {variant.badge && (
+                                                                    <div className={`absolute top-3 right-3 px-2 py-1 text-[9px] font-bold uppercase text-white rounded shadow-sm z-20 ${variant.badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
+                                                                        {variant.badge}
+                                                                    </div>
+                                                                )}
+
+                                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+                                                            </div>
+
+                                                            <div className="text-center group-hover:-translate-y-1 transition-transform duration-300 px-2">
+                                                                <h4 className="text-sm font-bold text-white mb-1">{variant.name}</h4>
+                                                                <p className="text-[10px] text-[var(--terracotta)]/80 uppercase tracking-widest">{product.title}</p>
+                                                            </div>
+                                                        </Link>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        )}
-
-                                        {/* Overlay & Quick Actions */}
-                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
-
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' });
-                                            }}
-                                            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1a1512] text-white flex items-center justify-center opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-[var(--terracotta)]"
-                                            title="Add Sample"
-                                        >
-                                            <span className="text-lg leading-none mb-1">+</span>
-                                        </button>
+                                        ))}
                                     </div>
-
-                                    {/* Info */}
-                                    <div className="px-2">
-                                        <div className="flex justify-between items-baseline mb-2">
-                                            <h3 className="text-xl font-serif text-[#EBE5E0] group-hover:text-[var(--terracotta)] transition-colors">
-                                                {product.title}
-                                            </h3>
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-white/30 border border-white/10 px-2 py-1 rounded-full">
-                                                {product.category?.title || product.tag || 'Collection'}
-                                            </span>
-                                        </div>
-                                        <p className="text-white/40 text-xs line-clamp-2 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 h-0 group-hover:h-auto overflow-hidden">
-                                            {product.description || 'Premium architectural terracotta.'}
-                                        </p>
-                                    </div>
-                                </Link>
+                                </div>
                             ))
                         ) : (
-                            <div className="col-span-full py-32 text-center">
+                            /* SCENARIO 2: FLAT GRID (When specific filtered tab is active) */
+                            /* BUT wait, user probably also wants the sub-variants to be visible even in filtered view */
+                            /* Let's stick to the hierarchical series breakdown BUT flatten the Category grouping since only 1 category is active. */
+                            /* Actually, the prompt says "only for products page when the navigation is on (All)". */
+                            /* This implies standard filtered view for other tabs. */
+                            /* HOWEVER, standard filtered view currently only shows PRODUCTS, not variants. */
+                            /* If user wants to see subvariants even in filtered view, we should use the same 'Series' card style logic but without the category wrapper. */
+
+                            /* Let's implement the grouped Series view for the filtered category too, just without the Category Header. */
+
+                            matchingProducts.map((product) => (
+                                <div key={product._id} className="col-span-full mb-12">
+                                    {/* SERIES HEADER */}
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <h3 className="text-2xl font-serif text-[#EBE5E0]">
+                                            {product.title} <span className="text-white/30 text-lg font-sans font-light italic ml-2">Series</span>
+                                        </h3>
+                                        <div className="h-px bg-white/5 flex-1 ml-4" />
+                                    </div>
+
+                                    {/* VARIANTS GRID */}
+                                    {/* We reuse the grid style but maybe 4 cols instead of 5 for filtered view since width might be different? No, keep consistent. */}
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-12 gap-y-16">
+                                        {(product.variants && product.variants.length > 0 ? product.variants : [{
+                                            _key: 'main',
+                                            name: 'Standard',
+                                            imageUrl: product.imageUrl,
+                                            badge: null
+                                        }]).map((variant: any, idx: number) => (
+                                            <Link
+                                                key={`${product._id}-${idx}`}
+                                                href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
+                                                className="group flex flex-col"
+                                            >
+                                                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-4 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-colors shadow-lg">
+                                                    {variant.imageUrl ? (
+                                                        <Image
+                                                            src={variant.imageUrl}
+                                                            alt={variant.name}
+                                                            fill
+                                                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                                                            className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                                                            suppressHydrationWarning
+                                                        />
+                                                    ) : (
+                                                        <div className="absolute inset-0 flex items-center justify-center text-white/10 text-xs tracking-widest uppercase">No Image</div>
+                                                    )}
+                                                    {variant.badge && (
+                                                        <div className={`absolute top-3 right-3 px-2 py-1 text-[9px] font-bold uppercase text-white rounded shadow-sm z-20 ${variant.badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
+                                                            {variant.badge}
+                                                        </div>
+                                                    )}
+                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
+                                                </div>
+                                                <div className="text-center group-hover:-translate-y-1 transition-transform duration-300 px-2">
+                                                    <h4 className="text-sm font-bold text-white mb-1">{variant.name}</h4>
+                                                    <p className="text-[10px] text-[var(--terracotta)]/80 uppercase tracking-widest">{product.title}</p>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+
+                        {matchingProducts.length === 0 && (
+                            <div className="col-span-full py-32 text-center border-t border-white/5">
                                 <span className="text-white/30 text-lg font-serif italic">No architectural pieces found in this collection.</span>
                             </div>
                         )}

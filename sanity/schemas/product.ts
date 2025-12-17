@@ -4,18 +4,27 @@ export default defineType({
     name: 'product',
     title: 'Product Range',
     type: 'document',
+    groups: [
+        { name: 'editorial', title: 'Editorial', default: true },
+        { name: 'variants', title: 'Variants & Images' },
+        { name: 'specs', title: 'Specifications' },
+        { name: 'downloads', title: 'Downloads' },
+        { name: 'seo', title: 'SEO' },
+    ],
     fields: [
         defineField({
             name: 'title',
             title: 'Collection Name',
             description: 'The name of this collection (e.g. Handmade Brick, Wirecut Brick)',
             type: 'string',
+            group: 'editorial',
             validation: (rule) => rule.required(),
         }),
         defineField({
             name: 'slug',
             title: 'Slug',
             type: 'slug',
+            group: 'editorial',
             options: {
                 source: 'title',
                 maxLength: 96,
@@ -26,12 +35,14 @@ export default defineType({
             name: 'subtitle',
             title: 'Subtitle',
             type: 'string',
+            group: 'editorial',
         }),
         defineField({
             name: 'tag',
             title: 'Category',
             description: 'The top-level category this collection belongs to',
             type: 'string',
+            group: 'editorial',
             options: {
                 list: [
                     { title: 'Brick Wall Tiles', value: 'Brick Wall Tiles' },
@@ -51,6 +62,7 @@ export default defineType({
             title: 'Category Reference',
             description: 'Select the category this collection belongs to (Replaces the old dropdown)',
             type: 'reference',
+            group: 'editorial',
             to: [{ type: 'category' }],
         }),
         defineField({
@@ -58,28 +70,34 @@ export default defineType({
             title: 'Range/Collection',
             description: 'Group products into ranges (e.g., Handmade Collection, Wirecut Collection, Extruded Collection)',
             type: 'string',
+            group: 'editorial',
             placeholder: 'e.g., Handmade Collection',
         }),
         defineField({
             name: 'priceRange',
             title: 'Price Range',
             type: 'string',
+            group: 'editorial',
             placeholder: '₹85 - ₹120 / sq.ft',
         }),
         defineField({
             name: 'description',
             title: 'Description',
             type: 'text',
+            group: 'editorial',
+            rows: 5,
         }),
         defineField({
             name: 'seo',
             title: 'SEO Settings',
             type: 'seo',
+            group: 'seo',
         }),
         defineField({
             name: 'images',
             title: 'Range Images',
             type: 'array',
+            group: 'variants',
             of: [
                 {
                     type: 'image',
@@ -99,6 +117,7 @@ export default defineType({
             title: 'Variants (Colors/Finishes)',
             description: 'Individual color variants within this collection (e.g., Deep Rustic Red, Charcoal Smoky)',
             type: 'array',
+            group: 'variants',
             of: [
                 {
                     name: 'variant',
@@ -147,6 +166,21 @@ export default defineType({
                             title: 'Additional Images',
                             type: 'array',
                             of: [{ type: 'image', options: { hotspot: true } }]
+                        },
+                        {
+                            name: 'badge',
+                            title: 'Badge',
+                            description: 'Add a badge like "New", "Premium", or "Hot"',
+                            type: 'string',
+                            options: {
+                                list: [
+                                    { title: 'None', value: '' },
+                                    { title: 'New', value: 'New' },
+                                    { title: 'Premium', value: 'Premium' },
+                                    { title: 'Best Seller', value: 'Best Seller' },
+                                    { title: 'Hot', value: 'Hot' },
+                                ],
+                            },
                         }
                     ],
                     preview: {
@@ -170,6 +204,7 @@ export default defineType({
             name: 'specs',
             title: 'Specifications',
             type: 'object',
+            group: 'specs',
             fields: [
                 defineField({ name: 'size', title: 'Size', type: 'string' }),
                 defineField({ name: 'thickness', title: 'Thickness', type: 'string' }),
@@ -186,7 +221,7 @@ export default defineType({
             name: 'texturePackage',
             title: 'PBR Texture Package',
             type: 'object',
-            group: 'details',
+            group: 'specs',
             fields: [
                 defineField({
                     name: 'seamlessPreview',
@@ -207,6 +242,7 @@ export default defineType({
             name: 'resources',
             title: 'Downloads & Resources',
             type: 'object',
+            group: 'downloads',
             fields: [
                 defineField({
                     name: 'technicalSheets',
