@@ -342,8 +342,13 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [editingVariant, setEditingVariant] = useState<any>(null);
 
-    // Sync form if product prop updates externally
-    useEffect(() => { setForm(product); }, [product]);
+    // Sync form only when switching products (prevents overwrite by stale data after save)
+    useEffect(() => {
+        if (product._id !== form._id) {
+            setForm(product);
+            setActiveTab('details'); // Reset tab on switch
+        }
+    }, [product._id]); // Only trigger on ID change, not content updates
 
     // ... existing handleSave, handleDelete ...
     const handleSave = async () => {

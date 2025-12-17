@@ -226,10 +226,10 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             </AnimatePresence>
 
                             {displayImages.length > 1 && (
-                                <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-2 rounded-full border border-white/10">
-                                    <button onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">←</button>
-                                    <span className="text-[10px] font-mono font-medium text-white/60 w-12 text-center">{activeImageIndex + 1} / {displayImages.length}</span>
-                                    <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">→</button>
+                                <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 md:gap-2 bg-black/60 backdrop-blur-md px-2 py-1 md:px-3 md:py-2 rounded-full border border-white/10 transition-all">
+                                    <button onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">←</button>
+                                    <span className="text-[9px] md:text-[10px] font-mono font-medium text-white/60 w-10 md:w-12 text-center">{activeImageIndex + 1} / {displayImages.length}</span>
+                                    <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">→</button>
                                 </div>
                             )}
                         </div>
