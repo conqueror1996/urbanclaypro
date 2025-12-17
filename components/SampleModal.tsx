@@ -68,6 +68,14 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
             ? `${formData.requirements}${box.length > 0 ? `\n\n(Tray Items: ${boxRequirements})` : ''}`
             : (box.length > 0 ? `Tray Items: ${boxRequirements}` : 'None');
 
+        // Generate product links for WhatsApp message
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://urbanclay.in';
+        const productLinks = box.map((sample, idx) => {
+            // Extract slug from sample.id (which is the product slug)
+            const productUrl = `${baseUrl}/products/${sample.id}`;
+            return `${idx + 1}. ${sample.name}\n   ${productUrl}`;
+        }).join('\n\n');
+
         // 1. Submit to CMS (Server Action)
         try {
             await submitLead({
@@ -79,14 +87,19 @@ export default function SampleModal({ isOpen, onClose, initialRequirements }: Sa
                 city: formData.address.split(',').pop()?.trim() || 'India', // Simple heuristics for city
                 quantity: 'Sample Box',
                 product: 'Sample Request',
-                notes: `Address: ${formData.address}\n\nRequirements: ${finalRequirements}`, // Combine address and reqs for context
+                notes: `Address: ${formData.address}\n\nRequirements: ${finalRequirements}\n\nProduct Links:\n${productLinks}`, // Combine address and reqs for context
             });
         } catch (err) {
             console.error('Failed to save lead:', err);
             // Continue to WhatsApp anyway so user flow isn't broken
         }
 
-        const rawMessage = `*New Sample Request*\n\n*Name:* ${formData.name}\n*Firm:* ${formData.firm}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email}\n*Address:* ${formData.address}\n*Requirements:* ${finalRequirements}`;
+        // Build WhatsApp message with product links
+        const productSection = box.length > 0
+            ? `\n\n*Requested Products:*\n${productLinks}`
+            : '';
+
+        const rawMessage = `*New Sample Request*\n\n*Name:* ${formData.name}\n*Firm:* ${formData.firm}\n*Phone:* ${formData.phone}\n*Email:* ${formData.email}\n*Address:* ${formData.address}${productSection}\n\n*Additional Notes:* ${formData.requirements || 'None'}`;
         const encodedMessage = encodeURIComponent(rawMessage);
         window.open(`https://wa.me/918080081951?text=${encodedMessage}`, '_blank');
         setIsSubmitted(true);
