@@ -232,6 +232,26 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">→</button>
                                 </div>
                             )}
+
+                            {/* Small Cute Add to Sample Button - Hover Only */}
+                            <motion.button
+                                onClick={() => addToBox({
+                                    id: product.slug,
+                                    name: selectedVariant?.name ? `${product.title} - ${selectedVariant.name}` : product.title,
+                                    color: '#b45a3c',
+                                    texture: activeImage ? `url('${activeImage}')` : '#b45a3c'
+                                })}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-40 w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:from-[var(--terracotta)]/30 hover:to-[var(--terracotta)]/20 hover:border-[var(--terracotta)]/50 transition-all duration-300"
+                                title="Add to Sample Box"
+                            >
+                                <svg className="w-4 h-4 md:w-4.5 md:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </motion.button>
                         </div>
 
                         {/* --- VARIANT CHIPS: MOBILE (Horizontal Scroll) --- */}

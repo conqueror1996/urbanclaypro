@@ -201,6 +201,26 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                                     </div>
                                                                 )}
 
+                                                                {/* Small Cute Add to Sample Button - Hover Only */}
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        e.stopPropagation();
+                                                                        addToBox({
+                                                                            id: product.slug,
+                                                                            name: `${product.title} - ${variant.name}`,
+                                                                            color: '#b45a3c',
+                                                                            texture: variant.imageUrl ? `url('${variant.imageUrl}')` : '#b45a3c'
+                                                                        });
+                                                                    }}
+                                                                    className="absolute bottom-2 right-2 z-30 w-7 h-7 rounded-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:from-[var(--terracotta)]/30 hover:to-[var(--terracotta)]/20 hover:border-[var(--terracotta)]/50 hover:scale-110 active:scale-95 transition-all duration-300"
+                                                                    title="Add to Sample Box"
+                                                                >
+                                                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                                                    </svg>
+                                                                </button>
+
                                                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
                                                             </div>
 
@@ -269,6 +289,27 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                             {variant.badge}
                                                         </div>
                                                     )}
+
+                                                    {/* Small Cute Add to Sample Button - Hover Only */}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            addToBox({
+                                                                id: product.slug,
+                                                                name: `${product.title} - ${variant.name}`,
+                                                                color: '#b45a3c',
+                                                                texture: variant.imageUrl ? `url('${variant.imageUrl}')` : '#b45a3c'
+                                                            });
+                                                        }}
+                                                        className="absolute bottom-2 right-2 z-30 w-7 h-7 rounded-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:from-[var(--terracotta)]/30 hover:to-[var(--terracotta)]/20 hover:border-[var(--terracotta)]/50 hover:scale-110 active:scale-95 transition-all duration-300"
+                                                        title="Add to Sample Box"
+                                                    >
+                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                                                        </svg>
+                                                    </button>
+
                                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
                                                 </div>
                                                 <div className="text-center group-hover:-translate-y-1 transition-transform duration-300 px-2">
