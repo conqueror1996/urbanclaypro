@@ -16,6 +16,7 @@ const Tools = dynamic(() => import('@/components/Tools'));
 const QuoteForm = dynamic(() => import('@/components/QuoteForm'));
 const Footer = dynamic(() => import('@/components/Footer'));
 const OurStoryTeaser = dynamic(() => import('@/components/OurStoryTeaser'));
+const FAQSchema = dynamic(() => import('@/components/FAQSchema'));
 
 
 
@@ -168,6 +169,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-[var(--sand)] text-[var(--ink)]">
       <JsonLd data={jsonLd} />
+      <FAQSchema />
       <Header />
       <Hero data={homePageData} />
 

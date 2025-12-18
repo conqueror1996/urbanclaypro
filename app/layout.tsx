@@ -33,10 +33,10 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://urbanclay.in'),
   title: {
-    default: "UrbanClay - Premium Terracotta Tiles & Jaali Panels | Pan-India Delivery",
+    default: "Buy Premium Terracotta Tiles Online India | UrbanClay - Free Samples",
     template: "%s | UrbanClay India"
   },
-  description: "India's leading manufacturer of low-efflorescence clay brick tiles, terracotta jaali panels, and architectural cladding. Serving Mumbai, Delhi, Bangalore, Pune, Hyderabad, Chennai, Kolkata, Ahmedabad & all major cities. Premium quality, pan-India delivery.",
+  description: "Buy premium terracotta tiles, clay brick tiles & jaali panels online. Handmade, wirecut & pressed. Pan-India delivery. ISO certified. Free samples! Shop now for Mumbai, Delhi, Bangalore, Pune.",
   keywords: [
     // Core Product Keywords
     "terracotta tiles India",
