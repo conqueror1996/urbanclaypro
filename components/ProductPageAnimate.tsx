@@ -105,16 +105,35 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     // Active Parallax only on Desktop
 
 
-    // Image Handling
+    // Image Handling - Show only current variant/product gallery, not all variants
+    // If main product has no images, auto-select first variant as fallback
+    React.useEffect(() => {
+        const mainProductImages = [product.imageUrl, ...(product.images?.map(i => typeof i === "string" ? i : i.url) || [])].filter(Boolean);
+
+        // If no variant selected AND no main product images, auto-select first variant
+        if (!selectedVariant && mainProductImages.length === 0 && product.variants && product.variants.length > 0) {
+            const firstVariant = product.variants[0];
+            if (firstVariant.imageUrl) {
+                setSelectedVariant(firstVariant);
+            }
+        }
+    }, [product, selectedVariant]);
+
     const galleryImages = selectedVariant
         ? [selectedVariant.imageUrl, ...(selectedVariant.gallery || [])].filter(Boolean) as string[]
-        : [product.imageUrl, ...(product.images?.map(i => typeof i === "string" ? i : i.url) || []), ...(product.variants?.map(v => v.imageUrl) || [])].filter(Boolean) as string[];
+        : [product.imageUrl, ...(product.images?.map(i => typeof i === "string" ? i : i.url) || [])].filter(Boolean) as string[];
 
     const displayImages = galleryImages.length > 0 ? galleryImages : [''];
     const activeImage = displayImages[activeImageIndex] || displayImages[0];
 
+    // Reset image index when gallery changes
+    React.useEffect(() => {
+        setActiveImageIndex(0);
+    }, [selectedVariant?.name, galleryImages.length]);
+
     // Auto-rotate images every 20 seconds
     React.useEffect(() => {
+        if (displayImages.length <= 1) return; // Don't rotate if only one image
         const interval = setInterval(() => {
             setActiveImageIndex(prev => (prev + 1) % displayImages.length);
         }, 20000); // 20 seconds
@@ -232,26 +251,6 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">→</button>
                                 </div>
                             )}
-
-                            {/* Small Cute Add to Sample Button - Hover Only */}
-                            <motion.button
-                                onClick={() => addToBox({
-                                    id: product.slug,
-                                    name: selectedVariant?.name ? `${product.title} - ${selectedVariant.name}` : product.title,
-                                    color: '#b45a3c',
-                                    texture: activeImage ? `url('${activeImage}')` : '#b45a3c'
-                                })}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-40 w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:from-[var(--terracotta)]/30 hover:to-[var(--terracotta)]/20 hover:border-[var(--terracotta)]/50 transition-all duration-300"
-                                title="Add to Sample Box"
-                            >
-                                <svg className="w-4 h-4 md:w-4.5 md:h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                </svg>
-                            </motion.button>
                         </div>
 
                         {/* --- VARIANT CHIPS: MOBILE (Horizontal Scroll) --- */}
@@ -379,9 +378,9 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="p-8 md:p-10 border-b border-white/5 flex flex-col md:flex-row md:items-end justify-between gap-4">
                                 <div>
                                     <h2 className="text-2xl font-serif text-[#EBE5E0]">Specifications</h2>
-                                    <p className="text-[10px] mt-2 text-white/40 uppercase tracking-widest font-mono">ISO 10545 Certified</p>
+                                    <p className="text-[10px] mt-2 text-white/40 uppercase tracking-widest font-bold">ISO 10545 Certified</p>
                                 </div>
-                                <div className="px-3 py-1 bg-white/5 rounded text-[10px] font-mono text-[var(--terracotta)] tracking-widest border border-white/5">
+                                <div className="px-3 py-1 bg-white/5 rounded text-[10px] font-bold text-[var(--terracotta)] tracking-widest border border-white/5">
                                     REF: {product.slug.toUpperCase().slice(0, 6)}
                                 </div>
                             </div>
@@ -395,7 +394,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                                 {spec.label}
                                             </span>
                                             <div>
-                                                <span className="block text-xl font-mono font-bold leading-none tracking-tight uppercase mb-2 text-[#EBE5E0]">
+                                                <span className="block text-xl font-bold leading-none tracking-tight uppercase mb-2 text-[#EBE5E0]">
                                                     {spec.value}
                                                 </span>
                                                 <p className="text-xs leading-relaxed text-white/50 font-medium">
@@ -429,7 +428,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 <div className="relative z-10">
                                     <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-[10px] mb-4 block">Calculator</span>
                                     <h3 className="text-3xl font-serif mb-8">Quantity Estimator</h3>
-                                    <CoverageCalculator />
+                                    <CoverageCalculator productDimensions={product.specs?.size} />
                                 </div>
                             </div>
                         </div>
@@ -460,7 +459,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
             {/* --- UNIFIED STICKY DOCK (Mobile & Desktop) --- */}
             <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1512]/90 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-                <div className="max-w-[1800px] mx-auto w-full px-4 md:px-8 py-4 md:py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="max-w-[1800px] mx-auto w-full px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
                     {/* Desktop Price Display */}
                     <div className="hidden md:flex flex-col items-start">
@@ -473,10 +472,26 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                     {/* Buttons Container */}
                     <div className="flex w-full md:w-auto gap-3 md:gap-4">
-                        <button onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })} className="flex-1 md:flex-none md:w-48 py-3.5 md:py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all">
-                            + Add To Sample Box
+                        {/* Talk to Expert - WhatsApp */}
+                        <button
+                            onClick={() => {
+                                const productUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/products/${product.category?.slug || 'collection'}/${product.slug}`;
+                                const variantInfo = selectedVariant?.name ? ` - ${selectedVariant.name}` : '';
+                                const message = `Hi! I'm interested in *${product.title}${variantInfo}*\n\nProduct Link: ${productUrl}\n\nCould you help me with more details?`;
+                                window.open(`https://wa.me/918080081951?text=${encodeURIComponent(message)}`, '_blank');
+                            }}
+                            className="flex-1 md:flex-none md:w-56 py-3.5 md:py-4 bg-white/5 border border-white/20 hover:bg-white/10 hover:border-white/40 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all flex items-center justify-center gap-2"
+                        >
+                            <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                            </svg>
+                            <span>Talk to Expert</span>
                         </button>
-                        <button onClick={() => setIsQuoteModalOpen(true)} className="flex-[2] md:flex-none md:w-64 py-3.5 md:py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all shadow-lg shadow-orange-900/20">
+
+                        <button
+                            onClick={() => setIsQuoteModalOpen(true)}
+                            className="flex-1 md:flex-none md:w-56 py-3.5 md:py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all shadow-lg shadow-orange-900/20"
+                        >
                             Get Custom Quote
                         </button>
                     </div>

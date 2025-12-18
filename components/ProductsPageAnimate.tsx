@@ -176,7 +176,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                     }]).map((variant: any, idx: number) => (
                                                         <Link
                                                             key={`${product._id}-${idx}`}
-                                                            href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
+                                                            href={`/products/${product.category?.slug || 'collection'}/${product.slug}${variant.name !== 'Standard' ? `?variant=${encodeURIComponent(variant.name)}` : ''}`}
                                                             className="group flex flex-col"
                                                         >
                                                             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-4 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-colors shadow-lg">
@@ -268,7 +268,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                         }]).map((variant: any, idx: number) => (
                                             <Link
                                                 key={`${product._id}-${idx}`}
-                                                href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
+                                                href={`/products/${product.category?.slug || 'collection'}/${product.slug}${variant.name !== 'Standard' ? `?variant=${encodeURIComponent(variant.name)}` : ''}`}
                                                 className="group flex flex-col"
                                             >
                                                 <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-4 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-colors shadow-lg">

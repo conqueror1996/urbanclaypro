@@ -145,7 +145,7 @@ Sent from UrbanClay Website`;
     };
 
     return (
-        <section id="quote" className="bg-[var(--sand)] border-t border-[var(--line)] py-32">
+        <section id="quote" className="bg-[var(--sand)] border-t border-[var(--line)] py-20 md:py-32">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-3xl shadow-xl border border-[var(--line)] overflow-hidden">
                     <div className="p-8 md:p-12">

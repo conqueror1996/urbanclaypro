@@ -66,7 +66,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
     const activeCategory = categoryData.find(c => c.id === activeTab) || categoryData[0];
 
     return (
-        <section className="py-24 md:py-32 bg-[#Fbf9f7] overflow-hidden" id="signature-collection">
+        <section className="py-20 md:py-32 bg-[#Fbf9f7] overflow-hidden" id="signature-collection">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* HEADLINE SECTION - Compact Layout */}

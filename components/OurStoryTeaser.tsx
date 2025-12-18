@@ -16,7 +16,7 @@ export default function OurStoryTeaser({ data }: OurStoryTeaserProps) {
     const imageUrl = data?.ourStoryImageUrl || '/images/our-philosophy-texture.jpg';
 
     return (
-        <section className="py-24 md:py-48 bg-[var(--sand)] border-y border-[var(--line)] relative overflow-hidden">
+        <section className="py-20 md:py-32 bg-[var(--sand)] border-y border-[var(--line)] relative overflow-hidden">
             {/* Subtle Background Animation */}
             <div className="absolute inset-0 pointer-events-none">
                 <motion.div

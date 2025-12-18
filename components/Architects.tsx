@@ -10,7 +10,7 @@ export default function Architects() {
     const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
 
     return (
-        <section id="architects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40">
+        <section id="architects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
             <motion.div
                 className="relative rounded-[2.5rem] bg-[#2A1E16] text-white overflow-hidden"
                 initial={{ opacity: 0, y: 40 }}

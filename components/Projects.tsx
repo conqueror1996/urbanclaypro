@@ -94,7 +94,7 @@ export default function Projects({ projects = [], showLink = true, layoutMode = 
     const isMixed = layoutMode === 'mixed';
 
     return (
-        <section id="projects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-48">
+        <section id="projects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
             {/* HEADER */}
             <motion.div
                 className="text-center mb-16"
