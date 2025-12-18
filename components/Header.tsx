@@ -14,15 +14,14 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Exposed Bricks',
         subtitle: 'Authentic Masonry',
-        href: '/products?category=Exposed%20Brick',
-        // In a real app, use real asset URLs. Using colors/gradients for abstract premium feel if images missing.
+        href: '/products?category=Exposed Brick',
         color: 'from-[#b45a3c] to-[#96472d]',
         image: '/images/menu-exposed.jpg'
     },
     {
         title: 'Brick Tiles',
         subtitle: 'Cladding Veneers',
-        href: '/products?category=Brick%20Tiles',
+        href: '/products?category=Brick Tiles',
         color: 'from-[#8c7b70] to-[#5d554f]',
         image: '/images/menu-cladding.jpg'
     },
@@ -36,7 +35,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Floor Tiles',
         subtitle: 'Earthy Grounding',
-        href: '/products?category=Floor%20Tiles',
+        href: '/products?category=Floor Tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
         textColor: 'text-[#2A1E16]',
         image: '/images/menu-floor.jpg'
@@ -44,7 +43,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Roof Tiles',
         subtitle: 'Heritage Roofing',
-        href: '/products?category=Roof%20Tiles',
+        href: '/products?category=Roof Tiles',
         color: 'from-[#2A1E16] to-[#1a1512]',
         image: '/images/menu-roof.jpg'
     }

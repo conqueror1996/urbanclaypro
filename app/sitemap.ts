@@ -4,39 +4,38 @@ import { getProducts, getProjects } from '@/lib/products';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://urbanclay.in';
 
-    // Fetch dynamic data
+    // Fetch dynamic content
     const products = await getProducts();
     const projects = await getProjects();
 
     // Static pages
     const staticPages = [
-        { route: '', priority: 1.0 },
-        { route: '/products', priority: 0.9 },
-        { route: '/projects', priority: 0.9 },
-        { route: '/guide', priority: 0.8 },
-        { route: '/architects', priority: 0.8 },
-        { route: '/our-story', priority: 0.7 },
-        { route: '/resources', priority: 0.6 },
-        { route: '/privacy-policy', priority: 0.3 },
-    ].map(({ route, priority }) => ({
+        '',
+        '/products',
+        '/projects',
+        '/guide',
+        '/architects',
+        '/our-story',
+        '/journal',
+        '/catalogue',
+        '/resources',
+        '/privacy-policy',
+    ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
-        changeFrequency: route === '' ? 'daily' as const : 'weekly' as const,
-        priority,
+        changeFrequency: 'weekly' as const,
+        priority: route === '' ? 1 : 0.8,
     }));
 
-    // Dynamic Product pages
-    const productPages = products.map((product) => {
-        const categorySlug = product.category?.slug || product.tag?.toLowerCase().replace(/\s+/g, '-') || 'products';
-        return {
-            url: `${baseUrl}/products/${categorySlug}/${product.slug}`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly' as const,
-            priority: 0.9,
-        };
-    });
+    // Product pages
+    const productPages = products.map((product) => ({
+        url: `${baseUrl}/products/${product.category?.slug || 'collection'}/${product.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.9,
+    }));
 
-    // Dynamic Project pages
+    // Project pages
     const projectPages = projects.map((project) => ({
         url: `${baseUrl}/projects/${project.slug}`,
         lastModified: new Date(),
@@ -44,5 +43,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    return [...staticPages, ...productPages, ...projectPages];
+    // Category pages (important for SEO)
+    const categories = [
+        'Exposed Brick',
+        'Brick Tiles',
+        'Jaali',
+        'Floor Tiles',
+        'Roof Tiles',
+    ].map((category) => ({
+        url: `${baseUrl}/products?category=${encodeURIComponent(category)}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.85,
+    }));
+
+    return [...staticPages, ...productPages, ...projectPages, ...categories];
 }

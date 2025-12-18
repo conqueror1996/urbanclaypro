@@ -142,8 +142,8 @@ export default function GuideContent({ data }: GuideContentProps) {
                                 ) : (
                                     <div className="w-full h-full bg-[#e7dbd1] flex items-center justify-center">No Image</div>
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
-                                <div className="absolute bottom-4 left-4">
+                                {/* Badge - No overlay */}
+                                <div className="absolute bottom-4 left-4 z-10">
                                     <span className="inline-block px-3 py-1 bg-white/90 backdrop-blur-sm text-[var(--terracotta)] text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">
                                         {item.bestFor}
                                     </span>

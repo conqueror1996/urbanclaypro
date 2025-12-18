@@ -104,9 +104,8 @@ export default function GuidePageAnimate() {
                                     src={item.image}
                                     alt={item.title}
                                     fill
-                                    className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                    className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0 border border-white/10 opacity-50" />
                             </div>
 
                             <div className="flex-1 space-y-8">

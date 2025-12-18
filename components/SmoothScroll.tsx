@@ -8,31 +8,56 @@ export default function SmoothScroll() {
     const pathname = usePathname();
 
     useEffect(() => {
-        // Don't initialize Lenis on studio, dashboard, or mobile devices (native scroll is better for mobile)
-        const isMobile = window.innerWidth < 768 || 'ontouchstart' in window;
-        if (pathname?.startsWith('/studio') || pathname?.startsWith('/dashboard') || isMobile) {
-            return;
-        }
+        // Only enable on desktop (min-width: 1024px) for luxury experience
+        const mediaQuery = window.matchMedia('(min-width: 1024px)');
 
-        const lenis = new Lenis({
-            duration: 0.85, // Was 1.2. Lower = Snappier/Faster settling (Less "slow")
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-            wheelMultiplier: 1.15, // Was 1. Higher = moves more pixels per scroll tick
-            touchMultiplier: 2,
-        });
+        let lenis: Lenis | null = null;
 
-        function raf(time: number) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+        const initLenis = () => {
+            // Skip on studio/dashboard pages
+            if (pathname?.startsWith('/studio') || pathname?.startsWith('/dashboard')) {
+                return;
+            }
 
-        requestAnimationFrame(raf);
+            if (mediaQuery.matches && !lenis) {
+                // Initialize Lenis for smooth, luxury scrolling (desktop only)
+                lenis = new Lenis({
+                    duration: 1.2, // Smooth, luxury duration
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Smooth easing
+                    orientation: 'vertical',
+                    gestureOrientation: 'vertical',
+                    smoothWheel: true,
+                    wheelMultiplier: 1, // Standard scroll speed
+                    touchMultiplier: 2,
+                    infinite: false,
+                });
 
+                // RAF loop
+                function raf(time: number) {
+                    lenis?.raf(time);
+                    requestAnimationFrame(raf);
+                }
+
+                requestAnimationFrame(raf);
+            } else if (!mediaQuery.matches && lenis) {
+                // Destroy Lenis on mobile/tablet for native scrolling
+                lenis.destroy();
+                lenis = null;
+            }
+        };
+
+        // Initialize on mount
+        initLenis();
+
+        // Listen for resize to enable/disable based on screen size
+        mediaQuery.addEventListener('change', initLenis);
+
+        // Cleanup
         return () => {
-            lenis.destroy();
+            mediaQuery.removeEventListener('change', initLenis);
+            if (lenis) {
+                lenis.destroy();
+            }
         };
     }, [pathname]);
 
