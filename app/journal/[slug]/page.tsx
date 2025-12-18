@@ -5,6 +5,7 @@ import { BLOG_POSTS } from '@/lib/blog-data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import SocialShare from '@/components/SocialShare';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -59,9 +60,18 @@ export default async function BlogPostPage({ params }: PageProps) {
                     <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-[#2A1E16] leading-tight mb-8">
                         {post.title}
                     </h1>
-                    <p className="text-xl text-gray-600 italic leading-relaxed">
+                    <p className="text-xl text-gray-600 italic leading-relaxed mb-8">
                         {post.excerpt}
                     </p>
+
+                    {/* Social Share */}
+                    <div className="flex justify-center">
+                        <SocialShare
+                            url={`https://urbanclay.in/journal/${slug}`}
+                            title={post.title}
+                            description={post.excerpt}
+                        />
+                    </div>
                 </div>
 
                 {/* Content */}
@@ -84,7 +94,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <div className="max-w-4xl mx-auto px-6 text-center">
                     <h2 className="font-serif text-3xl md:text-4xl mb-6">Inspired to build with clay?</h2>
                     <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                        Whether you need technical advice on exposed brick masonry or want to see samples of our jaali, our team is here to help.
+                        Whether you need technical advice on exposed brick masonry or want to see samples of our terracotta tiles, our team is here to help.
                     </p>
                     <Link href="/#quote" className="inline-block bg-white text-[var(--terracotta)] px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-[#2A1E16] hover:text-white transition-all shadow-xl">
                         Request Consultation

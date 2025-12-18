@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import CoverageCalculator from '@/components/product-page/CoverageCalculator';
 // import PatternVisualizer from '@/components/product-page/PatternVisualizer';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import RelatedArticles from '@/components/RelatedArticles';
 
 const WallStyler = dynamic(() => import('./WallStyler'), {
     ssr: false,
@@ -454,6 +455,9 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                     </section>
                 )
             }
+
+            {/* Related Articles Section */}
+            <RelatedArticles />
 
             <QuoteModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} productName={product.title} variantName={selectedVariant?.name} />
 
