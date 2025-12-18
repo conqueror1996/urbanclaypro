@@ -25,7 +25,7 @@ export default function Tools({ products = [] }: ToolsProps) {
 
     return (
         <section id="tools" className="bg-[var(--sand)] border-y border-[var(--line)]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
                 <div className="text-center mb-16">
                     <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Planning Tools</span>
                     <h2 className="text-3xl md:text-5xl font-serif text-[#2A1E16]">Plan Your Project</h2>
