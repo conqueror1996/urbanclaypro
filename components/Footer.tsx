@@ -47,6 +47,7 @@ export default function Footer() {
                     <div>
                         <h3 className="font-serif text-lg mb-6 text-[#d8b09a]">Resources</h3>
                         <ul className="space-y-4 text-sm text-gray-400">
+                            <li><FooterLink href="/journal">The Clay Journal</FooterLink></li>
                             <li><FooterLink href="/resources">Installation Guides</FooterLink></li>
                             <li><FooterLink href="/resources">Technical Data Sheets</FooterLink></li>
                             <li><FooterLink href="/projects">Project Showcase</FooterLink></li>

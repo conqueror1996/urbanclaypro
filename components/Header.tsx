@@ -52,6 +52,7 @@ const PRODUCT_CATEGORIES = [
 const navLinks = [
     { href: '/products', label: 'Products', hasDropdown: true },
     { href: '/projects', label: 'Projects' },
+    { href: '/journal', label: 'Journal' },
     { href: '/guide', label: 'Selection Guide' },
     { href: '/architects', label: 'For Architects' },
     { href: '/#quote', label: 'Contact' }
