@@ -43,7 +43,7 @@ export function SampleProvider({ children }: { children: ReactNode }) {
     }, [box]);
 
     const addToBox = (sample: Sample) => {
-        if (box.length < 4 && !box.find(s => s.id === sample.id)) {
+        if (box.length < 5 && !box.find(s => s.id === sample.id)) {
             setBox([...box, sample]);
         }
         setBoxOpen(true); // Always open box when clicking add

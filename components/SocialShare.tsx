@@ -1,8 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
 interface SocialShareProps {
     url: string;
     title: string;
@@ -10,9 +7,6 @@ interface SocialShareProps {
 }
 
 export default function SocialShare({ url, title, description }: SocialShareProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [copied, setCopied] = useState(false);
-
     const shareUrl = typeof window !== 'undefined' ? window.location.href : url;
     const shareTitle = encodeURIComponent(title);
     const shareDescription = encodeURIComponent(description || '');
@@ -26,17 +20,6 @@ export default function SocialShare({ url, title, description }: SocialShareProp
                 </svg>
             ),
             url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
-            color: 'hover:bg-[#0077B5] hover:text-white'
-        },
-        {
-            name: 'Facebook',
-            icon: (
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                </svg>
-            ),
-            url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-            color: 'hover:bg-[#1877F2] hover:text-white'
         },
         {
             name: 'Twitter',
@@ -46,7 +29,15 @@ export default function SocialShare({ url, title, description }: SocialShareProp
                 </svg>
             ),
             url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${shareTitle}`,
-            color: 'hover:bg-[#1DA1F2] hover:text-white'
+        },
+        {
+            name: 'Facebook',
+            icon: (
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+            ),
+            url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
         },
         {
             name: 'WhatsApp',
@@ -56,108 +47,24 @@ export default function SocialShare({ url, title, description }: SocialShareProp
                 </svg>
             ),
             url: `https://wa.me/?text=${shareTitle}%20${encodeURIComponent(shareUrl)}`,
-            color: 'hover:bg-[#25D366] hover:text-white'
         },
-        {
-            name: 'Email',
-            icon: (
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-            ),
-            url: `mailto:?subject=${shareTitle}&body=${shareDescription}%0A%0A${encodeURIComponent(shareUrl)}`,
-            color: 'hover:bg-gray-700 hover:text-white'
-        }
     ];
 
-    const copyToClipboard = async () => {
-        try {
-            await navigator.clipboard.writeText(shareUrl);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Failed to copy:', err);
-        }
-    };
-
     return (
-        <div className="relative">
-            {/* Share Button */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white rounded-lg transition-all text-sm font-medium"
-                aria-label="Share"
-            >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-                <span>Share</span>
-            </button>
-
-            {/* Share Menu */}
-            <AnimatePresence>
-                {isOpen && (
-                    <>
-                        {/* Backdrop */}
-                        <div
-                            className="fixed inset-0 z-40"
-                            onClick={() => setIsOpen(false)}
-                        />
-
-                        {/* Menu */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                            transition={{ duration: 0.15 }}
-                            className="absolute bottom-full mb-2 right-0 bg-white rounded-xl shadow-2xl border border-gray-200 p-4 min-w-[280px] z-50"
-                        >
-                            <div className="mb-3">
-                                <h3 className="text-sm font-bold text-gray-900 mb-1">Share this page</h3>
-                                <p className="text-xs text-gray-500">Choose your platform</p>
-                            </div>
-
-                            {/* Social Buttons */}
-                            <div className="grid grid-cols-5 gap-2 mb-3">
-                                {socialPlatforms.map((platform) => (
-                                    <a
-                                        key={platform.name}
-                                        href={platform.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`flex items-center justify-center p-3 rounded-lg border border-gray-200 text-gray-700 transition-all ${platform.color}`}
-                                        aria-label={`Share on ${platform.name}`}
-                                        title={platform.name}
-                                    >
-                                        {platform.icon}
-                                    </a>
-                                ))}
-                            </div>
-
-                            {/* Copy Link */}
-                            <div className="pt-3 border-t border-gray-100">
-                                <button
-                                    onClick={copyToClipboard}
-                                    className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all text-sm"
-                                >
-                                    <span className="font-medium text-gray-700">
-                                        {copied ? 'Link Copied!' : 'Copy Link'}
-                                    </span>
-                                    {copied ? (
-                                        <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    ) : (
-                                        <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                        </svg>
-                                    )}
-                                </button>
-                            </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+        <div className="flex items-center gap-3">
+            {socialPlatforms.map((platform) => (
+                <a
+                    key={platform.name}
+                    href={platform.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center w-10 h-10 rounded-full bg-[#2A1E16] text-white hover:bg-[var(--terracotta)] transition-all"
+                    aria-label={`Share on ${platform.name}`}
+                    title={platform.name}
+                >
+                    {platform.icon}
+                </a>
+            ))}
         </div>
     );
 }

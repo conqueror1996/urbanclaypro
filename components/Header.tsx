@@ -88,13 +88,15 @@ export default function Header() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-
+    // Pages that should have white header when not scrolled
+    const whiteHeaderPages = ['/architects', '/projects', '/guide', '/journal'];
+    const shouldShowWhiteHeader = whiteHeaderPages.some(page => pathname.startsWith(page));
 
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isScrolled || mobileMenuOpen || activeDropdown
-                ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] py-4'
-                : 'bg-transparent border-transparent py-6'
+            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isScrolled || mobileMenuOpen || activeDropdown || shouldShowWhiteHeader
+                    ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] py-4'
+                    : 'bg-transparent border-transparent py-6'
                 }`}
             onMouseLeave={handleMouseLeave}
             onMouseEnter={() => {

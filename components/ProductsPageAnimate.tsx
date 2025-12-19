@@ -97,23 +97,192 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                     </div>
                 </div>
 
-                {/* --- FILTERS (Studio Style) --- */}
-                <div className="sticky top-20 md:top-24 z-40 mb-12 md:mb-16 py-4 bg-[#1a1512]/90 backdrop-blur-md border-b border-white/5 -mx-6 px-6">
-                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                        {tabs.map((tab) => (
-                            <button
-                                key={tab.name}
-                                onClick={() => handleTabClick(tab.name)}
-                                className={`
-                                    whitespace-nowrap px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 border
-                                    ${activeTab === tab.name
-                                        ? 'bg-[var(--terracotta)] border-[var(--terracotta)] text-white'
-                                        : 'bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white'}
-                                `}
-                            >
-                                {tab.name}
-                            </button>
-                        ))}
+                {/* --- FILTERS (Premium Navbar Style) --- */}
+                <div className="sticky top-20 md:top-24 z-30 mb-8 md:mb-20 -mx-6 px-4 md:px-6">
+                    <div className="bg-white py-4 md:py-6 px-4 md:px-12 rounded-xl md:rounded-lg shadow-sm border border-gray-100">
+                        {/* Mobile: Horizontal Scroll */}
+                        <div className="flex md:hidden gap-3 overflow-x-auto pb-2 scrollbar-hide [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                            {/* Categories - Mobile */}
+                            <div className="flex-shrink-0 w-40">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
+                                    Categories
+                                </label>
+                                <div className="relative">
+                                    <select
+                                        value={activeTab}
+                                        onChange={(e) => handleTabClick(e.target.value)}
+                                        className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm"
+                                    >
+                                        {tabs.map((tab) => (
+                                            <option key={tab.name} value={tab.name}>
+                                                {tab.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Series - Mobile */}
+                            <div className="flex-shrink-0 w-32">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
+                                    Series
+                                </label>
+                                <div className="relative">
+                                    <select className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm">
+                                        <option>Smooth</option>
+                                        <option>Textured</option>
+                                        <option>Rustic</option>
+                                        <option>Modern</option>
+                                    </select>
+                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Color - Mobile */}
+                            <div className="flex-shrink-0 w-32">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
+                                    Color
+                                </label>
+                                <div className="relative">
+                                    <select className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm">
+                                        <option>Any color</option>
+                                        <option>Red</option>
+                                        <option>Brown</option>
+                                        <option>Beige</option>
+                                        <option>Gray</option>
+                                        <option>Black</option>
+                                    </select>
+                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Budget - Mobile */}
+                            <div className="flex-shrink-0 w-36">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
+                                    Budget
+                                </label>
+                                <div className="relative">
+                                    <select className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm">
+                                        <option>All</option>
+                                        <option>Low</option>
+                                        <option>Mid</option>
+                                        <option>High</option>
+                                    </select>
+                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Desktop: Premium Navbar Style */}
+                        <div className="hidden md:flex items-center justify-between gap-8">
+                            {/* Categories Dropdown */}
+                            <div className="flex-1">
+                                <div className="relative group">
+                                    <select
+                                        value={activeTab}
+                                        onChange={(e) => handleTabClick(e.target.value)}
+                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
+                                    >
+                                        {tabs.map((tab) => (
+                                            <option key={tab.name} value={tab.name}>
+                                                {tab.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="h-8 w-px bg-gray-200"></div>
+
+                            {/* Series Dropdown */}
+                            <div className="flex-1">
+                                <div className="relative group">
+                                    <select
+                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
+                                    >
+                                        <option value="">Series</option>
+                                        <option>Smooth</option>
+                                        <option>Textured</option>
+                                        <option>Rustic</option>
+                                        <option>Modern</option>
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="h-8 w-px bg-gray-200"></div>
+
+                            {/* Color Dropdown */}
+                            <div className="flex-1">
+                                <div className="relative group">
+                                    <select
+                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
+                                    >
+                                        <option value="">Color</option>
+                                        <option>Red</option>
+                                        <option>Brown</option>
+                                        <option>Beige</option>
+                                        <option>Gray</option>
+                                        <option>Black</option>
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Divider */}
+                            <div className="h-8 w-px bg-gray-200"></div>
+
+                            {/* Budget Range Dropdown */}
+                            <div className="flex-1">
+                                <div className="relative group">
+                                    <select
+                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
+                                    >
+                                        <option value="">Budget Range</option>
+                                        <option>Low (₹40-60/sq.ft)</option>
+                                        <option>Mid (₹60-100/sq.ft)</option>
+                                        <option>High (₹100+/sq.ft)</option>
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -140,7 +309,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                 <div key={category} className="section-category">
                                     {/* CATEGORY HEADER */}
                                     <div className="flex items-end gap-6 mb-12 border-b border-white/10 pb-6">
-                                        <h2 className="text-5xl md:text-7xl font-serif text-[#EBE5E0]/10 font-bold uppercase tracking-tighter leading-none select-none">
+                                        <h2 className="text-5xl md:text-7xl font-serif text-white font-bold uppercase tracking-tighter leading-none select-none">
                                             {category.split(' ')[0]}
                                         </h2>
                                         <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-4 ml-[-20px] bg-[#1a1512] px-2 z-10">

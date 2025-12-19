@@ -153,6 +153,13 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             {/* --- HERO SECTION: Swiss Hierarchy --- */}
             <section className="relative min-h-[90vh] flex flex-col pt-28 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto">
 
+                {/* Background Text - Large decorative text */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
+                    <h2 className="text-[20vw] md:text-[15vw] font-serif font-bold text-white/5 whitespace-nowrap tracking-tighter">
+                        {product.title.split(' ')[0]}
+                    </h2>
+                </div>
+
                 {/* Mobile Breadcrumbs: Standard Flow (Scrollable) */}
                 <div className="lg:hidden w-full mb-6 z-10 relative overflow-x-auto no-scrollbar whitespace-nowrap px-1">
                     <Breadcrumbs range={product.range} />
