@@ -7,7 +7,10 @@ export const metadata: Metadata = {
     description: 'A legacy of transforming spaces and empowering lives through sustainable terracotta.',
 };
 
-export default function OurStory() {
-    return <OurStoryContent />;
+import { getAboutPageData } from '@/lib/company';
+
+export default async function OurStory() {
+    const data = await getAboutPageData();
+    return <OurStoryContent data={data} />;
 }
 

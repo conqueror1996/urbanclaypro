@@ -7,8 +7,8 @@ import ArchitectsCorner from '@/components/ArchitectsCorner';
 import ScrollReveal from '@/components/ScrollReveal';
 import MaterialCalculator from '@/components/resources/MaterialCalculator';
 import TextureLibrary from '@/components/resources/TextureLibrary';
-
-
+import { getResources, getTextures } from '@/lib/products';
+import { getFAQs } from '@/lib/company';
 
 export const metadata: Metadata = {
     title: 'Resources & Tools | UrbanClay',
@@ -37,33 +37,31 @@ export const metadata: Metadata = {
     },
 };
 
-import { getResources, getTextures } from '@/lib/products';
-
 export default async function ResourcesPage() {
     const resources = await getResources();
     const textures = await getTextures();
+    const fetchedFaqs = await getFAQs();
+
+    const hardcodedFaqs = [
+        { _id: '1', question: "What is the recommended adhesive?", answer: "For exterior cladding, we strictly recommend high-polymer modified thin-set adhesives like Kerakoll H40 or Laticrete 335. Standard cement mortar is not recommended for heights above 10ft." },
+        { _id: '2', question: "Do these bricks require sealing?", answer: "While our high-fired clay is naturally resistant, we recommend a breathable siloxane-based water repellent for exterior facades to prevent efflorescence and staining in high-pollution areas." },
+        { _id: '3', question: "Can I order custom shapes?", answer: "Yes, for projects exceeding 5,000 sq.ft, we can develop custom molds for corner pieces, sills, or unique jaali profiles. Lead time for custom dies is typically 4 weeks." },
+        { _id: '4', question: "What is the breakage policy?", answer: "We account for 2-3% breakage in transit, which is industry standard. Any damage exceeding this during shipping is fully covered by our transit insurance and replaced immediately." }
+    ];
+
+    const faqs = fetchedFaqs.length > 0 ? fetchedFaqs : hardcodedFaqs;
 
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
-        mainEntity: [
-            {
-                '@type': 'Question',
-                name: 'Which adhesive do you recommend?',
-                acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: 'Kerakoll H14/H40 depending on substrate; see install guide.',
-                },
-            },
-            {
-                '@type': 'Question',
-                name: 'Lead time & logistics?',
-                acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: 'Typically 7–10 days; Pan-India shipping with moisture-safe packing.',
-                },
-            },
-        ],
+        mainEntity: faqs.map(f => ({
+            '@type': 'Question',
+            name: f.question,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: f.answer,
+            }
+        })),
     };
 
     return (
@@ -99,9 +97,6 @@ export default async function ResourcesPage() {
             <ScrollReveal className="py-12 max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
                 <TextureLibrary textures={textures} />
             </ScrollReveal>
-
-
-
 
             {/* SECTION 2: TECHNICAL DOWNLOADS */}
             <ScrollReveal className="py-24 max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -156,18 +151,13 @@ export default async function ResourcesPage() {
                     <h2 className="text-3xl font-serif text-white">Common Questions</h2>
                 </div>
                 <div className="space-y-4">
-                    {[
-                        { q: "What is the recommended adhesive?", a: "For exterior cladding, we strictly recommend high-polymer modified thin-set adhesives like Kerakoll H40 or Laticrete 335. Standard cement mortar is not recommended for heights above 10ft." },
-                        { q: "Do these bricks require sealing?", a: "While our high-fired clay is naturally resistant, we recommend a breathable siloxane-based water repellent for exterior facades to prevent efflorescence and staining in high-pollution areas." },
-                        { q: "Can I order custom shapes?", a: "Yes, for projects exceeding 5,000 sq.ft, we can develop custom molds for corner pieces, sills, or unique jaali profiles. Lead time for custom dies is typically 4 weeks." },
-                        { q: "What is the breakage policy?", a: "We account for 2-3% breakage in transit, which is industry standard. Any damage exceeding this during shipping is fully covered by our transit insurance and replaced immediately." }
-                    ].map((faq, i) => (
-                        <details key={i} className="group bg-white/5 open:bg-white/10 p-6 rounded-2xl border border-white/5 cursor-pointer transition-colors hover:border-white/10">
+                    {faqs.map((faq) => (
+                        <details key={faq._id} className="group bg-white/5 open:bg-white/10 p-6 rounded-2xl border border-white/5 cursor-pointer transition-colors hover:border-white/10">
                             <summary className="flex justify-between items-center font-medium list-none text-white/90">
-                                {faq.q}
+                                {faq.question}
                                 <span className="transform group-open:rotate-180 transition-transform text-[var(--terracotta)]">▼</span>
                             </summary>
-                            <p className="mt-4 text-white/60 leading-relaxed font-light">{faq.a}</p>
+                            <p className="mt-4 text-white/60 leading-relaxed font-light">{faq.answer}</p>
                         </details>
                     ))}
                 </div>

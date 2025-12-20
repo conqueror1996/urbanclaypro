@@ -18,7 +18,42 @@ interface ProductsPageAnimateProps {
 const toSlug = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
 
 export default function ProductsPageAnimate({ products }: ProductsPageAnimateProps) {
-    const { addToBox } = useSampleBox();
+    const { addToBox, box, isInBox, setBoxOpen } = useSampleBox();
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (toastMessage) {
+            const timer = setTimeout(() => setToastMessage(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [toastMessage]);
+
+    const handleAddSample = (product: Product, variant: any, e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const uniqueId = `${product.slug}-${toSlug(variant.name)}`;
+
+        if (isInBox(uniqueId)) {
+            setToastMessage("Already in your tray");
+            setBoxOpen(true);
+            return;
+        }
+
+        if (box.length >= 5) {
+            setToastMessage("Tray is full (Max 5 samples)");
+            setBoxOpen(true);
+            return;
+        }
+
+        addToBox({
+            id: uniqueId,
+            name: `${product.title} - ${variant.name}`,
+            color: '#b45a3c',
+            texture: variant.imageUrl ? `url('${variant.imageUrl}')` : '#b45a3c'
+        });
+        setToastMessage("Added to sample tray");
+    };
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
@@ -37,6 +72,25 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
 
     // 2. ACTIVE TAB STATE
     const [activeTab, setActiveTab] = useState('All');
+    const [selectedSeries, setSelectedSeries] = useState('All Series');
+    const [selectedColor, setSelectedColor] = useState('Any Color');
+    const [selectedPrice, setSelectedPrice] = useState('Any Budget');
+
+    // Extract dynamic filter options
+    const uniqueSeries = useMemo(() => {
+        return Array.from(new Set(products.flatMap(p => p.variants?.map(v => v.family)).filter(Boolean) as string[])).sort();
+    }, [products]);
+
+    const uniqueColors = useMemo(() => {
+        return Array.from(new Set(products.flatMap(p => p.variants?.map(v => v.color)).filter(Boolean) as string[])).sort();
+    }, [products]);
+
+    const priceOptions = [
+        { label: 'Any Budget', value: 'Any Budget' },
+        { label: 'Budget (₹ 40-70)', value: 'low' },
+        { label: 'Mid-Range (₹ 70-120)', value: 'mid' },
+        { label: 'Premium (₹ 120+)', value: 'high' }
+    ];
 
     // Sync activeTab with URL params
     useEffect(() => {
@@ -71,10 +125,46 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
     };
 
     // 3. FILTER LOGIC
+    // 3. FILTER LOGIC
     const matchingProducts = products.filter(p => {
-        if (activeTab === 'All') return true;
-        return (p.category?.title || p.tag) === activeTab;
+        // Category
+        if (activeTab !== 'All' && (p.category?.title || p.tag) !== activeTab) return false;
+
+        // Series
+        if (selectedSeries !== 'All Series' && !p.variants?.some(v => v.family === selectedSeries)) return false;
+
+        // Color
+        if (selectedColor !== 'Any Color' && !p.variants?.some(v => v.color === selectedColor)) return false;
+
+        // Price
+        if (selectedPrice !== 'Any Budget' && p.priceTier !== selectedPrice) return false;
+
+        return true;
     });
+
+    // Helper to filter variants for display
+    const getFilteredVariants = (product: Product) => {
+        let vars = product.variants || [];
+        if (selectedSeries !== 'All Series') {
+            vars = vars.filter(v => v.family === selectedSeries);
+        }
+        if (selectedColor !== 'Any Color') {
+            vars = vars.filter(v => v.color === selectedColor);
+        }
+
+        // If filtering leaves no variants but product matched (e.g. via other variants), populating empty might be wrong.
+        // But matchingProducts logic ensures product has at least one matching variant.
+        // If standard/no variants exists, use default behavior check.
+
+        if (vars.length === 0 && (product.variants?.length || 0) > 0) return []; // Should not happen due to parent filter
+
+        return vars.length > 0 ? vars : [{
+            _key: 'main',
+            name: 'Standard',
+            imageUrl: product.imageUrl,
+            badge: null
+        }];
+    };
 
     return (
         <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0]">
@@ -97,191 +187,219 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                     </div>
                 </div>
 
-                {/* --- FILTERS (Premium Navbar Style) --- */}
-                <div className="sticky top-20 md:top-24 z-30 mb-8 md:mb-20 -mx-6 px-4 md:px-6">
-                    <div className="bg-white py-4 md:py-6 px-4 md:px-12 rounded-xl md:rounded-lg shadow-sm border border-gray-100">
-                        {/* Mobile: Horizontal Scroll */}
-                        <div className="flex md:hidden gap-3 overflow-x-auto pb-2 scrollbar-hide [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                            {/* Categories - Mobile */}
-                            <div className="flex-shrink-0 w-40">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
+                {/* --- ARCHITECTURAL DARK FILTER --- */}
+                <div className="sticky top-20 md:top-24 z-40 mb-16 md:mb-24 -mx-6 px-4 md:px-6">
+                    {/* Desktop: Technical Grid Layout */}
+                    <div className="hidden md:block">
+                        <div className="bg-[#1a1a1a]/80 backdrop-blur-md border-y border-white/10 py-6">
+                            <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-8">
+
+                                {/* Label */}
+                                <div className="flex-shrink-0 flex items-center gap-3 opacity-60">
+                                    <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></div>
+                                    <span className="text-xs font-mono uppercase tracking-widest text-white">REFINE BY</span>
+                                </div>
+
+                                {/* Filter Group */}
+                                <div className="flex-1 flex items-center gap-8 justify-end">
+
+                                    {/* Categories - Scrollable Area */}
+                                    <div className="flex-1 overflow-hidden relative group/scroll">
+                                        <div className="flex items-center gap-6 overflow-x-auto scrollbar-hide border-r border-white/10 pr-8 mask-linear-fade">
+                                            {tabs.map((tab) => (
+                                                <button
+                                                    key={tab.name}
+                                                    onClick={() => handleTabClick(tab.name)}
+                                                    className={`text-xs font-medium uppercase tracking-[0.2em] transition-all py-1 relative whitespace-nowrap flex-shrink-0 ${activeTab === tab.name
+                                                        ? 'text-white'
+                                                        : 'text-white/40 hover:text-white'
+                                                        }`}
+                                                >
+                                                    {tab.name}
+                                                    {activeTab === tab.name && (
+                                                        <span className="absolute -bottom-2 left-0 w-full h-[1px] bg-[var(--terracotta)]"></span>
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {/* Fade effect on right to indicate more content */}
+                                        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#1a1a1a]/80 to-transparent pointer-events-none border-r border-white/10"></div>
+                                    </div>
+
+                                    {/* Dropdowns - Minimal & Transparent */}
+                                    <div className="flex items-center gap-4">
+                                        {/* Series Filter */}
+                                        <div className="relative group">
+                                            <select
+                                                value={selectedSeries}
+                                                onChange={(e) => setSelectedSeries(e.target.value)}
+                                                className="appearance-none bg-transparent text-xs font-medium uppercase tracking-wider text-white/70 border border-white/20 rounded-none px-4 py-2 pr-8 hover:border-white/40 hover:text-white transition-colors cursor-pointer focus:outline-none focus:border-[var(--terracotta)] w-32"
+                                            >
+                                                <option className="bg-[#1a1a1a]">All Series</option>
+                                                {uniqueSeries.map(s => <option key={s} value={s} className="bg-[#1a1a1a]">{s}</option>)}
+                                            </select>
+                                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                <svg className="w-3 h-3 text-white/40 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        {/* Color Filter */}
+                                        <div className="relative group">
+                                            <select
+                                                value={selectedColor}
+                                                onChange={(e) => setSelectedColor(e.target.value)}
+                                                className="appearance-none bg-transparent text-xs font-medium uppercase tracking-wider text-white/70 border border-white/20 rounded-none px-4 py-2 pr-8 hover:border-white/40 hover:text-white transition-colors cursor-pointer focus:outline-none focus:border-[var(--terracotta)] w-32"
+                                            >
+                                                <option className="bg-[#1a1a1a]">Any Color</option>
+                                                {uniqueColors.map(c => <option key={c} value={c} className="bg-[#1a1a1a]">{c}</option>)}
+                                            </select>
+                                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                <svg className="w-3 h-3 text-white/40 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        {/* Price Filter */}
+                                        <div className="relative group">
+                                            <select
+                                                value={selectedPrice}
+                                                onChange={(e) => setSelectedPrice(e.target.value)}
+                                                className="appearance-none bg-transparent text-xs font-medium uppercase tracking-wider text-white/70 border border-white/20 rounded-none px-4 py-2 pr-8 hover:border-white/40 hover:text-white transition-colors cursor-pointer focus:outline-none focus:border-[var(--terracotta)] w-32"
+                                            >
+                                                {priceOptions.map(p => <option key={p.value} value={p.value} className="bg-[#1a1a1a]">{p.label}</option>)}
+                                            </select>
+                                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                <svg className="w-3 h-3 text-white/40 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Reset Action */}
+                                    <button
+                                        onClick={() => {
+                                            setSelectedSeries('All Series');
+                                            setSelectedColor('Any Color');
+                                            setSelectedPrice('Any Budget');
+                                            setActiveTab('All');
+                                            router.push(pathname, { scroll: false });
+                                        }}
+                                        className="ml-4 p-2 text-white/30 hover:text-[var(--terracotta)] transition-colors"
+                                        title="Reset Filters"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile: Premium Architectural Grid (Sync Check) */}
+                    <div className="md:hidden relative z-30">
+                        {/* Scrollable Container */}
+                        <div className="bg-[#1a1a1a]/95 backdrop-blur-xl border-y border-white/10 overflow-x-auto scrollbar-hide flex items-stretch">
+
+                            {/* 1. Categories Block */}
+                            <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
                                     Categories
                                 </label>
                                 <div className="relative">
                                     <select
                                         value={activeTab}
                                         onChange={(e) => handleTabClick(e.target.value)}
-                                        className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm"
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
                                     >
                                         {tabs.map((tab) => (
-                                            <option key={tab.name} value={tab.name}>
+                                            <option key={tab.name} value={tab.name} className="bg-[#1a1a1a] text-gray-300">
                                                 {tab.name}
                                             </option>
                                         ))}
                                     </select>
-                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-[var(--terracotta)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Series - Mobile */}
-                            <div className="flex-shrink-0 w-32">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
-                                    Series
+                            {/* 2. Budget Block */}
+                            <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
+                                    Budget Range
                                 </label>
                                 <div className="relative">
-                                    <select className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm">
-                                        <option>Smooth</option>
-                                        <option>Textured</option>
-                                        <option>Rustic</option>
-                                        <option>Modern</option>
+                                    <select
+                                        value={selectedPrice}
+                                        onChange={(e) => setSelectedPrice(e.target.value)}
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
+                                    >
+                                        {priceOptions.map(p => <option key={p.value} value={p.value} className="bg-[#1a1a1a] text-gray-300">{p.label}</option>)}
                                     </select>
-                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-[var(--terracotta)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Color - Mobile */}
-                            <div className="flex-shrink-0 w-32">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
+                            {/* 3. Color Block */}
+                            <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
                                     Color
                                 </label>
                                 <div className="relative">
-                                    <select className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm">
-                                        <option>Any color</option>
-                                        <option>Red</option>
-                                        <option>Brown</option>
-                                        <option>Beige</option>
-                                        <option>Gray</option>
-                                        <option>Black</option>
+                                    <select
+                                        value={selectedColor}
+                                        onChange={(e) => setSelectedColor(e.target.value)}
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
+                                    >
+                                        <option className="bg-[#1a1a1a] text-gray-300">Any Color</option>
+                                        {uniqueColors.map(c => <option key={c} value={c} className="bg-[#1a1a1a] text-gray-300">{c}</option>)}
                                     </select>
-                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-[var(--terracotta)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Budget - Mobile */}
-                            <div className="flex-shrink-0 w-36">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-2">
-                                    Budget
+                            {/* 4. Series Block */}
+                            <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
+                                    Series
                                 </label>
                                 <div className="relative">
-                                    <select className="w-full px-3 py-2.5 bg-white border-2 border-gray-200 rounded-lg text-xs font-semibold text-[#2A1E16] appearance-none cursor-pointer shadow-sm">
-                                        <option>All</option>
-                                        <option>Low</option>
-                                        <option>Mid</option>
-                                        <option>High</option>
-                                    </select>
-                                    <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Desktop: Premium Navbar Style */}
-                        <div className="hidden md:flex items-center justify-between gap-8">
-                            {/* Categories Dropdown */}
-                            <div className="flex-1">
-                                <div className="relative group">
                                     <select
-                                        value={activeTab}
-                                        onChange={(e) => handleTabClick(e.target.value)}
-                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
+                                        value={selectedSeries}
+                                        onChange={(e) => setSelectedSeries(e.target.value)}
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
                                     >
-                                        {tabs.map((tab) => (
-                                            <option key={tab.name} value={tab.name}>
-                                                {tab.name}
-                                            </option>
-                                        ))}
+                                        <option className="bg-[#1a1a1a] text-gray-300">All Series</option>
+                                        {uniqueSeries.map(s => <option key={s} value={s} className="bg-[#1a1a1a] text-gray-300">{s}</option>)}
                                     </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-3 h-3 text-[var(--terracotta)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Divider */}
-                            <div className="h-8 w-px bg-gray-200"></div>
+                            {/* Spacer */}
+                            <div className="w-8 flex-shrink-0"></div>
 
-                            {/* Series Dropdown */}
-                            <div className="flex-1">
-                                <div className="relative group">
-                                    <select
-                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
-                                    >
-                                        <option value="">Series</option>
-                                        <option>Smooth</option>
-                                        <option>Textured</option>
-                                        <option>Rustic</option>
-                                        <option>Modern</option>
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Divider */}
-                            <div className="h-8 w-px bg-gray-200"></div>
-
-                            {/* Color Dropdown */}
-                            <div className="flex-1">
-                                <div className="relative group">
-                                    <select
-                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
-                                    >
-                                        <option value="">Color</option>
-                                        <option>Red</option>
-                                        <option>Brown</option>
-                                        <option>Beige</option>
-                                        <option>Gray</option>
-                                        <option>Black</option>
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Divider */}
-                            <div className="h-8 w-px bg-gray-200"></div>
-
-                            {/* Budget Range Dropdown */}
-                            <div className="flex-1">
-                                <div className="relative group">
-                                    <select
-                                        className="w-full px-6 py-3 bg-transparent border border-gray-200 rounded-lg text-center text-sm font-medium text-[#2A1E16] appearance-none cursor-pointer transition-all hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20"
-                                    >
-                                        <option value="">Budget Range</option>
-                                        <option>Low (₹40-60/sq.ft)</option>
-                                        <option>Mid (₹60-100/sq.ft)</option>
-                                        <option>High (₹100+/sq.ft)</option>
-                                    </select>
-                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <svg className="w-4 h-4 text-gray-400 group-hover:text-[var(--terracotta)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
+                            {/* Right Fade Affordance */}
+                            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#1a1a1a] to-transparent pointer-events-none border-y border-transparent"></div>
                         </div>
                     </div>
                 </div>
@@ -337,12 +455,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
 
                                                 {/* VARIANTS GRID */}
                                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-12 gap-y-16">
-                                                    {(product.variants && product.variants.length > 0 ? product.variants : [{
-                                                        _key: 'main',
-                                                        name: 'Standard',
-                                                        imageUrl: product.imageUrl,
-                                                        badge: null
-                                                    }]).map((variant: any, idx: number) => (
+                                                    {getFilteredVariants(product).map((variant: any, idx: number) => (
                                                         <Link
                                                             key={`${product._id}-${idx}`}
                                                             href={`/products/${product.category?.slug || 'collection'}/${product.slug}${variant.name !== 'Standard' ? `?variant=${encodeURIComponent(variant.name)}` : ''}`}
@@ -363,29 +476,18 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                                         No Image
                                                                     </div>
                                                                 )}
-
                                                                 {variant.badge && (
-                                                                    <div className={`absolute top-3 right-3 px-2 py-1 text-[9px] font-bold uppercase text-white rounded shadow-sm z-20 ${variant.badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
+                                                                    <div className={`absolute top-3 left-3 px-2 py-1 text-[9px] font-bold uppercase text-white rounded shadow-sm z-20 ${variant.badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
                                                                         {variant.badge}
                                                                     </div>
                                                                 )}
 
                                                                 {/* Small Cute Add to Sample Button - Hover Only */}
                                                                 <button
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        e.stopPropagation();
-                                                                        addToBox({
-                                                                            id: product.slug,
-                                                                            name: `${product.title} - ${variant.name}`,
-                                                                            color: '#b45a3c',
-                                                                            texture: variant.imageUrl ? `url('${variant.imageUrl}')` : '#b45a3c'
-                                                                        });
-                                                                    }}
-                                                                    className="absolute bottom-2 right-2 z-30 w-7 h-7 rounded-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:from-[var(--terracotta)]/30 hover:to-[var(--terracotta)]/20 hover:border-[var(--terracotta)]/50 hover:scale-110 active:scale-95 transition-all duration-300"
+                                                                    onClick={(e) => handleAddSample(product, variant, e)}
+                                                                    className="absolute top-3 right-3 z-20 w-6 h-6 rounded-full bg-black/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] hover:scale-110 active:scale-95 transition-all duration-300"
                                                                     title="Add to Sample Box"
-                                                                >
-                                                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                                                >                                                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
                                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                                                                     </svg>
                                                                 </button>
@@ -427,14 +529,8 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                     </div>
 
                                     {/* VARIANTS GRID */}
-                                    {/* We reuse the grid style but maybe 4 cols instead of 5 for filtered view since width might be different? No, keep consistent. */}
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-12 gap-y-16">
-                                        {(product.variants && product.variants.length > 0 ? product.variants : [{
-                                            _key: 'main',
-                                            name: 'Standard',
-                                            imageUrl: product.imageUrl,
-                                            badge: null
-                                        }]).map((variant: any, idx: number) => (
+                                        {getFilteredVariants(product).map((variant: any, idx: number) => (
                                             <Link
                                                 key={`${product._id}-${idx}`}
                                                 href={`/products/${product.category?.slug || 'collection'}/${product.slug}${variant.name !== 'Standard' ? `?variant=${encodeURIComponent(variant.name)}` : ''}`}
@@ -461,17 +557,8 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
 
                                                     {/* Small Cute Add to Sample Button - Hover Only */}
                                                     <button
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                            addToBox({
-                                                                id: product.slug,
-                                                                name: `${product.title} - ${variant.name}`,
-                                                                color: '#b45a3c',
-                                                                texture: variant.imageUrl ? `url('${variant.imageUrl}')` : '#b45a3c'
-                                                            });
-                                                        }}
-                                                        className="absolute bottom-2 right-2 z-30 w-7 h-7 rounded-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-md border border-white/40 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:from-[var(--terracotta)]/30 hover:to-[var(--terracotta)]/20 hover:border-[var(--terracotta)]/50 hover:scale-110 active:scale-95 transition-all duration-300"
+                                                        onClick={(e) => handleAddSample(product, variant, e)}
+                                                        className="absolute top-3 right-3 z-20 w-6 h-6 rounded-full bg-black/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] hover:scale-110 active:scale-95 transition-all duration-300"
                                                         title="Add to Sample Box"
                                                     >
                                                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
@@ -501,6 +588,19 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                 </AnimatePresence>
 
             </main>
+            <AnimatePresence>
+                {toastMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#1a1a1a] text-white px-6 py-3 rounded-full border border-white/20 shadow-2xl flex items-center gap-3 backdrop-blur-xl"
+                    >
+                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] animate-pulse" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest">{toastMessage}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <Footer />
         </div>
     );

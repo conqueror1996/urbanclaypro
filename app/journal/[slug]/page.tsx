@@ -1,11 +1,12 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { BLOG_POSTS } from '@/lib/blog-data';
+import { getJournalPost } from '@/lib/journal';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import SocialShare from '@/components/SocialShare';
+import { PortableText } from '@portabletext/react';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -13,7 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
-    const post = BLOG_POSTS.find(p => p.slug === slug);
+    const post = await getJournalPost(slug);
 
     if (!post) return { title: 'Article Not Found' };
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             url: `https://urbanclay.in/journal/${slug}`,
             images: [
                 {
-                    url: `https://urbanclay.in/api/og?slug=${slug}&type=article`,
+                    url: post.mainImage || 'https://urbanclay.in/og-default.jpg', // Fallback
                     width: 1200,
                     height: 630,
                     alt: post.title
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPostPage({ params }: PageProps) {
     const { slug } = await params;
-    const post = BLOG_POSTS.find(p => p.slug === slug);
+    const post = await getJournalPost(slug);
 
     if (!post) notFound();
 
@@ -68,11 +69,22 @@ export default async function BlogPostPage({ params }: PageProps) {
                     </p>
 
                     {/* Meta Info */}
-                    <div className="flex items-center justify-center gap-6 text-sm text-gray-500 mb-8">
+                    <div className="flex items-center justify-center gap-6 text-sm text-gray-500 mb-12">
                         <span>{post.date}</span>
                         <span>•</span>
                         <span>{post.readTime}</span>
                     </div>
+
+                    {/* Hero Image */}
+                    {(post.mainImage || post.imageUrl) && (
+                        <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-xl mb-16">
+                            <img
+                                src={post.mainImage || post.imageUrl}
+                                alt={post.title}
+                                className="object-cover w-full h-full"
+                            />
+                        </div>
+                    )}
 
                     {/* Social Share */}
                     <div className="flex justify-center">
@@ -103,8 +115,9 @@ export default async function BlogPostPage({ params }: PageProps) {
                             prose-img:rounded-xl prose-img:shadow-lg
                             max-w-none
                         "
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                    />
+                    >
+                        <PortableText value={post.body} />
+                    </div>
 
                     {/* Bottom Share */}
                     <div className="mt-16 pt-8 border-t border-gray-200">

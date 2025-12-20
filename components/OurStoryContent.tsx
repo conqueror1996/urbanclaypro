@@ -4,10 +4,16 @@ import React, { useRef } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { PortableText } from '@portabletext/react';
+import { AboutPageData } from '@/lib/company';
 
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 
-export default function OurStoryContent() {
+interface OurStoryContentProps {
+    data: AboutPageData | null;
+}
+
+export default function OurStoryContent({ data }: OurStoryContentProps) {
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -16,6 +22,11 @@ export default function OurStoryContent() {
 
     const heroY = useTransform(scrollYProgress, [0, 0.2], ["0%", "50%"]);
     const imageParallax = useTransform(scrollYProgress, [0.1, 0.4], ["5%", "-5%"]);
+
+    // Defaults
+    const estYear = data?.hero.estYear || 'Est. 2006';
+    const heroHeading = data?.hero.heading || 'A Legacy of Transformation';
+    const heroSubheading = data?.hero.subheading || 'From a modest initiative in Mumbai to a nationwide presence, we are redefining how the world builds with earth.';
 
     return (
         <div ref={containerRef} className="min-h-screen bg-[#f5f0eb] text-[#2A1E16]">
@@ -46,11 +57,10 @@ export default function OurStoryContent() {
                             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                         >
                             <span className="text-[var(--terracotta)] font-medium tracking-[0.3em] uppercase text-xs md:text-sm mb-6 block">
-                                Est. 2006
+                                {estYear}
                             </span>
                             <h1 className="text-5xl md:text-8xl font-serif font-medium text-[#2A1E16] mb-8 leading-[1.1]">
-                                A Legacy of <br />
-                                <span className="italic text-[var(--terracotta)]">Transformation</span>
+                                {heroHeading}
                             </h1>
                         </motion.div>
 
@@ -60,7 +70,7 @@ export default function OurStoryContent() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                         >
-                            From a modest initiative in Mumbai to a nationwide presence, we are redefining how the world builds with earth.
+                            {heroSubheading}
                         </motion.p>
                     </div>
                 </section>
@@ -83,8 +93,8 @@ export default function OurStoryContent() {
                                     style={{ scale: 1.1, y: imageParallax }}
                                 >
                                     <Image
-                                        src="/images/sustainability-sprout.png"
-                                        alt="UrbanClay Sustainability - New Life from Red Soil"
+                                        src={data?.mainContent.imageUrl || "/images/sustainability-sprout.png"}
+                                        alt="UrbanClay Sustainability"
                                         fill
                                         className="object-cover"
                                     />
@@ -99,20 +109,26 @@ export default function OurStoryContent() {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8 }}
                             >
-                                <h2 className="text-4xl font-serif text-[#2A1E16]">Rooted in <span className="italic">Sustainability</span></h2>
-                                <div className="space-y-6 text-lg text-[#5d554f] font-light leading-relaxed">
-                                    <p>
-                                        UrbanClay was founded with the ambition to revolutionize the way we build, aiming to make a lasting impact on both the spaces we create and the world we live in.
-                                    </p>
-                                    <p>
-                                        Today, we proudly serve clients across all major cities in India, including Bangalore, Hyderabad, Delhi, Maharashtra, Kerala, and Gujarat. We’ve completed over <strong>700 projects</strong>, collaborating with top architects to deliver excellence.
-                                    </p>
+                                <h2 className="text-4xl font-serif text-[#2A1E16]">{data?.mainContent.heading || 'Rooted in Sustainability'}</h2>
+                                <div className="space-y-6 text-lg text-[#5d554f] font-light leading-relaxed prose prose-p:my-4 prose-strong:font-bold">
+                                    {data?.mainContent.body ? (
+                                        <PortableText value={data.mainContent.body} />
+                                    ) : (
+                                        <>
+                                            <p>
+                                                UrbanClay was founded with the ambition to revolutionize the way we build, aiming to make a lasting impact on both the spaces we create and the world we live in.
+                                            </p>
+                                            <p>
+                                                Today, we proudly serve clients across all major cities in India, including Bangalore, Hyderabad, Delhi, Maharashtra, Kerala, and Gujarat. We’ve completed over <strong>700 projects</strong>, collaborating with top architects to deliver excellence.
+                                            </p>
+                                        </>
+                                    )}
                                 </div>
 
                                 <div className="p-8 bg-[#f9f7f5] rounded-xl border border-[#e5e5e5]">
-                                    <h3 className="text-xl font-serif text-[var(--terracotta)] mb-3">Our Promise</h3>
+                                    <h3 className="text-xl font-serif text-[var(--terracotta)] mb-3">{data?.mainContent.promise.title || 'Our Promise'}</h3>
                                     <p className="text-[#5d554f]">
-                                        For every product purchased, we plant <strong>10 trees</strong>. This initiative reflects our deep belief in giving back to the environment.
+                                        {data?.mainContent.promise.text || <>For every product purchased, we plant <strong>10 trees</strong>. This initiative reflects our deep belief in giving back to the environment.</>}
                                     </p>
                                 </div>
                             </motion.div>
@@ -127,15 +143,15 @@ export default function OurStoryContent() {
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                            <StatItem value={17} label="Years of Experience" suffix="+" />
-                            <StatItem value={700} label="Projects Completed" suffix="+" />
-                            <StatItem value={50} label="Cities Covered" suffix="+" />
-                            <StatItem value={10} label="Trees Planted" suffix="k+" />
+                            <StatItem value={data?.stats.yearsExperience || 17} label="Years of Experience" suffix="+" />
+                            <StatItem value={data?.stats.projectsCompleted || 700} label="Projects Completed" suffix="+" />
+                            <StatItem value={data?.stats.citiesCovered || 50} label="Cities Covered" suffix="+" />
+                            <StatItem value={data?.stats.treesPlanted || 10} label="Trees Planted" suffix="k+" />
                         </div>
                     </div>
                 </section>
 
-                <HorizontalTimeline />
+                <HorizontalTimeline events={data?.timeline} />
 
                 {/* VISION SECTION */}
                 <section className="py-32 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-[#f5f0eb] relative z-10">
@@ -145,12 +161,9 @@ export default function OurStoryContent() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
                     >
-                        <h2 className="text-4xl md:text-5xl font-serif text-[#2A1E16] mb-8">Empowering Lives Through Design</h2>
+                        <h2 className="text-4xl md:text-5xl font-serif text-[#2A1E16] mb-8">{data?.vision.heading || 'Empowering Lives Through Design'}</h2>
                         <p className="text-xl text-[#5d554f] leading-relaxed mb-12 font-light">
-                            UrbanClay is more than a company—it’s a legacy. We offer a diverse range of products, from terracotta cladding to hollow clay blocks, all crafted from 100% natural clay.
-                        </p>
-                        <p className="text-xl text-[#5d554f] leading-relaxed font-light">
-                            We invite you to be part of this journey. Explore our sustainable building solutions and discover how UrbanClay can help you create stunning, eco-friendly spaces.
+                            {data?.vision.text || 'UrbanClay is more than a company—it’s a legacy. We offer a diverse range of products, from terracotta cladding to hollow clay blocks, all crafted from 100% natural clay.'}
                         </p>
                     </motion.div>
                 </section>
@@ -160,7 +173,7 @@ export default function OurStoryContent() {
     );
 }
 
-const TIMELINE_EVENTS = [
+const DEFAULT_TIMELINE = [
     { year: '2006', title: 'The Beginning', description: 'Founded in a small workshop in Mumbai with a single kiln and a vision to revive terracotta.' },
     { year: '2010', title: 'First Major Project', description: 'Commissioned for the landmark "Red Stone House" in Bangalore, putting UrbanClay on the map.' },
     { year: '2015', title: 'Innovation Lab', description: 'Launched our dedicated R&D facility to develop weather-resistant and structural clay products.' },
@@ -169,7 +182,8 @@ const TIMELINE_EVENTS = [
     { year: '2024', title: 'Global Reach', description: 'Started exporting premium facade panels to the Middle East and Southeast Asia.' },
 ];
 
-function HorizontalTimeline() {
+function HorizontalTimeline({ events }: { events?: { year: string, title: string, description: string }[] }) {
+    const timelineEvents = events && events.length > 0 ? events : DEFAULT_TIMELINE;
     const targetRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: targetRef,
@@ -191,7 +205,7 @@ function HorizontalTimeline() {
                 </div>
 
                 <motion.div style={{ x }} className="flex gap-12 md:gap-24 px-8 md:px-24 pt-32 mt-20">
-                    {TIMELINE_EVENTS.map((event, i) => (
+                    {timelineEvents.map((event, i) => (
                         <div key={i} className="relative group min-w-[300px] md:min-w-[500px] flex flex-col justify-start">
                             {/* Line Connector */}
                             <div className="absolute top-8 left-0 w-full h-[1px] bg-white/20" />

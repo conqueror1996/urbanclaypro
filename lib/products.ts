@@ -42,6 +42,7 @@ export interface Product {
         efflorescence?: string;
     };
     priceRange: string;
+    priceTier?: string;
     description: string;
     images?: any[];
     imageUrl?: string;
@@ -56,6 +57,7 @@ export interface Product {
         gallery?: string[];
         galleryRefs?: string[];
         badge?: string;
+        color?: string;
     }[];
 
     resources?: {
@@ -90,9 +92,10 @@ const productsQuery = groq`*[_type == "product"] {
   range,
   specs,
   priceRange,
+  priceTier,
   description,
   "imageUrl": images[0].asset->url,
-  "variants": variants[]{ _key, name, family, "slug": slug.current, "imageUrl": image.asset->url, "imageRef": image.asset._ref, "altText": image.alt, "gallery": gallery[].asset->url, "galleryRefs": gallery[].asset._ref, badge },
+  "variants": variants[]{ _key, name, family, color, "slug": slug.current, "imageUrl": image.asset->url, "imageRef": image.asset._ref, "altText": image.alt, "gallery": gallery[].asset->url, "galleryRefs": gallery[].asset._ref, badge },
 
   "resources": {
     "technicalSheets": resources.technicalSheets[]{ title, "fileUrl": asset->url },
@@ -116,8 +119,9 @@ const productsQuery = groq`*[_type == "product"] {
 const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0] {
   ...,
   "slug": slug.current,
+  priceTier,
   "images": images[].asset->url,
-  "variants": variants[]{ _key, name, family, "slug": slug.current, "imageUrl": image.asset->url, "altText": image.alt, "gallery": gallery[].asset->url, badge },
+  "variants": variants[]{ _key, name, family, color, "slug": slug.current, "imageUrl": image.asset->url, "altText": image.alt, "gallery": gallery[].asset->url, badge },
 
   "resources": {
     "technicalSheets": resources.technicalSheets[]{ title, "fileUrl": asset->url },

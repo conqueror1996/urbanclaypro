@@ -81,6 +81,19 @@ export default defineType({
             placeholder: '₹85 - ₹120 / sq.ft',
         }),
         defineField({
+            name: 'priceTier',
+            title: 'Price Tier',
+            type: 'string',
+            group: 'editorial',
+            options: {
+                list: [
+                    { title: 'Budget (₹ 40-70)', value: 'low' },
+                    { title: 'Mid-Range (₹ 70-120)', value: 'mid' },
+                    { title: 'Premium (₹ 120+)', value: 'high' },
+                ],
+            },
+        }),
+        defineField({
             name: 'description',
             title: 'Description',
             type: 'text',
@@ -135,6 +148,21 @@ export default defineType({
                             title: 'Family Group',
                             description: 'Optional: Group variants together (e.g. "Rustic Red Series")',
                             type: 'string',
+                        },
+                        {
+                            name: 'color',
+                            title: 'Color Family',
+                            type: 'string',
+                            options: {
+                                list: [
+                                    { title: 'Red / Terracotta', value: 'Red' },
+                                    { title: 'Brown / Earth', value: 'Brown' },
+                                    { title: 'Grey / Black', value: 'Grey' },
+                                    { title: 'Beige / Sand', value: 'Beige' },
+                                    { title: 'White / Cream', value: 'White' },
+                                    { title: 'Multicolor', value: 'Multicolor' },
+                                ],
+                            },
                         },
                         {
                             name: 'slug',
