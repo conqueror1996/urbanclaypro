@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import PremiumImage from './PremiumImage';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Product } from '@/lib/products';
@@ -66,11 +67,14 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                 className="absolute inset-0"
                             >
                                 {activeImage && (
-                                    <Image
+                                    <PremiumImage
                                         src={activeImage}
                                         alt={product.title}
                                         fill
                                         className="object-contain p-8 md:p-12"
+                                        containerClassName="w-full h-full"
+                                        backgroundColor="bg-[#241e1a]"
+                                        shimmerColor="bg-gradient-to-r from-transparent via-white/5 to-transparent"
                                         priority
                                     />
                                 )}
@@ -95,7 +99,15 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                     onClick={() => setActiveImageIndex(idx)}
                                     className={`relative w-24 h-24 shrink-0 rounded-lg overflow-hidden border transition-all ${activeImageIndex === idx ? 'border-[var(--terracotta)] opacity-100' : 'border-transparent opacity-50 hover:opacity-100'}`}
                                 >
-                                    <Image src={img} alt="Thumbnail" fill className="object-cover" />
+                                    <PremiumImage
+                                        src={img}
+                                        alt="Thumbnail"
+                                        fill
+                                        className="object-cover"
+                                        containerClassName="w-full h-full"
+                                        backgroundColor="bg-[#241e1a]"
+                                        shimmerColor="bg-gradient-to-r from-transparent via-white/5 to-transparent"
+                                    />
                                 </button>
                             ))}
                         </div>
@@ -161,7 +173,17 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                                     }`}
                                             >
                                                 <div className="w-8 h-8 rounded-full overflow-hidden relative">
-                                                    {v.imageUrl && <Image src={v.imageUrl} alt={v.name} fill className="object-cover" />}
+                                                    {v.imageUrl && (
+                                                        <PremiumImage
+                                                            src={v.imageUrl}
+                                                            alt={v.name}
+                                                            fill
+                                                            className="object-cover"
+                                                            containerClassName="w-full h-full"
+                                                            backgroundColor="bg-white/10"
+                                                            shimmerColor="bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                                                        />
+                                                    )}
                                                 </div>
                                                 <span className={`text-xs font-bold uppercase tracking-wide ${isSelected ? 'text-[var(--terracotta)]' : 'text-white/60'}`}>{v.name}</span>
                                             </Link>
@@ -323,11 +345,14 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                 <Link href={`/products/${bgProduct.slug}`} key={bgProduct.slug} className="group cursor-pointer">
                                     <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-6 relative">
                                         {bgProduct.imageUrl ? (
-                                            <Image
+                                            <PremiumImage
                                                 src={bgProduct.imageUrl}
                                                 alt={bgProduct.title}
                                                 fill
                                                 className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
+                                                containerClassName="w-full h-full"
+                                                backgroundColor="bg-[#241e1a]"
+                                                shimmerColor="bg-gradient-to-r from-transparent via-white/5 to-transparent"
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest">No Image</div>

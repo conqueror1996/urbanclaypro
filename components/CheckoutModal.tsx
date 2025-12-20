@@ -265,6 +265,22 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                                     >
                                         Proceed to Payment
                                     </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            // Close checkout and scroll to/focus on the free consultation form in parent or handle here?
+                                            // Since this is a modal on top of SampleModal, we can just close this and let them use the form we just renamed.
+                                            // OR we can make this button submit the current details as a lead directly.
+                                            // Let's submit as lead directly since they filled details here.
+                                            const event = new CustomEvent('switchToConsultation', { detail: formData });
+                                            window.dispatchEvent(event);
+                                            onClose();
+                                        }}
+                                        className="w-full py-3 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-[var(--terracotta)] transition-colors"
+                                    >
+                                        I just need free guidance
+                                    </button>
                                 </form>
                             </>
                         )}

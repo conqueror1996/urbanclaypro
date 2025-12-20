@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getProducts } from '@/lib/products';
 
 export const metadata: Metadata = {
     title: 'Buy Terracotta Tiles in Pune | Free Samples & Delivery',
@@ -17,7 +18,33 @@ export const metadata: Metadata = {
     ],
 };
 
-export default function PunePage() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+export default async function PunePage() {
+    const products = await getProducts();
+
+    const featuredCategories = [
+        {
+            title: 'Exposed Bricks', // Corrected: Plural
+            displayTitle: 'Exposed Bricks',
+            keyword: 'Wirecut',
+            description: 'Wirecut, handmade & pressed bricks for facades'
+        },
+        {
+            title: 'Brick Wall Tiles', // Corrected: "Brick Wall Tiles"
+            displayTitle: 'Brick Tiles',
+            keyword: 'Cladding',
+            description: 'Thin cladding veneers for walls'
+        },
+        {
+            title: 'Cement Jali', // Corrected: "Cement Jali" (closest match found)
+            displayTitle: 'Jaali Panels',
+            keyword: 'Jali',
+            description: 'Decorative terracotta & cement screens'
+        }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
             <Header />
@@ -58,38 +85,32 @@ export default function PunePage() {
                         <h2 className="text-3xl font-serif text-center mb-12">Our Products in Pune</h2>
 
                         <div className="grid md:grid-cols-3 gap-8">
-                            <Link href="/products?category=Exposed Brick" className="group">
-                                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all">
-                                    <div className="h-48 bg-gradient-to-br from-[#b45a3c] to-[#96472d]"></div>
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-serif mb-2 group-hover:text-[var(--terracotta)]">Exposed Bricks</h3>
-                                        <p className="text-sm text-gray-600 mb-4">Wirecut, handmade & pressed bricks for facades</p>
-                                        <span className="text-sm font-bold text-[var(--terracotta)]">View Collection →</span>
-                                    </div>
-                                </div>
-                            </Link>
+                            {/* Dynamically Filtered Products */}
+                            {featuredCategories.map((cat) => {
+                                // Find a representative product for this category
+                                const product = products.find(p => p.category?.title === cat.title || p.tag === cat.title || p.title.includes(cat.keyword));
+                                if (!product) return null;
 
-                            <Link href="/products?category=Brick Tiles" className="group">
-                                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all">
-                                    <div className="h-48 bg-gradient-to-br from-[#8c7b70] to-[#5d554f]"></div>
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-serif mb-2 group-hover:text-[var(--terracotta)]">Brick Tiles</h3>
-                                        <p className="text-sm text-gray-600 mb-4">Thin cladding veneers for walls</p>
-                                        <span className="text-sm font-bold text-[var(--terracotta)]">View Collection →</span>
-                                    </div>
-                                </div>
-                            </Link>
-
-                            <Link href="/products?category=Jaali" className="group">
-                                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all">
-                                    <div className="h-48 bg-gradient-to-br from-[#d6cbb8] to-[#bfae96]"></div>
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-serif mb-2 group-hover:text-[var(--terracotta)]">Jaali Panels</h3>
-                                        <p className="text-sm text-gray-600 mb-4">Decorative terracotta screens</p>
-                                        <span className="text-sm font-bold text-[var(--terracotta)]">View Collection →</span>
-                                    </div>
-                                </div>
-                            </Link>
+                                return (
+                                    <Link key={cat.title} href={`/products?category=${encodeURIComponent(cat.title)}`} className="group">
+                                        <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all h-full flex flex-col">
+                                            <div className="h-48 bg-gray-200 relative overflow-hidden">
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img
+                                                    src={product.imageUrl}
+                                                    alt={product.title}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                />
+                                            </div>
+                                            <div className="p-6 flex-1 flex flex-col">
+                                                <h3 className="text-xl font-serif mb-2 group-hover:text-[var(--terracotta)]">{cat.displayTitle}</h3>
+                                                <p className="text-sm text-gray-600 mb-4 flex-1">{cat.description}</p>
+                                                <span className="text-sm font-bold text-[var(--terracotta)]">View Collection →</span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                );
+                            })}
                         </div>
                     </div>
                 </section>

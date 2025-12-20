@@ -7,6 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig: NextConfig = {
   /* Performance Optimizations */
+  output: 'standalone', // Required for Hostinger/VPS deployment
   reactCompiler: true,
 
   // Compression

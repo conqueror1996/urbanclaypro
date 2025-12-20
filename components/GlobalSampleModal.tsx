@@ -9,6 +9,7 @@ export default function GlobalSampleModal() {
     const { isBoxOpen, setBoxOpen } = useSampleBox();
     const [checkoutOpen, setCheckoutOpen] = useState(false);
     const [sampleType, setSampleType] = useState<'regular' | 'curated'>('regular');
+    const [consultationData, setConsultationData] = useState<any>(null);
 
     useEffect(() => {
         const handleOpenCheckout = (e: any) => {
@@ -17,14 +18,26 @@ export default function GlobalSampleModal() {
             setCheckoutOpen(true); // Open checkout
         };
 
+        const handleSwitchToConsultation = (e: any) => {
+            setConsultationData(e.detail);
+            setCheckoutOpen(false);
+            setBoxOpen(true); // Re-open sample modal (which now acts as consultation form)
+        };
+
         window.addEventListener('openCheckout', handleOpenCheckout);
-        return () => window.removeEventListener('openCheckout', handleOpenCheckout);
+        window.addEventListener('switchToConsultation', handleSwitchToConsultation);
+
+        return () => {
+            window.removeEventListener('openCheckout', handleOpenCheckout);
+            window.removeEventListener('switchToConsultation', handleSwitchToConsultation);
+        };
     }, [setBoxOpen]);
 
     return (
         <>
             <SampleModal
                 isOpen={isBoxOpen}
+                initialData={consultationData}
                 onClose={() => setBoxOpen(false)}
             />
             <CheckoutModal

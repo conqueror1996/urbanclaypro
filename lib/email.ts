@@ -1,15 +1,22 @@
 import nodemailer from 'nodemailer';
 
-const transporter = nodemailer.createTransport({
-    // Generic SMTP settings - User needs to fill these in .env.local
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-    },
-});
+// Singleton to reuse connection
+let transporter: nodemailer.Transporter | null = null;
+
+function getTransporter() {
+    if (transporter) return transporter;
+
+    transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+        },
+    });
+    return transporter;
+}
 
 export async function sendLeadAlertEmail(lead: any) {
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
@@ -31,6 +38,10 @@ export async function sendLeadAlertEmail(lead: any) {
                         <tr style="background-color: #f9f9f9;">
                             <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Name/Contact:</strong></td>
                             <td style="padding: 10px; border-bottom: 1px solid #eee;">${lead.contact}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Email:</strong></td>
+                            <td style="padding: 10px; border-bottom: 1px solid #eee;">${lead.email || 'N/A'}</td>
                         </tr>
                         <tr>
                             <td style="padding: 10px; border-bottom: 1px solid #eee;"><strong>Role:</strong></td>
@@ -65,11 +76,106 @@ export async function sendLeadAlertEmail(lead: any) {
             `,
         };
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log('📧 Email sent: %s', info.messageId);
+        const info = await getTransporter().sendMail(mailOptions);
+        console.log('📧 Admin Alert sent: %s', info.messageId);
         return { success: true, messageId: info.messageId };
     } catch (error) {
-        console.error('❌ Error sending email:', error);
+        console.error('❌ Error sending admin email:', error);
+        return { success: false, error };
+    }
+}
+
+export async function sendUserConfirmationEmail(lead: any) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) {
+        return;
+    }
+
+    try {
+        const mailOptions = {
+            from: `"UrbanClay Support" <${process.env.SMTP_USER}>`,
+            to: lead.email,
+            subject: `We've received your request! | UrbanClay`,
+            html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h2 style="color: #b14a2a; margin: 0;">UrbanClay</h2>
+                    </div>
+                    
+                    <p>Hello,</p>
+                    <p>Thank you for reaching out to UrbanClay. We have received your consultation request for <strong>${lead.product || 'terracotta products'}</strong>.</p>
+                    
+                    <p>Our team will review your requirements and get back to you shortly (usually within 24 hours).</p>
+                    
+                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <strong>Your Request Details:</strong><br>
+                        Phone: ${lead.contact}<br>
+                        Location: ${lead.city}<br>
+                        Requirement: ${lead.quantity}
+                    </div>
+
+                    <p>If you have urgent questions, feel free to reply to this email.</p>
+                    
+                    <p style="color: #888; font-size: 14px; margin-top: 30px;">
+                        Warm regards,<br>
+                        The UrbanClay Team
+                    </p>
+                </div>
+            `,
+        };
+
+        const info = await getTransporter().sendMail(mailOptions);
+        console.log('📧 User Confirmation sent: %s', info.messageId);
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        console.error('❌ Error sending user confirmation:', error);
+        return { success: false, error };
+    }
+}
+
+export async function sendSampleFollowUpEmail(lead: any) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.contact) {
+        // Note: lead.contact might be phone, need email. Assuming we saved email in 'email' field now in Sanity.
+        // If email not found, try to fallback or skip.
+        if (!lead.email) return { success: false, error: "No email" };
+    }
+
+    try {
+        const mailOptions = {
+            from: `"UrbanClay Team" <${process.env.SMTP_USER}>`,
+            to: lead.email,
+            subject: `Did your samples arrive? | UrbanClay`,
+            html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                     <div style="text-align: center; margin-bottom: 20px;">
+                        <h2 style="color: #b14a2a; margin: 0;">UrbanClay</h2>
+                    </div>
+
+                    <p>Hi ${lead.role === 'Architect' ? 'Architect' : 'there'},</p>
+
+                    <p>It's been a few days since you requested samples from us. We wanted to check in—<strong>have they arrived safely?</strong></p>
+
+                    <p>Here are a few things to look for when inspecting our terracotta:</p>
+                    <ul>
+                        <li><strong>Texture:</strong> Feel the natural grain. Authentic terracotta should feel earthy, not plastic.</li>
+                        <li><strong>Color Variation:</strong> Slight tonal differences are a hallmark of natural kiln firing.</li>
+                        <li><strong>Click Test:</strong> Tap two tiles together. A sharp "metallic" ring indicates high-quality firing.</li>
+                    </ul>
+
+                    <p>If you haven't received them yet, please reply to this email and we'll track it down for you immediately.</p>
+
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <p style="margin-bottom: 5px;"><strong>Ready to move forward?</strong></p>
+                        <a href="https://wa.me/919790932822" style="color: #b14a2a; text-decoration: none; font-weight: bold;">Chat with us on WhatsApp →</a>
+                    </div>
+                </div>
+            `
+        };
+
+        const info = await getTransporter().sendMail(mailOptions);
+        console.log('📧 Follow-up sent: %s', info.messageId);
+        return { success: true, messageId: info.messageId };
+    } catch (error) {
+        console.error('❌ Error sending follow-up:', error);
         return { success: false, error };
     }
 }

@@ -1,5 +1,5 @@
 
-import { Product } from './products';
+import { Product } from './types';
 
 // SEO-Optimized Descriptions conforming to 300+ words best practices
 const DESCRIPTIONS: Record<string, string> = {

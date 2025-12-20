@@ -10,6 +10,16 @@
   }
 }
 
+@keyframes slide-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 :root {
   --terracotta: #b45a3c;
   --ink: #2f2a26;
@@ -24,6 +34,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
   --font-serif: var(--font-epilogue);
+  --color-sand: var(--sand);
+  --color-terracotta: var(--terracotta);
+  --color-ink: var(--ink);
+  --color-line: var(--line);
 }
 
 html.lenis {
@@ -225,12 +239,18 @@ html::-webkit-scrollbar-thumb:hover {
 }
 
 /* Shimmer animation utility with GPU acceleration */
+/* Shimmer animation utility with GPU acceleration */
 .animate-shimmer {
   background-size: 200% 100%;
   animation: shimmer 2s infinite linear;
   transform: translateZ(0);
   /* GPU acceleration */
   will-change: background-position;
+}
+
+.animate-slide-shimmer {
+  animation: slide-shimmer 1.5s infinite ease-in-out;
+  will-change: transform;
 }
 
 /* Performance: CSS Containment for isolated components */

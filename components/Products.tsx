@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import PremiumImage from './PremiumImage';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
@@ -282,12 +283,13 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                             <div className="aspect-[4/5] rounded-[2rem] mb-6 relative overflow-hidden bg-[#f4f1ee] group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
                                                                 {/* Show Image if available, else Texture Overlay */}
                                                                 {variant.imageUrl ? (
-                                                                    <Image
+                                                                    <PremiumImage
                                                                         src={variant.imageUrl}
                                                                         alt={variant.name}
                                                                         fill
                                                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                                                                        className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
+                                                                        className="object-cover transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
+                                                                        containerClassName="w-full h-full"
                                                                     />
                                                                 ) : (
                                                                     <>

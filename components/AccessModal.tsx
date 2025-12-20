@@ -95,7 +95,6 @@ export default function AccessModal({ isOpen, onClose }: AccessModalProps) {
 
                                 <div className="space-y-3 text-left max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                                     {[
-                                        { name: 'UrbanClay Product Catalogue 2025', size: '12 MB', file: '/downloads/catalogue.pdf' },
                                         { name: 'Technical Data Sheets (TDS)', size: '4.5 MB', file: '/downloads/tds.pdf' },
                                         { name: 'Installation Guide - Facades', size: '2.8 MB', file: '/downloads/install-guide.pdf' },
                                         { name: 'BIM Objects & Textures', size: '45 MB', file: '/downloads/bim-assets.zip' },

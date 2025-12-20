@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import PremiumImage from './PremiumImage';
 import { motion, useReducedMotion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 
 interface HeroVisualProps {
@@ -136,11 +137,12 @@ export default function HeroVisual({ imageUrl }: HeroVisualProps) {
                 {/* Image Layer */}
                 <div className="absolute inset-0 z-0 transform transition-transform duration-500 hover:scale-105"> {/* Subtle zoom on hover */}
                     {imageUrl ? (
-                        <Image
+                        <PremiumImage
                             src={imageUrl}
                             alt="Premium Terracotta Product"
                             fill
                             className="object-cover"
+                            containerClassName="w-full h-full"
                             priority
                             sizes="(max-width: 768px) 100vw, 50vw"
                         />

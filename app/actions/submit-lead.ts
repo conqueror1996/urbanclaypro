@@ -1,7 +1,7 @@
 'use server'
 
 import { writeClient } from '@/sanity/lib/write-client'
-import { sendLeadAlertEmail } from '@/lib/email'
+import { sendLeadAlertEmail, sendUserConfirmationEmail } from '@/lib/email'
 
 export async function submitLead(formData: any) {
     try {
@@ -37,8 +37,9 @@ export async function submitLead(formData: any) {
             quantity: formData.quantity,
             timeline: formData.timeline,
             contact: formData.contact,
+            email: formData.email, // Save email if schema supports it
             notes: formData.notes,
-            requirement: formData.notes, // Storing the variant/requirement string here as well for clarity in CMS
+            requirement: formData.notes,
             seriousness: seriousness,
             isSerious: isSerious,
             status: 'new',
@@ -47,15 +48,16 @@ export async function submitLead(formData: any) {
 
         const result = await writeClient.create(doc)
 
-        // 3. Email Notification for Serious Leads
+        // 3. Email Automation
+        // A. Admin Alert (for Serious Leads)
         if (isSerious) {
             console.log('🚀 Serious Lead Detected:', result._id)
-            try {
-                // We don't await this to keep the response fast for the user
-                sendLeadAlertEmail({ ...doc, _id: result._id }).catch((err: any) => console.error('Email send failed in background', err));
-            } catch (e) {
-                console.error('Failed to trigger email alert', e)
-            }
+            sendLeadAlertEmail({ ...doc, _id: result._id }).catch(err => console.error('Admin Alert Failed', err));
+        }
+
+        // B. User Auto-Reply (Always send for valid email)
+        if (doc.email && doc.email.includes('@')) {
+            sendUserConfirmationEmail({ ...doc, _id: result._id }).catch(err => console.error('Auto-Reply Failed', err));
         }
 
         return { success: true, id: result._id, isSerious }

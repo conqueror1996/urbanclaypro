@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import PremiumImage from './PremiumImage';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Variant {
@@ -183,11 +184,12 @@ export default function ProductImageGallery({ images = [], variants = [], collec
                             }}
                             className="absolute inset-0 w-full h-full"
                         >
-                            <Image
+                            <PremiumImage
                                 src={selectedImage}
                                 alt={title}
                                 fill
                                 className="object-cover"
+                                containerClassName="w-full h-full"
                                 sizes="(max-width: 768px) 100vw, 66vw"
                                 priority
                             />
@@ -233,7 +235,7 @@ export default function ProductImageGallery({ images = [], variants = [], collec
                             className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer border-2 transition-all relative ${selectedImage === img ? 'border-[var(--terracotta)] opacity-100 ring-1 ring-[var(--terracotta)]' : 'border-transparent opacity-60 hover:opacity-100'
                                 }`}
                         >
-                            <Image src={img} alt={`View ${i + 1}`} fill className="object-cover" sizes="64px" />
+                            <PremiumImage src={img} alt={`View ${i + 1}`} fill className="object-cover" containerClassName="w-full h-full" sizes="64px" />
                         </div>
                     ))}
                 </div>
@@ -277,11 +279,12 @@ export default function ProductImageGallery({ images = [], variants = [], collec
                                 <div className={`aspect-square rounded-lg overflow-hidden bg-[#e7dbd1] border-2 transition-all relative shadow-sm ${selectedImage === variant.imageUrl ? 'border-[var(--terracotta)]' : 'border-transparent group-hover:border-[var(--terracotta)]'
                                     }`}>
                                     {variant.imageUrl ? (
-                                        <Image
+                                        <PremiumImage
                                             src={variant.imageUrl}
                                             alt={variant.name}
                                             fill
                                             className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                            containerClassName="w-full h-full"
                                             sizes="(max-width: 768px) 33vw, 20vw"
                                         />
                                     ) : (
