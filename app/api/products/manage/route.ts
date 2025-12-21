@@ -272,6 +272,30 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: true });
         }
 
+        if (action === 'remove_project_gallery_image') {
+            const { _id, imageUrl } = data;
+            if (!_id || !imageUrl) throw new Error("Missing ID or Image URL");
+
+            // We need to find the element in the array that matches this URL.
+            // Since we can't easily query "which element has this URL" inside a patch operation directly without a query first...
+            // We'll trust the client to maybe provide the index? No, race conditions.
+            // Robust way: Fetch the doc, find the key, then unset.
+
+            const doc = await client.fetch(`*[_id == $_id][0] { gallery[]{_key, asset->{url}} }`, { _id });
+            if (!doc || !doc.gallery) return NextResponse.json({ success: true }); // Already gone?
+
+            const itemToRemove = doc.gallery.find((g: any) => g.asset?.url === imageUrl);
+
+            if (itemToRemove && itemToRemove._key) {
+                await client.patch(_id)
+                    .unset([`gallery[_key=="${itemToRemove._key}"]`])
+                    .commit();
+            }
+
+            revalidatePath('/dashboard/projects');
+            return NextResponse.json({ success: true });
+        }
+
         // ==========================================
         // RESOURCES
         // ==========================================

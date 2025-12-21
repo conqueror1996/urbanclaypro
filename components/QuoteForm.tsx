@@ -298,6 +298,21 @@ Sent from UrbanClay Website`;
                                             className={`w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] ${errors.quantity ? 'border-red-500 bg-red-50' : ''}`}
                                         />
                                         {errors.quantity && <p className="text-red-500 text-xs ml-1">{errors.quantity}</p>}
+
+                                        {/* Bulk Volume Intelligence */}
+                                        {parseInt(formData.quantity.replace(/[^0-9]/g, '') || '0') > 2000 && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="mt-2 text-xs bg-[var(--terracotta)]/10 border border-[var(--terracotta)]/20 text-[var(--terracotta)] p-3 rounded-lg flex items-start gap-2"
+                                            >
+                                                <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                                <div>
+                                                    <span className="font-bold block mb-0.5">High Volume Project</span>
+                                                    Your request qualifies for <span className="font-bold underline">direct trade pricing</span>. A dedicated Project Manager will be assigned to your account.
+                                                </div>
+                                            </motion.div>
+                                        )}
                                     </div>
 
                                     <div className="space-y-1">

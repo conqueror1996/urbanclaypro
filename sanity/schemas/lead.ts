@@ -42,6 +42,17 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'email',
+      title: 'Email Address',
+      type: 'string',
+    }),
+    defineField({
+      name: 'address',
+      title: 'Full Address',
+      type: 'text',
+      hidden: ({ document }) => !document?.isSampleRequest,
+    }),
+    defineField({
       name: 'notes',
       title: 'Additional Notes',
       type: 'text',
@@ -93,6 +104,45 @@ export default defineType({
           ]
         }
       ]
+    }),
+    defineField({
+      name: 'isSampleRequest',
+      title: 'Is Sample Request?',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'sampleItems',
+      title: 'Requested Samples',
+      type: 'array',
+      of: [{ type: 'string' }],
+      hidden: ({ document }) => !document?.isSampleRequest,
+    }),
+    defineField({
+      name: 'fulfillmentStatus',
+      title: 'Fulfillment Status',
+      type: 'string',
+      initialValue: 'pending',
+      options: {
+        list: [
+          { title: 'Pending', value: 'pending' },
+          { title: 'Processing', value: 'processing' },
+          { title: 'Shipped', value: 'shipped' },
+          { title: 'Delivered', value: 'delivered' },
+        ],
+      },
+      hidden: ({ document }) => !document?.isSampleRequest,
+    }),
+    defineField({
+      name: 'shippingInfo',
+      title: 'Shipping Details',
+      type: 'object',
+      fields: [
+        { name: 'courier', type: 'string', title: 'Courier Name' },
+        { name: 'trackingNumber', type: 'string', title: 'Tracking Number' },
+        { name: 'dispatchedDate', type: 'datetime', title: 'Dispatched Date' }
+      ],
+      hidden: ({ document }) => !document?.isSampleRequest,
     }),
   ],
   preview: {

@@ -125,11 +125,14 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
     if (!product) {
         // Redirection logic remains ...
         const slugToCategory: Record<string, string> = {
-            'exposed-bricks': 'Exposed Brick',
-            'exposed-brick': 'Exposed Brick',
-            'brick-walls': 'Brick Tiles',
-            'brick-wall-tiles': 'Brick Tiles',
-            'jaali': 'Jaali',
+            'exposed-bricks': 'Exposed Bricks',
+            'exposed-brick': 'Exposed Bricks',
+            'brick-walls': 'Brick Wall Tiles',
+            'brick-wall-tiles': 'Brick Wall Tiles',
+            'brick-tiles': 'Brick Wall Tiles',
+            'jaali': 'Terracotta Jali',
+            'terracotta-jaali': 'Terracotta Jali',
+            'terracotta-jali': 'Terracotta Jali',
             'floor-tiles': 'Floor Tiles',
             'roof-tiles': 'Roof Tiles',
             'roof-tile': 'Roof Tiles',

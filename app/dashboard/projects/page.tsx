@@ -176,7 +176,48 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
     const [form, setForm] = useState(project);
     const [isSaving, setIsSaving] = useState(false);
 
+    const [isDraggingMain, setIsDraggingMain] = useState(false);
+    const [isDraggingGallery, setIsDraggingGallery] = useState(false);
+
     useEffect(() => { setForm(project); }, [project]);
+
+    const handleDragMain = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setIsDraggingMain(true);
+        } else if (e.type === "dragleave") {
+            setIsDraggingMain(false);
+        }
+    };
+
+    const handleDropMain = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDraggingMain(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleImageUpload(e.dataTransfer.files[0], true);
+        }
+    };
+
+    const handleDragGallery = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.type === "dragenter" || e.type === "dragover") {
+            setIsDraggingGallery(true);
+        } else if (e.type === "dragleave") {
+            setIsDraggingGallery(false);
+        }
+    };
+
+    const handleDropGallery = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDraggingGallery(false);
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            Array.from(e.dataTransfer.files).forEach(file => handleImageUpload(file, false));
+        }
+    };
 
     const handleSave = async () => {
         setIsSaving(true);
@@ -218,17 +259,64 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
         }
     };
 
-    const handleImageUpload = async (file: File, isMain: boolean = false) => {
-        if (!file) return;
-        const fd = new FormData();
-        fd.append('file', file);
+    // Helper to convert problematic JPEGs to PNG
+    const convertImageToPng = (file: File): Promise<File> => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) { reject(new Error("Canvas context failed")); return; }
+                ctx.drawImage(img, 0, 0);
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".png", { type: "image/png" });
+                        resolve(newFile);
+                    } else reject(new Error("Blob creation failed"));
+                }, 'image/png');
+            };
+            img.onerror = (e) => reject(e);
+            img.src = URL.createObjectURL(file);
+        });
+    };
+
+    const handleImageUpload = async (originalFile: File, isMain: boolean = false) => {
+        if (!originalFile) return;
+
+        const performUpload = async (fileToUpload: File) => {
+            const fd = new FormData();
+            fd.append('file', fileToUpload);
+
+            const upRes = await authenticatedFetch('/api/upload', { method: 'POST', body: fd });
+            if (!upRes.ok) {
+                const errText = await upRes.text();
+                // Check for specific Sanity metadata error
+                if (upRes.status === 500 && errText.includes('could not read metadata')) {
+                    throw new Error("METADATA_ERROR");
+                }
+                throw new Error(`Upload server error: ${upRes.status} ${errText}`);
+            }
+            const upJson = await upRes.json();
+            if (!upJson.success) throw new Error(upJson.error || "Upload failed");
+            return upJson.asset._id;
+        };
 
         try {
-            const upRes = await authenticatedFetch('/api/upload', { method: 'POST', body: fd });
-            const upJson = await upRes.json();
-            if (!upJson.success) throw new Error("Upload failed");
+            let assetId: string;
 
-            const assetId = upJson.asset._id;
+            try {
+                assetId = await performUpload(originalFile);
+            } catch (e: any) {
+                if (e.message === "METADATA_ERROR" && (originalFile.type === 'image/jpeg' || originalFile.type === 'image/jpg')) {
+                    console.log("Attempting to convert problematic JPEG to PNG...");
+                    const pngFile = await convertImageToPng(originalFile);
+                    assetId = await performUpload(pngFile);
+                } else {
+                    throw e; // Re-throw other errors
+                }
+            }
 
             // Should probably handle this in 'manage' API for atomicity, but simple separate calls work for MVP
             const updateBody: any = {
@@ -239,39 +327,47 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
             if (isMain) {
                 updateBody.data.image = { _type: 'image', asset: { _type: 'reference', _ref: assetId } };
             } else {
-                // For gallery, we need append logic not set logic, so 'update_project' might be too simple if it just sets fields.
-                // Actually, manage API only does SET.
-                // We need a way to APPEND to gallery. 
-                // Let's create a specialized action or simply read-modify-write gallery locally (risky) or enhance manage API.
-
-                // Simpler: Use the upload route's legacy 'product-image' mode? No, we deprecated that.
-                // Let's use 'update_project' but with the full array? 
-                // We don't have the full array of Asset objects here, only URLs string in 'project.gallery'. 
-                // We can't easily reconstruct the array to send back without fetching raw doc.
-
-                // REAL SOLUTION: Enhance 'manage' API to support 'add_project_image'
-
-                // Fallback for now: Assume manage API update_project will be enhanced or we do a quick patch here.
-                // I'll call a dedicated action 'add_project_gallery_image' which I will add to the manage API in a moment.
                 updateBody.action = 'add_project_gallery_image';
                 updateBody.data.assetId = assetId;
             }
 
-            await authenticatedFetch('/api/products/manage', { method: 'POST', body: JSON.stringify(updateBody) });
+            const manageRes = await authenticatedFetch('/api/products/manage', { method: 'POST', body: JSON.stringify(updateBody) });
+            if (!manageRes.ok) {
+                const errText = await manageRes.text();
+                throw new Error(`Manage API error: ${manageRes.status} ${errText}`);
+            }
+
             onRefresh();
 
-        } catch (e) { alert("Upload failed"); }
+        } catch (e) {
+            console.error("Upload Error Details:", e);
+            alert(e instanceof Error ? e.message : "Upload failed");
+        }
+    };
+
+    const handleDeleteGalleryImage = async (imageUrl: string) => {
+        if (!confirm("Remove this image?")) return;
+        try {
+            const res = await authenticatedFetch('/api/products/manage', {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'remove_project_gallery_image',
+                    data: { _id: (project as any)._id, imageUrl }
+                })
+            });
+            if (!res.ok) throw new Error("Failed to remove image");
+            onRefresh();
+        } catch (e) { alert("Could not remove image"); }
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            // ... (keep props)
             className="flex flex-col h-full"
         >
             {/* Header */}
             <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-start bg-gray-50/30">
+                {/* ... (keep header content) */}
                 <div>
                     <h1 className="text-3xl font-serif text-[#1a1512]">{form.title}</h1>
                     <div className="flex gap-4 mt-2 text-xs font-bold uppercase tracking-wider text-gray-400 items-center">
@@ -303,8 +399,10 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
             </div>
 
             <div className="flex-1 overflow-y-auto p-8 space-y-8">
+                {/* ... (keep form fields) */}
                 <div className="grid grid-cols-2 gap-6">
                     <div className="col-span-2 space-y-4">
+                        {/* Featured Checkbox and Main Image */}
                         <div className="flex items-center justify-between bg-yellow-50 p-4 rounded-xl border border-yellow-200">
                             <div>
                                 <h4 className="font-bold text-sm text-[#2A1E16]">Featured Project</h4>
@@ -321,14 +419,26 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
                             </label>
                         </div>
                         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Main Image</label>
-                        <div className="h-64 bg-gray-100 rounded-xl overflow-hidden relative group cursor-pointer border-2 border-transparent hover:border-[var(--terracotta)] transition-colors">
+                        <div
+                            className={`h-64 rounded-xl overflow-hidden relative group cursor-pointer border-2 transition-all duration-300 ${isDraggingMain ? 'border-[var(--terracotta)] bg-orange-50 scale-[1.02] shadow-xl' : 'border-transparent bg-gray-100 hover:border-[var(--terracotta)]'}`}
+                            onDragEnter={handleDragMain}
+                            onDragOver={handleDragMain}
+                            onDragLeave={handleDragMain}
+                            onDrop={handleDropMain}
+                        >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             {project.imageUrl ?
                                 <img src={project.imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                                : <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+                                : <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-3">
+                                    <svg className="w-10 h-10 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    <p className="text-sm font-medium">Drag & Drop Main Image Here</p>
+                                </div>
                             }
-                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <span className="bg-white/90 px-4 py-2 rounded-lg text-xs font-bold uppercase pointer-events-none">Change Image</span>
+                            <div className={`absolute inset-0 bg-black/40 transition-opacity flex items-center justify-center ${isDraggingMain ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                                <div className="bg-white/90 backdrop-blur-md px-6 py-4 rounded-xl shadow-2xl flex flex-col items-center gap-2">
+                                    <svg className="w-8 h-8 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-gray-800">{isDraggingMain ? 'Drop to Upload' : 'Change Main Image'}</span>
+                                </div>
                                 <input
                                     type="file"
                                     className="absolute inset-0 opacity-0 cursor-pointer"
@@ -364,29 +474,51 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
 
                 <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Gallery Images</label>
-                    <div className="grid grid-cols-4 gap-4">
-                        {project.gallery?.map((img, i) => (
-                            <div key={i} className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={img} alt="" className="w-full h-full object-cover" />
-                                <button className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                </button>
+                    <div
+                        className={`rounded-xl p-4 transition-all duration-300 border-2 border-dashed relative ${isDraggingGallery ? 'border-[var(--terracotta)] bg-orange-50/50 scale-[1.01] ring-4 ring-orange-100' : 'border-gray-200/50 bg-gray-50/30'}`}
+                        onDragEnter={handleDragGallery}
+                        onDragOver={handleDragGallery}
+                        onDragLeave={handleDragGallery}
+                        onDrop={handleDropGallery}
+                    >
+                        {isDraggingGallery && (
+                            <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm rounded-xl border-4 border-dashed border-[var(--terracotta)] m-2 pointer-events-none animate-pulse">
+                                <svg className="w-16 h-16 text-[var(--terracotta)] mb-4 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                                <h4 className="text-2xl font-serif text-[var(--terracotta)] font-bold">Release to Upload</h4>
+                                <p className="text-sm text-[var(--terracotta)]/70 mt-2 font-medium">Add photos to gallery</p>
                             </div>
-                        ))}
-                        <div className="aspect-square border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-400 hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] hover:bg-[var(--terracotta)]/5 transition-all relative">
-                            <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                            <span className="text-xs font-bold uppercase">Add Photos</span>
-                            <input
-                                type="file"
-                                multiple
-                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                onChange={(e) => {
-                                    if (e.target.files) {
-                                        Array.from(e.target.files).forEach(f => handleImageUpload(f, false));
-                                    }
-                                }}
-                            />
+                        )}
+                        <div className="grid grid-cols-4 gap-4">
+                            {project.gallery?.map((img, i) => (
+                                <div key={i} className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group shadow-sm border border-gray-200">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={img} alt="" className="w-full h-full object-cover" />
+                                    <button
+                                        onClick={() => handleDeleteGalleryImage(img)}
+                                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg transform hover:scale-110"
+                                        title="Remove Image"
+                                    >
+                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                    </button>
+                                </div>
+                            ))}
+                            <div className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400 hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] hover:bg-white transition-all relative cursor-pointer group bg-white">
+                                <div className="group-hover:-translate-y-1 transition-transform duration-300">
+                                    <svg className="w-8 h-8 mb-2 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                    <span className="text-xs font-bold uppercase block text-center">Add Photos</span>
+                                    <span className="text-[9px] text-gray-300 uppercase block text-center mt-1 group-hover:text-[var(--terracotta)]/70">or drag & drop</span>
+                                </div>
+                                <input
+                                    type="file"
+                                    multiple
+                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                    onChange={(e) => {
+                                        if (e.target.files) {
+                                            Array.from(e.target.files).forEach(f => handleImageUpload(f, false));
+                                        }
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -71,7 +71,17 @@ export function SampleProvider({ children }: { children: ReactNode }) {
 export function useSampleBox() {
     const context = useContext(SampleContext);
     if (context === undefined) {
-        throw new Error('useSampleBox must be used within a SampleProvider');
+        // Fallback to prevent crash during unexpected render cycles (e.g. SSR edge cases, or outside layout)
+        console.warn('useSampleBox used outside SampleProvider. Returning dummy context.');
+        return {
+            box: [],
+            addToBox: () => { },
+            removeFromBox: () => { },
+            isInBox: () => false,
+            clearBox: () => { },
+            isBoxOpen: false,
+            setBoxOpen: () => { }
+        };
     }
     return context;
 }

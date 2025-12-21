@@ -569,10 +569,26 @@ export default function KilnAnimation() {
                 </AnimatePresence>
             </div>
 
-            {/* HAMMER TOOL TOGGLE */}
+            {/* HAMMER TOOL TOGGLE & HINT */}
             <AnimatePresence>
                 {showHammerTool && !isCertified && (
-                    <div className="absolute bottom-32 z-30 flex flex-col items-center gap-3">
+                    <div className="absolute bottom-32 z-30 flex flex-col items-center gap-4">
+
+                        {/* Discovery Hint - Points to the button */}
+                        {!hammerMode && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="flex flex-col items-center animate-bounce pointer-events-none mb-2"
+                            >
+                                <div className="bg-white/90 backdrop-blur-md text-[#9a3412] px-5 py-2.5 rounded-xl shadow-2xl border border-orange-200/50 flex flex-col items-center text-center max-w-[200px]">
+                                    <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-orange-600/70 mb-0.5">Vitrified</span>
+                                    <span className="text-sm font-serif font-bold text-gray-900 leading-none">Test Strength Now</span>
+                                </div>
+                                <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-white/90 shadow-sm filter drop-shadow-sm"></div>
+                            </motion.div>
+                        )}
 
                         <motion.button
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -585,22 +601,22 @@ export default function KilnAnimation() {
                             whileTap={{ scale: 0.95 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             onClick={() => setHammerMode(!hammerMode)}
-                            className={`px-8 py-3 rounded-full font-serif tracking-widest uppercase text-sm font-bold transition-all flex items-center gap-2 ${hammerMode
-                                ? 'bg-orange-600 text-white shadow-lg ring-4 ring-orange-200'
-                                : 'bg-white text-gray-800 shadow-md hover:shadow-xl border border-orange-100'
+                            className={`px-8 py-3.5 rounded-full font-serif tracking-widest uppercase text-xs font-bold transition-all flex items-center gap-3 border-2 ${hammerMode
+                                ? 'bg-orange-600 border-orange-600 text-white shadow-xl ring-4 ring-orange-200'
+                                : 'bg-white border-orange-100 text-gray-900 shadow-xl hover:shadow-2xl hover:border-orange-200'
                                 }`}
                             style={{
                                 cursor: 'pointer',
-                                animation: !hammerMode ? 'pulse-orange 2s infinite' : 'none'
+                                animation: !hammerMode ? 'pulse-orange 1.5s infinite' : 'none'
                             }}
                         >
-                            <span className="text-lg">🔨</span>
-                            {hammerMode ? 'Tap Brick to Test' : 'Test Strength'}
+                            <span className="text-xl leading-none">🔨</span>
+                            <span className="pt-0.5">{hammerMode ? 'Tap Brick to Break' : 'Verify Strength'}</span>
                         </motion.button>
                         <style jsx>{`
                             @keyframes pulse-orange {
                                 0% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4); }
-                                70% { box-shadow: 0 0 0 10px rgba(234, 88, 12, 0); }
+                                70% { box-shadow: 0 0 0 15px rgba(234, 88, 12, 0); }
                                 100% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); }
                             }
                         `}</style>

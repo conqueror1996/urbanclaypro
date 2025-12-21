@@ -36,6 +36,7 @@ export async function getJournalPosts(): Promise<JournalPost[]> {
             "mainImage": mainImage.asset->url,
             publishedAt,
             author,
+            category,
             body
         }`;
         const posts = await client.fetch(query, {}, { next: { revalidate: 60 } });
@@ -44,8 +45,8 @@ export async function getJournalPosts(): Promise<JournalPost[]> {
         return posts.map((p: any) => ({
             ...p,
             date: p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently',
-            readTime: '5 min read', // Placeholder logic
-            category: 'Architecture' // Default category as schema didn't have one initially, can add later
+            readTime: p.body ? `${Math.ceil(JSON.stringify(p.body).split(' ').length / 200)} min read` : '5 min read',
+            category: p.category || 'Architecture'
         }));
     } catch (error) {
         console.error('Error fetching journal posts:', error);

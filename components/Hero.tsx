@@ -62,6 +62,7 @@ export default function Hero({ data }: HeroProps) {
                                     className="btn-terracotta min-h-[48px] md:min-h-[56px]"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
+                                    aria-label="Scroll to enquiry form to specify products for your project"
                                 >
                                     Specify for Your Project
                                 </motion.button>

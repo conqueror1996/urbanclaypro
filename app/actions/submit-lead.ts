@@ -2,6 +2,7 @@
 
 import { writeClient } from '@/sanity/lib/write-client'
 import { sendLeadAlertEmail, sendUserConfirmationEmail } from '@/lib/email'
+import { createZohoLead } from '@/lib/zoho'
 
 export async function submitLead(formData: any) {
     try {
@@ -44,6 +45,12 @@ export async function submitLead(formData: any) {
             isSerious: isSerious,
             status: 'new',
             submittedAt: new Date().toISOString(),
+            // New Fields for Sample Logistics
+            address: formData.address,
+            isSampleRequest: formData.isSampleRequest,
+            sampleItems: formData.sampleItems,
+            fulfillmentStatus: formData.fulfillmentStatus || (formData.isSampleRequest ? 'pending' : undefined),
+            shippingInfo: formData.shippingInfo,
         }
 
         const result = await writeClient.create(doc)
@@ -55,10 +62,17 @@ export async function submitLead(formData: any) {
             sendLeadAlertEmail({ ...doc, _id: result._id }).catch(err => console.error('Admin Alert Failed', err));
         }
 
-        // B. User Auto-Reply (Always send for valid email)
         if (doc.email && doc.email.includes('@')) {
             sendUserConfirmationEmail({ ...doc, _id: result._id }).catch(err => console.error('Auto-Reply Failed', err));
         }
+
+        // 4. Send to Zoho CRM
+        // We do this asynchronously so we don't block the UI response
+        createZohoLead({
+            ...formData,
+            // Ensure simple defaults if missing
+            name: formData.name || formData.firmName?.split(' ')[0] || 'Unknown',
+        }).catch(err => console.error('Zoho Sync Failed:', err));
 
         return { success: true, id: result._id, isSerious }
     } catch (error) {

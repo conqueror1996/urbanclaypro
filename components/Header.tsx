@@ -14,21 +14,21 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Exposed Bricks',
         subtitle: 'Authentic Masonry',
-        href: '/products?category=Exposed Brick',
+        href: '/products?category=Exposed Bricks',
         color: 'from-[#b45a3c] to-[#96472d]',
         image: '/images/menu-exposed.jpg'
     },
     {
         title: 'Brick Tiles',
         subtitle: 'Cladding Veneers',
-        href: '/products?category=Brick Tiles',
+        href: '/products?category=Brick Wall Tiles',
         color: 'from-[#8c7b70] to-[#5d554f]',
         image: '/images/menu-cladding.jpg'
     },
     {
         title: 'Terracotta Jaali',
         subtitle: 'Breathable Screens',
-        href: '/products?category=Jaali',
+        href: '/products?category=Terracotta Jali',
         color: 'from-[#d6cbb8] to-[#bfae96]',
         image: '/images/menu-jaali.jpg'
     },
@@ -95,8 +95,8 @@ export default function Header() {
     return (
         <header
             className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isScrolled || mobileMenuOpen || activeDropdown || shouldShowWhiteHeader
-                    ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] py-4'
-                    : 'bg-transparent border-transparent py-6'
+                ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] py-4'
+                : 'bg-transparent border-transparent py-6'
                 }`}
             onMouseLeave={handleMouseLeave}
             onMouseEnter={() => {
@@ -153,6 +153,7 @@ export default function Header() {
                             shadow-lg hover:shadow-orange-900/10 transform hover:-translate-y-0.5 relative overflow-hidden group
                             ${isScrolled || activeDropdown ? 'bg-[#2A1E16] text-white hover:bg-[#4a3e36]' : 'bg-white text-[#2A1E16] hover:bg-[#FAF8F6]'}
                         `}
+                        aria-label={box.length > 0 ? `Order samples, ${box.length} items in tray` : "Order samples"}
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             <span>Order Samples</span>
@@ -334,7 +335,7 @@ export default function Header() {
                                             setMobileMenuOpen(false);
                                         }}
                                         className="w-full min-h-[52px] py-4 bg-[var(--terracotta)] text-white font-bold rounded-xl uppercase tracking-wider text-sm shadow-lg shadow-orange-900/10 flex items-center justify-center gap-2 active:scale-95 transition-transform"
-                                        aria-label="Get samples"
+                                        aria-label={box.length > 0 ? `Get samples, ${box.length} items in tray` : "Get samples"}
                                     >
                                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                                         Get Samples {box.length > 0 && <span className="bg-white text-[var(--terracotta)] w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">{box.length}</span>}

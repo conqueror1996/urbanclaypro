@@ -1,7 +1,9 @@
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import BlogGrid from '@/components/journal/BlogGrid';
+import JournalLayout from '@/components/journal/JournalLayout';
+import { getJournalPosts } from '@/lib/journal';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -16,24 +18,36 @@ export const metadata: Metadata = {
     }
 };
 
-export default function JournalPage() {
+export default async function JournalPage() {
+    // Fetch all posts, sorted by date (newest first)
+    const allPosts = await getJournalPosts();
+
+    // Split into Featured (1st) and Grid (Rest)
+    const featured = allPosts.length > 0 ? allPosts[0] : null;
+    const gridPosts = allPosts.length > 0 ? allPosts.slice(1) : [];
+
     return (
-        <div className="bg-[#FAF7F3] min-h-screen">
+        <div className="bg-[#FAF7F3] min-h-screen flex flex-col">
             <Header />
-            <div className="pt-24 pb-12 bg-white">
-                <div className="max-w-7xl mx-auto px-4 text-center">
-                    <div className="inline-block px-4 py-1 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-xs font-bold uppercase tracking-widest mb-6">
-                        Resources & Inspiration
-                    </div>
-                    <h1 className="font-serif text-5xl md:text-7xl text-[#2A1E16] mb-6">
+
+            <main className="flex-grow pt-28">
+                {/* Visual Header */}
+                <div className="text-center mb-10 px-4">
+                    <span className="inline-block px-3 py-1 mb-4 border border-[var(--terracotta)]/20 text-[var(--terracotta)] text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">
+                        Thought Leadership
+                    </span>
+                    <h1 className="font-serif text-5xl md:text-7xl text-[#2A1E16] mb-4">
                         The Clay Journal
                     </h1>
-                    <p className="max-w-2xl mx-auto text-gray-500 text-lg">
-                        Deep dives into the world of sustainable materials, modern craftsmanship, and better building practices for the Indian sub-continent.
+                    <p className="max-w-xl mx-auto text-gray-400 text-sm md:text-base font-light">
+                        Curated stories on sustainable living, architectural innovation, and the timeless beauty of terracotta.
                     </p>
                 </div>
-            </div>
-            <BlogGrid />
+
+                {/* Content Layout */}
+                <JournalLayout featured={featured} posts={gridPosts} />
+            </main>
+
             <Footer />
         </div>
     );

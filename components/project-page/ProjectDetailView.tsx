@@ -94,200 +94,166 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                 </motion.div>
             </section>
 
-            {/* 2. ELEGANT METADATA BAR */}
-            <div className="bg-[#2A1E16] text-white py-6 md:py-8 sticky top-0 z-40 shadow-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center gap-6">
-                    <div className="flex gap-12 text-sm uppercase tracking-widest font-medium text-white/60">
-                        <div className="hidden md:block">
-                            <span className="block text-[10px] opacity-50 mb-1">Project</span>
-                            <span className="text-white">{project.title}</span>
+            {/* 2. THE FUNDAMENTALS - High-End Spec Sheet Style */}
+            <section className="relative z-10 bg-[#FAF8F6]">
+                <div className="max-w-[1800px] mx-auto grid grid-cols-1 md:grid-cols-12 border-b border-[#2A1E16]/10">
+
+                    {/* Sticky Sidebar / Project Meta */}
+                    <div className="md:col-span-3 lg:col-span-3 border-r border-[#2A1E16]/10 p-8 md:p-12 md:sticky md:top-24 md:h-[calc(100vh-6rem)] flex flex-col justify-between">
+                        <div className="space-y-12">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="space-y-2"
+                            >
+                                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#2A1E16]/40">Typology</span>
+                                <span className="block text-xl md:text-2xl font-serif text-[#2A1E16]">{project.type || "Residential"}</span>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.1 }}
+                                className="space-y-2"
+                            >
+                                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#2A1E16]/40">Location</span>
+                                <span className="block text-xl md:text-2xl font-serif text-[#2A1E16]">{project.location || "New Delhi, India"}</span>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.2 }}
+                                className="space-y-2"
+                            >
+                                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#2A1E16]/40">Materials</span>
+                                <div className="flex flex-wrap gap-2">
+                                    {(project.productsUsed?.slice(0, 3) || [{ title: 'Exposed Brick' }, { title: 'Terracotta' }]).map((m: any, i: number) => (
+                                        <span key={i} className="px-3 py-1 border border-[#2A1E16]/10 rounded-full text-xs text-[#2A1E16]/60">
+                                            {m.title}
+                                        </span>
+                                    ))}
+                                </div>
+                            </motion.div>
                         </div>
-                        <div>
-                            <span className="block text-[10px] opacity-50 mb-1">Location</span>
-                            <span className="text-white">{project.location}</span>
-                        </div>
-                        <div>
-                            <span className="block text-[10px] opacity-50 mb-1">Type</span>
-                            <span className="text-white">{project.type}</span>
+
+                        <div className="pt-12 hidden md:block">
+                            <svg className="w-12 h-12 text-[var(--terracotta)] opacity-20" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="2" fill="none" />
+                                <path d="M50 20 L50 80 M20 50 L80 50" stroke="currentColor" strokeWidth="2" />
+                            </svg>
                         </div>
                     </div>
-                    {/* CTA on the bar */}
-                    <Link href="/#quote" className="text-xs font-bold text-[var(--terracotta)] hover:text-white transition-colors border-b border-[var(--terracotta)] hover:border-white pb-0.5 uppercase tracking-wider">
-                        Request Similar
-                    </Link>
-                </div>
-            </div>
 
-            {/* 3. NARRATIVE FLOW - Editorial Style */}
-            <section className="py-24 md:py-32 px-4 md:px-8 max-w-[1600px] mx-auto overflow-hidden">
-                {/* Intro Text - Centered & Wide */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="max-w-4xl mx-auto text-center mb-32"
-                >
-                    <svg className="w-12 h-12 text-[var(--terracotta)] mx-auto mb-8 opacity-50" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" /></svg>
-                    <p className="font-serif text-3xl md:text-5xl leading-snug text-[#2A1E16]">
-                        {project.description?.split('.')[0] || "A masterpiece designed with nature in mind."}.
-                    </p>
-                </motion.div>
+                    {/* Main Narrative & Visuals */}
+                    <div className="md:col-span-9 lg:col-span-9">
 
-                {/* Narrative Block 1: Image Left, Text Right */}
-                <div className="grid md:grid-cols-2 gap-12 lg:gap-24 items-center mb-32">
-                    <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                        className="relative aspect-[4/5] bg-gray-200 rounded-sm overflow-hidden"
-                    >
-                        {mainStoryImage ? (
-                            <Image src={mainStoryImage} alt="Project detail" fill className="object-cover" />
-                        ) : (
-                            <div className="w-full h-full bg-[#EBE5E0]" />
-                        )}
-                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#2A1E16]">
-                            Perspective
-                        </div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="space-y-8"
-                    >
-                        <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--terracotta)]">The Vision</h3>
-                        <div className="text-lg text-[#5d554f] leading-relaxed space-y-6 font-light">
-                            {/* Render description paragraphs */}
-                            {project.description?.split('\n').filter(p => p.length > 5).slice(0, 2).map((paragraph, i) => (
-                                <p key={i}>{paragraph}</p>
-                            ))}
-                            {!project.description && <p>This project exemplifies the perfect blend of traditional craftsmanship and modern architectural needs. The use of natural clay textures provides warmth to the structure.</p>}
-                        </div>
-                    </motion.div>
-                </div>
-
-                {/* Narrative Block 2: Full Width Break (if 2nd image exists) */}
-                {secondaryStoryImage && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1 }}
-                        className="relative w-full aspect-video md:aspect-[2.35/1] overflow-hidden mb-32 group"
-                    >
-                        <motion.div style={{ y: yParallax }} className="absolute inset-0 h-[120%] w-full">
-                            <Image src={secondaryStoryImage} alt="Architectural detail" fill className="object-cover" />
-                        </motion.div>
-                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    </motion.div>
-                )}
-
-                {/* Narrative Block 3: Text Left, Specs Right */}
-                <div className="grid md:grid-cols-12 gap-12 mb-24">
-                    <div className="md:col-span-5 md:col-start-2">
-                        <h3 className="font-serif text-3xl mb-6">Materiality & Texture</h3>
-                        <p className="text-[#5d554f] leading-relaxed">
-                            {project.description?.split('\n').filter(p => p.length > 5).slice(2).join(' ') ||
-                                "The selection of materials was crucial to the project's identity. By integrating locally sourced terracotta, the building breathes and ages gracefully with time."}
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* 4. PRODUCTS USED - "SHOP THE LOOK" */}
-            {project.productsUsed && project.productsUsed.length > 0 && (
-                <section className="bg-white py-24 border-t border-[#f0ebe6]">
-                    <div className="max-w-7xl mx-auto px-4">
-                        <div className="text-center mb-16">
-                            <span className="text-gray-400 font-bold uppercase tracking-widest text-xs mb-2 block">Curated Materials</span>
-                            <h2 className="text-3xl font-serif text-[#2A1E16]">Featured Products</h2>
+                        {/* A. The Statement */}
+                        <div className="p-8 md:p-20 lg:p-32 border-b border-[#2A1E16]/10">
+                            <motion.p
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="text-3xl md:text-5xl lg:text-6xl font-serif leading-[1.15] text-[#2A1E16]"
+                            >
+                                {project.description?.split('.')[0] || "A masterful integration of form, function, and earthy materiality."}.
+                            </motion.p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {project.productsUsed.map((p, i) => (
-                                <Link
-                                    key={i}
-                                    href={`/products/${p.category || 'products'}/${p.slug}`}
-                                    className="group block"
-                                >
-                                    <div className="relative aspect-square overflow-hidden bg-[#F5EEE7] mb-6 border border-[#e9e2da]">
-                                        {/* Product Image */}
-                                        {p.imageUrl ? (
-                                            <Image
-                                                src={p.imageUrl}
-                                                alt={p.title}
-                                                fill
-                                                className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-                                            />
-                                        ) : (
-                                            <div className="flex items-center justify-center w-full h-full text-gray-300">
-                                                <span>No Image</span>
-                                            </div>
+                        {/* B. The Editorial Flow */}
+                        <div className="bg-white">
+                            {/* Detailed Text Block */}
+                            <div className="grid md:grid-cols-2 gap-12 p-8 md:p-20">
+                                <div className="font-serif text-2xl text-[var(--terracotta)]">
+                                    "Architecture should speak of its time and place, but yearn for timelessness."
+                                </div>
+                                <div className="text-[#5d554f] text-lg leading-relaxed space-y-6 font-light">
+                                    {project.description?.split('\n').filter(p => p.length > 5).map((paragraph, i) => (
+                                        <p key={i}>{paragraph}</p>
+                                    )) || (
+                                            <p>This project exemplifies the UrbanClay philosophy: harmonizing raw, natural materials with contemporary design lines. Every brick tells a story of craftsmanship, sustainability, and aesthetic precision.</p>
                                         )}
-                                        {/* Overlay CTA */}
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                            <span className="text-white border border-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
-                                                View Product
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <h4 className="text-lg font-serif text-[#2A1E16] mb-1 group-hover:text-[var(--terracotta)] transition-colors text-center">{p.title}</h4>
-                                    <p className="text-xs text-gray-400 uppercase tracking-wider text-center">UrbanClay Collection</p>
-                                </Link>
-                            ))}
+                                </div>
+                            </div>
+
+                            {/* Dynamic Gallery Grid */}
+                            {project.gallery && project.gallery.length > 0 && (
+                                <div className="grid grid-cols-1 md:grid-cols-2">
+                                    {project.gallery.map((img, idx) => {
+                                        // Rhythmic Layout Logic
+                                        const isFullWidth = idx % 3 === 0;
+
+                                        return (
+                                            <div key={idx} className={`${isFullWidth ? 'md:col-span-2' : ''} group relative overflow-hidden`}>
+                                                <motion.div
+                                                    initial={{ opacity: 0 }}
+                                                    whileInView={{ opacity: 1 }}
+                                                    viewport={{ once: true }}
+                                                    transition={{ duration: 0.8 }}
+                                                    className={`relative ${isFullWidth ? 'aspect-[2.35/1]' : 'aspect-[4/5]'} w-full bg-gray-100`}
+                                                >
+                                                    <Image
+                                                        src={img}
+                                                        alt={`Detail ${idx}`}
+                                                        fill
+                                                        className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                                                    />
+                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
+                                                </motion.div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
+
+                        {/* C. Material Showcase */}
+                        {project.productsUsed && project.productsUsed.length > 0 && (
+                            <div className="bg-[#1a1512] text-[#FAF8F6] p-8 md:p-20">
+                                <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8">
+                                    <h2 className="text-4xl md:text-6xl font-serif">Palette</h2>
+                                    <span className="text-xs uppercase tracking-[0.2em] opacity-50 mb-2">Curated Materials</span>
+                                </div>
+
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+                                    {project.productsUsed.map((p, i) => (
+                                        <Link href={`/products/${p.category || 'products'}/${p.slug}`} key={i} className="group cursor-pointer">
+                                            <div className="aspect-square relative bg-white/5 overflow-hidden mb-4 border border-white/5 group-hover:border-white/20 transition-colors">
+                                                {p.imageUrl && (
+                                                    <Image
+                                                        src={p.imageUrl}
+                                                        alt={p.title}
+                                                        fill
+                                                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                                    />
+                                                )}
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px]">
+                                                    <span className="border border-white/80 px-4 py-2 text-[10px] uppercase tracking-widest text-white">View</span>
+                                                </div>
+                                            </div>
+                                            <h4 className="text-sm font-serif text-white/90 group-hover:text-[var(--terracotta)] transition-colors">{p.title}</h4>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* D. Footer Navigation */}
+                        <div className="p-12 md:p-24 bg-[#EBE5E0] flex flex-col items-center justify-center text-center space-y-6">
+                            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#2A1E16]/40">Next Chapter</span>
+                            <Link href="/projects" className="group">
+                                <h3 className="text-4xl md:text-6xl font-serif text-[#2A1E16] group-hover:italic transition-all">
+                                    Browse All Projects
+                                </h3>
+                                <div className="h-px w-0 group-hover:w-full bg-[#2A1E16] transition-all duration-500 mt-4 mx-auto opacity-20" />
+                            </Link>
+                        </div>
+
                     </div>
-                </section>
-            )}
-
-            {/* 5. IMMERSIVE GALLERY (The "Mosaic") */}
-            {remainingGallery.length > 0 && (
-                <section className="py-24 bg-[#1a1a18] text-white">
-                    <div className="max-w-[1800px] mx-auto px-4">
-                        <div className="flex justify-between items-end mb-16 px-4">
-                            <h2 className="text-3xl md:text-5xl font-serif">Visual Archive</h2>
-                            <div className="bg-white/10 h-px w-32 md:w-64 mb-4"></div>
-                        </div>
-
-                        {/* Mosaic Grid */}
-                        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-                            {remainingGallery.map((img, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    initial={{ opacity: 0, y: 50 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-100px" }}
-                                    transition={{ duration: 0.6 }}
-                                    className="break-inside-avoid relative mb-6 group cursor-pointer"
-                                >
-                                    <div className="relative overflow-hidden">
-                                        <Image
-                                            src={img}
-                                            alt={`Gallery image ${idx}`}
-                                            width={800}
-                                            height={600}
-                                            className="w-full h-auto object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
-
-            {/* 6. NEXT PROJECT NAV - Sticky FooterNav */}
-            <section className="bg-white py-12 border-t border-gray-100 text-center">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Continue Exploring</p>
-                <Link href="/projects" className="inline-flex items-center gap-4 text-2xl font-serif text-[#2A1E16] hover:text-[var(--terracotta)] transition-colors group">
-                    <span className="group-hover:-translate-x-2 transition-transform">←</span>
-                    Back to All Projects
-                </Link>
+                </div>
             </section>
         </article>
     );

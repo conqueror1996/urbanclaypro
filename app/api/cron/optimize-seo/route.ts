@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { runSEOAutomation } from '@/lib/automation/seo'; // unused but kept for reference if we switch back
-// Actually, let's just remove it to be clean.
 
 // Allow longer timeout for AI processing
 export const maxDuration = 300;
@@ -13,21 +11,17 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        // We need to adapt runSEOAutomation for server-side usage or write specific server logic here.
-        // Actually, let's keep the dedicated server logic here which is already robust, 
-        // but perhaps update it to ensure it covers all cases.
-
-        // Re-implementing explicitly to be sure it matches our latest standards
         const { writeClient } = await import('@/sanity/lib/write-client');
         const { generateSEOAttributes } = await import('@/lib/ai/seo-optimizer');
 
-        // Fetch ALL products
+        // Fetch ALL products with their update time
         const products = await writeClient.fetch(`*[_type == "product"]{
             _id, 
             title, 
             description, 
             subtitle,
             tag,
+            _updatedAt,
             "currentSeo": seo
         }`);
 
@@ -35,16 +29,30 @@ export async function GET(req: NextRequest) {
         const results = [];
 
         for (const product of products) {
-            // Check if update is needed (missing keywords OR older than 7 days)
-            const lastUpdate = product.currentSeo?.lastAutomatedUpdate ? new Date(product.currentSeo.lastAutomatedUpdate) : null;
-            const daysSinceUpdate = lastUpdate ? (new Date().getTime() - lastUpdate.getTime()) / (1000 * 3600 * 24) : 999;
-            const needsUpdate = !product.currentSeo?.keywords?.length || daysSinceUpdate > 7;
+            // Check if update is needed
+            const lastSeoUpdate = product.currentSeo?.lastAutomatedUpdate
+                ? new Date(product.currentSeo.lastAutomatedUpdate)
+                : new Date(0); // Epoch if never updated
+
+            const productUpdatedAt = new Date(product._updatedAt);
+            const daysSinceSeoUpdate = (new Date().getTime() - lastSeoUpdate.getTime()) / (1000 * 3600 * 24);
+
+            // Update if:
+            // 1. No SEO keywords exist
+            // 2. SEO is older than 30 days (Periodic Refresh)
+            // 3. Product content was updated AFTER the last SEO update (Smart Trigger)
+            const needsUpdate =
+                !product.currentSeo?.keywords?.length ||
+                daysSinceSeoUpdate > 30 ||
+                productUpdatedAt > lastSeoUpdate;
 
             if (!needsUpdate) {
-                console.log(`Skipping ${product.title} (Fresh: ${Math.round(daysSinceUpdate)} days)`);
+                // console.log(`Skipping ${product.title} (Fresh)`);
                 results.push({ id: product._id, status: 'skipped', title: product.title, reason: 'fresh' });
                 continue;
             }
+
+            console.log(`⚡️ Optimizing: ${product.title} (Reason: ${productUpdatedAt > lastSeoUpdate ? 'Content Changed' : 'Expired'})`);
 
             try {
                 const newSeo = await generateSEOAttributes({
@@ -59,6 +67,7 @@ export async function GET(req: NextRequest) {
                             metaTitle: newSeo.metaTitle,
                             metaDescription: newSeo.metaDescription,
                             keywords: newSeo.keywords,
+                            aiInsights: newSeo.aiInsights,
                             lastAutomatedUpdate: new Date().toISOString()
                         }
                     }).commit();

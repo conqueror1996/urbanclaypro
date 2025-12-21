@@ -4,13 +4,18 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import PremiumImage from './PremiumImage';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Product } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
-import CoverageCalculator from '@/components/product-page/CoverageCalculator';
-import PatternVisualizer from '@/components/product-page/PatternVisualizer';
 import TechnicalDetails from '@/components/product-page/TechnicalDetails';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import ResourceGateModal from '@/components/ResourceGateModal';
+import JsonLd from '@/components/JsonLd';
+
+const CoverageCalculator = dynamic(() => import('@/components/product-page/CoverageCalculator'), { ssr: false });
+const PatternVisualizer = dynamic(() => import('@/components/product-page/PatternVisualizer'), { ssr: false });
+
 
 interface ProductPageStudioProps {
     product: Product;
@@ -44,8 +49,66 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
         // Optional: Update URL without reload (shallow routing handled by Next.js Link usually better, but for state this works)
     };
 
+    // Resource Gating State
+    const [isGateOpen, setIsGateOpen] = useState(false);
+    const [pendingResource, setPendingResource] = useState<{ url: string; name: string } | null>(null);
+
+    const handleDownload = (e: React.MouseEvent, url: string, name: string) => {
+        e.preventDefault();
+
+        // simple check for previous access
+        const hasAccess = typeof window !== 'undefined' && localStorage.getItem('urbanclay_pro_user');
+
+        if (hasAccess) {
+            window.open(url, '_blank');
+        } else {
+            setPendingResource({ url, name });
+            setIsGateOpen(true);
+        }
+    };
+
+
+    // Generate Product Schema for Google Rich Snippets
+    const productSchema = {
+        '@context': 'https://schema.org/',
+        '@type': 'Product',
+        name: product.title,
+        image: product.imageUrl,
+        description: product.description,
+        brand: {
+            '@type': 'Brand',
+            name: 'UrbanClay'
+        },
+        offers: {
+            '@type': 'Offer',
+            url: `https://urbanclay.in/products/${product.category?.slug}/${product.slug}`,
+            priceCurrency: 'INR',
+            price: product.priceRange?.replace(/[^0-9]/g, '') || '150', // Fallback or extract
+            availability: 'https://schema.org/InStock',
+            itemCondition: 'https://schema.org/NewCondition'
+        },
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.8',
+            reviewCount: '89'
+        }
+    };
+
     return (
         <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-20">
+            <JsonLd data={productSchema} />
+
+            <ResourceGateModal
+                isOpen={isGateOpen}
+                onClose={() => setIsGateOpen(false)}
+                resourceName={pendingResource?.name || 'Technical Asset'}
+                onAccessGranted={() => {
+                    if (pendingResource) {
+                        window.open(pendingResource.url, '_blank');
+                        setPendingResource(null);
+                    }
+                }}
+            />
 
             {/* --- HERO SECTION --- */}
             <section className="relative min-h-screen flex flex-col pt-24 px-6 gap-12 lg:flex-row lg:items-start lg:gap-20 max-w-[1600px] mx-auto">
@@ -266,8 +329,8 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                             {product.resources?.technicalSheets?.[0] ? (
                                 <a
                                     href={product.resources.technicalSheets[0].fileUrl}
-                                    target="_blank"
-                                    className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                                    onClick={(e) => handleDownload(e, product.resources!.technicalSheets![0].fileUrl, product.resources!.technicalSheets![0].title)}
+                                    className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
                                 >
                                     <div className="w-10 h-10 rounded-lg bg-[var(--terracotta)]/20 flex items-center justify-center text-[var(--terracotta)]">
                                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>

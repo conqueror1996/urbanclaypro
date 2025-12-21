@@ -44,6 +44,20 @@ export default defineType({
             type: 'string',
         }),
         defineField({
+            name: 'category',
+            title: 'Category',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Architecture', value: 'Architecture' },
+                    { title: 'Sustainability', value: 'Sustainability' },
+                    { title: 'Design', value: 'Design' },
+                    { title: 'Product Guide', value: 'Product Guide' },
+                ],
+            },
+            initialValue: 'Architecture',
+        }),
+        defineField({
             name: 'body',
             title: 'Body',
             type: 'array',
@@ -51,6 +65,11 @@ export default defineType({
                 { type: 'block' },
                 { type: 'image' },
             ],
+        }),
+        defineField({
+            name: 'seo',
+            title: 'SEO',
+            type: 'seo',
         }),
     ],
 })

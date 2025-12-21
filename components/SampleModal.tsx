@@ -24,6 +24,27 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
     const [viewMode, setViewMode] = useState<'review' | 'consult'>(initialData ? 'consult' : 'review');
     const { box, removeFromBox } = useSampleBox();
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [notification, setNotification] = useState<string | null>(null);
+
+    const showNotification = (message: string) => {
+        setNotification(message);
+        setTimeout(() => setNotification(null), 3000);
+    };
+
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+            document.documentElement.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+            document.documentElement.style.overflow = 'unset';
+        };
+    }, [isOpen]);
 
     // Auto-generate requirements from box content
     const getSampleDescription = (s: any) => {
@@ -97,6 +118,10 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
             timeline: 'Immediate',
             contact: formData.phone,
             email: formData.email, // Explicitly passing email for auto-reply
+            name: formData.name, // Explicitly pass name for CRM
+            address: formData.address,
+            sampleItems: box.map(s => s.name),
+            isSampleRequest: box.length > 0, // Flag if they have items in tray
             notes: `Name: ${formData.name}\nEmail: ${formData.email}\nFull Address: ${formData.address}\n\nRequirements:\n${finalRequirements}`
         };
 
@@ -113,11 +138,11 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
 
                 setIsSubmitted(true);
             } else {
-                alert('Connection error. Please try again.');
+                showNotification('Connection error. Please try again.');
             }
         } catch (err) {
             console.error(err);
-            alert('Something went wrong.');
+            showNotification('Something went wrong.');
         }
     };
 
@@ -214,7 +239,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                         <div className="space-y-4 mb-8">
                                             <button
                                                 onClick={() => {
-                                                    if (box.length === 0) return alert('Please add samples first!');
+                                                    if (box.length === 0) return showNotification('Please add samples to your tray first');
                                                     const event = new CustomEvent('openCheckout', { detail: { type: 'regular' } });
                                                     window.dispatchEvent(event);
                                                 }}
@@ -340,6 +365,20 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                 <button onClick={onClose} className="w-full py-4 bg-[var(--terracotta)] text-white rounded-lg font-bold uppercase text-xs">Close</button>
                             </div>
                         )}
+
+                        <AnimatePresence>
+                            {notification && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-3 bg-[#2A1E16] text-white rounded-full shadow-2xl shadow-black/20 pointer-events-none"
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                                    <span className="text-xs font-bold uppercase tracking-wider whitespace-nowrap">{notification}</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </motion.div>
                 </div>
             )}

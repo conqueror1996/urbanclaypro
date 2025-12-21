@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSampleBox } from '@/context/SampleContext';
+import { createRazorpayOrder, verifyRazorpayPayment } from '@/app/actions/payment';
 
 interface CheckoutModalProps {
     isOpen: boolean;
@@ -12,7 +13,23 @@ interface CheckoutModalProps {
 
 export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutModalProps) {
     const { box } = useSampleBox();
-    const [step, setStep] = useState<'details' | 'payment' | 'success'>('details');
+    const [step, setStep] = useState<'details' | 'payment' | 'processing' | 'success'>('details');
+    const [loading, setLoading] = useState(false);
+
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+            document.documentElement.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+            document.documentElement.style.overflow = 'unset';
+        };
+    }, [isOpen]);
 
     const pricing = {
         regular: { price: 999, label: '5 Samples', description: 'Your selected samples' },
@@ -25,6 +42,7 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
         name: '',
         phone: '',
         email: '',
+        role: 'Home Owner',
         address: '',
         city: '',
         pincode: ''
@@ -46,42 +64,63 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
-    const handleProceedToPayment = () => {
-        if (validate()) {
+    useEffect(() => {
+        // Load Razorpay Script proactively
+        if (isOpen && !(window as any).Razorpay) {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
+            document.body.appendChild(script);
+        }
+    }, [isOpen]);
+
+    const handleProceedToPayment = async () => {
+        if (!validate()) return;
+
+        setLoading(true);
+        try {
+            // 1. Create Server-Side Order
+            const receiptId = `rcpt_${Date.now().toString().slice(-8)}`;
+            const orderRes = await createRazorpayOrder(currentPricing.price, receiptId);
+
+            if (!orderRes.success || !orderRes.orderId) {
+                alert("Failed to initialize payment gateway. Please try again.");
+                setLoading(false);
+                return;
+            }
+
             setStep('payment');
-            initializeRazorpay();
+            openRazorpay(orderRes.orderId);
+        } catch (error) {
+            console.error(error);
+            alert("Connection error. Please check internet.");
+            setLoading(false);
         }
     };
 
-    const initializeRazorpay = () => {
-        // Load Razorpay script
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.async = true;
-        document.body.appendChild(script);
-    };
+    const openRazorpay = (orderId: string) => {
+        if (!(window as any).Razorpay) {
+            alert("Razorpay SDK failed to load. Please refresh.");
+            setLoading(false);
+            return;
+        }
 
-    const handlePayment = () => {
         const options = {
-            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_YOUR_KEY', // Replace with your Razorpay key
-            amount: currentPricing.price * 100, // Amount in paise
+            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+            amount: currentPricing.price * 100,
             currency: 'INR',
             name: 'Urban Clay',
-            description: `${currentPricing.label} - Sample Box`,
-            image: '/logo.png',
-            handler: function (response: any) {
-                // Payment successful
-                console.log('Payment successful:', response);
-                setStep('success');
-
-                // Send confirmation to backend/WhatsApp
-                sendOrderConfirmation(response.razorpay_payment_id);
+            description: `${currentPricing.label}`,
+            image: 'https://raw.githubusercontent.com/conqueror1996/urbanclaypro/main/public/urbanclay-logo.png', // Fallback URL
+            order_id: orderId, // Secure Order ID
+            handler: async function (response: any) {
+                await handleVerification(response);
             },
             prefill: {
                 name: formData.name,
@@ -89,17 +128,13 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                 contact: formData.phone
             },
             notes: {
-                address: formData.address,
-                city: formData.city,
-                pincode: formData.pincode,
-                sampleType: sampleType
+                address: formData.city,
+                role: formData.role
             },
-            theme: {
-                color: '#C17A5F'
-            },
+            theme: { color: '#b45a3c' },
             modal: {
                 ondismiss: function () {
-                    setStep('details');
+                    setLoading(false); // Enable buttons again
                 }
             }
         };
@@ -108,16 +143,73 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
         razorpay.open();
     };
 
-    const sendOrderConfirmation = (paymentId: string) => {
+    const handleVerification = async (response: any) => {
+        setStep('processing');
+        try {
+            // 2. Verify Signature on Server
+            const verifyRes = await verifyRazorpayPayment(
+                response.razorpay_order_id,
+                response.razorpay_payment_id,
+                response.razorpay_signature
+            );
+
+            if (verifyRes.success) {
+                handleOrderCompletion(response);
+            } else {
+                alert("Payment verification failed! Please contact support.");
+                setStep('details');
+            }
+        } catch (error) {
+            console.error("Verification Error", error);
+            alert("Payment verified but order creation failed. Contact support.");
+        }
+    };
+
+    const handleOrderCompletion = async (response: any) => {
+        // 3. Create Lead in System
+        try {
+            const sampleItems = sampleType === 'regular' ? box.map(s => s.name) : ['Curated Premium Collection'];
+
+            await import('@/app/actions/submit-lead').then(mod => mod.submitLead({
+                role: formData.role,
+                product: sampleType === 'regular' ? `Sample Box (${box.length}) - PAID` : 'Curated Samples - PAID',
+                firmName: formData.role === 'Architect' ? formData.name + ' Studio' : 'Private Residence',
+                city: formData.city,
+                quantity: 'Sample Box',
+                timeline: 'Immediate',
+                contact: formData.phone,
+                email: formData.email,
+                address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
+                notes: `PAID ORDER via Razorpay.\nPayment ID: ${response.razorpay_payment_id}\nOrder ID: ${response.razorpay_order_id}`,
+                isSampleRequest: true,
+                sampleItems: sampleItems,
+                fulfillmentStatus: 'pending'
+            }));
+
+            setStep('success');
+            sendWhatsAppConfirmation(response.razorpay_payment_id);
+        } catch (error) {
+            console.error('Failed to create order lead', error);
+            alert("Order saved locally but sync failed. We have received your payment!");
+            setStep('success'); // Still show success as payment is done
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const sendWhatsAppConfirmation = (paymentId: string) => {
         const productList = sampleType === 'regular'
             ? box.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
             : 'Curated Premium Collection';
 
-        const message = `*New Sample Order - PAID*\n\n*Payment ID:* ${paymentId}\n*Type:* ${currentPricing.label}\n*Amount:* ₹${currentPricing.price}\n\n*Customer Details:*\nName: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\n\n*Shipping Address:*\n${formData.address}\n${formData.city}, ${formData.pincode}\n\n*Samples:*\n${productList}`;
+        const message = `*New Sample Order - PAID*\n\n*Payment ID:* ${paymentId}\n*Role:* ${formData.role}\n*Amount:* ₹${currentPricing.price}\n\n*Customer Details:*\nName: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\n\n*Shipping Address:*\n${formData.address}\n${formData.city}, ${formData.pincode}\n\n*Samples:*\n${productList}`;
 
         const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/918080081951?text=${encodedMessage}`, '_blank');
+        // Optional: Auto open WA
+        // window.open(`https://wa.me/918080081951?text=${encodedMessage}`, '_blank');
     };
+
+    const isTestMode = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.startsWith('rzp_test');
 
     return (
         <AnimatePresence>
@@ -128,7 +220,7 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-[#2A1E16]/60 backdrop-blur-md"
+                        className="absolute inset-0 bg-[#2A1E16]/80 backdrop-blur-md"
                     />
 
                     <motion.div
@@ -146,53 +238,30 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                             </svg>
                         </button>
 
-                        {step === 'details' && (
+                        {(step === 'details' || step === 'payment') && (
                             <>
                                 <div className="text-center mb-6">
-                                    <span className="text-[var(--terracotta)] font-bold text-xs uppercase tracking-widest">Premium Samples</span>
+                                    {isTestMode && <span className="bg-yellow-100 text-yellow-800 text-[10px] font-bold px-2 py-0.5 rounded border border-yellow-200 mb-2 inline-block">TEST MODE</span>}
                                     <h3 className="text-2xl font-serif font-bold text-[#2A1E16] mt-2">{currentPricing.label}</h3>
-                                    <p className="text-gray-600 text-sm mt-1">{currentPricing.description}</p>
-                                    <div className="mt-4 inline-flex items-baseline gap-1">
+                                    <div className="mt-2 inline-flex items-baseline gap-1">
                                         <span className="text-4xl font-bold text-[#2A1E16]">₹{currentPricing.price}</span>
-                                        <span className="text-gray-500 text-sm">+ shipping</span>
+                                        <span className="text-gray-500 text-sm">inc. taxes</span>
                                     </div>
                                 </div>
 
-                                {sampleType === 'regular' && box.length > 0 && (
-                                    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Your Selection</h4>
-                                        <div className="space-y-2">
-                                            {box.map((sample, i) => (
-                                                <div key={sample.id} className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-gray-200">
-                                                        {sample.texture.includes('url') ? (
-                                                            <img
-                                                                src={sample.texture.match(/url\(['"]?([^'"\)]+)['"]?\)/)?.[1] || sample.texture}
-                                                                alt={sample.name}
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <div className="w-full h-full" style={{ backgroundColor: sample.color }} />
-                                                        )}
-                                                    </div>
-                                                    <span className="text-sm text-gray-700">{sample.name}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
                                 <form className="space-y-4">
-                                    <div>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            placeholder="Full Name *"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            className={`w-full px-4 py-3 rounded-lg border ${errors.name ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20 outline-none transition-all`}
-                                        />
-                                        {errors.name && <span className="text-red-500 text-xs mt-1">{errors.name}</span>}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="col-span-2">
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                placeholder="Full Name *"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                className={`w-full px-4 py-3 rounded-lg border ${errors.name ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-[var(--terracotta)] outline-none text-sm`}
+                                            />
+                                            {errors.name && <span className="text-red-500 text-xs mt-1">{errors.name}</span>}
+                                        </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
@@ -203,31 +272,45 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                                                 placeholder="Phone *"
                                                 value={formData.phone}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 rounded-lg border ${errors.phone ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20 outline-none transition-all`}
+                                                className={`w-full px-4 py-3 rounded-lg border ${errors.phone ? 'border-red-300' : 'border-gray-200'} focus:border-[var(--terracotta)] outline-none text-sm`}
                                             />
                                             {errors.phone && <span className="text-red-500 text-xs mt-1">{errors.phone}</span>}
                                         </div>
                                         <div>
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                placeholder="Email *"
-                                                value={formData.email}
+                                            <select
+                                                name="role"
+                                                value={formData.role}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20 outline-none transition-all`}
-                                            />
-                                            {errors.email && <span className="text-red-500 text-xs mt-1">{errors.email}</span>}
+                                                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--terracotta)] outline-none text-sm bg-white"
+                                            >
+                                                <option value="Home Owner">Home Owner</option>
+                                                <option value="Architect">Architect</option>
+                                                <option value="Interior Designer">Interior Designer</option>
+                                                <option value="Builder">Builder / Developer</option>
+                                            </select>
                                         </div>
+                                    </div>
+
+                                    <div>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email Address *"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className={`w-full px-4 py-3 rounded-lg border ${errors.email ? 'border-red-300' : 'border-gray-200'} focus:border-[var(--terracotta)] outline-none text-sm`}
+                                        />
+                                        {errors.email && <span className="text-red-500 text-xs mt-1">{errors.email}</span>}
                                     </div>
 
                                     <div>
                                         <textarea
                                             name="address"
-                                            placeholder="Shipping Address *"
+                                            placeholder="Complete Shipping Address *"
                                             value={formData.address}
                                             onChange={handleChange}
                                             rows={2}
-                                            className={`w-full px-4 py-3 rounded-lg border ${errors.address ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20 outline-none transition-all resize-none`}
+                                            className={`w-full px-4 py-3 rounded-lg border ${errors.address ? 'border-red-300' : 'border-gray-200'} focus:border-[var(--terracotta)] outline-none text-sm resize-none`}
                                         />
                                         {errors.address && <span className="text-red-500 text-xs mt-1">{errors.address}</span>}
                                     </div>
@@ -240,9 +323,8 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                                                 placeholder="City *"
                                                 value={formData.city}
                                                 onChange={handleChange}
-                                                className={`w-full px-4 py-3 rounded-lg border ${errors.city ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20 outline-none transition-all`}
+                                                className={`w-full px-4 py-3 rounded-lg border ${errors.city ? 'border-red-300' : 'border-gray-200'} focus:border-[var(--terracotta)] outline-none text-sm`}
                                             />
-                                            {errors.city && <span className="text-red-500 text-xs mt-1">{errors.city}</span>}
                                         </div>
                                         <div>
                                             <input
@@ -252,32 +334,35 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                                                 value={formData.pincode}
                                                 onChange={handleChange}
                                                 maxLength={6}
-                                                className={`w-full px-4 py-3 rounded-lg border ${errors.pincode ? 'border-red-300 bg-red-50' : 'border-gray-200'} focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/20 outline-none transition-all`}
+                                                className={`w-full px-4 py-3 rounded-lg border ${errors.pincode ? 'border-red-300' : 'border-gray-200'} focus:border-[var(--terracotta)] outline-none text-sm`}
                                             />
-                                            {errors.pincode && <span className="text-red-500 text-xs mt-1">{errors.pincode}</span>}
                                         </div>
+                                    </div>
+
+                                    <div className="pt-2">
+                                        <button
+                                            type="button"
+                                            disabled={loading}
+                                            onClick={handleProceedToPayment}
+                                            className="w-full py-4 bg-[var(--terracotta)] text-white rounded-lg font-bold uppercase tracking-wider text-sm hover:bg-[#a85638] transition-all shadow-lg disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                                        >
+                                            {loading ? 'Initializing Secure Payment...' : 'Proceed to Pay'}
+                                            {!loading && <span className="text-lg">→</span>}
+                                        </button>
+                                        <p className="text-[10px] text-center text-gray-400 mt-3 flex items-center justify-center gap-1">
+                                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                            Secured by Razorpay
+                                        </p>
                                     </div>
 
                                     <button
                                         type="button"
-                                        onClick={handleProceedToPayment}
-                                        className="w-full py-4 bg-[var(--terracotta)] text-white rounded-lg font-bold uppercase tracking-wider text-sm hover:bg-[#a85638] transition-all shadow-lg"
-                                    >
-                                        Proceed to Payment
-                                    </button>
-
-                                    <button
-                                        type="button"
                                         onClick={() => {
-                                            // Close checkout and scroll to/focus on the free consultation form in parent or handle here?
-                                            // Since this is a modal on top of SampleModal, we can just close this and let them use the form we just renamed.
-                                            // OR we can make this button submit the current details as a lead directly.
-                                            // Let's submit as lead directly since they filled details here.
                                             const event = new CustomEvent('switchToConsultation', { detail: formData });
                                             window.dispatchEvent(event);
                                             onClose();
                                         }}
-                                        className="w-full py-3 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-[var(--terracotta)] transition-colors"
+                                        className="w-full py-2 text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-[var(--terracotta)] transition-colors"
                                     >
                                         I just need free guidance
                                     </button>
@@ -285,32 +370,11 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                             </>
                         )}
 
-                        {step === 'payment' && (
+                        {step === 'processing' && (
                             <div className="text-center py-12">
-                                <div className="mb-6">
-                                    <div className="w-20 h-20 bg-[var(--terracotta)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg className="w-10 h-10 text-[var(--terracotta)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-2xl font-serif font-bold text-[#2A1E16] mb-2">Secure Payment</h3>
-                                    <p className="text-gray-600 mb-6">Complete your payment to confirm order</p>
-                                    <div className="text-3xl font-bold text-[#2A1E16] mb-8">₹{currentPricing.price}</div>
-                                </div>
-
-                                <button
-                                    onClick={handlePayment}
-                                    className="w-full py-4 bg-[var(--terracotta)] text-white rounded-lg font-bold uppercase tracking-wider text-sm hover:bg-[#a85638] transition-all shadow-lg mb-4"
-                                >
-                                    Pay with Razorpay
-                                </button>
-
-                                <button
-                                    onClick={() => setStep('details')}
-                                    className="text-gray-500 text-sm hover:text-gray-700 transition-colors"
-                                >
-                                    ← Back to details
-                                </button>
+                                <div className="w-16 h-16 border-4 border-gray-100 border-t-[var(--terracotta)] rounded-full animate-spin mx-auto mb-6"></div>
+                                <h3 className="text-xl font-serif font-bold text-[#2A1E16] mb-2">Verifying Payment...</h3>
+                                <p className="text-gray-500 text-sm">Please do not close this window.</p>
                             </div>
                         )}
 
@@ -325,13 +389,13 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                     </svg>
                                 </motion.div>
-                                <h3 className="text-2xl font-serif font-bold text-[#2A1E16] mb-3">Payment Successful!</h3>
-                                <p className="text-gray-600 mb-8">Your sample box will be dispatched within 2-3 business days.</p>
+                                <h3 className="text-2xl font-serif font-bold text-[#2A1E16] mb-3">Order Confirmed!</h3>
+                                <p className="text-gray-600 mb-8">Thank you, {formData.name}. Your samples will be dispatched shortly.</p>
                                 <button
                                     onClick={onClose}
                                     className="w-full py-4 bg-[var(--terracotta)] text-white rounded-lg font-bold uppercase tracking-wider text-sm hover:bg-[#a85638] transition-all"
                                 >
-                                    Close
+                                    Close & Return to Browsing
                                 </button>
                             </div>
                         )}

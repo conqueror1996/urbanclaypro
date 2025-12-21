@@ -54,6 +54,14 @@ export default function LeadsDashboard() {
 
             // Map product images to leads
             const leadsWithImages = data.leads.map((lead: any) => {
+                // Special handling for Catalogue
+                if (lead.product === 'General Catalogue') {
+                    return {
+                        ...lead,
+                        productImage: 'https://cdn-icons-png.flaticon.com/512/337/337946.png' // Generic Catalog/PDF Icon
+                    };
+                }
+
                 const productMatch = data.products.find((p: any) => p.title === lead.product);
                 return {
                     ...lead,
@@ -83,8 +91,12 @@ export default function LeadsDashboard() {
         }
     };
 
-    const getSeriousnessBadge = (seriousness: string) => {
-        switch (seriousness) {
+    const getSeriousnessBadge = (lead: Lead) => {
+        if (lead.role === 'Visitor') {
+            return <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">📥 Download</span>;
+        }
+
+        switch (lead.seriousness) {
             case 'high': return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">🔥 Hot</span>;
             case 'medium': return <span className="bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium uppercase tracking-wider">Medium</span>;
             default: return <span className="text-gray-400 text-xs uppercase tracking-wider">Low</span>;
@@ -219,7 +231,7 @@ export default function LeadsDashboard() {
                                             <div className="space-y-1">
                                                 <div className="flex items-center gap-3">
                                                     <h3 className="font-bold text-lg text-[#1a1512] group-hover:text-[var(--terracotta)] transition-colors">{lead.contact}</h3>
-                                                    {getSeriousnessBadge(lead.seriousness)}
+                                                    {getSeriousnessBadge(lead)}
                                                     <span className={`px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wider ${getStatusColor(lead.status)}`}>
                                                         {lead.status}
                                                     </span>
@@ -292,7 +304,7 @@ export default function LeadsDashboard() {
                                     <div className="space-y-2">
                                         <div className="flex items-center gap-2">
                                             <span className="text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded font-mono">#{selectedLead._id.slice(-6)}</span>
-                                            {getSeriousnessBadge(selectedLead.seriousness)}
+                                            {getSeriousnessBadge(selectedLead)}
                                         </div>
                                         <h2 className="text-3xl font-serif text-[#1a1512]">{selectedLead.contact}</h2>
                                         <div className="flex gap-4 text-sm text-gray-500">

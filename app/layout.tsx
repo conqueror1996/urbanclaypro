@@ -30,6 +30,8 @@ export const viewport: Viewport = {
   ],
 };
 
+import { SEO_KEYWORDS } from "@/lib/constants";
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://urbanclay.in'),
   title: {
@@ -37,100 +39,7 @@ export const metadata: Metadata = {
     template: "%s | UrbanClay India"
   },
   description: "Buy premium terracotta tiles, clay brick tiles & jaali panels online. Handmade, wirecut & pressed. Pan-India delivery. ISO certified. Free samples! Shop now for Mumbai, Delhi, Bangalore, Pune.",
-  keywords: [
-    // Core Product Keywords
-    "terracotta tiles India",
-    "clay brick tiles",
-    "jaali panels",
-    "facade tiles",
-    "exposed brick tiles",
-    "terracotta cladding",
-    "architectural tiles",
-    "brick wall tiles",
-    "terracotta facade panels",
-    "clay roof tiles",
-    "wirecut bricks",
-    "handmade bricks",
-    "pressed bricks",
-    "low efflorescence tiles",
-
-    // Expanded Product Variants
-    "thin brick veneers",
-    "hollow clay blocks",
-    "porotherm bricks",
-    "ventilated facade systems",
-    "louvers and baguettes",
-    "ceramic wall cladding",
-    "fly ash bricks alternative",
-    "red clay bricks",
-    "antique brick tiles",
-    "reclaimed bricks",
-    "glazed terracotta",
-    "terracotta louvers",
-    "rainscreen cladding",
-
-    // Broader Construction & Architecture
-    "building facade materials",
-    "sustainable construction materials",
-    "green building products India",
-    "architectural supplies",
-    "exterior wall cladding",
-    "interior design materials",
-    "landscape pavers",
-    "patio flooring",
-    "elevation tiles design",
-    "modern house elevation",
-    "traditional indian architecture",
-    "vernacular architecture materials",
-    "exposed brickwork specs",
-    "facade engineering",
-    "building envelope solutions",
-    "thermal insulation materials",
-    "natural cooling materials",
-    "leed certified materials",
-    "igbc green building products",
-
-    // Location Keywords - Major Cities & States
-    "terracotta tiles Mumbai",
-    "terracotta tiles Delhi",
-    "terracotta tiles Bangalore",
-    "terracotta tiles Pune",
-    "terracotta tiles Hyderabad",
-    "terracotta tiles Chennai",
-    "terracotta tiles Kolkata",
-    "terracotta tiles Ahmedabad",
-    "terracotta tiles Gurgaon",
-    "terracotta tiles Noida",
-    "construction materials Kerala",
-    "brick suppliers Goa",
-    "tile showroom Chandigarh",
-    "facade contractors Jaipur",
-    "architects in Surat",
-    "builders in Indore",
-
-    // Application Keywords
-    "office facade design",
-    "hospitality architecture",
-    "resort design materials",
-    "cafe interior design",
-    "luxury home exterior",
-    "villa elevation materials",
-    "compound wall cladding",
-    "gate design materials",
-    "living room wall texture",
-    "bedroom feature wall",
-
-    // Professional Keywords
-    "architect tiles India",
-    "builder resources",
-    "contractor supplies",
-    "premium clay products",
-    "custom terracotta manufacturing",
-    "bulk building materials",
-    "construction material wholesaler",
-    "architectural specification",
-    "turnkey facade solutions",
-  ],
+  keywords: SEO_KEYWORDS,
   authors: [{ name: "UrbanClay" }],
   creator: "UrbanClay",
   publisher: "UrbanClay",
@@ -204,6 +113,7 @@ import GlobalSampleModal from '@/components/GlobalSampleModal';
 // ... imports
 
 import SecurityProvider from "@/components/SecurityProvider";
+import SmartExitPopup from "@/components/SmartExitPopup";
 
 // ... imports
 
@@ -226,6 +136,7 @@ export default function RootLayout({
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
             <WebVitalsReporter />
             <GlobalSampleModal />
+            <SmartExitPopup />
           </SampleProvider>
         </SecurityProvider>
       </body>
