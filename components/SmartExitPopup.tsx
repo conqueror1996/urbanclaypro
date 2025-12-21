@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSampleBox } from '@/context/SampleContext';
 import { X, ArrowRight, Download, Package } from 'lucide-react';
 import { submitLead } from '@/app/actions/submit-lead';
+import { usePathname } from 'next/navigation';
 
 export default function SmartExitPopup() {
     const { box, setBoxOpen } = useSampleBox();
@@ -12,11 +13,17 @@ export default function SmartExitPopup() {
     const [hasBeenDismissed, setHasBeenDismissed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const pathname = usePathname();
 
     // Form data for the "Catalogue" flow
     const [email, setEmail] = useState('');
 
     useEffect(() => {
+        // Don't run on dashboard/studio routes
+        if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/studio')) {
+            return;
+        }
+
         // Check if already dismissed in this session
         const dismissed = sessionStorage.getItem('urbanclay_exit_dismissed');
         if (dismissed) {
@@ -38,7 +45,7 @@ export default function SmartExitPopup() {
         return () => {
             document.removeEventListener('mouseleave', handleExitIntent);
         };
-    }, [hasBeenDismissed, isVisible]);
+    }, [hasBeenDismissed, isVisible, pathname]);
 
     const handleDismiss = () => {
         setIsVisible(false);
@@ -80,8 +87,10 @@ export default function SmartExitPopup() {
         }
     };
 
-    // Don't render anything if dismissed or not triggered
-    if (!isVisible) return null;
+    // Don't render anything if:
+    // 1. Not visible
+    // 2. On dashboard/studio routes (double safety)
+    if (!isVisible || pathname?.startsWith('/dashboard') || pathname?.startsWith('/studio')) return null;
 
     // Determine Mode: 'AbandonedCart' vs 'LeadMagnet'
     const mode = box.length > 0 ? 'AbandonedCart' : 'LeadMagnet';

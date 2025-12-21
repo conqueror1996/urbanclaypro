@@ -1,6 +1,7 @@
 'use server';
 
 import crypto from 'crypto';
+import { submitLead } from '@/app/actions/submit-lead';
 
 const KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
 const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
@@ -59,5 +60,35 @@ export async function verifyRazorpayPayment(orderId: string, paymentId: string, 
         return { success: true };
     } else {
         return { success: false, error: "Invalid payment signature" };
+    }
+}
+
+export async function verifyPaymentAndSubmitLead(
+    paymentDetails: { orderId: string, paymentId: string, signature: string },
+    leadData: any
+) {
+    // 1. Verify Payment First
+    const verification = await verifyRazorpayPayment(
+        paymentDetails.orderId,
+        paymentDetails.paymentId,
+        paymentDetails.signature
+    );
+
+    if (!verification.success) {
+        console.error("Payment Verification Failed for Lead:", leadData.email);
+        return { success: false, error: "Payment verification failed. Lead not created." };
+    }
+
+    // 2. Only if Verified, Submit Lead
+    try {
+        const result = await submitLead({
+            ...leadData,
+            notes: `${leadData.notes}\n\n[VERIFIED PAYMENT]\nPayment ID: ${paymentDetails.paymentId}\nOrder ID: ${paymentDetails.orderId}`
+        });
+
+        return { success: true, leadId: result.id };
+    } catch (error) {
+        console.error("Post-Payment Lead Submission Failed:", error);
+        return { success: false, error: "Payment received but lead creation failed. Please contact support." };
     }
 }

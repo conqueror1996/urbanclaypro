@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/lib/products';
+import PremiumImage from './PremiumImage';
 
 interface SignatureCollectionProps {
     products: Product[];
@@ -158,7 +158,6 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                                 )}
                             </div>
 
-                            {/* Mobile View All */}
                             {/* View All - Bottom centered */}
                             <div className="mt-16 md:mt-24 text-center">
                                 <Link
@@ -193,16 +192,16 @@ function ProductCard({ product, categoryId, index }: { product: Product, categor
                 <div className="relative aspect-[3/4] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] rounded-3xl border border-transparent group-hover:border-[var(--line)]">
                     {image ? (
                         <>
-                            <Image
+                            <PremiumImage
                                 src={image}
                                 alt={product.title}
                                 fill
                                 sizes="(max-width: 1024px) 50vw, 25vw"
                                 className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
-                                suppressHydrationWarning
+                                containerClassName="absolute inset-0 w-full h-full"
                             />
                             {/* Overlay Gradient */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                         </>
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-[var(--ink)]/20 bg-[var(--sand)]/20">
@@ -211,7 +210,7 @@ function ProductCard({ product, categoryId, index }: { product: Product, categor
                     )}
 
                     {/* Floating Action Button */}
-                    <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+                    <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100 z-10">
                         <span className="h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-lg text-[var(--ink)]">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                         </span>

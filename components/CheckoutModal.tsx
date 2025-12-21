@@ -146,31 +146,10 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
     const handleVerification = async (response: any) => {
         setStep('processing');
         try {
-            // 2. Verify Signature on Server
-            const verifyRes = await verifyRazorpayPayment(
-                response.razorpay_order_id,
-                response.razorpay_payment_id,
-                response.razorpay_signature
-            );
-
-            if (verifyRes.success) {
-                handleOrderCompletion(response);
-            } else {
-                alert("Payment verification failed! Please contact support.");
-                setStep('details');
-            }
-        } catch (error) {
-            console.error("Verification Error", error);
-            alert("Payment verified but order creation failed. Contact support.");
-        }
-    };
-
-    const handleOrderCompletion = async (response: any) => {
-        // 3. Create Lead in System
-        try {
+            // Prepare Lead Data
             const sampleItems = sampleType === 'regular' ? box.map(s => s.name) : ['Curated Premium Collection'];
 
-            await import('@/app/actions/submit-lead').then(mod => mod.submitLead({
+            const leadData = {
                 role: formData.role,
                 product: sampleType === 'regular' ? `Sample Box (${box.length}) - PAID` : 'Curated Samples - PAID',
                 firmName: formData.role === 'Architect' ? formData.name + ' Studio' : 'Private Residence',
@@ -180,23 +159,42 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                 contact: formData.phone,
                 email: formData.email,
                 address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
-                notes: `PAID ORDER via Razorpay.\nPayment ID: ${response.razorpay_payment_id}\nOrder ID: ${response.razorpay_order_id}`,
+                notes: `PAID ORDER via Razorpay.`, // Payment IDs will be added by server action
                 isSampleRequest: true,
                 sampleItems: sampleItems,
                 fulfillmentStatus: 'pending'
-            }));
+            };
 
-            setStep('success');
-            sendWhatsAppConfirmation(response.razorpay_payment_id);
+            // 2. Verify Payment AND Submit Lead in one Atomic Server Action
+            // This ensures no lead is created unless payment is verified on server
+            const { verifyPaymentAndSubmitLead } = await import('@/app/actions/payment');
+
+            const result = await verifyPaymentAndSubmitLead(
+                {
+                    orderId: response.razorpay_order_id,
+                    paymentId: response.razorpay_payment_id,
+                    signature: response.razorpay_signature
+                },
+                leadData
+            );
+
+            if (result.success) {
+                setStep('success');
+                sendWhatsAppConfirmation(response.razorpay_payment_id);
+            } else {
+                alert(result.error || "Payment verification failed! Please contact support.");
+                setStep('details');
+            }
         } catch (error) {
-            console.error('Failed to create order lead', error);
-            alert("Order saved locally but sync failed. We have received your payment!");
-            setStep('success'); // Still show success as payment is done
+            console.error("Verification/Submission Error", error);
+            alert("Payment processed but order creation failed. Please contact support with Payment ID: " + response.razorpay_payment_id);
+            setStep('success'); // Payment is done, so show success to avoid user panic, but log error
         } finally {
             setLoading(false);
         }
     };
 
+    // Helper: WhatsApp (Client Side Only)
     const sendWhatsAppConfirmation = (paymentId: string) => {
         const productList = sampleType === 'regular'
             ? box.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
@@ -204,8 +202,8 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
 
         const message = `*New Sample Order - PAID*\n\n*Payment ID:* ${paymentId}\n*Role:* ${formData.role}\n*Amount:* ₹${currentPricing.price}\n\n*Customer Details:*\nName: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\n\n*Shipping Address:*\n${formData.address}\n${formData.city}, ${formData.pincode}\n\n*Samples:*\n${productList}`;
 
-        const encodedMessage = encodeURIComponent(message);
-        // Optional: Auto open WA
+        // This function doesn't automatically open URL unless uncommented below
+        // const encodedMessage = encodeURIComponent(message);
         // window.open(`https://wa.me/918080081951?text=${encodedMessage}`, '_blank');
     };
 

@@ -53,7 +53,7 @@ export default function Hero({ data }: HeroProps) {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                             >
-                                {data?.heroSubheading || 'Crafted for timeless spaces, engineered for performance.'}
+                                {data?.heroSubheading || 'Buildings deserve a skin — not decoration.'}
                             </motion.p>
 
                             <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">
