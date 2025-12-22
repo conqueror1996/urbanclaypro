@@ -114,6 +114,7 @@ import GlobalSampleModal from '@/components/GlobalSampleModal';
 
 import SecurityProvider from "@/components/SecurityProvider";
 import SmartExitPopup from "@/components/SmartExitPopup";
+import AiConsultant from "@/components/AiConsultant";
 
 // ... imports
 
@@ -136,7 +137,9 @@ export default function RootLayout({
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
             <WebVitalsReporter />
             <GlobalSampleModal />
+            <GlobalSampleModal />
             <SmartExitPopup />
+            <AiConsultant />
           </SampleProvider>
         </SecurityProvider>
       </body>
