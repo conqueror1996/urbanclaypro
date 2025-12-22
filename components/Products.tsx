@@ -18,7 +18,7 @@ interface ProductsProps {
 // Interface for display items
 interface DisplayItem {
     name: string;
-    imageUrl: string;
+    imageUrl: string | undefined;
     slug: string;
     variantName?: string;
     categorySlug: string;
