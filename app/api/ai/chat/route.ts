@@ -53,10 +53,10 @@ export async function POST(req: NextRequest) {
 
         const fullPrompt = `${systemPrompt}\n\nConversation so far:\n${conversationHistory}\nClay:`;
 
-        const model = 'gemini-1.5-flash';
+        const model = 'gemini-2.5-flash';
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-        let response = await fetch(url, {
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -64,21 +64,6 @@ export async function POST(req: NextRequest) {
                 generationConfig: { temperature: 0.7, maxOutputTokens: 200 }
             })
         });
-
-        if (!response.ok) {
-            // DEBUG: If 404, list available models to see what is wrong
-            if (response.status === 404) {
-                const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-                if (listRes.ok) {
-                    const listData = await listRes.json();
-                    const models = listData.models?.map((m: any) => m.name).join(', ') || "No models found";
-                    throw new Error(`Model '${model}' not found. Available: ${models}`);
-                }
-            }
-            const errorText = await response.text();
-            console.error(`Gemini API Error: ${response.status}`, errorText);
-            throw new Error(`Gemini API Error: ${response.status} - ${errorText}`);
-        }
 
         if (!response.ok) {
             const errorText = await response.text();
