@@ -78,8 +78,8 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({ reply: aiResponse.trim() });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Chat API Error:", error);
-        return NextResponse.json({ error: "Failed to generate response" }, { status: 500 });
+        return NextResponse.json({ error: error.message || "Failed to generate response" }, { status: 500 });
     }
 }

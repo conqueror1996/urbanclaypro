@@ -49,10 +49,10 @@ export default function AiConsultant() {
             if (data.reply) {
                 setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
             } else {
-                throw new Error("No reply");
+                throw new Error(data.error || "No reply");
             }
-        } catch (err) {
-            setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the kiln right now. Please try again later!" }]);
+        } catch (err: any) {
+            setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${err.message || "I'm having trouble connecting to the kiln right now."}` }]);
         } finally {
             setIsLoading(false);
         }
@@ -115,8 +115,8 @@ export default function AiConsultant() {
                                 >
                                     <div
                                         className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                                ? 'bg-[var(--terracotta)] text-white rounded-br-none'
-                                                : 'bg-white text-gray-700 border border-gray-100 rounded-bl-none'
+                                            ? 'bg-[var(--terracotta)] text-white rounded-br-none'
+                                            : 'bg-white text-gray-700 border border-gray-100 rounded-bl-none'
                                             }`}
                                     >
                                         {msg.content}
