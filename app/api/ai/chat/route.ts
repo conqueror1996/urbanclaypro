@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const apiKey = process.env.GEMINI_API_KEY || "";
 
+const { writeClient } = require('@/sanity/lib/write-client');
+
 export async function POST(req: NextRequest) {
     if (!apiKey) {
         return NextResponse.json({ error: "Configuration Error" }, { status: 500 });
@@ -9,37 +11,32 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
-        const { messages, userContext } = body; // messages: [{role, content}], userContext: { role: 'Architect', city: 'Mumbai' }
+        const { messages, userContext } = body;
 
-        const lastMessage = messages[messages.length - 1].content;
-
+        // SYSTEM PROMPT
         const systemPrompt = `
         You are "Clay", the AI Design Consultant for UrbanClay.
         
-        Your Goal: Help the user find the right terracotta product and **capture their project details** (lead generation).
+        GOAL:
+        1. Answer questions about terracotta bricks, tiles, and jaalis helpfuly.
+        2. **IMPORTANT**: Convert this conversation into a LEAD.
+        3. Gently ask for the user's **Name** and **Contact Logic (Phone or Email)** if you don't have it.
         
-        User Context:
-        - Role: ${userContext?.role || 'Visitor'}
-        - Location: ${userContext?.city || 'India'}
+        DATA CAPTURE PROTOCOL:
+        If the user provides their Name, Phone, Email, or specific Project Details, you MUST capture it in a hidden JSON block at the end of your response.
+        
+        Format:
+        [Your normal helpful reply to the user...]
+        ||CAPTURE:{"name": "...", "contact": "...", "email": "...", "city": "...", "intent": "..."}||
+
+        Exctract whatever bits you have. "intent" is a short summary of what they want (e.g. "needs red wirecut bricks for commercial facade").
         
         Brand Knowledge:
-        - We sell premium terracotta wirecut bricks, cladding tiles, jaalis (screens), and roof tiles.
-        - Pricing is "On Request" but generally "Premium/Affordable Luxury".
-        - We ship Pan-India.
+        - Products: Exposed Wirecut Bricks, Cladding Tiles (20mm), Jaalis, Roof Tiles.
+        - Pricing: "On Request" (Premium).
+        - Context: We ship Pan-India.
         
-        Guidelines:
-        1. be helpful, professional, and concise.
-        2. If the user asks about price, give a range (e.g., "Our cladding starts from ₹85/sq.ft depending on the series") and ask "What is the approximate area you are covering?"
-        3. If they mention a project, ask "Is this for a residential or commercial project?"
-        4. ALWAYS try to gently guide them to request a sample box. "Would you like me to add a sample of this to your tray?"
-        
-        Products to Mention if relevant:
-        - Exposed Wirecut Bricks (Red, Antique, Chocolate)
-        - Brick Cladding Tiles (20mm thick)
-        - Terracotta Jaalis (Camp jali, Four petal, etc.)
-        - Mangalore Roof Tiles
-        
-        Keep responses under 3 sentences unless technical details are asked.
+        Keep responses conversational and professional.
         `;
 
         // Construct Gemini Structured Prompt
@@ -50,7 +47,7 @@ export async function POST(req: NextRequest) {
             },
             {
                 role: 'model',
-                parts: [{ text: "Understood. I am Clay, the UrbanClay Design Consultant. I will help the user find products, answer technical questions, and capture leads while being concise and helpful." }]
+                parts: [{ text: "Understood. I will answer helpfully and capture lead data in the ||CAPTURE:...|| format when available." }]
             }
         ];
 
@@ -65,15 +62,12 @@ export async function POST(req: NextRequest) {
         const model = 'gemini-2.5-flash';
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-        // Log for debugging
-        console.log("Sending Chat Context:", JSON.stringify(contents, null, 2));
-
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: contents,
-                generationConfig: { temperature: 0.7, maxOutputTokens: 300 }
+                generationConfig: { temperature: 0.7, maxOutputTokens: 400 }
             })
         });
 
@@ -84,11 +78,51 @@ export async function POST(req: NextRequest) {
         }
 
         const data = await response.json();
-        const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
-        if (!aiResponse) throw new Error("No response from AI");
+        // --- INTELLIGENT DATA CAPTURE ---
+        const captureRegex = /\|\|CAPTURE:(.*?)\|\|/;
+        const match = aiText.match(captureRegex);
+        let capturedData = null;
 
-        return NextResponse.json({ reply: aiResponse.trim() });
+        if (match && match[1]) {
+            try {
+                const jsonStr = match[1];
+                capturedData = JSON.parse(jsonStr);
+
+                // Remove the hidden block from the user-facing reply
+                aiText = aiText.replace(match[0], '').trim();
+
+                // Save to Sanity immediately
+                if (capturedData.contact || capturedData.email || capturedData.name) {
+                    const leadDoc = {
+                        _type: 'lead',
+                        role: 'Chat Visitor',
+                        firmName: capturedData.name || 'Unknown Chat User',
+                        contact: capturedData.contact,
+                        email: capturedData.email,
+                        city: capturedData.city || userContext?.city,
+                        notes: `[AI Chat] ${capturedData.intent || 'Conversation'}`,
+                        seriousness: 'medium', // Default for chat interactions
+                        status: 'new',
+                        submittedAt: new Date().toISOString(),
+                        source: 'AI Chatbot'
+                    };
+
+                    // Fire and forget save
+                    writeClient.create(leadDoc).then((res: any) => {
+                        console.log("✅ AI Chat captured lead:", res._id);
+                    }).catch((err: any) => {
+                        console.error("❌ Failed to save AI lead:", err);
+                    });
+                }
+
+            } catch (e) {
+                console.error("Failed to parse CAPTURE block", e);
+            }
+        }
+
+        return NextResponse.json({ reply: aiText.trim(), leadCaptured: !!capturedData });
 
     } catch (error: any) {
         console.error("Chat API Error:", error);
