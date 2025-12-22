@@ -1,13 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
 
 const { writeClient } = require('@/sanity/lib/write-client');
 
 export async function POST(req: NextRequest) {
-    const apiKey = process.env.GEMINI_API_KEY || "";
+    // 1. Try process.env
+    let apiKey = process.env.GEMINI_API_KEY;
+
+    // 2. Fallback: Manual Hot-Reload from .env.local (Fix for stale server process)
+    if (!apiKey) {
+        try {
+            const envPath = path.join(process.cwd(), '.env.local');
+            if (fs.existsSync(envPath)) {
+                const envConfig = dotenv.parse(fs.readFileSync(envPath));
+                apiKey = envConfig.GEMINI_API_KEY;
+                console.log("🔄 Hot-loaded GEMINI_API_KEY from .env.local");
+            }
+        } catch (e) {
+            console.warn("Failed to hot-load .env.local", e);
+        }
+    }
+
     console.log("Checking Gemini Key:", apiKey ? "Present" : "Missing");
 
     if (!apiKey) {
-        return NextResponse.json({ error: "Configuration Error: GEMINI_API_KEY is missing" }, { status: 500 });
+        return NextResponse.json({ error: "Configuration Error: GEMINI_API_KEY is missing. Please restart the server." }, { status: 500 });
     }
 
     try {
