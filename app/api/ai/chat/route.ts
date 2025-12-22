@@ -42,26 +42,38 @@ export async function POST(req: NextRequest) {
         Keep responses under 3 sentences unless technical details are asked.
         `;
 
-        // Construct Gemini Prompt
-        // Since Gemini Flash doesn't support chat history array natively in the same way as OpenAI, we flatten it or use the chat endpoint.
-        // For simplicity/robustness with raw API, we'll format it as a script.
+        // Construct Gemini Structured Prompt
+        const contents = [
+            {
+                role: 'user',
+                parts: [{ text: systemPrompt }]
+            },
+            {
+                role: 'model',
+                parts: [{ text: "Understood. I am Clay, the UrbanClay Design Consultant. I will help the user find products, answer technical questions, and capture leads while being concise and helpful." }]
+            }
+        ];
 
-        let conversationHistory = "";
+        // Add history
         messages.forEach((m: any) => {
-            conversationHistory += `${m.role === 'user' ? 'User' : 'Clay'}: ${m.content}\n`;
+            contents.push({
+                role: m.role === 'user' ? 'user' : 'model',
+                parts: [{ text: m.content }]
+            });
         });
-
-        const fullPrompt = `${systemPrompt}\n\nConversation so far:\n${conversationHistory}\nClay:`;
 
         const model = 'gemini-2.5-flash';
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+        // Log for debugging
+        console.log("Sending Chat Context:", JSON.stringify(contents, null, 2));
 
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: fullPrompt }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 200 }
+                contents: contents,
+                generationConfig: { temperature: 0.7, maxOutputTokens: 300 }
             })
         });
 
