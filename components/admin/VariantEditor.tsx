@@ -290,12 +290,48 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                                 {galleryItems.map((item, idx) => (
                                     <div key={idx} className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative group border border-gray-200">
                                         <Image src={item.url} alt="" fill className="object-cover" />
-                                        <button
-                                            onClick={() => removeGalleryItem(idx)}
-                                            className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm"
-                                        >
-                                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                        </button>
+
+                                        {/* Actions Overlay */}
+                                        <div className="absolute inset-x-0 top-0 p-1 flex justify-between opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                            <button
+                                                onClick={() => {
+                                                    // Swap functionality
+                                                    const currentMain = { url: mainImagePreview, assetId: mainImageAssetId };
+                                                    const selected = item;
+
+                                                    // Set selected as main
+                                                    setMainImagePreview(selected.url);
+                                                    setMainImageAssetId(selected.assetId);
+
+                                                    // If main had an image, put it in gallery at this position
+                                                    // Otherwise remove this position (promoting gallery to main)
+                                                    if (currentMain.assetId && currentMain.url) {
+                                                        const newGallery = [...galleryItems];
+                                                        newGallery[idx] = { url: currentMain.url, assetId: currentMain.assetId };
+                                                        setGalleryItems(newGallery);
+                                                    } else {
+                                                        const newGallery = galleryItems.filter((_, i) => i !== idx);
+                                                        setGalleryItems(newGallery);
+                                                    }
+                                                }}
+                                                className="bg-white/90 text-[var(--terracotta)] p-1.5 rounded-full hover:bg-white shadow-sm transition-colors"
+                                                title="Set as Main Image"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                                </svg>
+                                            </button>
+
+                                            <button
+                                                onClick={() => removeGalleryItem(idx)}
+                                                className="bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 shadow-sm transition-colors"
+                                                title="Remove"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                                 <button
