@@ -27,9 +27,11 @@ export async function POST(req: NextRequest) {
         
         Format:
         [Your normal helpful reply to the user...]
-        ||CAPTURE:{"name": "...", "contact": "...", "email": "...", "city": "...", "intent": "..."}||
+        ||CAPTURE:{"name": "...", "contact": "...", "email": "...", "city": "...", "product": "...", "intent": "..."}||
 
-        Exctract whatever bits you have. "intent" is a short summary of what they want (e.g. "needs red wirecut bricks for commercial facade").
+        Exctract whatever bits you have.
+        - "product": Infer the main product of interest (e.g. "Exposed Wirecut Bricks", "Cladding", "Jaali", "Roof Tiles"). Defaults to "General Enquiry".
+        - "intent": a short summary of what they want.
         
         Brand Knowledge:
         - Products: Exposed Wirecut Bricks, Cladding Tiles (20mm), Jaalis, Roof Tiles.
@@ -47,7 +49,7 @@ export async function POST(req: NextRequest) {
             },
             {
                 role: 'model',
-                parts: [{ text: "Understood. I will answer helpfully and capture lead data in the ||CAPTURE:...|| format when available." }]
+                parts: [{ text: "Understood. I will answer helpfully and capture lead data (including product interest) in the ||CAPTURE:...|| format when available." }]
             }
         ];
 
@@ -102,6 +104,7 @@ export async function POST(req: NextRequest) {
                         contact: capturedData.contact,
                         email: capturedData.email,
                         city: capturedData.city || userContext?.city,
+                        product: capturedData.product || 'General Enquiry', // Captured Product Interest
                         notes: `[AI Chat] ${capturedData.intent || 'Conversation'}`,
                         seriousness: 'medium', // Default for chat interactions
                         status: 'new',
