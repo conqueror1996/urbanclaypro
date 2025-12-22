@@ -119,7 +119,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
     });
 
     // Map Products to Display Items (Series View)
-    const variantsToShow: DisplayItem[] = matchingProducts.flatMap(product => {
+    const variantsToShow: DisplayItem[] = matchingProducts.flatMap((product): DisplayItem[] => {
         const categorySlug = product.category?.slug || toSlug(product.tag || 'uncategorized');
 
         // If specific category selected, show individual variants
