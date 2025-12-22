@@ -72,20 +72,44 @@ export async function POST(req: NextRequest) {
         const model = 'gemini-2.5-flash';
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: contents,
-                generationConfig: { temperature: 0.7, maxOutputTokens: 400 }
-            })
-        });
+        // Helper for retry logic
+        const fetchWithRetry = async (retries = 3, delay = 1000) => {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: contents,
+                            generationConfig: { temperature: 0.7, maxOutputTokens: 400 }
+                        })
+                    });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Gemini API Error: ${response.status}`, errorText);
-            throw new Error(`Gemini API Error: ${response.status}`);
-        }
+                    if (response.status === 429) {
+                        console.warn(`Gemini 429 hit. Retrying in ${delay}ms... (Attempt ${i + 1})`);
+                        await new Promise(res => setTimeout(res, delay * (i + 1))); // Exponential backoff
+                        continue;
+                    }
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Gemini API Error: ${response.status} - ${errorText}`);
+                    }
+
+                    return response;
+                } catch (e: any) {
+                    if (i === retries - 1) throw e;
+                    if (e.message.includes('429')) {
+                        await new Promise(res => setTimeout(res, delay * (i + 1)));
+                        continue;
+                    }
+                    throw e;
+                }
+            }
+            throw new Error("Max retries exceeded");
+        };
+
+        const response = await fetchWithRetry();
 
         const data = await response.json();
         let aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
