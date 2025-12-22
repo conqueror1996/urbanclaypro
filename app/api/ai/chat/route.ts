@@ -109,9 +109,22 @@ export async function POST(req: NextRequest) {
                         source: 'AI Chatbot'
                     };
 
-                    // Fire and forget save
-                    writeClient.create(leadDoc).then((res: any) => {
+                    const { sendLeadAlertEmail } = require('@/lib/email');
+
+                    // ...
+
+                    // Fire and forget save & email
+                    writeClient.create(leadDoc).then(async (res: any) => {
                         console.log("✅ AI Chat captured lead:", res._id);
+
+                        // Send Admin Alert Email
+                        try {
+                            await sendLeadAlertEmail({ ...leadDoc, _id: res._id });
+                            console.log("📧 Admin alert sent for AI lead");
+                        } catch (emailErr) {
+                            console.error("Failed to send AI lead email:", emailErr);
+                        }
+
                     }).catch((err: any) => {
                         console.error("❌ Failed to save AI lead:", err);
                     });
