@@ -96,12 +96,17 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
     useEffect(() => {
         const catParam = searchParams.get('category');
         if (catParam) {
-            // Simple fuzzy match
-            const match = tabs.find(t =>
-                t.name === catParam ||
-                toSlug(t.name) === catParam ||
-                t.name.toLowerCase() === catParam.toLowerCase()
-            );
+            // Robust fuzzy match
+            const normalizedParam = catParam.toLowerCase().replace(/-/g, ' ').trim();
+
+            const match = tabs.find(t => {
+                const normalizedTab = t.name.toLowerCase();
+                return normalizedTab === normalizedParam ||
+                    toSlug(t.name) === catParam ||
+                    normalizedTab.includes(normalizedParam) ||
+                    normalizedParam.includes(normalizedTab);
+            });
+
             if (match) {
                 setActiveTab(match.name);
             }
@@ -203,27 +208,22 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                 {/* Filter Group */}
                                 <div className="flex-1 flex items-center gap-8 justify-end">
 
-                                    {/* Categories - Scrollable Area */}
-                                    <div className="flex-1 overflow-hidden relative group/scroll">
-                                        <div className="flex items-center gap-6 overflow-x-auto scrollbar-hide border-r border-white/10 pr-8 mask-linear-fade">
-                                            {tabs.map((tab) => (
-                                                <button
-                                                    key={tab.name}
-                                                    onClick={() => handleTabClick(tab.name)}
-                                                    className={`text-xs font-medium uppercase tracking-[0.2em] transition-all py-1 relative whitespace-nowrap flex-shrink-0 ${activeTab === tab.name
-                                                        ? 'text-white'
-                                                        : 'text-white/40 hover:text-white'
-                                                        }`}
-                                                >
-                                                    {tab.name}
-                                                    {activeTab === tab.name && (
-                                                        <span className="absolute -bottom-2 left-0 w-full h-[1px] bg-[var(--terracotta)]"></span>
-                                                    )}
-                                                </button>
+                                    {/* Categories Dropdown - Desktop */}
+                                    <div className="relative group">
+                                        <select
+                                            value={activeTab}
+                                            onChange={(e) => handleTabClick(e.target.value)}
+                                            className="appearance-none bg-transparent text-xs font-medium uppercase tracking-wider text-white border border-white/20 rounded-none px-4 py-2 pr-8 hover:border-white/40 transition-colors cursor-pointer focus:outline-none focus:border-[var(--terracotta)] w-40"
+                                        >
+                                            {tabs.map(tab => (
+                                                <option key={tab.name} value={tab.name} className="bg-[#1a1a1a]">{tab.name}</option>
                                             ))}
+                                        </select>
+                                        <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                            <svg className="w-3 h-3 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                                            </svg>
                                         </div>
-                                        {/* Fade effect on right to indicate more content */}
-                                        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#1a1a1a]/80 to-transparent pointer-events-none border-r border-white/10"></div>
                                     </div>
 
                                     {/* Dropdowns - Minimal & Transparent */}

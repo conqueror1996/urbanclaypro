@@ -15,6 +15,19 @@ interface ProductsProps {
     featuredOnly?: boolean;
 }
 
+// Interface for display items
+interface DisplayItem {
+    name: string;
+    imageUrl: string;
+    slug: string;
+    variantName?: string;
+    categorySlug: string;
+    color: string;
+    tag: string;
+    priceRange: string;
+    range?: string;
+}
+
 // Utility to clean strings for slugs
 const toSlug = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
 
@@ -106,20 +119,38 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
     });
 
     // Map Products to Display Items (Series View)
-    const variantsToShow = matchingProducts.map(product => {
+    const variantsToShow: DisplayItem[] = matchingProducts.flatMap(product => {
         const categorySlug = product.category?.slug || toSlug(product.tag || 'uncategorized');
+
+        // If specific category selected, show individual variants
+        if (activeTab !== 'All' && product.variants && product.variants.length > 0) {
+            return product.variants.map(v => ({
+                name: v.name,
+                imageUrl: v.imageUrl || product.imageUrl,
+                slug: product.slug,
+                variantName: v.name, // Pass specific variant name
+                categorySlug: categorySlug,
+                color: v.color || '#e6d5c9',
+                tag: product.title, // Show parent product name as tag context
+                priceRange: product.priceRange,
+                range: product.range
+            }));
+        }
+
+        // Default: Show Main Product
         const displayImage = product.imageUrl || (product.variants && product.variants[0]?.imageUrl) || '';
 
-        return {
+        return [{
             name: product.title,
             imageUrl: displayImage,
             slug: product.slug,
+            variantName: undefined,
             categorySlug: categorySlug,
             color: '#e6d5c9',
             tag: product.category?.title || product.tag, // Use consistent category title
             priceRange: product.priceRange,
             range: product.range
-        };
+        }];
     });
 
     return (
@@ -194,12 +225,12 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                 >
                     {(() => {
                         // Group variants by range
-                        const grouped = variantsToShow.reduce((acc, variant) => {
+                        const grouped = variantsToShow.reduce((acc, variant: DisplayItem) => {
                             const rangeName = variant.range || 'General Collection';
                             if (!acc[rangeName]) acc[rangeName] = [];
                             acc[rangeName].push(variant);
                             return acc;
-                        }, {} as Record<string, typeof variantsToShow>);
+                        }, {} as Record<string, DisplayItem[]>);
 
                         // If "All" tab or featured only, maybe stick to flat list or keep grouped? 
                         // User request implies they want to see ranges. Grouping is safer.
@@ -278,7 +309,10 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                             <div className={`grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 ${featuredOnly ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
                                                 {variants.map((variant, index) => (
                                                     <div key={`${rangeName}-${index}`} className="group block h-full">
-                                                        <Link href={`/products/${variant.categorySlug}/${variant.slug}`} className="flex flex-col h-full">
+                                                        <Link
+                                                            href={`/products/${variant.categorySlug}/${variant.slug}${variant.variantName ? `?variant=${encodeURIComponent(variant.variantName)}` : ''}`}
+                                                            className="flex flex-col h-full"
+                                                        >
                                                             {/* Image Card - Consistent Radius */}
                                                             <div className="aspect-[4/5] rounded-[2rem] mb-6 relative overflow-hidden bg-[#f4f1ee] group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
                                                                 {/* Show Image if available, else Texture Overlay */}

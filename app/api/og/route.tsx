@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { getProduct } from '@/lib/products';
+import { getProduct, getProject } from '@/lib/products';
 
 export const runtime = 'edge';
 
@@ -13,6 +13,7 @@ export async function GET(request: Request) {
     // In page.tsx we will pass the full path or just the slug?
     // Let's pass the product slug explicitly.
 
+    const type = searchParams.get('type') || 'product'; // 'product' or 'project'
     const slugParam = searchParams.get('slug'); // Should be the actual product ID slug
 
     if (!slugParam) {
@@ -42,9 +43,26 @@ export async function GET(request: Request) {
     const slugParts = slugParam.split('/');
     const productSlug = slugParts[slugParts.length - 1];
 
-    const product = await getProduct(productSlug);
+    let item: any = null;
+    let categoryTitle = 'Collection';
+    let label = 'Product';
 
-    if (!product) {
+    if (type === 'project') {
+        const project = await getProject(productSlug);
+        if (project) {
+            item = project;
+            categoryTitle = project.location || 'Project Showcase';
+            label = 'Project';
+        }
+    } else {
+        const product = await getProduct(productSlug);
+        if (product) {
+            item = product;
+            categoryTitle = product.category?.title || product.tag || 'Collection';
+        }
+    }
+
+    if (!item) {
         return new ImageResponse(
             (
                 <div
@@ -61,7 +79,7 @@ export async function GET(request: Request) {
                     }}
                 >
                     <div style={{ fontSize: 60, fontWeight: 'bold', textTransform: 'uppercase' }}>UrbanClay</div>
-                    <div style={{ fontSize: 30, opacity: 0.6, marginTop: 20 }}>Product Not Found</div>
+                    <div style={{ fontSize: 30, opacity: 0.6, marginTop: 20 }}>{label} Not Found</div>
                 </div>
             ),
             { width: 1200, height: 630 }
@@ -90,8 +108,8 @@ export async function GET(request: Request) {
                 >
                     {/* Use standard img for remote resources in edge runtime response */}
                     <img
-                        src={product.imageUrl || 'https://urbanclay.in/og-fallback.jpg'}
-                        alt={product.title}
+                        src={item.imageUrl || 'https://urbanclay.in/og-fallback.jpg'}
+                        alt={item.title}
                         style={{
                             width: '100%',
                             height: '100%',
@@ -139,7 +157,7 @@ export async function GET(request: Request) {
                         color: '#fff',
                         textTransform: 'capitalize'
                     }}>
-                        {product.title}
+                        {item.title}
                     </div>
 
                     <div style={{ display: 'flex' }}>
@@ -156,7 +174,7 @@ export async function GET(request: Request) {
                             textTransform: 'uppercase',
                             letterSpacing: '0.05em'
                         }}>
-                            {product.category?.title || product.tag || 'Collection'}
+                            {categoryTitle}
                         </div>
                     </div>
 

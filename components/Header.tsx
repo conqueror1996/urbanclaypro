@@ -43,7 +43,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Roof Tiles',
         subtitle: 'Heritage Roofing',
-        href: '/products?category=Roof Tiles',
+        href: '/products?category=Mangalore Roof Tiles',
         color: 'from-[#2A1E16] to-[#1a1512]',
         image: '/images/menu-roof.jpg'
     }

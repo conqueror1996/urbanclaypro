@@ -29,7 +29,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
             title: project.title,
             description: project.description?.slice(0, 160),
-            images: project.imageUrl ? [project.imageUrl] : [],
+            url: `https://urbanclay.in/projects/${slug}`,
+            siteName: 'UrbanClay',
+            locale: 'en_IN',
+            type: 'website',
+            images: [
+                {
+                    url: `/api/og?type=project&slug=${slug}`,
+                    width: 1200,
+                    height: 630,
+                    alt: project.title,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${project.title} | UrbanClay Projects`,
+            description: project.description?.slice(0, 200),
+            images: [`/api/og?type=project&slug=${slug}`],
         },
     };
 }

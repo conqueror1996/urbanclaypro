@@ -10,6 +10,16 @@ interface SignatureCollectionProps {
     products: Product[];
 }
 
+interface DisplayProduct {
+    _id: string;
+    title: string;
+    subtitle?: string;
+    slug: string;
+    imageUrl: string;
+    categorySlug?: string;
+    variantName?: string;
+}
+
 const SIGNATURE_CATEGORIES = [
     {
         id: 'exposed-brick',
@@ -53,12 +63,38 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
     const categoryData = useMemo(() => {
         return SIGNATURE_CATEGORIES.map(cat => {
             const matches = products.filter(cat.match);
-            // Deduplicate by slug
-            const unique = Array.from(new Map(matches.map(item => [item.slug, item])).values());
+
+            // Expand variants
+            const items: DisplayProduct[] = matches.flatMap(p => {
+                const categorySlug = p.category?.slug || 'products';
+
+                if (p.variants && p.variants.length > 0) {
+                    return p.variants.map((v: any, idx: number) => ({
+                        _id: `${p._id}-${idx}`,
+                        title: v.name,
+                        subtitle: p.title, // Parent title as context
+                        slug: p.slug, // Use parent slug for base URL
+                        imageUrl: v.imageUrl || p.imageUrl,
+                        categorySlug: categorySlug,
+                        variantName: v.name
+                    }));
+                }
+
+                return [{
+                    _id: p._id,
+                    title: p.title,
+                    subtitle: cat.label,
+                    slug: p.slug,
+                    imageUrl: p.imageUrl || (p.variants && p.variants[0]?.imageUrl) || '',
+                    categorySlug: categorySlug,
+                    variantName: undefined
+                }];
+            });
+
             // Take top 4 for the smaller grid
             return {
                 ...cat,
-                items: unique.slice(0, 4)
+                items: items.slice(0, 4)
             };
         });
     }, [products]);
@@ -140,11 +176,10 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
 
                             {/* Products Grid - Smaller Cards (4 cols) */}
                             <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-                                {activeCategory.items.map((product, index) => (
+                                {activeCategory.items.map((item, index) => (
                                     <ProductCard
-                                        key={`${activeCategory.id}-${product._id}`}
-                                        product={product}
-                                        categoryId={activeCategory.id}
+                                        key={item._id}
+                                        product={item}
                                         index={index}
                                     />
                                 ))}
@@ -176,9 +211,8 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
     );
 }
 
-function ProductCard({ product, categoryId, index }: { product: Product, categoryId: string, index: number }) {
-    const image = product.imageUrl || (product.variants?.[0]?.imageUrl);
-    const categorySlug = product.category?.slug || product.tag?.toLowerCase().replace(/\s+/g, '-') || 'products';
+function ProductCard({ product, index }: { product: DisplayProduct, index: number }) {
+    const { title, subtitle, imageUrl, categorySlug, slug, variantName } = product;
 
     return (
         <motion.div
@@ -187,14 +221,17 @@ function ProductCard({ product, categoryId, index }: { product: Product, categor
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="group relative w-[calc(50%-0.5rem)] md:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
         >
-            <Link href={`/products/${categorySlug}/${product.slug}`} className="block h-full">
+            <Link
+                href={`/products/${categorySlug || 'products'}/${slug}${variantName ? `?variant=${encodeURIComponent(variantName)}` : ''}`}
+                className="block h-full"
+            >
                 {/* Image Card - Increased Radius & Smaller Aspect */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] rounded-3xl border border-transparent group-hover:border-[var(--line)]">
-                    {image ? (
+                    {imageUrl ? (
                         <>
                             <PremiumImage
-                                src={image}
-                                alt={product.title}
+                                src={imageUrl}
+                                alt={title}
                                 fill
                                 sizes="(max-width: 1024px) 50vw, 25vw"
                                 className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
@@ -220,10 +257,10 @@ function ProductCard({ product, categoryId, index }: { product: Product, categor
                 {/* Minimal Info */}
                 <div className="text-center group-hover:-translate-y-1 transition-transform duration-500 px-2">
                     <h4 className="text-lg font-serif text-[var(--ink)] mb-1 group-hover:text-[var(--terracotta)] transition-colors line-clamp-1">
-                        {product.title}
+                        {title}
                     </h4>
                     <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink)]/40 font-bold line-clamp-1 mt-1">
-                        {product.subtitle || categoryId.replace('-', ' ')}
+                        {subtitle}
                     </p>
                 </div>
             </Link>
