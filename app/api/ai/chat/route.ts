@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         const fullPrompt = `${systemPrompt}\n\nConversation so far:\n${conversationHistory}\nClay:`;
 
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -65,7 +65,11 @@ export async function POST(req: NextRequest) {
             }
         );
 
-        if (!response.ok) throw new Error(`Gemini API Error: ${response.status}`);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Gemini API Error: ${response.status}`, errorText);
+            throw new Error(`Gemini API Error: ${response.status}`);
+        }
 
         const data = await response.json();
         const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
