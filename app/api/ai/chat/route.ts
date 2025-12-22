@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const apiKey = process.env.GEMINI_API_KEY || "";
-
 const { writeClient } = require('@/sanity/lib/write-client');
 
 export async function POST(req: NextRequest) {
+    const apiKey = process.env.GEMINI_API_KEY || "";
+    console.log("Checking Gemini Key:", apiKey ? "Present" : "Missing");
+
     if (!apiKey) {
-        return NextResponse.json({ error: "Configuration Error" }, { status: 500 });
+        return NextResponse.json({ error: "Configuration Error: GEMINI_API_KEY is missing" }, { status: 500 });
     }
 
     try {
