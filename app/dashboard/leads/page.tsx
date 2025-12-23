@@ -28,6 +28,8 @@ interface Lead {
         author: string;
     }>;
     productImage?: string; // Resolved client-side
+    fulfillmentStatus?: 'pending' | 'shipped' | 'delivered';
+    deliveredAt?: string;
 }
 
 export default function LeadsDashboard() {
@@ -183,27 +185,76 @@ export default function LeadsDashboard() {
         }
     };
 
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Analytics
+    const stats = {
+        total: leads.length,
+        hot: leads.filter(l => l.seriousness === 'high').length,
+        // @ts-ignore
+        pendingSamples: leads.filter(l => l.role === 'Visitor' || (l.quantity && l.quantity.includes('Sample'))).length
+            - leads.filter(l => l.fulfillmentStatus === 'delivered').length
+    };
+
+    const filteredLeads = sortedLeads.filter(lead =>
+        (lead.contact?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (lead.role?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (lead.city?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+        (lead.product?.toLowerCase() || '').includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="space-y-8 relative">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-serif text-[#1a1512]">Sales Leads</h1>
-                    <p className="text-gray-500 mt-2">Manage and track incoming quote requests.</p>
+            {/* Header & Stats */}
+            <div className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-serif text-[#1a1512]">Sales Leads</h1>
+                        <p className="text-gray-500 mt-1">Manage and track incoming quote requests.</p>
+                    </div>
+                    {/* Search & Sort */}
+                    <div className="flex gap-2">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search leads..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="pl-9 pr-4 py-2 border border-gray-200 rounded-md text-sm outline-none focus:border-[var(--terracotta)] w-48 transition-all focus:w-64"
+                            />
+                            <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                        <div className="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                            <button
+                                onClick={() => setSortBy('date')}
+                                className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${sortBy === 'date' ? 'bg-[var(--terracotta)] text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Latest
+                            </button>
+                            <button
+                                onClick={() => setSortBy('seriousness')}
+                                className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${sortBy === 'seriousness' ? 'bg-[var(--terracotta)] text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                            >
+                                Hot
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div className="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
-                    <button
-                        onClick={() => setSortBy('date')}
-                        className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${sortBy === 'date' ? 'bg-[var(--terracotta)] text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                    >
-                        Latest
-                    </button>
-                    <button
-                        onClick={() => setSortBy('seriousness')}
-                        className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${sortBy === 'seriousness' ? 'bg-[var(--terracotta)] text-white shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                    >
-                        Highest Value
-                    </button>
+
+                {/* Business Pulse Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Pipeline</p>
+                        <p className="text-3xl font-serif text-[#1a1512] mt-1">{stats.total}</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-orange-50 to-white p-5 rounded-xl border border-orange-100 shadow-sm">
+                        <p className="text-xs font-bold text-orange-400 uppercase tracking-wider">Hot Leads 🔥</p>
+                        <p className="text-3xl font-serif text-orange-900 mt-1">{stats.hot}</p>
+                    </div>
+                    <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                        <p className="text-xs font-bold text-blue-400 uppercase tracking-wider">Pending Orders</p>
+                        <p className="text-3xl font-serif text-blue-900 mt-1">{stats.pendingSamples > 0 ? stats.pendingSamples : 0}</p>
+                    </div>
                 </div>
             </div>
 
@@ -214,8 +265,8 @@ export default function LeadsDashboard() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-4">
-                    {sortedLeads.length > 0 ? (
-                        sortedLeads.map((lead, index) => (
+                    {filteredLeads.length > 0 ? (
+                        filteredLeads.map((lead, index) => (
                             <motion.div
                                 key={lead._id}
                                 layoutId={lead._id}
@@ -273,10 +324,14 @@ export default function LeadsDashboard() {
                         ))
                     ) : (
                         <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
-                            <p className="text-gray-500">No leads found.</p>
+                            {searchTerm ? (
+                                <p className="text-gray-500">No leads found matching &quot;<span className="font-bold text-gray-700">{searchTerm}</span>&quot;.</p>
+                            ) : (
+                                <p className="text-gray-500">No leads found yet.</p>
+                            )}
                         </div>
                     )}
-                </div>
+                </div >
             )}
 
             {/* DETAIL SLIDE-OVER */}
@@ -454,6 +509,6 @@ export default function LeadsDashboard() {
                     </>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }
