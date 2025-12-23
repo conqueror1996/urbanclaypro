@@ -5,8 +5,8 @@
             "schedule": "0 0 30 * *"
         },
         {
-            "path": "/api/cron/follow-up",
-            "schedule": "30 4 * * *"
+            "path": "/api/cron/sample-follow-up",
+            "schedule": "30 9 * * *"
         }
     ]
 }

@@ -15,6 +15,11 @@ export const metadata: Metadata = {
         'tiles online Pune',
         'exposed brick tiles Pune',
         'buy tiles Pune',
+        'terracotta cladding Pune',
+        'terracotta facade Pune',
+        'clay roof tiles Pune',
+        'brick veneer Pune',
+        'architectural tiles Pune',
     ],
 };
 
@@ -45,8 +50,60 @@ export default async function PunePage() {
         }
     ];
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        'name': 'UrbanClay Pune',
+        'image': 'https://urbanclay.in/og-image.png',
+        '@id': 'https://urbanclay.in/pune',
+        'url': 'https://urbanclay.in/pune',
+        'telephone': '+918080081951',
+        'priceRange': '₹₹',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Pune',
+            'addressLocality': 'Pune',
+            'addressRegion': 'Maharashtra',
+            'postalCode': '411001',
+            'addressCountry': 'IN'
+        },
+        'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': 18.5204,
+            'longitude': 73.8567
+        },
+        'openingHoursSpecification': {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': [
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ],
+            'opens': '09:00',
+            'closes': '19:00'
+        },
+        'sameAs': [
+            'https://www.instagram.com/urbanclay',
+            'https://www.facebook.com/urbanclay'
+        ],
+        'areaServed': [
+            'Pune',
+            'Pimpri-Chinchwad',
+            'Kothrud',
+            'Viman Nagar',
+            'Hinjewadi'
+        ]
+    };
+
     return (
         <div className="min-h-screen bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Header />
 
             <main className="pt-32 pb-20">

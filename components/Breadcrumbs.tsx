@@ -17,8 +17,31 @@ export default function Breadcrumbs({ range }: { range?: string }) {
 
     const variantName = searchParams.get('variant');
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': 'https://urbanclay.in'
+            },
+            ...parts.map((part, idx) => ({
+                '@type': 'ListItem',
+                'position': idx + 2,
+                'name': formatLabel(part),
+                'item': `https://urbanclay.in/${parts.slice(0, idx + 1).join('/')}`
+            }))
+        ]
+    };
+
     return (
         <nav className="flex flex-nowrap items-center justify-start text-[10px] font-bold uppercase tracking-wide text-gray-500 leading-none">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center">Home</Link>
 
             {parts.map((part, idx) => {

@@ -16,12 +16,69 @@ export const metadata: Metadata = {
         'terracotta tiles Navi Mumbai',
         'exposed brick tiles Mumbai',
         'buy tiles Mumbai',
+        'terracotta cladding Mumbai',
+        'terracotta facade Mumbai',
+        'clay roof tiles Mumbai',
+        'brick veneer Mumbai',
+        'architectural tiles Mumbai',
     ],
 };
 
 export default function MumbaiPage() {
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        'name': 'UrbanClay Mumbai',
+        'image': 'https://urbanclay.in/og-image.png',
+        '@id': 'https://urbanclay.in/mumbai',
+        'url': 'https://urbanclay.in/mumbai',
+        'telephone': '+918080081951',
+        'priceRange': '₹₹',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Mumbai',
+            'addressLocality': 'Mumbai',
+            'addressRegion': 'Maharashtra',
+            'postalCode': '400001',
+            'addressCountry': 'IN'
+        },
+        'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': 19.0760,
+            'longitude': 72.8777
+        },
+        'openingHoursSpecification': {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': [
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ],
+            'opens': '09:00',
+            'closes': '19:00'
+        },
+        'sameAs': [
+            'https://www.instagram.com/urbanclay',
+            'https://www.facebook.com/urbanclay'
+        ],
+        'areaServed': [
+            'Mumbai',
+            'Navi Mumbai',
+            'Thane',
+            'Kalyan',
+            'Dombivli'
+        ]
+    };
+
     return (
         <div className="min-h-screen bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Header />
 
             <main className="pt-32 pb-20">

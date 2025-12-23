@@ -14,12 +14,69 @@ export const metadata: Metadata = {
         'tiles online Bangalore',
         'exposed brick tiles Bangalore',
         'buy tiles Bangalore',
+        'terracotta cladding Bangalore',
+        'terracotta facade Bangalore',
+        'clay roof tiles Bangalore',
+        'brick veneer Bangalore',
+        'architectural tiles Bangalore',
     ],
 };
 
 export default function BangalorePage() {
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        'name': 'UrbanClay Bangalore',
+        'image': 'https://urbanclay.in/og-image.png',
+        '@id': 'https://urbanclay.in/bangalore',
+        'url': 'https://urbanclay.in/bangalore',
+        'telephone': '+918080081951',
+        'priceRange': '₹₹',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Bangalore',
+            'addressLocality': 'Bangalore',
+            'addressRegion': 'Karnataka',
+            'postalCode': '560001',
+            'addressCountry': 'IN'
+        },
+        'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': 12.9716,
+            'longitude': 77.5946
+        },
+        'openingHoursSpecification': {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': [
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ],
+            'opens': '09:00',
+            'closes': '19:00'
+        },
+        'sameAs': [
+            'https://www.instagram.com/urbanclay',
+            'https://www.facebook.com/urbanclay'
+        ],
+        'areaServed': [
+            'Bangalore',
+            'Karnataka',
+            'Mysore',
+            'Hubli',
+            'Mangalore'
+        ]
+    };
+
     return (
         <div className="min-h-screen bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Header />
 
             <main className="pt-32 pb-20">

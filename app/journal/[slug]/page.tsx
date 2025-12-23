@@ -107,8 +107,37 @@ export default async function BlogPostPage({ params }: PageProps) {
 
     if (!post) notFound();
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': post.title,
+        'image': post.mainImage ? [post.mainImage] : undefined,
+        'datePublished': post.date, // Assumes post.date is ISO formatted or close to it. If not, might need parsing.
+        'author': {
+            '@type': 'Organization',
+            'name': 'UrbanClay'
+        },
+        'publisher': {
+            '@type': 'Organization',
+            'name': 'UrbanClay',
+            'logo': {
+                '@type': 'ImageObject',
+                'url': 'https://urbanclay.in/urbanclay-logo.png'
+            }
+        },
+        'description': post.excerpt,
+        'mainEntityOfPage': {
+            '@type': 'WebPage',
+            '@id': `https://urbanclay.in/journal/${slug}`
+        }
+    };
+
     return (
         <div className="bg-[#fcfbf9] min-h-screen selection:bg-[var(--terracotta)] selection:text-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Header />
 
             <article className="pt-32 pb-24">

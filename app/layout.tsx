@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     apple: '/apple-icon.png',
   },
   alternates: {
-    canonical: '/',
+    canonical: 'https://urbanclay.in',
   },
   robots: {
     index: true,
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
   },
   verification: {
     // Add your verification codes here when ready
-    // google: 'your-google-verification-code',
+    google: 'google-site-verification=YOUR_VERIFICATION_CODE',
     // yandex: 'your-yandex-verification-code',
   },
   appleWebApp: {

@@ -15,12 +15,69 @@ export const metadata: Metadata = {
         'terracotta tiles Gurgaon',
         'exposed brick tiles Noida',
         'buy tiles Delhi',
+        'terracotta cladding Delhi',
+        'terracotta facade Gurgaon',
+        'clay roof tiles Noida',
+        'brick veneer Delhi',
+        'architectural tiles Delhi NCR',
     ],
 };
 
 export default function DelhiPage() {
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        'name': 'UrbanClay Delhi NCR',
+        'image': 'https://urbanclay.in/og-image.png',
+        '@id': 'https://urbanclay.in/delhi',
+        'url': 'https://urbanclay.in/delhi',
+        'telephone': '+918080081951',
+        'priceRange': '₹₹',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Delhi NCR',
+            'addressLocality': 'New Delhi',
+            'addressRegion': 'Delhi',
+            'postalCode': '110001',
+            'addressCountry': 'IN'
+        },
+        'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': 28.6139,
+            'longitude': 77.2090
+        },
+        'openingHoursSpecification': {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': [
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday'
+            ],
+            'opens': '09:00',
+            'closes': '19:00'
+        },
+        'sameAs': [
+            'https://www.instagram.com/urbanclay',
+            'https://www.facebook.com/urbanclay'
+        ],
+        'areaServed': [
+            'Delhi',
+            'Gurgaon',
+            'Noida',
+            'Faridabad',
+            'Ghaziabad'
+        ]
+    };
+
     return (
         <div className="min-h-screen bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Header />
 
             <main className="pt-32 pb-20">
