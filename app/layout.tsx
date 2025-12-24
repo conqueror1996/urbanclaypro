@@ -118,6 +118,8 @@ import AiConsultant from "@/components/AiConsultant";
 
 // ... imports
 
+import FootprintTracker from "@/components/FootprintTracker";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -134,9 +136,8 @@ export default function RootLayout({
             <SmoothScroll />
             <SplashLoader />
             <PageTransition>{children}</PageTransition>
-            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
+            <FootprintTracker />
             <WebVitalsReporter />
-            <GlobalSampleModal />
             <GlobalSampleModal />
             <SmartExitPopup />
             <AiConsultant />

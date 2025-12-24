@@ -132,7 +132,7 @@ export default function SamplesDashboard() {
         <div className="space-y-8 h-[calc(100vh-100px)] flex flex-col">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-serif text-[#1a1512]">Sample Logistics</h1>
+                    <h1 className="text-3xl font-serif text-[var(--ink)]">Samples</h1>
                     <p className="text-gray-500 mt-2">Track and manage physical sample shipments.</p>
                 </div>
                 <div className="flex gap-4 items-center">
@@ -184,7 +184,7 @@ export default function SamplesDashboard() {
                                         className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow group relative"
                                     >
                                         <div className="flex justify-between items-start mb-2">
-                                            <h4 className="font-bold text-[#1a1512]">{order.contact}</h4>
+                                            <h4 className="font-bold text-[var(--ink)]">{order.contact}</h4>
                                             <span className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded uppercase">{order.role}</span>
                                         </div>
 
@@ -292,7 +292,7 @@ export default function SamplesDashboard() {
                             initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
                             className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md relative z-10"
                         >
-                            <h3 className="text-xl font-serif text-[#1a1512] mb-4">Ship Sample Order</h3>
+                            <h3 className="text-xl font-serif text-[var(--ink)] mb-4">Ship Sample Order</h3>
                             <p className="text-sm text-gray-500 mb-6">Enter tracking details for {shippingModalOrder.product} to {shippingModalOrder.city}.</p>
 
                             <form onSubmit={handleShipSubmit} className="space-y-4">

@@ -442,6 +442,75 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         </div>
                     </div>
 
+                    {/* 4. Frequently Asked Questions (LLM Optimization) */}
+                    <div className="group">
+                        <div className="flex items-center gap-4 mb-8">
+                            <span className="text-[var(--terracotta)] text-3xl font-serif">04</span>
+                            <div className="h-px w-16 bg-white/10" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Expert Inputs</span>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {/* FAQ Column */}
+                            <div className="space-y-4">
+                                <h3 className="text-2xl font-serif text-[#EBE5E0] mb-6">Common Questions</h3>
+                                {[
+                                    {
+                                        q: `Is ${product.title} suitable for exterior use in high-rainfall areas?`,
+                                        a: `Yes, ${product.title} is fired at temperatures exceeding 1000°C, making it highly resistant to water absorption and weathering. We recommend applying a breathable silicone sealant for extreme coastal climates.`
+                                    },
+                                    {
+                                        q: "Do I need special adhesive for installation?",
+                                        a: "For brick tiles, we recommend a high-performance polymer-modified thin-set adhesive (Type 2 or higher) compliant with IS 15477 standards."
+                                    },
+                                    {
+                                        q: "How does it compare to cement blocks?",
+                                        a: `Unlike cement, ${product.title} is a natural thermal insulator. It resists heat transfer, keeping interiors cooler by up to 5°C in Indian summers.`
+                                    },
+                                    {
+                                        q: "What is the lead time for delivery?",
+                                        a: "Standard profiles are typically in stock for immediate dispatch. Custom sizes or large project orders (above 5000 sq.ft) may require 3-4 weeks."
+                                    }
+                                ].map((faq, i) => (
+                                    <details key={i} className="group/faq bg-[#1a1512] border border-white/5 rounded-xl overflow-hidden open:bg-white/[0.02] transition-colors">
+                                        <summary className="p-4 cursor-pointer font-medium text-[#EBE5E0] flex justify-between items-center select-none marker:content-none">
+                                            {faq.q}
+                                            <span className="text-[var(--terracotta)] text-xl group-open/faq:rotate-45 transition-transform">+</span>
+                                        </summary>
+                                        <div className="px-4 pb-4 text-white/50 text-sm leading-relaxed">
+                                            {faq.a}
+                                        </div>
+                                    </details>
+                                ))}
+                            </div>
+
+                            {/* Technical Cheat Sheet (Table for AI Parsing) */}
+                            <div>
+                                <h3 className="text-2xl font-serif text-[#EBE5E0] mb-6">Data Sheet</h3>
+                                <div className="border border-white/10 rounded-2xl overflow-hidden">
+                                    <table className="w-full text-left text-sm">
+                                        <tbody className="divide-y divide-white/5">
+                                            {[
+                                                ["Material", "Natural Terracotta Clay"],
+                                                ["Firing Temp", "> 1000°C"],
+                                                ["Water Absorption", "< 12%"],
+                                                ["Efflorescence", "Nil / Slight"],
+                                                ["Compressive Strength", "> 20 N/mm²"],
+                                                ["Origin", "Made in India"],
+                                                ["Application", "Interior & Exterior"]
+                                            ].map(([k, v], i) => (
+                                                <tr key={i} className="hover:bg-white/[0.02]">
+                                                    <th className="py-3 px-4 text-white/40 font-medium uppercase tracking-wider text-[10px] w-1/2">{k}</th>
+                                                    <td className="py-3 px-4 text-[#EBE5E0] font-mono">{v}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section >
 

@@ -197,7 +197,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                             <div className="mt-16 md:mt-24 text-center">
                                 <Link
                                     href={`/products?category=${activeCategory.id}`}
-                                    className="inline-flex items-center gap-2 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-[var(--terracotta)] hover:text-[var(--ink)] transition-colors duration-300"
+                                    className="btn-link-dotted text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]"
                                 >
                                     View All {activeCategory.label}
                                     <span>→</span>

@@ -123,8 +123,9 @@ export default function Projects({ projects = [], showLink = true, layoutMode = 
 
             {showLink && (
                 <div className="text-center mt-16">
-                    <Link href="/projects" className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-[#e9e2da] text-[#2A1E16] font-medium hover:bg-[#2A1E16] hover:text-white hover:border-[#2A1E16] transition-all duration-300">
+                    <Link href="/projects" className="btn-link-dotted text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">
                         View All Projects
+                        <span>→</span>
                     </Link>
                 </div>
             )}

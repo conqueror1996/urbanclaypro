@@ -15,11 +15,13 @@ export async function generateSalesEmail(lead: Lead) {
     // In a real production app, this would call OpenAI/Gemini API
     // For now, we will use a sophisticated template engine to mimic intelligence.
 
-    const isArchitect = lead.role.toLowerCase().includes('architect') || lead.role.toLowerCase().includes('designer');
-    const isBuilder = lead.role.toLowerCase().includes('builder') || lead.role.toLowerCase().includes('contractor');
+    const role = lead.role || 'Visitor';
+    const isArchitect = role.toLowerCase().includes('architect') || role.toLowerCase().includes('designer');
+    const isBuilder = role.toLowerCase().includes('builder') || role.toLowerCase().includes('contractor');
     const isHomeowner = !isArchitect && !isBuilder;
 
-    const firstName = lead.contact.split(' ')[0];
+    const contactName = lead.contact || 'Partner';
+    const firstName = contactName.split(' ')[0];
 
     let tone = "professional and helpful";
     let opening = `Thank you for your interest in UrbanClay's premium collection.`;

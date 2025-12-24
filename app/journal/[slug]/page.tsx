@@ -98,6 +98,18 @@ const ptComponents = {
                 </a>
             )
         }
+    },
+    list: {
+        bullet: ({ children }: any) => <ul className="my-8 space-y-3 font-normal text-gray-700 list-none ml-2">{children}</ul>,
+        number: ({ children }: any) => <ol className="my-8 space-y-3 font-normal text-gray-700 list-decimal list-outside ml-6 marker:text-[var(--terracotta)] marker:font-serif marker:font-bold">{children}</ol>,
+    },
+    listItem: {
+        bullet: ({ children }: any) => (
+            <li className="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-[0.6em] before:w-1.5 before:h-1.5 before:bg-[var(--terracotta)] before:rounded-full">
+                {children}
+            </li>
+        ),
+        number: ({ children }: any) => <li className="pl-2">{children}</li>,
     }
 }
 

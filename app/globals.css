@@ -160,6 +160,17 @@ h4 {
   backface-visibility: hidden;
 }
 
+.btn-link-dotted {
+  @apply relative inline-flex items-center gap-2 font-medium text-[var(--ink)] transition-all duration-300;
+  padding-bottom: 2px;
+  border-bottom: 2px dotted currentColor;
+}
+
+.btn-link-dotted:hover {
+  @apply text-[var(--terracotta)];
+  border-bottom-style: solid;
+}
+
 /* Typography Refinements */
 p {
   @apply leading-relaxed;
@@ -425,4 +436,20 @@ img {
 
 .snap-scroll-mobile>* {
   scroll-snap-align: center;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }

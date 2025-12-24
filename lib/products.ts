@@ -144,6 +144,40 @@ export async function getCollectionBySlug(collectionSlug: string): Promise<Produ
     return getProduct(collectionSlug);
 }
 
+// Optimized query for OG Image generation for Categories
+export async function getCategoryHero(categorySlug: string): Promise<{ title: string, imageUrl: string } | undefined> {
+    try {
+        // Try finding a product in this category with an image
+        const query = groq`*[_type == "product" && (category->slug.current == $slug || tag == $slug)][0] {
+            title,
+            "imageUrl": images[0].asset->url
+        }`;
+
+        // Mapping for Titles (since we don't have a category document always)
+        const slugToTitle: Record<string, string> = {
+            'exposed-bricks': 'Exposed Bricks',
+            'brick-wall-tiles': 'Brick Wall Tiles',
+            'terracotta-jaali': 'Terracotta Jali',
+            'floor-tiles': 'Floor Tiles',
+            'roof-tiles': 'Roof Tiles',
+            'facades': 'Clay Facade Panels'
+        };
+
+        const result = await client.fetch(query, { slug: categorySlug }, { next: { revalidate: 3600 } });
+
+        if (result) {
+            return {
+                title: slugToTitle[categorySlug] || result.title + ' Collection', // Use official title or fallback
+                imageUrl: result.imageUrl
+            };
+        }
+        return undefined;
+    } catch (e) {
+        console.error('Error fetching category hero', e);
+        return undefined;
+    }
+}
+
 
 
 

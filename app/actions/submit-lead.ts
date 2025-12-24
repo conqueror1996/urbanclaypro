@@ -56,11 +56,10 @@ export async function submitLead(formData: any) {
         const result = await writeClient.create(doc)
 
         // 3. Email Automation
-        // A. Admin Alert (for Serious Leads)
-        if (isSerious) {
-            console.log('🚀 Serious Lead Detected:', result._id)
-            sendLeadAlertEmail({ ...doc, _id: result._id }).catch(err => console.error('Admin Alert Failed', err));
-        }
+        // 3. Email Automation
+        // A. Admin Alert (Send for ALL leads now)
+        console.log('🚀 New Lead Saved:', result._id);
+        sendLeadAlertEmail({ ...doc, _id: result._id }).catch(err => console.error('Admin Alert Failed', err));
 
         if (doc.email && doc.email.includes('@')) {
             sendUserConfirmationEmail({ ...doc, _id: result._id }).catch(err => console.error('Auto-Reply Failed', err));

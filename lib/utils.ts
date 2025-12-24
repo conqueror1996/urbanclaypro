@@ -44,3 +44,7 @@ export function formatCurrency(amount: number): string {
         maximumFractionDigits: 0
     }).format(amount);
 }
+
+export function toSlug(text: string | null | undefined): string {
+    return (text || '').toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+}

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
+    const [isCollapsed, setIsCollapsed] = useState(false);
     const pathname = usePathname();
 
     useEffect(() => {
@@ -16,6 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             // Restore cookie if missing (e.g., after browser restart or cookie cleared)
             const storedPassword = localStorage.getItem('uc_admin_password');
             if (storedPassword && !document.cookie.includes('uc_admin_token=')) {
+                // Secure cookie attributes should be used in production
                 document.cookie = `uc_admin_token=${storedPassword}; path=/; max-age=31536000; SameSite=Lax`;
             }
         }
@@ -47,7 +49,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen bg-[#1a1512] flex items-center justify-center p-4 font-sans">
+            <div className="min-h-screen bg-[var(--ink)] flex items-center justify-center p-4 font-sans">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -80,29 +82,49 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     const navItems = [
         { label: 'Overview', href: '/dashboard', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg> },
+        { label: 'Journal Manager', href: '/dashboard/journal', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg> },
         { label: 'Product Catalog', href: '/dashboard/products', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
         { label: 'Categories', href: '/dashboard/categories', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg> },
         { label: 'Projects', href: '/dashboard/projects', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg> },
         { label: 'Sales Leads', href: '/dashboard/leads', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
-        { label: 'Sample Logistics', href: '/dashboard/samples', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
+        { label: 'Samples', href: '/dashboard/samples', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
         { label: 'Content Engine', href: '/dashboard/content', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg> },
         { label: 'CMS Studio', href: '/studio', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg> },
         { label: 'Settings', href: '/dashboard/settings', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
     ];
 
     return (
-        <div className="min-h-screen bg-[#f8f7f6] flex">
+        <div className="min-h-screen bg-[var(--sand)] flex font-sans">
             {/* Sidebar */}
-            <aside className="w-72 bg-[#1a1512] text-white flex flex-col fixed h-full z-50">
-                <div className="p-8">
-                    <div className="flex items-center gap-3 mb-10">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[var(--terracotta)] to-[#8a4229] rounded-xl flex items-center justify-center shadow-lg shadow-orange-900/20">
-                            <span className="font-serif font-bold text-lg">U</span>
+            <aside
+                className={`${isCollapsed ? 'w-20' : 'w-72'} bg-[var(--ink)] text-[#e9e2da] flex flex-col fixed h-full z-50 transition-all duration-300 ease-in-out border-r border-white/5 shadow-2xl`}
+            >
+                <div className={`relative ${isCollapsed ? 'p-4' : 'p-8'}`}>
+                    {/* Toggle Button */}
+                    <button
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        className="absolute -right-3 top-10 bg-[var(--terracotta)] text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform z-10"
+                    >
+                        <svg
+                            className={`w-3 h-3 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+
+                    <div className={`flex items-center gap-3 mb-10 ${isCollapsed ? 'justify-center' : ''}`}>
+                        <div className="w-10 h-10 bg-gradient-to-br from-[var(--terracotta)] to-[#8a4229] rounded-xl flex items-center justify-center shadow-lg shadow-orange-900/20 shrink-0">
+                            <span className="font-serif font-bold text-lg text-white">U</span>
                         </div>
-                        <div>
-                            <h1 className="font-serif text-lg tracking-wide leading-none">UrbanClay</h1>
-                            <span className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium">Dashboard</span>
-                        </div>
+                        {!isCollapsed && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                <h1 className="font-serif text-lg tracking-wide leading-none text-white">UrbanClay</h1>
+                                <span className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium font-sans">Dashboard</span>
+                            </motion.div>
+                        )}
                     </div>
 
                     <nav className="space-y-2">
@@ -112,33 +134,38 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all group ${isActive
+                                    title={isCollapsed ? item.label : ''}
+                                    className={`flex items-center ${isCollapsed ? 'justify-center px-0 py-3' : 'gap-4 px-4 py-3'} rounded-xl transition-all group ${isActive
                                         ? 'bg-white/10 text-white shadow-inner font-medium'
                                         : 'text-white/50 hover:text-white hover:bg-white/5'
                                         }`}
                                 >
-                                    <span className={isActive ? 'text-[var(--terracotta)]' : 'group-hover:text-[var(--terracotta)] transition-colors'}>
+                                    <span className={`${isActive ? 'text-[var(--terracotta)]' : 'group-hover:text-[var(--terracotta)] transition-colors'}`}>
                                         {item.icon(isActive)}
                                     </span>
-                                    <span className="text-sm tracking-wide">{item.label}</span>
-                                    {isActive && <motion.div layoutId="nav-indicator" className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] ml-auto" />}
+                                    {!isCollapsed && <span className="text-sm tracking-wide whitespace-nowrap">{item.label}</span>}
+                                    {!isCollapsed && isActive && <motion.div layoutId="nav-indicator" className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] ml-auto" />}
                                 </Link>
                             );
                         })}
                     </nav>
                 </div>
 
-                <div className="mt-auto p-8 border-t border-white/5">
-                    <button onClick={handleLogout} className="flex items-center gap-3 text-white/40 hover:text-red-400 transition-colors text-sm font-medium w-full group">
+                <div className={`mt-auto border-t border-white/5 ${isCollapsed ? 'p-4' : 'p-8'}`}>
+                    <button
+                        onClick={handleLogout}
+                        className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} text-white/40 hover:text-red-400 transition-colors text-sm font-medium w-full group`}
+                        title={isCollapsed ? 'Logout' : ''}
+                    >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                        <span className="group-hover:translate-x-1 transition-transform">Logout</span>
+                        {!isCollapsed && <span className="group-hover:translate-x-1 transition-transform">Logout</span>}
                     </button>
-                    <p className="text-[10px] text-white/20 mt-6 text-center">Version 2.0.4 &bull; Built by DeepMind</p>
+                    {!isCollapsed && <p className="text-[10px] text-white/20 mt-6 text-center whitespace-nowrap overflow-hidden text-ellipsis font-mono">v2.0.4 &bull; Monolith OS</p>}
                 </div>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 ml-72 p-10 overflow-y-auto min-h-screen">
+            <main className={`flex-1 ${isCollapsed ? 'ml-20' : 'ml-72'} p-10 overflow-y-auto min-h-screen transition-all duration-300 ease-in-out`}>
                 <div className="max-w-7xl mx-auto">
                     {children}
                 </div>

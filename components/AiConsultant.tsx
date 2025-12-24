@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send, User, Sparkles } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -10,10 +11,20 @@ interface Message {
 }
 
 export default function AiConsultant() {
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: "Hi! I'm Clay, your design assistant. Looking for bricks, tiles, or jaalis today?" }
-    ]);
+    const [messages, setMessages] = useState<Message[]>([]);
+
+    useEffect(() => {
+        // Intelligent Greeting based on Page Context
+        let initialGreeting = "Hi! I'm Clay, your design assistant. Looking for bricks, tiles, or jaalis today?";
+
+        if (pathname?.includes('bricks')) initialGreeting = "I see you're interested in our Exposed Wirecut Bricks. They are great for heat insulation. How can I help?";
+        if (pathname?.includes('tiles')) initialGreeting = "Our Cladding Tiles are perfect for renovations. Would you like to know about the installation process?";
+        if (pathname?.includes('jaali') || pathname?.includes('jali')) initialGreeting = "Terracotta Jaalis are excellent for passive cooling. Do you need a specific pattern?";
+
+        setMessages([{ role: 'assistant', content: initialGreeting }]);
+    }, [pathname]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -50,7 +61,7 @@ export default function AiConsultant() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     messages: [...messages, userMsg],
-                    userContext: { role: 'Visitor', city: 'India' } // Could be dynamic
+                    userContext: { role: 'Visitor', city: 'India', currentPage: pathname }
                 })
             });
 

@@ -30,17 +30,17 @@ export default async function JournalPage() {
         <div className="bg-[#FAF7F3] min-h-screen flex flex-col">
             <Header />
 
-            <main className="flex-grow pt-28">
+            <main className="flex-grow pt-32 md:pt-40">
                 {/* Visual Header */}
-                <div className="text-center mb-10 px-4">
-                    <span className="inline-block px-3 py-1 mb-4 border border-[var(--terracotta)]/20 text-[var(--terracotta)] text-[10px] font-bold uppercase tracking-[0.2em] rounded-full">
-                        Thought Leadership
-                    </span>
-                    <h1 className="font-serif text-5xl md:text-7xl text-[#2A1E16] mb-4">
+                <div className="text-center mb-16 px-4 fade-in-up">
+                    <span className="inline-block px-4 py-1 mb-6 border-b border-[var(--terracotta)] text-[var(--terracotta)] text-[10px] font-bold uppercase tracking-[0.25em]">
                         The Clay Journal
+                    </span>
+                    <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-[#2A1E16] mb-6 tracking-tight">
+                        Material & Context
                     </h1>
-                    <p className="max-w-xl mx-auto text-gray-400 text-sm md:text-base font-light">
-                        Curated stories on sustainable living, architectural innovation, and the timeless beauty of terracotta.
+                    <p className="max-w-2xl mx-auto text-gray-500 text-sm md:text-base font-light leading-relaxed">
+                        A curated dialogue on sustainable masonry, facade engineering, and the future of Indian architecture.
                     </p>
                 </div>
 

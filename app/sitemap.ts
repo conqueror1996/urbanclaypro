@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getProducts, getProjects } from '@/lib/products';
+import { CITIES } from '@/lib/locations';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://urbanclay.in';
@@ -22,11 +23,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/contact',
         '/privacy-policy',
         '/terms',
-        '/mumbai',
-        '/delhi',
-        '/bangalore',
-        '/pune',
+        '/privacy-policy',
+        '/terms',
         '/terracotta-tiles-india',
+        // Add dynamic cities
+        ...Object.keys(CITIES).map(city => `/${city}`),
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),

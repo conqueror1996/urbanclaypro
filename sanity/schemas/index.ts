@@ -14,7 +14,8 @@ import journal from './journal'
 
 import resource from './resource'
 import faq from './faq'
+import footprint from './footprint'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-    types: [product, project, homePage, aboutPage, category, guide, lead, seo, resource, journal, faq],
+    types: [product, project, homePage, aboutPage, category, guide, lead, seo, resource, journal, faq, footprint],
 }
