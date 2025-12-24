@@ -24,7 +24,8 @@ export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function Home() {
   const products = await getProducts();
-  const projects = (await getProjects()).slice(0, 3);
+  const allProjects = await getProjects();
+  const recentProjects = allProjects.slice(0, 3);
   const homePageData = await getHomePageData();
 
   const jsonLd = {
@@ -202,7 +203,7 @@ export default async function Home() {
 
       {/* Projects - White Background */}
       <ScrollReveal className="bg-white">
-        <Projects projects={projects} />
+        <Projects projects={recentProjects} />
       </ScrollReveal>
 
       {/* Tools - Sand Background */}
@@ -210,6 +211,11 @@ export default async function Home() {
         <Tools products={products} />
       </ScrollReveal>
 
+
+      {/* Project Atlas - Global Reach */}
+      <ScrollReveal className="bg-[var(--ink)]">
+        <ProjectAtlas projects={allProjects} />
+      </ScrollReveal>
 
       {/* Footer Section */}
       <ScrollReveal className="bg-white">
