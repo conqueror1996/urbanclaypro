@@ -3,7 +3,7 @@
 import { writeClient } from '@/sanity/lib/write-client';
 import { headers } from 'next/headers';
 
-export async function trackFootprint(path: string) {
+export async function trackFootprint(path: string, extraData?: { vitals?: any, errors?: string, referrer?: string }) {
     try {
         const headersList = await headers();
         const ip = headersList.get('x-forwarded-for') || 'unknown';
@@ -12,11 +12,25 @@ export async function trackFootprint(path: string) {
         // Simple Bot Filter
         if (userAgent.includes('bot') || userAgent.includes('spider')) return;
 
+        // Simple Device/Browser parsing (can be enhanced with a library like ua-parser-js if needed)
+        const isMobile = /mobile/i.test(userAgent);
+        const deviceType = isMobile ? 'Mobile' : 'Desktop';
+        let browser = 'Unknown';
+        if (userAgent.includes('Chrome')) browser = 'Chrome';
+        else if (userAgent.includes('Safari')) browser = 'Safari';
+        else if (userAgent.includes('Firefox')) browser = 'Firefox';
+        else if (userAgent.includes('Edge')) browser = 'Edge';
+
         await writeClient.create({
             _type: 'footprint',
             path: path,
             ip: ip,
             userAgent: userAgent,
+            browser,
+            deviceType,
+            vitals: extraData?.vitals || {},
+            errors: extraData?.errors || null,
+            referrer: extraData?.referrer || null,
             timestamp: new Date().toISOString(),
         });
 

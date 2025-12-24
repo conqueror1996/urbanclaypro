@@ -1,16 +1,18 @@
 import { MetadataRoute } from 'next';
 import { getProducts, getProjects } from '@/lib/products';
+import { client } from '@/sanity/lib/client';
 import { CITIES } from '@/lib/locations';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://urbanclay.in';
 
-    // Fetch dynamic content
+    // 1. ALL DYNAMIC DATA FETCHING
     const products = await getProducts();
     const projects = await getProjects();
+    const posts = await client.fetch(`*[_type == "journal"]{ "slug": slug.current, publishedAt }`);
 
-    // Static pages
-    const staticPages = [
+    // 2. STATIC PAGES
+    const staticRoutes = [
         '',
         '/products',
         '/projects',
@@ -23,19 +25,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/contact',
         '/privacy-policy',
         '/terms',
-        '/privacy-policy',
-        '/terms',
         '/terracotta-tiles-india',
-        // Add dynamic cities
-        ...Object.keys(CITIES).map(city => `/${city}`),
-    ].map((route) => ({
+    ];
+
+    const staticPages = staticRoutes.map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
         priority: route === '' ? 1 : 0.8,
     }));
 
-    // Product pages
+    // 3. CITY PAGES (High SEO Value)
+    const cityPages = Object.keys(CITIES).map((city) => ({
+        url: `${baseUrl}/${city}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.85,
+    }));
+
+    // 4. CATEGORY PAGES (Canonical Pretty URLs)
+    const categories = [
+        'wirecut-bricks',
+        'exposed-bricks',
+        'brick-wall-tiles',
+        'facades',
+        'terracotta-jaali',
+        'breeze-blocks',
+        'roof-tiles',
+        'floor-tiles'
+    ].map((slug) => ({
+        url: `${baseUrl}/products/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.9,
+    }));
+
+    // 5. PRODUCT PAGES
     const productPages = products.map((product) => ({
         url: `${baseUrl}/products/${product.category?.slug || 'collection'}/${product.slug}`,
         lastModified: new Date(),
@@ -43,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
     }));
 
-    // Project pages
+    // 6. PROJECT PAGES
     const projectPages = projects.map((project) => ({
         url: `${baseUrl}/projects/${project.slug}`,
         lastModified: new Date(),
@@ -51,19 +76,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    // Category pages (important for SEO)
-    const categories = [
-        'Exposed Brick',
-        'Brick Tiles',
-        'Jaali',
-        'Floor Tiles',
-        'Roof Tiles',
-    ].map((category) => ({
-        url: `${baseUrl}/products?category=${encodeURIComponent(category)}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.85,
+    // 7. JOURNAL / BLOG POSTS (New Content Engine)
+    const journalPages = posts.map((post: any) => ({
+        url: `${baseUrl}/journal/${post.slug}`,
+        lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.75, // Higher than generic pages, content is king
     }));
 
-    return [...staticPages, ...productPages, ...projectPages, ...categories];
+    return [
+        ...staticPages,
+        ...cityPages,
+        ...categories,
+        ...productPages,
+        ...projectPages,
+        ...journalPages
+    ];
 }

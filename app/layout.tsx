@@ -143,6 +143,7 @@ export default function RootLayout({
             <AiConsultant />
           </SampleProvider>
         </SecurityProvider>
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
       </body>
     </html>
   );

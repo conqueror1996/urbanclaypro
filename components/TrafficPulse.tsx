@@ -23,15 +23,15 @@ export default function TrafficPulse() {
         load();
     }, []);
 
-    const MetricCard = ({ label, value, delay, highlight = false }: { label: string, value: number | string, delay: number, highlight?: boolean }) => (
+    const MetricCard = ({ label, value, delay, highlight = false, subtext }: { label: string, value: number | string, delay: number, highlight?: boolean, subtext?: string }) => (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay, duration: 0.5 }}
             className={`
-                relative p-6 rounded-2xl border backdrop-blur-sm overflow-hidden
+                relative p-6 rounded-2xl border backdrop-blur-sm overflow-hidden flex flex-col justify-between
                 ${highlight
-                    ? 'bg-[var(--terracotta)] text-white border-transparent shadow-lg shadow-orange-900/20'
+                    ? 'bg-[var(--terracotta)] text-white border-transparent shadow-lg shadow-orange-900/20 col-span-2'
                     : 'bg-white border-[#e9e2da] text-[#2A1E16]'}
             `}
         >
@@ -50,17 +50,18 @@ export default function TrafficPulse() {
                         </span>
                     )}
                 </div>
+                {subtext && <p className={`text-[10px] mt-1 ${highlight ? 'text-white/60' : 'text-gray-400'}`}>{subtext}</p>}
             </div>
 
-            {/* Decorative Background Elements */}
+            {/* Decorative */}
             <div className={`absolute -right-4 -bottom-4 w-24 h-24 rounded-full opacity-10 ${highlight ? 'bg-black' : 'bg-[var(--terracotta)]'}`} />
         </motion.div>
     );
 
     if (loading) {
         return (
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 w-full animate-pulse">
-                {[...Array(5)].map((_, i) => (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full animate-pulse">
+                {[...Array(4)].map((_, i) => (
                     <div key={i} className="h-32 bg-gray-100 rounded-2xl" />
                 ))}
             </div>
@@ -69,76 +70,109 @@ export default function TrafficPulse() {
 
     if (!stats) return null;
 
+    // Health Score Logic for Color
+    const getHealthColor = (score: number) => {
+        if (score >= 90) return 'text-emerald-500';
+        if (score >= 70) return 'text-amber-500';
+        return 'text-red-500';
+    };
+
     return (
         <div className="w-full">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h2 className="text-2xl font-serif text-[#1a1512]">Footprint Tracker</h2>
-                    <p className="text-sm text-gray-500">Real-time visitor snapshots across time</p>
+                    <h2 className="text-2xl font-serif text-[#1a1512]">Site Health & Pulse</h2>
+                    <p className="text-sm text-gray-500">Real-time performance and traffic diagnostics</p>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-                    {stats.isDemo ? (
-                        <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded">
-                            Demo Mode
-                        </span>
-                    ) : (
-                        <div className="flex items-center gap-2 text-[var(--terracotta)]">
-                            <span className="w-2 h-2 bg-[var(--terracotta)] rounded-full animate-pulse" />
-                            Live Data
-                        </div>
-                    )}
+                    <span className={`w-2 h-2 rounded-full animate-pulse ${stats.errorCount > 0 ? 'bg-red-500' : 'bg-emerald-500'}`} />
+                    {stats.errorCount > 0 ? 'System Alert' : 'System Healthy'}
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+
+                {/* HERO: SITE HEALTH SCORE */}
+                <div className="lg:col-span-2 bg-white border border-[#e9e2da] rounded-2xl p-6 flex flex-col items-center justify-center relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-transparent" />
+                    <div className="relative z-10 text-center">
+                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-4">Site Health Score</p>
+                        <div className="relative inline-flex items-center justify-center">
+                            <svg className="w-32 h-32 transform -rotate-90">
+                                <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-100" />
+                                <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent"
+                                    strokeDasharray={351.86}
+                                    strokeDashoffset={351.86 - (351.86 * stats.healthScore) / 100}
+                                    className={`${getHealthColor(stats.healthScore)} transition-all duration-1000`}
+                                />
+                            </svg>
+                            <span className={`absolute text-4xl font-bold font-serif ${getHealthColor(stats.healthScore)}`}>
+                                {stats.healthScore}
+                            </span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-4">
+                            Based on Performance (LCP) & Stability
+                        </p>
+                    </div>
+                </div>
+
+                {/* SEO HERO */}
+                <div className="lg:col-span-2 bg-[#1a1512] border border-transparent rounded-2xl p-6 flex flex-col items-center justify-center relative overflow-hidden text-white shadow-lg">
+                    <p className="text-xs text-white/40 font-bold uppercase tracking-wider mb-4">SEO Health</p>
+                    <div className="text-center mb-4">
+                        <span className="text-5xl font-serif font-bold text-[var(--terracotta)]">{stats.seoScore}</span>
+                        <span className="text-sm text-white/40 ml-1">/ 100</span>
+                    </div>
+                    <div className="w-full flex justify-between px-8 text-xs text-center">
+                        <div>
+                            <span className="block font-bold text-white text-lg">{stats.organicCount}</span>
+                            <span className="text-white/40">Organic Visits</span>
+                        </div>
+                        <div>
+                            <span className={`block font-bold text-lg ${stats.avgLcp < 2500 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                {(stats.avgLcp / 1000).toFixed(1)}s
+                            </span>
+                            <span className="text-white/40">Load Time</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Performance Metric */}
                 <MetricCard
-                    label="Today"
-                    value={stats.today}
-                    delay={0}
-                    highlight
-                />
-                <MetricCard
-                    label="Yesterday"
-                    value={stats.yesterday}
+                    label="Avg LCP Speed"
+                    value={`${(stats.avgLcp / 1000).toFixed(2)}s`}
                     delay={0.1}
+                    subtext={stats.avgLcp < 2500 ? "Excellent Speed" : "Needs Optimization"}
                 />
+
+                {/* Error Metric */}
                 <MetricCard
-                    label="1 Month Ago"
-                    value={stats.lastMonth}
+                    label="Issues Detected"
+                    value={stats.errorCount}
                     delay={0.2}
+                    subtext="Recent JavaScript Errors"
+                    highlight={stats.errorCount > 0}
                 />
+
+                {/* TRAFFIC HERO */}
                 <MetricCard
-                    label="3 Months Ago"
-                    value={stats.threeMonthsAgo}
+                    label="Today's Traffic"
+                    value={stats.today}
                     delay={0.3}
-                />
-                <MetricCard
-                    label="8 Months Ago"
-                    value={stats.eightMonthsAgo}
-                    delay={0.4}
+                    highlight={stats.errorCount === 0}
+                    subtext={`vs Yesterday: ${stats.yesterday}`}
                 />
             </div>
 
-            {/* Helper Message for Demo Mode to guide user to Real Data */}
-            {stats.isDemo && (
-                <div className="mt-4 p-3 bg-gray-50 border border-gray-100 rounded-lg flex flex-col gap-2 text-xs text-gray-500">
-                    {stats.error && (
-                        <div className="p-2 bg-red-50 text-red-600 border border-red-100 rounded mb-2">
-                            <strong>Connection Error:</strong> {stats.error}
-                        </div>
-                    )}
-                    <div className="flex items-center gap-3">
-                        <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <p><span className="font-bold text-gray-700">Viewing Simulated Data.</span> To connect real Google Analytics feed:</p>
-                    </div>
-                    <code className="bg-white p-2 border rounded text-xs text-gray-600 block overflow-x-auto">
-                        GA_PROPERTY_ID=your_id<br />
-                        GA_CLIENT_EMAIL=your_email<br />
-                        GA_PRIVATE_KEY="your_key"
-                    </code>
-                    <p className="text-[10px] text-gray-500 italic border-t border-gray-100 pt-2 mt-1">
-                        ⚠️ <strong>Server Restart Required:</strong> If you just added these variables, stop and restart your server (<code className="bg-gray-100 px-1">npm run dev</code>) to load them.
-                    </p>
+            {/* Recent Errors Log (Only show if errors exist) */}
+            {stats.recentErrors && stats.recentErrors.length > 0 && (
+                <div className="mt-6 p-4 bg-red-50 border border-red-100 rounded-xl">
+                    <h4 className="text-sm font-bold text-red-800 mb-2">Recent System Errors</h4>
+                    <ul className="space-y-1">
+                        {stats.recentErrors.map((err: string, i: number) => (
+                            <li key={i} className="text-xs text-red-600 font-mono break-all">• {err}</li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </div>

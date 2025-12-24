@@ -9,6 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
 
     useEffect(() => {
@@ -93,17 +94,58 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         { label: 'Settings', href: '/dashboard/settings', icon: (active: boolean) => <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
     ];
 
+
+
     return (
-        <div className="min-h-screen bg-[var(--sand)] flex font-sans">
+        <div className="min-h-screen bg-[var(--sand)] flex flex-col md:flex-row font-sans">
+
+            {/* Mobile Header */}
+            <div className="md:hidden bg-[var(--ink)] text-white p-4 flex items-center justify-between sticky top-0 z-40 shadow-md">
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-[var(--terracotta)] to-[#8a4229] rounded-lg flex items-center justify-center shrink-0">
+                        <span className="font-serif font-bold text-sm text-white">U</span>
+                    </div>
+                    <span className="font-serif text-lg tracking-wide">UrbanClay</span>
+                </div>
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="p-2 text-white/80 hover:text-white"
+                >
+                    {isMobileMenuOpen ? (
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                    ) : (
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    )}
+                </button>
+            </div>
+
+            {/* Sidebar Overlay for Mobile */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Sidebar */}
             <aside
-                className={`${isCollapsed ? 'w-20' : 'w-72'} bg-[var(--ink)] text-[#e9e2da] flex flex-col fixed h-full z-50 transition-all duration-300 ease-in-out border-r border-white/5 shadow-2xl`}
+                className={`
+                    fixed inset-y-0 left-0 z-50 h-full bg-[var(--ink)] text-[#e9e2da] flex flex-col border-r border-white/5 shadow-2xl transition-transform duration-300 ease-in-out
+                    ${isCollapsed ? 'md:w-20' : 'md:w-72'}
+                    w-64 
+                    ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+                `}
             >
-                <div className={`relative ${isCollapsed ? 'p-4' : 'p-8'}`}>
-                    {/* Toggle Button */}
+                <div className={`relative ${isCollapsed ? 'md:p-4' : 'p-6 md:p-8'}`}>
+                    {/* Desktop Collapse Toggle */}
                     <button
                         onClick={() => setIsCollapsed(!isCollapsed)}
-                        className="absolute -right-3 top-10 bg-[var(--terracotta)] text-white w-6 h-6 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform z-10"
+                        className="hidden md:flex absolute -right-3 top-10 bg-[var(--terracotta)] text-white w-6 h-6 rounded-full items-center justify-center shadow-md hover:scale-110 transition-transform z-10"
                     >
                         <svg
                             className={`w-3 h-3 transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}
@@ -115,27 +157,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         </svg>
                     </button>
 
-                    <div className={`flex items-center gap-3 mb-10 ${isCollapsed ? 'justify-center' : ''}`}>
+                    <div className={`flex items-center gap-3 mb-8 md:mb-10 ${isCollapsed ? 'md:justify-center' : ''}`}>
                         <div className="w-10 h-10 bg-gradient-to-br from-[var(--terracotta)] to-[#8a4229] rounded-xl flex items-center justify-center shadow-lg shadow-orange-900/20 shrink-0">
                             <span className="font-serif font-bold text-lg text-white">U</span>
                         </div>
-                        {!isCollapsed && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                                <h1 className="font-serif text-lg tracking-wide leading-none text-white">UrbanClay</h1>
-                                <span className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium font-sans">Dashboard</span>
-                            </motion.div>
+                        {(!isCollapsed || isMobileMenuOpen) && (
+                            <div className="md:block block">
+                                {/* Always show text on mobile since mobile sidebar is fixed width */}
+                                <h1 className={`font-serif text-lg tracking-wide leading-none text-white ${isCollapsed && !isMobileMenuOpen ? 'md:hidden' : ''}`}>UrbanClay</h1>
+                                <span className={`text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium font-sans ${isCollapsed && !isMobileMenuOpen ? 'md:hidden' : ''}`}>Dashboard</span>
+                            </div>
                         )}
                     </div>
 
-                    <nav className="space-y-2">
+                    <nav className="space-y-1 md:space-y-2">
                         {navItems.map((item) => {
                             const isActive = pathname === item.href;
                             return (
                                 <Link
                                     key={item.href}
                                     href={item.href}
+                                    onClick={() => setIsMobileMenuOpen(false)} // Close menu on click (mobile)
                                     title={isCollapsed ? item.label : ''}
-                                    className={`flex items-center ${isCollapsed ? 'justify-center px-0 py-3' : 'gap-4 px-4 py-3'} rounded-xl transition-all group ${isActive
+                                    className={`flex items-center ${isCollapsed ? 'md:justify-center md:px-0 md:py-3' : 'gap-4 px-4 py-3'} px-4 py-3 rounded-xl transition-all group ${isActive
                                         ? 'bg-white/10 text-white shadow-inner font-medium'
                                         : 'text-white/50 hover:text-white hover:bg-white/5'
                                         }`}
@@ -143,29 +187,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     <span className={`${isActive ? 'text-[var(--terracotta)]' : 'group-hover:text-[var(--terracotta)] transition-colors'}`}>
                                         {item.icon(isActive)}
                                     </span>
-                                    {!isCollapsed && <span className="text-sm tracking-wide whitespace-nowrap">{item.label}</span>}
-                                    {!isCollapsed && isActive && <motion.div layoutId="nav-indicator" className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] ml-auto" />}
+                                    {(!isCollapsed || isMobileMenuOpen) && (
+                                        <span className={`text-sm tracking-wide whitespace-nowrap ${isCollapsed && !isMobileMenuOpen ? 'md:hidden' : ''}`}>{item.label}</span>
+                                    )}
+                                    {(!isCollapsed || isMobileMenuOpen) && isActive && <div className={`w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] ml-auto ${isCollapsed && !isMobileMenuOpen ? 'md:hidden' : ''}`} />}
                                 </Link>
                             );
                         })}
                     </nav>
                 </div>
 
-                <div className={`mt-auto border-t border-white/5 ${isCollapsed ? 'p-4' : 'p-8'}`}>
+                <div className={`mt-auto border-t border-white/5 ${isCollapsed ? 'md:p-4' : 'p-6 md:p-8'}`}>
                     <button
                         onClick={handleLogout}
-                        className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} text-white/40 hover:text-red-400 transition-colors text-sm font-medium w-full group`}
+                        className={`flex items-center ${isCollapsed ? 'md:justify-center' : 'gap-3'} text-white/40 hover:text-red-400 transition-colors text-sm font-medium w-full group`}
                         title={isCollapsed ? 'Logout' : ''}
                     >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-                        {!isCollapsed && <span className="group-hover:translate-x-1 transition-transform">Logout</span>}
+                        {(!isCollapsed || isMobileMenuOpen) && <span className={`group-hover:translate-x-1 transition-transform ${isCollapsed && !isMobileMenuOpen ? 'md:hidden' : ''}`}>Logout</span>}
                     </button>
-                    {!isCollapsed && <p className="text-[10px] text-white/20 mt-6 text-center whitespace-nowrap overflow-hidden text-ellipsis font-mono">v2.0.4 &bull; Monolith OS</p>}
+                    {(!isCollapsed || isMobileMenuOpen) && <p className={`text-[10px] text-white/20 mt-6 text-center whitespace-nowrap overflow-hidden text-ellipsis font-mono ${isCollapsed && !isMobileMenuOpen ? 'md:hidden' : ''}`}>v2.0.4 &bull; Monolith OS</p>}
                 </div>
             </aside>
 
             {/* Main Content */}
-            <main className={`flex-1 ${isCollapsed ? 'ml-20' : 'ml-72'} p-10 overflow-y-auto min-h-screen transition-all duration-300 ease-in-out`}>
+            <main className={`flex-1 transition-all duration-300 ease-in-out p-4 md:p-10 overflow-y-auto min-h-[calc(100vh-64px)] md:min-h-screen
+                ${isCollapsed ? 'md:ml-20' : 'md:ml-72'} 
+                ml-0
+            `}>
                 <div className="max-w-7xl mx-auto">
                     {children}
                 </div>
