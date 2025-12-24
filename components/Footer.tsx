@@ -1,13 +1,16 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Footer() {
     return (
         <footer id="contact" className="bg-[#2A1E16] text-white border-t border-white/10">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 md:py-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
-                    {/* Column 1: Brand */}
+                    {/* Column 1: Brand (Always Visible) */}
                     <div className="space-y-6">
                         <Link href="/" className="block">
                             <Image
@@ -17,22 +20,19 @@ export default function Footer() {
                                 height={40}
                                 className="h-10 w-auto opacity-90 brightness-0 invert"
                             />
-                            {/* Fallback if no white logo image exists yet, we can use text or filter */}
                         </Link>
                         <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
                             India's premier manufacturer of sustainable terracotta tiles, brick cladding, and architectural facades.
                         </p>
                         <div className="flex items-center gap-4">
-                            {/* Social Icons */}
                             <SocialLink href="https://www.instagram.com/urbanclay.in/" label="Instagram" icon="instagram" />
                             <SocialLink href="https://linkedin.com/company/urbanclay" label="LinkedIn" icon="linkedin" />
                             <SocialLink href="https://x.com/urbanclayindia" label="X (Twitter)" icon="twitter" />
                         </div>
                     </div>
 
-                    {/* Column 2: Products */}
-                    <div>
-                        <h3 className="font-serif text-lg mb-6 text-[#d8b09a]">Products</h3>
+                    {/* Column 2: Products (Accordion on Mobile) */}
+                    <FooterSection title="Products">
                         <ul className="space-y-4 text-sm text-gray-400">
                             <li><FooterLink href="/products/exposed-bricks">Exposed Wirecut Bricks</FooterLink></li>
                             <li><FooterLink href="/products/brick-wall-tiles">Brick Cladding Tiles</FooterLink></li>
@@ -41,11 +41,10 @@ export default function Footer() {
                             <li><FooterLink href="/products/clay-floor-tiles">Floor & Roof Tiles</FooterLink></li>
                             <li><FooterLink href="/products/clay-ceiling-tiles">Ceiling Tiles</FooterLink></li>
                         </ul>
-                    </div>
+                    </FooterSection>
 
-                    {/* Column 3: Resources */}
-                    <div>
-                        <h3 className="font-serif text-lg mb-6 text-[#d8b09a]">Resources</h3>
+                    {/* Column 3: Resources (Accordion on Mobile) */}
+                    <FooterSection title="Resources">
                         <ul className="space-y-4 text-sm text-gray-400">
                             <li><FooterLink href="/journal">The Clay Journal</FooterLink></li>
                             <li><FooterLink href="/resources">Installation Guides</FooterLink></li>
@@ -54,25 +53,24 @@ export default function Footer() {
                             <li><FooterLink href="/architects">For Architects</FooterLink></li>
                             <li><FooterLink href="/guide">Selection Guide</FooterLink></li>
                         </ul>
-                    </div>
+                    </FooterSection>
 
-                    {/* Column 4: Company & Contact */}
-                    <div>
-                        <h3 className="font-serif text-lg mb-6 text-[#d8b09a]">Company</h3>
+                    {/* Column 4: Company (Accordion on Mobile) */}
+                    <FooterSection title="Company">
                         <ul className="space-y-4 text-sm text-gray-400">
                             <li><FooterLink href="/our-story">Our Story</FooterLink></li>
                             <li><FooterLink href="/contact">Contact Us</FooterLink></li>
-                            <li className="pt-4">
-                                <p className="text-xs uppercase tracking-wider text-gray-500 mb-1">Sales & Support</p>
-                                <a href="tel:+918080081951" className="block text-white hover:text-[#d8b09a] transition-colors font-medium">+91 80800 81951</a>
-                                <a href="tel:+917977107611" className="block text-white hover:text-[#d8b09a] transition-colors font-medium">+91 79771 07611</a>
+                            <li><FooterLink href="/#quote"><span className="text-[#ea580c] font-medium">Request a Quote</span></FooterLink></li>
+                            <li className="pt-4 border-t border-white/5 mt-4">
+                                <p className="text-xs uppercase tracking-wider text-gray-500 mb-2">Sales & Support</p>
+                                <a href="tel:+918080081951" className="block text-white hover:text-[#d8b09a] transition-colors font-medium mb-1">+91 80800 81951</a>
                                 <a href="mailto:sales@urbanclay.in" className="block text-white hover:text-[#d8b09a] transition-colors font-medium">sales@urbanclay.in</a>
                             </li>
                         </ul>
-                    </div>
+                    </FooterSection>
                 </div>
 
-                <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                <div className="mt-12 md:mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500 text-center md:text-left">
                     <p>© {new Date().getFullYear()} UrbanClay. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
@@ -80,6 +78,7 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
+
             {/* Sub-footer Strip */}
             <a
                 href="https://superbuildindia.com"
@@ -88,7 +87,6 @@ export default function Footer() {
                 className="block w-full bg-[#F7F7F7] border-t border-[#E5E5E5] py-4 text-center group transition-colors duration-300 hover:bg-[#F0F0F0]"
             >
                 <div className="flex items-center justify-center gap-3">
-                    {/* Minimal Building + Checkmark Icon */}
                     <svg
                         className="w-5 h-5 text-[#6B6B6B] opacity-80 group-hover:text-[#B14A2A] group-hover:opacity-100 transition-all duration-300"
                         viewBox="0 0 24 24"
@@ -108,6 +106,35 @@ export default function Footer() {
                 </div>
             </a>
         </footer>
+    );
+}
+
+// Mobile Accordion Component
+function FooterSection({ title, children }: { title: string, children: React.ReactNode }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="border-b border-white/10 md:border-none pb-4 md:pb-0">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center justify-between w-full md:cursor-default md:mb-6 group"
+            >
+                <h3 className="font-serif text-lg text-[#d8b09a]">{title}</h3>
+                {/* Plus/Minus Icon - Only visible on mobile */}
+                <span className={`md:hidden text-[#d8b09a] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+                    {isOpen ? (
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
+                    ) : (
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    )}
+                </span>
+            </button>
+
+            {/* Content: Always visible on Desktop, Collapsible on Mobile */}
+            <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0 md:max-h-none md:opacity-100 md:mt-0'}`}>
+                {children}
+            </div>
+        </div>
     );
 }
 

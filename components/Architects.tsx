@@ -27,7 +27,7 @@ export default function Architects() {
                         <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-[10px] md:text-xs font-semibold tracking-wider uppercase mb-4 md:mb-6 border border-white/10">
                             Professional Resources
                         </span>
-                        <h3 className="text-2xl md:text-5xl font-serif mb-4 md:mb-6 leading-tight">
+                        <h3 className="text-3xl md:text-5xl font-serif mb-4 md:mb-6 leading-tight">
                             For Architects & <br className="hidden md:block" /> Designers
                         </h3>
                         <p className="text-sm md:text-lg text-white/70 mb-8 md:mb-10 leading-relaxed max-w-md mx-auto lg:mx-0">
@@ -38,7 +38,7 @@ export default function Architects() {
                                 onClick={() => setIsModalOpen(true)}
                                 className="btn-secondary border-none shadow-lg hover:shadow-xl w-full sm:w-auto py-3 md:py-4 text-sm md:text-base"
                             >
-                                Access Technical Library
+                                Access Library
                             </button>
                             <motion.button
                                 onClick={() => setIsSampleModalOpen(true)}
@@ -46,13 +46,13 @@ export default function Architects() {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                Order Sample Box
+                                Order Samples
                             </motion.button>
                         </div>
                     </div>
 
-                    {/* Visual Element */}
-                    <div className="relative h-full min-h-[400px] bg-white/5 rounded-3xl border border-white/10 p-6 backdrop-blur-sm overflow-hidden group">
+                    {/* Visual Element - Hidden on Mobile to save space per user request */}
+                    <div className="relative hidden md:block h-full min-h-[400px] bg-white/5 rounded-3xl border border-white/10 p-6 backdrop-blur-sm overflow-hidden group">
                         {/* Grid Background */}
                         <div className="absolute inset-0 opacity-20"
                             style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
@@ -135,3 +135,4 @@ export default function Architects() {
         </section>
     );
 }
+
