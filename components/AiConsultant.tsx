@@ -80,6 +80,13 @@ export default function AiConsultant() {
         }
     };
 
+    // Hide on backend dashboard and product detail pages
+    const segments = pathname ? pathname.split('/').filter(Boolean) : [];
+    const isHidden = pathname?.startsWith('/dashboard') ||
+        (segments[0] === 'products' && segments.length >= 3);
+
+    if (isHidden) return null;
+
     return (
         <>
             {/* FLOATING TRIGGER */}
