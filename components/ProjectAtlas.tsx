@@ -103,12 +103,12 @@ export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
     }, [projects]);
 
     return (
-        <section className="py-16 md:py-24 bg-[#2A1E16] text-white overflow-hidden relative">
+        <section className="py-10 md:py-24 bg-[#2A1E16] text-white overflow-hidden relative">
             {/* Background Texture */}
             <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
 
                     {/* Text Content */}
                     <motion.div
@@ -117,23 +117,23 @@ export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                     >
-                        <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Project Atlas</span>
-                        <h2 className="text-4xl md:text-5xl font-serif mb-6 leading-tight">
+                        <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-2 block">Project Atlas</span>
+                        <h2 className="text-3xl md:text-5xl font-serif mb-4 md:mb-6 leading-tight">
                             Building India,<br />
                             <span className="text-white/50">One Brick at a Time.</span>
                         </h2>
-                        <p className="text-white/60 text-lg max-w-md mb-8 leading-relaxed">
+                        <p className="text-white/60 text-base md:text-lg max-w-md mb-6 md:mb-8 leading-relaxed">
                             From the humid coasts of Chennai to the dry heat of Jaipur, our terracotta products are trusted by architects across the subcontinent for their durability and timeless appeal.
                         </p>
 
-                        <div className="grid grid-cols-2 gap-8">
+                        <div className="grid grid-cols-2 gap-6 md:gap-8 mb-8 lg:mb-0">
                             <div>
-                                <div className="text-3xl font-bold text-[var(--terracotta)] mb-1">50+</div>
-                                <div className="text-sm text-white/40 uppercase tracking-wider">Cities Delivered</div>
+                                <div className="text-2xl md:text-3xl font-bold text-[var(--terracotta)] mb-1">50+</div>
+                                <div className="text-xs md:text-sm text-white/40 uppercase tracking-wider">Cities Delivered</div>
                             </div>
                             <div>
-                                <div className="text-3xl font-bold text-[var(--terracotta)] mb-1">200+</div>
-                                <div className="text-sm text-white/40 uppercase tracking-wider">Projects Completed</div>
+                                <div className="text-2xl md:text-3xl font-bold text-[var(--terracotta)] mb-1">200+</div>
+                                <div className="text-xs md:text-sm text-white/40 uppercase tracking-wider">Projects Completed</div>
                             </div>
                         </div>
                     </motion.div>
@@ -144,7 +144,7 @@ export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative aspect-[4/5] md:aspect-square lg:aspect-[4/5] w-full max-w-lg mx-auto"
+                        className="relative aspect-[3/4] md:aspect-square lg:aspect-[4/5] w-[60%] md:w-full max-w-md mx-auto mt-4 md:mt-0"
                     >
                         {/* India Map SVG */}
                         <svg
