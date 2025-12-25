@@ -9,6 +9,9 @@ const client = createClient({
     apiVersion: '2023-05-03',
 });
 
+// Force Node.js runtime to support Nodemailer
+export const runtime = 'nodejs';
+
 export async function POST(request: Request) {
     try {
         const body = await request.json();
