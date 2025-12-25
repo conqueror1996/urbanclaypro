@@ -16,7 +16,7 @@ export default function TextReveal({ text, className = '', delay = 0, highlightW
         hidden: { opacity: 0 },
         visible: (i = 1) => ({
             opacity: 1,
-            transition: { staggerChildren: 0.12, delayChildren: delay * 0.1 }
+            transition: { staggerChildren: 0.08, delayChildren: delay * 0.1 }
         })
     };
 
@@ -46,8 +46,7 @@ export default function TextReveal({ text, className = '', delay = 0, highlightW
             className={`flex flex-wrap overflow-hidden ${className}`}
             variants={container}
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+            animate="visible"
         >
             {words.map((word, index) => {
                 const isHighlighted = highlightWords.some(hw => word.toLowerCase().includes(hw.toLowerCase()));

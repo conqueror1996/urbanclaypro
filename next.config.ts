@@ -7,7 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig: NextConfig = {
   /* Performance Optimizations */
-  output: 'standalone', // Required for Hostinger/VPS deployment
+  output: 'standalone',
   reactCompiler: true,
 
   // Compression
@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
+    unoptimized: false,
     remotePatterns: [
       {
         protocol: 'https',

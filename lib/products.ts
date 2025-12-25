@@ -9,7 +9,7 @@ try {
         apiVersion: '2024-11-28',
         dataset: 'production',
         projectId: '22qqjddz',
-        useCdn: false, // Keep CDN disabled in development for faster updates
+        useCdn: true, // Enable CDN for production speed
     });
 } catch (e) {
     console.error("Sanity client creation failed:", e);

@@ -18,21 +18,21 @@ export default function PremiumImage({
     alt,
     ...props
 }: PremiumImageProps) {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(!props.priority);
 
     return (
         <div
             className={`relative overflow-hidden ${backgroundColor} ${containerClassName}`}
         >
-            {/* Loading Shimmer Overlay */}
-            {isLoading && (
+            {/* Loading Shimmer Overlay - Only show if not priority or still loading */}
+            {isLoading && !props.priority && (
                 <div
                     className={`absolute inset-0 z-10 w-full h-full animate-slide-shimmer ${shimmerColor}`}
                 />
             )}
 
             <Image
-                className={`transition-all duration-700 ease-out ${isLoading ? 'scale-105 blur-lg opacity-0' : 'scale-100 blur-0 opacity-100'
+                className={`transition-all duration-700 ease-out ${isLoading && !props.priority ? 'scale-105 blur-lg opacity-0' : 'scale-100 blur-0 opacity-100'
                     } ${className}`}
                 onLoad={() => setIsLoading(false)}
                 alt={alt}

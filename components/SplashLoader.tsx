@@ -7,9 +7,10 @@ export default function SplashLoader() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        // Minimal delay for quick branding without LCP penalty
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 2000); // Show splash for 2 seconds
+        }, 300);
         return () => clearTimeout(timer);
     }, []);
 
