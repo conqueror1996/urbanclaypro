@@ -56,6 +56,7 @@ export async function POST(request: Request) {
 
                 await transporter.sendMail({
                     from: `"Urban Clay" <${process.env.SMTP_USER}>`,
+                    replyTo: "urbanclay@claytile.in",
                     to: clientEmail,
                     subject: "Project Completion & Feedback Request - Urban Clay",
                     html: `
