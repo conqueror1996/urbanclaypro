@@ -4,7 +4,7 @@ import { client } from '@/sanity/lib/client';
 import { CITIES } from '@/lib/locations';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://urbanclay.in';
+    const baseUrl = 'https://claytile.in';
 
     // 1. ALL DYNAMIC DATA FETCHING
     const products = await getProducts();

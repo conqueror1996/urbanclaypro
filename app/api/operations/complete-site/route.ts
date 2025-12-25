@@ -74,7 +74,7 @@ export async function POST(request: Request) {
                 emailSent = true;
             } else {
                 console.warn('[EMAIL] SMTP credentials missing. Logged instead.');
-                console.log(`[EMAIL-MOCK] Link: https://urbanclay.com/feedback/${siteId}`);
+                console.log(`[EMAIL-MOCK] Link: https://claytile.in/feedback/${siteId}`);
             }
         } catch (emailErr: any) {
             console.error('Email sending failed:', emailErr);

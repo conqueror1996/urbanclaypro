@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 import { SEO_KEYWORDS } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://urbanclay.in'),
+  metadataBase: new URL('https://claytile.in'),
   title: {
     default: "Buy Premium Terracotta Tiles Online India | UrbanClay - Free Samples",
     template: "%s | UrbanClay India"
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "UrbanClay - Premium Terracotta Tiles & Jaali Panels | Pan-India",
     description: "India's trusted source for low-efflorescence terracotta tiles, jaali panels & architectural cladding. Serving 100+ cities nationwide with premium quality.",
-    url: 'https://urbanclay.in',
+    url: 'https://claytile.in',
     siteName: 'UrbanClay',
     locale: 'en_IN',
     type: "website",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     apple: '/apple-icon.png',
   },
   alternates: {
-    canonical: 'https://urbanclay.in',
+    canonical: 'https://claytile.in',
   },
   robots: {
     index: true,

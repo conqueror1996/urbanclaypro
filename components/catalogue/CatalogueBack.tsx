@@ -25,14 +25,14 @@ export default function CatalogueBack() {
                 <div className="space-y-4">
                     <div className="flex flex-col gap-1 items-center">
                         <span className="text-xs font-bold uppercase tracking-widest text-[#c45d3f]">Contact</span>
-                        <p className="font-light text-lg">hello@urbanclay.com</p>
+                        <p className="font-light text-lg">urbanclay@claytile.in</p>
                         <p className="font-light text-lg">+91 98765 43210</p>
                     </div>
                 </div>
 
                 {/* Website */}
                 <div className="pt-12 border-t border-white/10 w-full">
-                    <p className="text-2xl font-serif italic">www.urbanclay.com</p>
+                    <p className="text-2xl font-serif italic">www.claytile.in</p>
                 </div>
 
             </div>

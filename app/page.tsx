@@ -33,28 +33,28 @@ export default async function Home() {
     '@graph': [
       {
         '@type': 'WebSite',
-        '@id': 'https://urbanclay.in/#website',
+        '@id': 'https://claytile.in/#website',
         name: 'UrbanClay',
-        url: 'https://urbanclay.in',
+        url: 'https://claytile.in',
         potentialAction: {
           '@type': 'SearchAction',
-          target: 'https://urbanclay.in/products?search={search_term_string}',
+          target: 'https://claytile.in/products?search={search_term_string}',
           'query-input': 'required name=search_term_string'
         }
       },
       {
         '@type': 'LocalBusiness',
-        '@id': 'https://urbanclay.in/#place',
+        '@id': 'https://claytile.in/#place',
         name: 'UrbanClay',
         legalName: 'UrbanClay',
-        url: 'https://urbanclay.in',
-        logo: 'https://urbanclay.in/urbanclay-logo.png',
-        image: 'https://urbanclay.in/urbanclay-logo.png',
+        url: 'https://claytile.in',
+        logo: 'https://claytile.in/urbanclay-logo.png',
+        image: 'https://claytile.in/urbanclay-logo.png',
         description: 'Leading manufacturer and supplier of premium terracotta tiles, clay brick tiles, jaali panels, and architectural cladding across India. Serving architects, builders, and contractors nationwide.',
 
         // Contact Information
         telephone: '+91-8080081951',
-        email: 'sales@urbanclay.in',
+        email: 'urbanclay@claytile.in',
 
         // Address
         address: {
