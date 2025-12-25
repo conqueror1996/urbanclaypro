@@ -19,26 +19,21 @@
 
 ## Part 2: Connect Email (`urbanclay@claytile.in`)
 
-Since you bought the domain from GoDaddy, you likely have **Microsoft 365** (Outlook) as the email provider included (or purchased separately). We need to get the **SMTP Settings** so your website can send emails *as* you.
+**If you are using Titan Email:** You can skip this section! Titan enables SMTP by default. Just grab your password and jump to **Part 3**.
 
-### Step A: Enable SMTP (Critical!)
+**If you are using Microsoft 365 (Outlook):** Follow the steps below.
+
+### Step A: Enable SMTP (Critical for Microsoft 365)
 GoDaddy/Microsoft blocks "sending via code" by default. You must enable "Authenticated SMTP".
 
-1.  **Log in to GoDaddy**.
-2.  Go to your **My Products** page.
-3.  Scroll down to **Email & Office** and click **Manage All** (or "Manage" button next to your new email).
-4.  In the Dashboard, look for a section called **"Users"** or **"Account Information"**.
-5.  There should be a link that says **"Advanced Admin"** or **"Sign in to Microsoft Exchange"** or **"Microsoft 365 Admin Center"**.
-    *   *Tip: It is usually a small link at the bottom or left sidebar.*
-    *   *Direct Link Attempt (Try this if you are already logged in):* `https://admin.microsoft.com/` (If it redirects you to GoDaddy, use the link inside GoDaddy dashboard).
-
-6.  Once in the **Microsoft 365 Admin Center**:
-    *   Go to **Users** -> **Active Users**.
-    *   Click on `urbanclay@claytile.in`.
-    *   A side panel will open. Click the **Mail** tab.
-    *   Click **Manage email apps**.
-    *   **Check** the box for `Authenticated SMTP`.
-    *   Click **Save changes**.
+1.  Log in to the **Microsoft 365 Admin Center** (using your `urbanclay@claytile.in` login).
+    *   *Link is usually found in your GoDaddy Email Dashboard > "Advanced Admin".*
+2.  Go to **Users** -> **Active Users**.
+3.  Click on `urbanclay@claytile.in`.
+4.  Click the **Mail** tab.
+5.  Click **Manage email apps**.
+6.  **Check** the box for `Authenticated SMTP`.
+7.  Click **Save changes**.
 
 ### Step B: Get Your Credentials
 You will use your email password. If you have "2-Factor Authentication" (2FA) on, you **cannot** use your normal password. You must generate an **App Password**.
@@ -53,12 +48,12 @@ Now tell Vercel to use these new details.
 1.  Go to **Vercel** -> **Settings** -> **Environment Variables**.
 2.  **Edit** (or Add) the following variables:
 
-| Variable | Value (If using GoDaddy/Microsoft 365) |
-| :--- | :--- |
-| `SMTP_HOST` | `smtp.office365.com` |
-| `SMTP_PORT` | `587` |
-| `SMTP_USER` | `urbanclay@claytile.in` |
-| `SMTP_PASS` | *(Your Email Password or App Password)* |
+| Variable | Value (If using **Titan Email**) | Value (If using Microsoft 365) |
+| :--- | :--- | :--- |
+| `SMTP_HOST` | `smtp.titan.email` | `smtp.office365.com` |
+| `SMTP_PORT` | `465` | `587` |
+| `SMTP_USER` | `urbanclay@claytile.in` | `urbanclay@claytile.in` |
+| `SMTP_PASS` | *(Your Titan Password)* | *(Your Email/App Password)* |
 
 3.  **Redeploy** your app (go to Deployments -> click the three dots -> Redeploy) for changes to take effect.
 
