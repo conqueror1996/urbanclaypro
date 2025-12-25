@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createClient } from 'next-sanity';
 
+import { projectId, dataset, apiVersion } from '@/sanity/env';
+
 const client = createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    projectId,
+    dataset,
+    apiVersion,
     useCdn: false,
     token: process.env.SANITY_API_TOKEN,
-    apiVersion: '2023-05-03',
 });
 
 // Force Node.js runtime to support Nodemailer
