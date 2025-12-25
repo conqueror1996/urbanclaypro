@@ -35,6 +35,7 @@ export async function POST(request: Request) {
             if (process.env.SMTP_HOST && process.env.SMTP_USER) {
                 const nodemailer = require('nodemailer');
                 const port = parseInt(process.env.SMTP_PORT || '587');
+
                 const transporter = nodemailer.createTransport({
                     host: process.env.SMTP_HOST,
                     port: port,
@@ -56,7 +57,6 @@ export async function POST(request: Request) {
 
                 await transporter.sendMail({
                     from: `"Urban Clay" <${process.env.SMTP_USER}>`,
-                    replyTo: "urbanclay@claytile.in",
                     to: clientEmail,
                     subject: "Project Completion & Feedback Request - Urban Clay",
                     html: `
