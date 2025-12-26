@@ -9,14 +9,15 @@ export default function FloatingSampleBadge() {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        // Show after scrolling down a bit
-        const handleScroll = () => {
-            setIsVisible(window.scrollY > 300);
+        const checkVisibility = () => {
+            setIsVisible(window.scrollY > 300 || box.length > 0);
         };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+        window.addEventListener('scroll', checkVisibility);
+        checkVisibility(); // Initial check
+
+        return () => window.removeEventListener('scroll', checkVisibility);
+    }, [box.length]);
 
     return (
         <AnimatePresence>

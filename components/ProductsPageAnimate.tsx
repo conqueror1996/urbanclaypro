@@ -175,7 +175,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
         <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0]">
             <Header />
 
-            <main className="pt-32 pb-20 px-0 md:px-6 max-w-[1800px] mx-auto min-h-screen">
+            <main className="max-w-[1800px] mx-auto min-h-screen pt-32 pb-20 px-0 md:px-6">
 
                 {/* --- CATALOG HEADER --- */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 px-6 md:px-0">

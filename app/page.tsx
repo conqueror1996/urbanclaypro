@@ -5,6 +5,8 @@ import Hero from '@/components/Hero';
 import ScrollReveal from '@/components/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
 import { getProducts, getProjects, getHomePageData } from '@/lib/products';
+import { extractSearchTerm, generateDynamicTitle } from '@/lib/search-injection';
+import { Metadata } from 'next';
 
 const KilnPreview = dynamic(() => import('@/components/KilnAnimationWrapper'));
 
@@ -22,7 +24,31 @@ const FAQSchema = dynamic(() => import('@/components/FAQSchema'));
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function Home() {
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const term = extractSearchTerm(resolvedParams);
+  // Only override if a term exists
+  if (term) {
+    return {
+      title: generateDynamicTitle('Terracotta Tiles', term),
+      description: `Discover premium ${term} by UrbanClay. Low efflorescence, high durability, and delivered across India. Get a free sample today.`,
+      openGraph: {
+        title: `Premium ${term} - UrbanClay India`,
+        description: `India's trusted source for ${term}. Serving 100+ cities nationwide with premium quality.`,
+      }
+    }
+  }
+  return {};
+}
+
+export default async function Home({ searchParams }: Props) {
+  const resolvedParams = await searchParams;
+  const injectedKeyword = extractSearchTerm(resolvedParams);
+
   const products = await getProducts();
   const allProjects = await getProjects();
   const recentProjects = allProjects.slice(0, 3);
@@ -172,7 +198,7 @@ export default async function Home() {
       <JsonLd data={jsonLd} />
       <FAQSchema />
       <Header />
-      <Hero data={homePageData} />
+      <Hero data={homePageData} injectedKeyword={injectedKeyword} />
 
       {/* Soft Gradient Divider */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 opacity-40">

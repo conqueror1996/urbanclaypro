@@ -14,9 +14,10 @@ interface HeroProps {
         heroHeading?: string;
         heroSubheading?: string;
     } | null;
+    injectedKeyword?: string | null;
 }
 
-export default function Hero({ data }: HeroProps) {
+export default function Hero({ data, injectedKeyword }: HeroProps) {
 
     const [isHoveringText, setIsHoveringText] = useState(false);
 
@@ -34,12 +35,25 @@ export default function Hero({ data }: HeroProps) {
                             viewport={{ once: true }}
                             transition={{ duration: 0.6 }}
                         >
+                            {injectedKeyword && (
+                                <div
+                                    data-testid="keyword-badge"
+                                    className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-sm font-medium border border-[var(--terracotta)]/20 backdrop-blur-sm animate-fade-in"
+                                >
+                                    <span className="relative flex h-2 w-2">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--terracotta)] opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--terracotta)]"></span>
+                                    </span>
+                                    Viewing High-Performance Options for "{injectedKeyword}"
+                                </div>
+                            )}
+
                             <div
                                 onMouseEnter={() => setIsHoveringText(true)}
                                 onMouseLeave={() => setIsHoveringText(false)}
                                 className="cursor-default"
                             >
-                                <h1 className="sr-only">India’s most specified terracotta facade system for architects.</h1>
+                                <h1 className="sr-only">{data?.heroHeading || 'India’s most specified terracotta facade system for architects.'}</h1>
                                 <TextReveal
                                     text={data?.heroHeading || 'India’s most specified terracotta facade system for architects.'}
                                     highlightWords={['terracotta']}

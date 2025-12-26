@@ -90,8 +90,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const { addToBox, isInBox } = useSampleBox();
-
+    const { addToBox, isInBox, setBoxOpen } = useSampleBox();
 
     // Active Variant State
     const initialVariant = variantName ? product.variants?.find(v => v.name === variantName) : null;
@@ -99,6 +98,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
     const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+    const [flyingImage, setFlyingImage] = useState<{ src: string, x: number, y: number } | null>(null);
 
     React.useEffect(() => {
         const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -238,6 +238,9 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 </span>
                             </div>
 
+                            {/* Price Showcase - Added Request */}
+
+
                         </motion.div>
                     </div>
 
@@ -277,6 +280,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         )}
                                     </div>
                                 </motion.div>
+
+
                             </AnimatePresence>
 
                             {displayImages.length > 1 && (
@@ -296,7 +301,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         <button
                                             key={v._key || i}
                                             onClick={() => handleVariantSelect(v.name)}
-                                            className={`flex-shrink-0 relative w-14 h-14 rounded-full overflow-hidden border-2 transition-all duration-300 snap-center ${selectedVariant?.name === v.name || (!selectedVariant && activeImage === v.imageUrl)
+                                            className={`group/chip flex-shrink-0 relative w-14 h-14 rounded-full overflow-hidden border-2 transition-all duration-300 snap-center ${selectedVariant?.name === v.name || (!selectedVariant && activeImage === v.imageUrl)
                                                 ? 'border-[var(--terracotta)] ring-2 ring-[var(--terracotta)] ring-offset-2 ring-offset-[#120d0b] scale-110'
                                                 : 'border-white/20'
                                                 }`}
@@ -313,6 +318,48 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             ) : (
                                                 <div className="w-full h-full bg-[#3a3430]" />
                                             )}
+
+                                            {/* Quick Add Overlay - Mobile: Always Visible Corner Badge */}
+                                            <div className="absolute inset-0 z-10 pointer-events-none">
+                                                <div
+                                                    className={`absolute bottom-0 right-0 w-6 h-6 flex items-center justify-center cursor-pointer pointer-events-auto transition-all ${isInBox(`${product.slug}-${v.name}`)
+                                                        ? 'bg-[var(--terracotta)] text-white'
+                                                        : 'bg-black/60 text-white hover:bg-[var(--terracotta)]'
+                                                        }`}
+                                                    style={{ borderTopLeftRadius: '12px' }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (isInBox(`${product.slug}-${v.name}`)) {
+                                                            setBoxOpen(true);
+                                                            return;
+                                                        }
+
+                                                        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                                                        setFlyingImage({
+                                                            src: v.imageUrl || activeImage,
+                                                            x: rect.left + rect.width / 2,
+                                                            y: rect.top + rect.height / 2
+                                                        });
+
+                                                        setTimeout(() => {
+                                                            addToBox({
+                                                                id: `${product.slug}-${v.name}`,
+                                                                name: `${product.title} - ${v.name}`,
+                                                                color: '#b45a3c',
+                                                                texture: v.imageUrl || activeImage
+                                                            });
+                                                            setBoxOpen(true);
+                                                            setFlyingImage(null);
+                                                        }, 800);
+                                                    }}
+                                                >
+                                                    {isInBox(`${product.slug}-${v.name}`) ? (
+                                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                                                    ) : (
+                                                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </button>
                                     ))}
                                 </div>
@@ -328,6 +375,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         <span className="w-1 h-1 rounded-full bg-[var(--terracotta)]"></span>
                                         {selectedVariant?.name || product.variants?.find(v => v.imageUrl === activeImage)?.name}
                                     </motion.div>
+
+
                                 )}
                             </div>
                         </div>
@@ -361,6 +410,46 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     ) : (
                                         <div className="w-full h-full bg-[#3a3430]" />
                                     )}
+
+                                    {/* Quick Add Overlay */}
+                                    <div
+                                        className="absolute inset-0 z-10 opacity-0 group-hover/btn:opacity-100 flex items-center justify-center transition-opacity pointer-events-none bg-black/20"
+                                    >
+                                        <div
+                                            className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center cursor-pointer pointer-events-auto hover:bg-[var(--terracotta)] hover:scale-110 transition-all backdrop-blur-sm shadow-xl border border-white/10"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (isInBox(`${product.slug}-${v.name}`)) {
+                                                    setBoxOpen(true);
+                                                    return;
+                                                }
+
+                                                const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                                                setFlyingImage({
+                                                    src: v.imageUrl || activeImage,
+                                                    x: rect.left + rect.width / 2,
+                                                    y: rect.top + rect.height / 2
+                                                });
+
+                                                setTimeout(() => {
+                                                    addToBox({
+                                                        id: `${product.slug}-${v.name}`,
+                                                        name: `${product.title} - ${v.name}`,
+                                                        color: '#b45a3c',
+                                                        texture: v.imageUrl || activeImage
+                                                    });
+                                                    setBoxOpen(true);
+                                                    setFlyingImage(null);
+                                                }, 800);
+                                            }}
+                                        >
+                                            {isInBox(`${product.slug}-${v.name}`) ? (
+                                                <svg className="w-5 h-5 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                                            ) : (
+                                                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                            )}
+                                        </div>
+                                    </div>
                                 </button>
                             ))}
                         </div>
@@ -376,6 +465,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
                                 {selectedVariant?.name || product.variants?.find(v => v.imageUrl === activeImage)?.name}
                             </motion.div>
+
+
                         )}
                     </div>
                 </div>
@@ -568,36 +659,68 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1512]/90 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
                 <div className="max-w-[1800px] mx-auto w-full px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
-                    {/* Desktop Price Display */}
-                    <div className="hidden md:flex flex-col items-start">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Estimated Price</span>
+                    {/* Price Display - Responsive */}
+                    <div className="flex flex-col items-start w-full md:w-auto mb-3 md:mb-0">
                         <div className="flex items-baseline gap-2">
                             <span className="text-2xl font-serif text-[#EBE5E0]">{product.priceRange?.split('/')[0] || 'Inquire'}</span>
                             {product.priceRange && <span className="text-xs text-white/40 font-light lowercase">/ sq.ft</span>}
                         </div>
+                        <span className="text-[9px] text-white/40 font-medium tracking-wide uppercase">*Pricing depends upon quantity</span>
                     </div>
 
                     {/* Buttons Container */}
                     <div className="flex w-full md:w-auto gap-3 md:gap-4">
-                        {/* Talk to Expert - WhatsApp */}
+                        {/* Talk to Expert / Get Sample - WhatsApp */}
                         {/* Talk to Expert / Get Sample - WhatsApp */}
                         <button
-                            onClick={() => {
-                                const itemToAdd = {
-                                    id: selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug,
-                                    name: selectedVariant ? `${product.title} - ${selectedVariant.name}` : product.title,
-                                    color: '#b45a3c', // Default fallback
-                                    texture: activeImage
-                                };
-                                addToBox(itemToAdd);
+                            ref={(el) => {
+                                // Store ref for animation origin
+                                if (el) (window as any)._sampleBtnRef = el;
                             }}
-                            disabled={isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)}
-                            className="flex-1 md:flex-none md:w-56 py-3.5 md:py-4 bg-white/5 border border-white/20 hover:bg-white/10 hover:border-white/40 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={(e) => {
+                                if (isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)) {
+                                    setBoxOpen(true);
+                                    return;
+                                }
+
+                                const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                                const startX = rect.left + rect.width / 2;
+                                const startY = rect.top + rect.height / 2;
+
+                                // Trigger Flying Animation
+                                setFlyingImage({
+                                    src: activeImage,
+                                    x: startX,
+                                    y: startY
+                                });
+
+                                // Delay adding to box until animation "arrives" (approx 800ms)
+                                setTimeout(() => {
+                                    const itemToAdd = {
+                                        id: selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug,
+                                        name: selectedVariant ? `${product.title} - ${selectedVariant.name}` : product.title,
+                                        color: '#b45a3c',
+                                        texture: activeImage
+                                    };
+                                    addToBox(itemToAdd);
+                                    setBoxOpen(true); // Open box to confirm
+                                    setFlyingImage(null); // Cleanup
+                                }, 800);
+                            }}
+                            disabled={false} // Always clickable to open box if added
+                            className={`flex-1 md:flex-none md:w-56 py-3.5 md:py-4 border rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all flex items-center justify-center gap-2
+                                ${isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)
+                                    ? 'bg-white/10 border-[var(--terracotta)] text-[var(--terracotta)]'
+                                    : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 text-white'
+                                }`}
                         >
-                            <svg className="w-4 h-4 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            <svg className={`w-4 h-4 ${isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'text-[var(--terracotta)]' : 'text-[var(--terracotta)]'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                {isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)
+                                    ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                }
                             </svg>
-                            <span>{isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'Added to Box' : 'Get Sample'}</span>
+                            <span>{isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'View Cart' : 'Get Sample'}</span>
                         </button>
 
                         <button
@@ -609,6 +732,47 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                     </div>
                 </div>
             </div>
+
+
+            {/* --- Flying Image Animation --- */}
+            <AnimatePresence>
+                {flyingImage && (
+                    <motion.div
+                        initial={{
+                            position: 'fixed',
+                            top: flyingImage.y,
+                            left: flyingImage.x,
+                            width: 60,
+                            height: 60,
+                            opacity: 1,
+                            zIndex: 100,
+                            scale: 1,
+                            borderRadius: '50%'
+                        }}
+                        animate={{
+                            top: [flyingImage.y, window.innerHeight - 80],
+                            left: [flyingImage.x, window.innerWidth - 80],
+                            scale: [1, 0.5, 0.2],
+                            opacity: [1, 1, 0]
+                        }}
+                        transition={{
+                            duration: 0.8,
+                            ease: [0.16, 1, 0.3, 1], // Cubic bezier for premium feel
+                            times: [0, 1]
+                        }}
+                        style={{ pointerEvents: 'none' }}
+                    >
+                        <div className="w-full h-full relative rounded-full overflow-hidden border-2 border-[var(--terracotta)] shadow-[0_0_20px_rgba(180,90,60,0.5)]">
+                            <Image
+                                src={flyingImage.src}
+                                alt="Flying Sample"
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
         </main >
     );

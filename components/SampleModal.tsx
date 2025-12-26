@@ -210,8 +210,8 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     {box.map((sample, i) => (
                                                         <div key={sample.id} className="relative group w-16 h-16 flex-shrink-0 cursor-pointer">
                                                             <div className="w-full h-full rounded-lg shadow-md border border-black/5 overflow-hidden bg-gray-100">
-                                                                {sample.texture.includes('url') ? (
-                                                                    <img src={sample.texture.match(/url\(['"]?([^'"\)]+)['"]?\)/)?.[1] || sample.texture} alt={sample.name} className="w-full h-full object-cover" />
+                                                                {sample.texture && (sample.texture.startsWith('/') || sample.texture.startsWith('http') || sample.texture.includes('url')) ? (
+                                                                    <img src={sample.texture.includes('url') ? sample.texture.match(/url\(['"]?([^'"\)]+)['"]?\)/)?.[1] || sample.texture : sample.texture} alt={sample.name} className="w-full h-full object-cover" />
                                                                 ) : (
                                                                     <div className="w-full h-full" style={{ backgroundColor: sample.color }} />
                                                                 )}

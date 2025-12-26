@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import PremiumImage from './PremiumImage';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 
 interface Variant {
     name: string;
@@ -35,6 +35,23 @@ export default function ProductImageGallery({ images = [], variants = [], collec
     const [selectedImage, setSelectedImage] = useState<string>('');
     const [activeCollection, setActiveCollection] = useState<string>(collections?.[0]?.name || '');
     const [direction, setDirection] = useState(0);
+    const mainImageRef = React.useRef<HTMLDivElement>(null);
+
+    // Drop handler logic
+    const handleDrop = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo, action: () => void) => {
+        if (!mainImageRef.current) return;
+        const dropZone = mainImageRef.current.getBoundingClientRect();
+        const { x, y } = info.point;
+
+        if (
+            x >= dropZone.left &&
+            x <= dropZone.right &&
+            y >= dropZone.top &&
+            y <= dropZone.bottom
+        ) {
+            action();
+        }
+    };
 
     // Helper to get images for a variant
     const getVariantImages = (variant: { imageUrl: string; gallery?: string[] }) => {
@@ -168,7 +185,7 @@ export default function ProductImageGallery({ images = [], variants = [], collec
     return (
         <div>
             {/* MAIN HERO IMAGE SLIDER */}
-            <div className="w-full h-64 md:h-96 bg-[#e7dbd1] rounded-xl overflow-hidden relative shadow-xl ring-1 ring-black/5 group">
+            <div ref={mainImageRef} className="w-full h-64 md:h-96 bg-[#e7dbd1] rounded-xl overflow-hidden relative shadow-xl ring-1 ring-black/5 group">
                 <AnimatePresence initial={false} custom={direction}>
                     {selectedImage ? (
                         <motion.div
@@ -226,8 +243,15 @@ export default function ProductImageGallery({ images = [], variants = [], collec
             {currentImages.length > 1 && (
                 <div className="flex gap-2 mt-2 md:mt-3 overflow-x-auto pb-1 scrollbar-hide">
                     {currentImages.map((img, i) => (
-                        <div
+                        <motion.div
                             key={i}
+                            drag
+                            dragSnapToOrigin
+                            whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
+                            onDragEnd={(e, info) => handleDrop(e, info, () => {
+                                setDirection(i > currentImages.indexOf(selectedImage) ? 1 : -1);
+                                setSelectedImage(img);
+                            })}
                             onClick={() => {
                                 setDirection(i > currentImages.indexOf(selectedImage) ? 1 : -1);
                                 setSelectedImage(img);
@@ -235,8 +259,8 @@ export default function ProductImageGallery({ images = [], variants = [], collec
                             className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer border-2 transition-all relative ${selectedImage === img ? 'border-[var(--terracotta)] opacity-100 ring-1 ring-[var(--terracotta)]' : 'border-transparent opacity-60 hover:opacity-100'
                                 }`}
                         >
-                            <PremiumImage src={img} alt={`View ${i + 1}`} fill className="object-cover" containerClassName="w-full h-full" sizes="64px" />
-                        </div>
+                            <PremiumImage src={img} alt={`View ${i + 1}`} fill className="object-cover pointer-events-none" containerClassName="w-full h-full" sizes="64px" />
+                        </motion.div>
                     ))}
                 </div>
             )}
@@ -271,8 +295,12 @@ export default function ProductImageGallery({ images = [], variants = [], collec
                     {!collections && <h3 className="font-bold text-lg mb-4">Available Colors & Textures</h3>}
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
                         {displayVariants.map((variant, idx) => (
-                            <div
+                            <motion.div
                                 key={idx}
+                                drag
+                                dragSnapToOrigin
+                                whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
+                                onDragEnd={(e, info) => handleDrop(e, info, () => handleVariantClick(variant))}
                                 onClick={() => handleVariantClick(variant)}
                                 className="group cursor-pointer"
                             >
@@ -283,7 +311,7 @@ export default function ProductImageGallery({ images = [], variants = [], collec
                                             src={variant.imageUrl}
                                             alt={variant.name}
                                             fill
-                                            className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                            className="object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none"
                                             containerClassName="w-full h-full"
                                             sizes="(max-width: 768px) 33vw, 20vw"
                                         />
@@ -297,7 +325,7 @@ export default function ProductImageGallery({ images = [], variants = [], collec
                                     }`}>
                                     {variant.name}
                                 </p>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
