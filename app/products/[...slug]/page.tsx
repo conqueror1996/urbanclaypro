@@ -196,6 +196,19 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         const relatedProducts = await getRelatedProducts(categoryIdentifier, pathSlug);
         const quoteUrl = `/?product=${encodeURIComponent(product.title)}${typeof variant === 'string' ? `&variant=${encodeURIComponent(variant)}` : ''}#quote`;
 
+        // Parse Price Logic
+        const priceInfo = (() => {
+            const raw = product.priceRange || '';
+            const cleaned = raw.replace(/[^0-9\-\.]/g, '');
+            if (!cleaned) return null;
+
+            if (cleaned.includes('-')) {
+                const [min, max] = cleaned.split('-');
+                return { type: 'AggregateOffer', min: min, max: max };
+            }
+            return { type: 'Offer', price: cleaned };
+        })();
+
         const jsonLd = {
             '@context': 'https://schema.org',
             '@type': 'Product',
@@ -203,17 +216,42 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             image: product.imageUrl,
             description: product.description,
             brand: { '@type': 'Brand', name: 'UrbanClay' },
-            offers: {
-                '@type': 'Offer',
-                url: `https://claytile.in/products/${categoryIdentifier}/${product.slug}`,
-                priceCurrency: 'INR',
-                availability: 'https://schema.org/InStock',
-                priceSpecification: {
-                    '@type': 'UnitPriceSpecification',
-                    priceCurrency: 'INR'
+            ...(priceInfo ? {
+                offers: priceInfo.type === 'AggregateOffer' ? {
+                    '@type': 'AggregateOffer',
+                    priceCurrency: 'INR',
+                    lowPrice: priceInfo.min,
+                    highPrice: priceInfo.max,
+                    availability: 'https://schema.org/InStock',
+                    offerCount: 1
+                } : {
+                    '@type': 'Offer',
+                    url: `https://claytile.in/products/${categoryIdentifier}/${product.slug}`,
+                    priceCurrency: 'INR',
+                    price: priceInfo.price,
+                    availability: 'https://schema.org/InStock'
                 }
-            }
+            } : {
+                // Fallback if no price available (prevent GSC error by omitting offers)
+                offers: {
+                    '@type': 'Offer',
+                    availability: 'https://schema.org/InStock',
+                    priceCurrency: 'INR',
+                    price: '0' // Placeholder to conform to schema if strictly needed, or better to omit. 
+                    // Actually, GSC hates price '0' sometimes. 
+                    // Let's use a contact point or Inquiry only, but for this specific 'Offer' error, providing a valid format is key.
+                    // Validating "price" existence is critical.
+                    // If null, we simply don't include 'offers' key at the top level? 
+                    // Usually acceptable. But let's providing a generic structure.
+                    // However, we'll try to omit offers if no price.
+                }
+            })
         };
+
+        // Clean up fallback if we want to be strict:
+        if (!priceInfo) {
+            delete (jsonLd as any).offers;
+        }
 
         return (
             <div className="bg-[#1a1512] min-h-screen">
