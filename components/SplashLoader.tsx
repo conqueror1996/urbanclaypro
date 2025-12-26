@@ -8,10 +8,8 @@ export default function SplashLoader() {
 
     useEffect(() => {
         // Minimal delay for quick branding without LCP penalty
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 300);
-        return () => clearTimeout(timer);
+        // No artificial delay for maximum LCP score
+        setIsLoading(false);
     }, []);
 
     return (
