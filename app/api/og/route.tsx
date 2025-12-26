@@ -1,5 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { getProduct, getProject, getCategoryHero } from '@/lib/products';
+import { CITIES } from '@/lib/locations';
+import { getJournalPost } from '@/lib/journal';
 
 export const runtime = 'edge';
 
@@ -34,32 +36,68 @@ export async function GET(request: Request) {
     const productSlug = slugParts[slugParts.length - 1];
 
     let item: any = null;
-    let categoryTitle = 'Collection';
-    let label = 'Product';
+    let label = 'Collection';
+    let subLabel = '';
+    let categoryTitle = 'Premium Collection';
 
+    // 1. PROJECT
     if (type === 'project') {
         const project = await getProject(productSlug);
         if (project) {
             item = project;
-            categoryTitle = project.location || 'Architecture';
-            label = 'Project';
+            label = 'Project Spotlight';
+            subLabel = project.location || 'India';
+            categoryTitle = 'Architecture';
         }
-    } else if (type === 'category') {
-        // Handle Category Mode
+    }
+    // 2. CATEGORY
+    else if (type === 'category') {
         const categoryData = await getCategoryHero(productSlug);
         if (categoryData) {
             item = categoryData;
-            categoryTitle = 'Our Collection';
-            label = 'Category';
+            label = 'Curated Collection';
+            categoryTitle = 'UrbanClay Series';
         }
-    } else {
+    }
+    // 3. CITY
+    else if (type === 'city') {
+        const cityData = CITIES[productSlug];
+        if (cityData) {
+            item = {
+                title: `Terracotta in ${cityData.name}`,
+                imageUrl: 'https://claytile.in/images/architect-hero-confidence.png', // Fallback or city specific
+                priceRange: null
+            };
+            label = `Serving ${cityData.region} India`;
+            categoryTitle = 'Local Experience';
+        }
+    }
+    // 4. JOURNAL
+    else if (type === 'journal' || type === 'article') {
+        try {
+            const post = await getJournalPost(productSlug);
+            if (post) {
+                item = {
+                    title: post.title,
+                    imageUrl: post.mainImage || 'https://claytile.in/images/kiln-firing-process.jpg',
+                    priceRange: post.readTime // Using price slot for read time
+                };
+                label = 'The Clay Journal';
+                categoryTitle = 'Editorial';
+            }
+        } catch (e) { console.error(e) }
+    }
+    // 5. PRODUCT (Default)
+    else {
         const product = await getProduct(productSlug);
         if (product) {
             item = product;
-            categoryTitle = product.category?.title || product.tag || 'Premium Collection';
+            label = product.category?.title || 'Signature Series';
+            categoryTitle = product.tag || 'Terracotta';
         }
     }
 
+    // Fallback if item not found
     if (!item) {
         return new ImageResponse(
             (
@@ -85,7 +123,7 @@ export async function GET(request: Request) {
                 backgroundColor: '#1a1512',
                 position: 'relative',
             }}>
-                {/* 1. Full Bleed Background Image */}
+                {/* 1. Background Image */}
                 <img
                     src={item.imageUrl || 'https://claytile.in/og-fallback.jpg'}
                     alt={item.title}
@@ -94,7 +132,7 @@ export async function GET(request: Request) {
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        opacity: 0.9
+                        opacity: 0.95
                     }}
                 />
 
@@ -102,7 +140,7 @@ export async function GET(request: Request) {
                 <div style={{
                     position: 'absolute',
                     inset: 0,
-                    backgroundImage: 'linear-gradient(to top, #1a1512 0%, rgba(26, 21, 18, 0.9) 25%, rgba(0,0,0,0) 60%)',
+                    backgroundImage: 'linear-gradient(to top, #1a1512 0%, rgba(26, 21, 18, 0.95) 30%, rgba(0,0,0,0) 70%)',
                 }} />
 
                 {/* 3. Content Layer */}
@@ -112,78 +150,84 @@ export async function GET(request: Request) {
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'flex-end',
+                    justifyContent: 'space-between',
                     padding: '60px 80px',
                 }}>
-                    {/* Top Brand Mark */}
-                    <div style={{
-                        position: 'absolute',
-                        top: 60,
-                        left: 80,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                    }}>
-                        <div style={{ width: 40, height: 40, borderRadius: '50%', backgroundColor: '#ea580c', display: 'flex' }} />
-                        <span style={{
-                            fontSize: 24,
-                            fontFamily: 'Inter',
-                            fontWeight: 700,
-                            color: '#fff',
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase'
-                        }}>UrbanClay</span>
-                    </div>
+                    {/* Top Bar: Brand & Label */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        {/* Brand */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{ width: 40, height: 40, borderRadius: '50%', backgroundColor: '#ea580c', display: 'flex' }} />
+                            <span style={{ fontSize: 24, fontFamily: 'Inter', fontWeight: 700, color: '#fff', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                                UrbanClay
+                            </span>
+                        </div>
 
-                    {/* Tag / Category Badge */}
-                    <div style={{ display: 'flex', marginBottom: '24px' }}>
+                        {/* Dynamic Label Badge */}
                         <div style={{
                             padding: '10px 24px',
                             background: 'rgba(255, 255, 255, 0.1)',
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             borderRadius: '100px',
-                            color: '#ea580c', // Terracotta Orange
-                            fontSize: 18,
+                            color: '#ea580c',
+                            fontSize: 16,
                             fontFamily: 'Inter',
                             fontWeight: 600,
-                            textTransform: 'uppercase',
                             letterSpacing: '0.05em',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '8px'
+                            textTransform: 'uppercase'
                         }}>
-                            <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#ea580c' }} />
-                            {categoryTitle}
+                            {label}
                         </div>
                     </div>
 
-                    {/* Main Title */}
-                    <div style={{
-                        fontSize: 84,
-                        fontFamily: '"Playfair Display"',
-                        color: '#ffffff',
-                        lineHeight: 1,
-                        marginBottom: '16px',
-                        textShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                        maxWidth: '90%'
-                    }}>
-                        {item.title}
-                    </div>
+                    {/* Bottom Content */}
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        {/* Meta Tag (e.g., Price, Location, Read Time) */}
+                        {(item.priceRange || subLabel) && (
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                marginBottom: '20px',
+                                color: 'rgba(255,255,255,0.8)',
+                                fontFamily: 'Inter',
+                                fontSize: 20,
+                                fontWeight: 500
+                            }}>
+                                {item.priceRange ? <span style={{ color: '#ea580c' }}>{item.priceRange}</span> : null}
+                                {subLabel ? <span>{subLabel}</span> : null}
+                            </div>
+                        )}
 
-                    {/* Footer / Domain */}
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '16px',
-                        marginTop: '10px'
-                    }}>
-                        <div style={{ height: 1, width: 60, backgroundColor: '#ea580c' }} />
-                        <span style={{
-                            fontSize: 20,
-                            fontFamily: 'Inter',
-                            color: '#a3a3a3',
-                            letterSpacing: '0.05em'
-                        }}>Original Terracotta • Handcrafted in India</span>
+                        {/* Main Title */}
+                        <div style={{
+                            fontSize: item.title.length > 30 ? 72 : 84, // Auto-scale font
+                            fontFamily: '"Playfair Display"',
+                            color: '#ffffff',
+                            lineHeight: 1,
+                            marginBottom: '24px',
+                            textShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                            maxWidth: '95%'
+                        }}>
+                            {item.title}
+                        </div>
+
+                        {/* Footer / URL */}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginTop: '10px',
+                            borderTop: '1px solid rgba(255,255,255,0.2)',
+                            paddingTop: '24px',
+                            width: '100%'
+                        }}>
+                            <span style={{ fontSize: 20, fontFamily: 'Inter', color: '#ea580c', fontWeight: 600, marginRight: '16px' }}>claytile.in</span>
+                            <span style={{ fontSize: 20, fontFamily: 'Inter', color: '#a3a3a3' }}>
+                                {categoryTitle} • Handcrafted in India
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
