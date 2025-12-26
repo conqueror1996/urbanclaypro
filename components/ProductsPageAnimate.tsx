@@ -175,10 +175,10 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
         <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0]">
             <Header />
 
-            <main className="pt-32 pb-20 px-6 max-w-[1800px] mx-auto min-h-screen">
+            <main className="pt-32 pb-20 px-0 md:px-6 max-w-[1800px] mx-auto min-h-screen">
 
                 {/* --- CATALOG HEADER --- */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 px-6 md:px-0">
                     <div>
                         <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
                             Material Library
@@ -193,7 +193,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                 </div>
 
                 {/* --- ARCHITECTURAL DARK FILTER --- */}
-                <div className="sticky top-20 md:top-24 z-40 mb-16 md:mb-24 -mx-6 px-4 md:px-6">
+                <div className="sticky top-20 md:top-24 z-40 mb-16 md:mb-24 md:-mx-6 md:px-6">
                     {/* Desktop: Technical Grid Layout */}
                     <div className="hidden md:block">
                         <div className="bg-[#1a1a1a]/80 backdrop-blur-md border-y border-white/10 py-6">
@@ -412,7 +412,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
-                        className={activeTab === 'All' ? "space-y-32" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 md:gap-y-16"}
+                        className={`px-6 md:px-0 ${activeTab === 'All' ? "space-y-32" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 md:gap-y-16"}`}
                     >
                         {/* SCENARIO 1: HIERARCHICAL VIEW (When 'All' tab is active) */}
                         {activeTab === 'All' ? (
