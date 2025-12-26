@@ -6,7 +6,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
 import { getProducts, getProjects, getHomePageData } from '@/lib/products';
 
-const KilnPreview = dynamic(() => import('@/components/KilnAnimation'));
+const KilnPreview = dynamic(() => import('@/components/KilnAnimationWrapper'));
 
 const SignatureCollection = dynamic(() => import('@/components/SignatureCollection'));
 const Architects = dynamic(() => import('@/components/Architects'));
