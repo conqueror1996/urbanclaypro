@@ -140,58 +140,60 @@ export default function ProjectAtlasMap({ projects = [] }: ProjectAtlasMapProps)
                 />
                 <path d="M225.5,38.5 L210,20 L230,10 L250,15 L265.5,35.5 Z" fill="url(#mapGradient)" stroke="#5d4037" strokeWidth="1" />
 
-                {projectLocations.map((loc) => (
-                    <Link
-                        key={loc.id}
-                        href={`/projects/${loc.project.slug}`}
-                        className="absolute group"
-                        style={{ left: `${loc.x}%`, top: `${loc.y}%` }}
-                        onMouseEnter={() => setActiveLocation(loc.id)}
-                        onMouseLeave={() => setActiveLocation(null)}
-                    >
-                        <div className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 cursor-pointer">
-                            <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--terracotta)] opacity-20 animate-ping duration-[2s]"></span>
-                            <span className="absolute inline-flex h-2/3 w-2/3 rounded-full bg-[var(--terracotta)] opacity-40 animate-pulse"></span>
-                            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 bg-[#d97757] shadow-[0_0_10px_rgba(217,119,87,0.8)] transition-all duration-300 ${activeLocation === loc.id ? 'scale-150 bg-white' : 'group-hover:scale-125'}`}></span>
-                        </div>
+            </svg>
 
-                        <AnimatePresence>
-                            {activeLocation === loc.id && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 bg-[#1a1512]/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl p-4 z-50 pointer-events-none origin-bottom"
-                                >
-                                    <div className="flex gap-4">
-                                        <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-white/10 relative">
-                                            <img
-                                                src={loc.project.image}
-                                                alt={loc.project.name}
-                                                className="w-full h-full object-cover"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+            {/* Hotspots - Overlaid on top of SVG */}
+            {projectLocations.map((loc) => (
+                <Link
+                    key={loc.id}
+                    href={`/projects/${loc.project.slug}`}
+                    className="absolute group"
+                    style={{ left: `${loc.x}%`, top: `${loc.y}%` }}
+                    onMouseEnter={() => setActiveLocation(loc.id)}
+                    onMouseLeave={() => setActiveLocation(null)}
+                >
+                    <div className="relative flex items-center justify-center w-8 h-8 -ml-4 -mt-4 cursor-pointer">
+                        <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--terracotta)] opacity-20 animate-ping duration-[2s]"></span>
+                        <span className="absolute inline-flex h-2/3 w-2/3 rounded-full bg-[var(--terracotta)] opacity-40 animate-pulse"></span>
+                        <span className={`relative inline-flex rounded-full h-2.5 w-2.5 bg-[#d97757] shadow-[0_0_10px_rgba(217,119,87,0.8)] transition-all duration-300 ${activeLocation === loc.id ? 'scale-150 bg-white' : 'group-hover:scale-125'}`}></span>
+                    </div>
+
+                    <AnimatePresence>
+                        {activeLocation === loc.id && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 bg-[#1a1512]/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl p-4 z-50 pointer-events-none origin-bottom"
+                            >
+                                <div className="flex gap-4">
+                                    <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-white/10 relative">
+                                        <img
+                                            src={loc.project.image}
+                                            alt={loc.project.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                    </div>
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
+                                            <span className="text-[10px] font-bold text-white/60 uppercase tracking-wider">{loc.city}</span>
                                         </div>
-                                        <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
-                                                <span className="text-[10px] font-bold text-white/60 uppercase tracking-wider">{loc.city}</span>
-                                            </div>
-                                            <h4 className="text-base font-serif text-white leading-tight mb-1 truncate">{loc.project.name}</h4>
-                                            <p className="text-xs text-white/50 leading-snug line-clamp-2">{loc.project.details}</p>
-                                            <div className="mt-2 flex items-center text-[10px] font-medium text-[var(--terracotta)]">
-                                                View Project <span className="ml-1">→</span>
-                                            </div>
+                                        <h4 className="text-base font-serif text-white leading-tight mb-1 truncate">{loc.project.name}</h4>
+                                        <p className="text-xs text-white/50 leading-snug line-clamp-2">{loc.project.details}</p>
+                                        <div className="mt-2 flex items-center text-[10px] font-medium text-[var(--terracotta)]">
+                                            View Project <span className="ml-1">→</span>
                                         </div>
                                     </div>
-                                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-8 border-transparent border-t-[#1a1512]/95"></div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </Link>
-                ))}
-            </svg>
+                                </div>
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-8 border-transparent border-t-[#1a1512]/95"></div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </Link>
+            ))}
         </motion.div>
     );
 }
