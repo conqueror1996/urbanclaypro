@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                     alt: post.title
                 }
             ]
+        },
+        alternates: {
+            canonical: `https://claytile.in/journal/${slug}`
         }
     };
 }

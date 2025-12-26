@@ -145,6 +145,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             openGraph: {
                 title: metaTitle,
                 images: [(product as any).seo?.openGraphImage || `/api/og?slug=${pathSlug}`]
+            },
+            alternates: {
+                canonical: `https://claytile.in/products/${product.category?.slug || 'collection'}/${product.slug}`
             }
         };
     }
@@ -169,6 +172,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                     height: 630,
                     alt: `${categoryData.displayTitle} Collection`
                 }]
+            },
+            alternates: {
+                canonical: `https://claytile.in/products/${pathSlug}`
             }
         };
     }
@@ -196,7 +202,17 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             name: product.title,
             image: product.imageUrl,
             description: product.description,
-            brand: { '@type': 'Brand', name: 'UrbanClay' }
+            brand: { '@type': 'Brand', name: 'UrbanClay' },
+            offers: {
+                '@type': 'Offer',
+                url: `https://claytile.in/products/${categoryIdentifier}/${product.slug}`,
+                priceCurrency: 'INR',
+                availability: 'https://schema.org/InStock',
+                priceSpecification: {
+                    '@type': 'UnitPriceSpecification',
+                    priceCurrency: 'INR'
+                }
+            }
         };
 
         return (
