@@ -215,12 +215,13 @@ export default defineType({
                         select: {
                             title: 'name',
                             subtitle: 'family',
+                            color: 'color',
                             media: 'image'
                         },
-                        prepare({ title, subtitle, media }) {
+                        prepare({ title, subtitle, color, media }) {
                             return {
                                 title: title,
-                                subtitle: subtitle ? `Family: ${subtitle}` : 'Single Variant',
+                                subtitle: [color, subtitle].filter(Boolean).join(' • ') || 'No color/family set',
                                 media: media
                             }
                         }
