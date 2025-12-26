@@ -98,16 +98,30 @@ export async function POST(req: NextRequest) {
                 catId = newCat._id;
             }
 
+            // AUTO-GENERATE CONTENT (AI Logic)
+            // Use local mock Product object for generator
+            const mockProduct: any = { title, tag: category };
+            const { generateArtisticDescription } = await import('@/lib/catalogue-content');
+            const autoDescription = generateArtisticDescription(mockProduct);
+
+            const metaTitle = `${title} - Premium ${category} | Urban Clay`;
+            const metaDescription = `${autoDescription} Available in Mumbai, Bangalore, and across India.`;
+
             const doc = {
                 _type: 'product',
                 title,
                 tag: category, // Keep legacy tag for now
                 category: { _type: 'reference', _ref: catId }, // Actual Reference
                 slug: { current: slug, _type: 'slug' },
-                description: '',
+                description: autoDescription, // Pre-fill with artistic description
                 priceRange: 'On Request',
                 variants: [],
-                images: []
+                images: [],
+                seo: {
+                    metaTitle,
+                    metaDescription,
+                    keywords: [title, category, 'Terracotta', 'Clay', 'Architecture']
+                }
             };
 
             const result = await client.create(doc);

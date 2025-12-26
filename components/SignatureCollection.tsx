@@ -18,7 +18,10 @@ interface DisplayProduct {
     imageUrl: string;
     categorySlug?: string;
     variantName?: string;
+    family?: string;
 }
+
+// ... existing categories ...
 
 const SIGNATURE_CATEGORIES = [
     {
@@ -76,7 +79,8 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                         slug: p.slug, // Use parent slug for base URL
                         imageUrl: v.imageUrl || p.imageUrl,
                         categorySlug: categorySlug,
-                        variantName: v.name
+                        variantName: v.name,
+                        family: v.family // Capture family for grouping
                     }));
                 }
 
@@ -87,14 +91,88 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                     slug: p.slug,
                     imageUrl: p.imageUrl || (p.variants && p.variants[0]?.imageUrl) || '',
                     categorySlug: categorySlug,
-                    variantName: undefined
+                    variantName: undefined,
+                    family: undefined
                 }];
             });
+
+            // Smart Selection: Interleave by Family/Product to show variety
+            // Especially for 'brick-tile' as requested
+            let selectedItems = items;
+
+            if (cat.id === 'brick-tile' && items.length > 0) {
+                const groups: Record<string, DisplayProduct[]> = {};
+
+                // Group by Family (priority) or Subtitle (Product Name)
+                items.forEach(item => {
+                    const key = item.family || item.subtitle || 'default';
+                    if (!groups[key]) groups[key] = [];
+                    groups[key].push(item);
+                });
+
+                const groupKeys = Object.keys(groups);
+
+                // Sort keys based on User Preference: Handmade -> Smooth -> Wirecut -> Textured
+                const priorityOrder = ['handmade', 'smooth', 'wirecut', 'textured'];
+
+                groupKeys.sort((a, b) => {
+                    const aLower = a.toLowerCase();
+                    const bLower = b.toLowerCase();
+
+                    const aIndex = priorityOrder.findIndex(p => aLower.includes(p));
+                    const bIndex = priorityOrder.findIndex(p => bLower.includes(p));
+
+                    // If both found, sort by priority
+                    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+
+                    // If only 'a' is in priority list, it comes first
+                    if (aIndex !== -1) return -1;
+
+                    // If only 'b' is in priority list, it comes first
+                    if (bIndex !== -1) return 1;
+
+                    return aLower.localeCompare(bLower);
+                });
+
+                const interleaved: DisplayProduct[] = [];
+                // Sort keys to ensure consistent order (maybe prioritizing groups with more distinct images?)
+                // For now, simple interleaving
+                const maxLen = Math.max(...Object.values(groups).map(g => g.length));
+
+                for (let i = 0; i < maxLen; i++) {
+                    for (const key of groupKeys) {
+                        const candidate = groups[key][i];
+                        if (candidate) {
+                            interleaved.push(candidate);
+                        }
+                    }
+                }
+
+                // FILTER FOR UNIQUE IMAGES
+                // This ensures we don't show 4 cards with the exact same visual
+                const seenImages = new Set<string>();
+                const uniqueItems: DisplayProduct[] = [];
+
+                for (const item of interleaved) {
+                    // Normalize URL to handle potential query params differences if strictly needed, 
+                    // but usually Sanity CDN URLs are stable.
+                    if (item.imageUrl && !seenImages.has(item.imageUrl)) {
+                        seenImages.add(item.imageUrl);
+                        uniqueItems.push(item);
+                    } else if (!item.imageUrl && !seenImages.has('placeholder')) {
+                        // Allow at least one placeholder
+                        seenImages.add('placeholder');
+                        uniqueItems.push(item);
+                    }
+                }
+
+                selectedItems = uniqueItems;
+            }
 
             // Take top 4 for the smaller grid
             return {
                 ...cat,
-                items: items.slice(0, 4)
+                items: selectedItems.slice(0, 4)
             };
         });
     }, [products]);

@@ -20,6 +20,8 @@ export function generateLuxurySpecs(product: Product): PremiumSpec[] {
                 dimensions = '300mm x 55mm x 18mm';
             } else if (title.includes('rustic') || title.includes('wirecut')) {
                 dimensions = '230mm x 72mm x 17mm';
+            } else if (title.includes('hexagonal') || title.includes('hexagon')) {
+                dimensions = '8" Hexagon (200mm Side)';
             } else {
                 dimensions = '230mm x 75mm x 18mm';
             }
