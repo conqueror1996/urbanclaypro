@@ -94,13 +94,15 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
         }
     };
 
-    // --- RENDER HELPERS ---
-    const renderBricks = () => {
+    // --- HELPERS ---
+    const BRICK_TEXTURE = "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAlJyBoZWlnaHQ9JzIwMCUnPjxmaWx0ZXIgaWQ9J24nPjxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjUnIG51bU9jdGF2ZXM9JzEnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd0cmFuc3BhcmVudCcvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nMC4yJy8+PC9zdmc+')";
 
+    // --- RENDER HELPERS ---
+    const renderedBricks = React.useMemo(() => {
         // SPECIAL CASE: BASKETWEAVE (Block Based)
         if (pattern === 'basket') {
-            // Render 64 blocks covering the area
-            return Array.from({ length: 100 }).map((_, i) => {
+            // Reduced from 100 to 50 for performance
+            return Array.from({ length: 50 }).map((_, i) => {
                 const col = i % 8;
                 const row = Math.floor(i / 8);
                 const isVertical = (col + row) % 2 === 0;
@@ -123,7 +125,7 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                                     >
                                         <div className="absolute inset-0"
                                             style={{
-                                                backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAlJyBoZWlnaHQ9JzIwMCUnPjxmaWx0ZXIgaWQ9J24nPjxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjUnIG51bU9jdGF2ZXM9JzEnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd0cmFuc3BhcmVudCcvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nMC4yJy8+PC9zdmc+')",
+                                                backgroundImage: BRICK_TEXTURE,
                                                 filter: `brightness(${(0.95 + deterministicRandom * 0.1).toFixed(4)})`,
                                                 opacity: 0.6,
                                                 mixBlendMode: 'multiply'
@@ -143,7 +145,8 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
         }
 
         // STANDARD BRICKS (Stretcher, Stack, Herringbone)
-        return Array.from({ length: 400 }).map((_, i) => {
+        // Reduced from 400 to 192 for performance (enough to fill view)
+        return Array.from({ length: 192 }).map((_, i) => {
             let spanClass = "col-span-1 aspect-[3/1] w-full"; // Explicit w-full
             let offsetClass = "";
 
@@ -162,14 +165,9 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
             return (
                 <div
                     key={`${pattern}-${i}`}
-                    // Added border-r to simulate vertical grout (attached to the brick, so it staggers)
-                    // relative -> flex container to manage width
                     className={`relative ${spanClass} ${offsetClass} box-border border-r-[3px] md:border-r-[6px] border-transparent`}
-                    style={{
-                        // We apply the color to the INNER part, not the wrapper
-                    }}
                 >
-                    <div className="w-full h-full relative rounded-[1px] overflow-hidden"
+                    <div className="w-full h-full relative rounded-[1px] overflow-hidden bg-current"
                         style={{
                             backgroundColor: brickTone,
                             boxShadow: '3px 3px 6px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.2)'
@@ -177,21 +175,21 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
 
                         <div className="absolute inset-0"
                             style={{
-                                backgroundImage: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAlJyBoZWlnaHQ9JzIwMCUnPjxmaWx0ZXIgaWQ9J24nPjxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjUnIG51bU9jdGF2ZXM9JzEnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWxsPSd0cmFuc3BhcmVudCcvPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScgb3BhY2l0eT0nMC4yJy8+PC9zdmc+')",
+                                backgroundImage: BRICK_TEXTURE,
                                 filter: `brightness(${(0.95 + deterministicRandom * 0.1).toFixed(4)})`,
                                 opacity: 0.6,
                                 mixBlendMode: 'multiply'
                             }}
                         />
+                        {/* Simplified Borders - Removed expensive divs if possible, but kept for look. Use CSS border if possible? 
+                           Keeping for now but verified count reduction. */}
                         <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/40" />
                         <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/40" />
-                        <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-white/30" />
-                        <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-black/30" />
                     </div>
                 </div>
             );
         });
-    };
+    }, [pattern, brickTone]);
 
     // --- ACTIONS ---
     const handleDownload = async () => {
@@ -240,10 +238,10 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                 <motion.div
                     className={gridConfig.className}
                     style={gridConfig.style}
-                    animate={{ scale: 1.4 }}
+                    initial={{ scale: 1.4 }}
                     transition={{ type: 'spring', damping: 30, stiffness: 100 }}
                 >
-                    {renderBricks()}
+                    {renderedBricks}
                 </motion.div>
 
                 {/* Info Text - Ignored during export */}
