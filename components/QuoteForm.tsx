@@ -20,6 +20,8 @@ export default function QuoteForm() {
         quantity: '',
         timeline: '',
         contact: '',
+        email: '',
+        name: '',
         notes: ''
     });
 
@@ -39,7 +41,8 @@ export default function QuoteForm() {
     const [errors, setErrors] = useState({
         city: '',
         quantity: '',
-        contact: ''
+        contact: '',
+        email: ''
     });
 
     const nextStep = () => {
@@ -69,7 +72,7 @@ export default function QuoteForm() {
 
     const validate = () => {
         let isValid = true;
-        const newErrors = { city: '', quantity: '', contact: '' };
+        const newErrors: any = { city: '', quantity: '', contact: '', email: '' };
 
         if (!formData.city.trim()) {
             newErrors.city = 'City is required';
@@ -86,6 +89,11 @@ export default function QuoteForm() {
             isValid = false;
         } else if (formData.contact.length < 10) {
             newErrors.contact = 'Please enter a valid phone number';
+            isValid = false;
+        }
+
+        if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = 'Please enter a valid email address';
             isValid = false;
         }
 
@@ -353,12 +361,36 @@ Sent from UrbanClay Website`;
                                     className="space-y-6"
                                 >
                                     <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Contact Number</label>
+                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Full Name</label>
+                                        <input
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            placeholder="Your name or Project Manager's name"
+                                            className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16]"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Email <span className="text-gray-400 font-normal lowercase">(Optional for quote PDF)</span></label>
+                                        <input
+                                            name="email"
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            placeholder="project@firm.com"
+                                            className={`w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] ${errors.email ? 'border-red-500 bg-red-50' : ''}`}
+                                        />
+                                        {errors.email && <p className="text-red-500 text-xs ml-1">{errors.email}</p>}
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Contact Number <span className="text-red-500">*</span></label>
                                         <input
                                             name="contact"
                                             value={formData.contact}
                                             onChange={handleChange}
-                                            placeholder="+91 98765 43210"
+                                            placeholder="+91 98765 43210 (WhatsApp)"
                                             className={`w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] ${errors.contact ? 'border-red-500 bg-red-50' : ''}`}
                                         />
                                         {errors.contact && <p className="text-red-500 text-xs ml-1">{errors.contact}</p>}
