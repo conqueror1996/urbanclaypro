@@ -61,8 +61,12 @@ export async function sendLeadAlertEmail(lead: any) {
     }
 
     try {
+        const isSerious = lead.isSerious || lead.seriousness === 'high';
+        const title = isSerious ? '🔥 Serious Lead Detected' : '📩 New Lead Received';
+        const subjectPrefix = isSerious ? '🔥 Serious Lead' : '📩 New Lead';
+
         const content = `
-            <h2 style="color: #b14a2a; margin-top: 0;">🔥 Serious Lead Detected</h2>
+            <h2 style="color: #b14a2a; margin-top: 0;">${title}</h2>
             <p style="color: #555;"><strong>${lead.name || 'A client'}</strong> (${lead.role}) has requested <strong>${lead.quantity}</strong>.</p>
             
             <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
@@ -96,7 +100,7 @@ export async function sendLeadAlertEmail(lead: any) {
         const mailOptions = {
             from: `"UrbanClay Bot" <${process.env.SMTP_USER}>`,
             to: 'urbanclay@claytile.in',
-            subject: `🔥 New Lead: ${lead.role} from ${lead.city}`,
+            subject: `${subjectPrefix}: ${lead.role} from ${lead.city}`,
             html: wrapEmailTemplate(content)
         };
 
