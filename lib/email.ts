@@ -89,13 +89,13 @@ export async function sendLeadAlertEmail(lead: any) {
             </table>
 
             <div style="margin-top: 30px; text-align: center;">
-                <a href="https://urbanclay.in/dashboard/leads" style="${EMAIL_STYLES.button}">View in Dashboard</a>
+                <a href="https://claytile.in/dashboard/leads" style="${EMAIL_STYLES.button}">View in Dashboard</a>
             </div>
         `;
 
         const mailOptions = {
             from: `"UrbanClay Bot" <${process.env.SMTP_USER}>`,
-            to: 'sales@urbanclay.in',
+            to: 'urbanclay@claytile.in',
             subject: `🔥 New Lead: ${lead.role} from ${lead.city}`,
             html: wrapEmailTemplate(content)
         };
@@ -131,7 +131,7 @@ export async function sendUserConfirmationEmail(lead: any) {
 
             <p>Our architectural team will review your project details and get back to you within 24 hours.</p>
 
-            <p>In the meantime, feel free to browse our <a href="https://urbanclay.in/products" style="color: #b45a3c; text-decoration: underline;">latest collection</a>.</p>
+            <p>In the meantime, feel free to browse our <a href="https://claytile.in/products" style="color: #b45a3c; text-decoration: underline;">latest collection</a>.</p>
         `;
 
         const mailOptions = {
@@ -149,7 +149,7 @@ export async function sendUserConfirmationEmail(lead: any) {
                 <p>Thank you for downloading the UrbanClay 2025 Architects' Kit. Inside, you'll find our complete product specs and the latest trade price list.</p>
                 
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="https://urbanclay.in/" style="${EMAIL_STYLES.button}">Download PDF Catalogue</a>
+                    <a href="https://claytile.in/" style="${EMAIL_STYLES.button}">Download PDF Catalogue</a>
                 </div>
 
                 <p style="color: #666; font-size: 14px;"><strong>Note:</strong> We've also attached our 'Installation Guide' for exposed brick cladding.</p>

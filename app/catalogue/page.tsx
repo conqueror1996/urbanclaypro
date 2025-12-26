@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Urban Clay - 2025 Monograph',
         description: 'Explore the complete 2025 collection of premium terracotta architectural products. Download the digital monograph.',
-        url: 'https://urbanclay.in/catalogue',
+        url: 'https://claytile.in/catalogue',
         siteName: 'UrbanClay',
         locale: 'en_IN',
         type: 'website',
         images: [
             {
-                url: 'https://urbanclay.in/images/premium-terracotta-facade.png',
+                url: 'https://claytile.in/images/premium-terracotta-facade.png',
                 width: 1200,
                 height: 630,
                 alt: 'Urban Clay 2025 Monograph Cover',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Urban Clay - 2025 Monograph',
         description: 'Limited edition architectural catalogue featuring our complete range of premium terracotta tiles.',
-        images: ['https://urbanclay.in/images/premium-terracotta-facade.png'],
+        images: ['https://claytile.in/images/premium-terracotta-facade.png'],
     },
 };
 

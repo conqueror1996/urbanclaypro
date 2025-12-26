@@ -16,13 +16,13 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Resources & Technical Tools | UrbanClay',
         description: 'Access material calculators, installation guides, and technical specifications for architectural terracotta projects.',
-        url: 'https://urbanclay.in/resources',
+        url: 'https://claytile.in/resources',
         siteName: 'UrbanClay',
         locale: 'en_IN',
         type: 'website',
         images: [
             {
-                url: 'https://urbanclay.in/images/architect-hero-confidence.png',
+                url: 'https://claytile.in/images/architect-hero-confidence.png',
                 width: 1200,
                 height: 630,
                 alt: 'UrbanClay Architectural Resources',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Resources & Technical Tools | UrbanClay',
         description: 'Access material calculators, installation guides, and technical specifications.',
-        images: ['https://urbanclay.in/images/architect-hero-confidence.png'],
+        images: ['https://claytile.in/images/architect-hero-confidence.png'],
     },
 };
 

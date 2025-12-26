@@ -49,8 +49,8 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="text-[#9C8C74] text-xs font-bold uppercase tracking-wider mb-1">Email</p>
-                                    <a href="mailto:sales@urbanclay.in" className="text-lg text-[var(--ink)] hover:text-[var(--terracotta)] transition-colors block">
-                                        sales@urbanclay.in
+                                    <a href="mailto:urbanclay@claytile.in" className="text-lg text-[var(--ink)] hover:text-[var(--terracotta)] transition-colors block">
+                                        urbanclay@claytile.in
                                     </a>
                                 </div>
                             </div>

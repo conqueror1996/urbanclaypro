@@ -87,7 +87,7 @@ export async function GET(request: Request) {
             }}>
                 {/* 1. Full Bleed Background Image */}
                 <img
-                    src={item.imageUrl || 'https://urbanclay.in/og-fallback.jpg'}
+                    src={item.imageUrl || 'https://claytile.in/og-fallback.jpg'}
                     alt={item.title}
                     style={{
                         position: 'absolute',

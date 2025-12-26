@@ -25,13 +25,13 @@ export default function Breadcrumbs({ range }: { range?: string }) {
                 '@type': 'ListItem',
                 'position': 1,
                 'name': 'Home',
-                'item': 'https://urbanclay.in'
+                'item': 'https://claytile.in'
             },
             ...parts.map((part, idx) => ({
                 '@type': 'ListItem',
                 'position': idx + 2,
                 'name': formatLabel(part),
-                'item': `https://urbanclay.in/${parts.slice(0, idx + 1).join('/')}`
+                'item': `https://claytile.in/${parts.slice(0, idx + 1).join('/')}`
             }))
         ]
     };

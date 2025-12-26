@@ -74,12 +74,12 @@ Once deployed, your site might look broken or fail to load data. This is because
 
 ## Step 5: Connect Your Personal Domain
 1.  In your Vercel Project Dashboard, go to **Settings** -> **Domains**.
-2.  Enter your personal domain (e.g., `urbanclay.com`).
+2.  Enter your personal domain (e.g., `claytile.in`).
 3.  Vercel will give you DNS records (A Record and CNAME) to add to your domain registrar (GoDaddy, Namecheap, etc.).
 4.  Add these records in your registrar's dashboard.
 5.  Once verified, Vercel will issue an SSL certificate automatically.
 
-**Important:** Don't forget to add your new personal domain (e.g., `https://urbanclay.com`) to **Sanity CORS Origins** as well (Repeat Step 4)!
+**Important:** Don't forget to add your new personal domain (e.g., `https://claytile.in`) to **Sanity CORS Origins** as well (Repeat Step 4)!
 
 ---
 

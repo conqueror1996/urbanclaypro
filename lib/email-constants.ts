@@ -61,8 +61,8 @@ export const EMAIL_SIGNATURE = `
                     <p style="margin: 0; font-weight: bold; color: #b45a3c; font-size: 16px;">UrbanClay Team</p>
                     <p style="margin: 4px 0 0; color: #5d554f; font-size: 14px;">Premium Terracotta Solutions</p>
                     <p style="margin: 8px 0 0; font-size: 13px;">
-                        <a href="https://urbanclay.in" style="color: #2A1E16; text-decoration: none; font-weight: bold;">urbanclay.in</a> • 
-                        <a href="mailto:contact@urbanclay.in" style="color: #2A1E16; text-decoration: none; font-weight: bold;">contact@urbanclay.in</a> • 
+                        <a href="https://claytile.in" style="color: #2A1E16; text-decoration: none; font-weight: bold;">claytile.in</a> • 
+                        <a href="mailto:urbanclay@claytile.in" style="color: #2A1E16; text-decoration: none; font-weight: bold;">urbanclay@claytile.in</a> • 
                         <a href="tel:+918080081951" style="color: #2A1E16; text-decoration: none;">+91 80800 81951</a>
                     </p>
                 </td>
@@ -84,7 +84,7 @@ export const EMAIL_FOOTER = `
         </p>
         <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
             <a href="https://www.instagram.com/urbanclay.in/" style="color: white; text-decoration: none; margin: 0 10px;">Instagram</a>
-            <a href="https://urbanclay.in/products" style="color: white; text-decoration: none; margin: 0 10px;">Catalog</a>
+            <a href="https://claytile.in/products" style="color: white; text-decoration: none; margin: 0 10px;">Catalog</a>
             <a href="https://wa.me/918080081951" style="color: white; text-decoration: none; margin: 0 10px;">WhatsApp</a>
         </div>
     </div>

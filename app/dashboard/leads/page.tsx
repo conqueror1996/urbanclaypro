@@ -127,7 +127,7 @@ export default function LeadsDashboard() {
         doc.setFontSize(10);
         doc.setTextColor(100);
         doc.text("UrbanClay Inc.", 14, 28);
-        doc.text("gst@urbanclay.in | +91 98765 43210", 14, 33);
+        doc.text("urbanclay@claytile.in | +91 98765 43210", 14, 33);
 
         doc.text(`Date: ${new Date().toLocaleDateString()}`, 150, 20);
         doc.text(`Valid Until: ${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}`, 150, 25);

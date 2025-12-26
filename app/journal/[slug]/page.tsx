@@ -27,10 +27,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title: post.title,
             description: post.excerpt,
             type: 'article',
-            url: `https://urbanclay.in/journal/${slug}`,
+            url: `https://claytile.in/journal/${slug}`,
             images: [
                 {
-                    url: post.mainImage || 'https://urbanclay.in/og-default.jpg',
+                    url: post.mainImage || 'https://claytile.in/og-default.jpg',
                     width: 1200,
                     height: 630,
                     alt: post.title
@@ -134,13 +134,13 @@ export default async function BlogPostPage({ params }: PageProps) {
             'name': 'UrbanClay',
             'logo': {
                 '@type': 'ImageObject',
-                'url': 'https://urbanclay.in/urbanclay-logo.png'
+                'url': 'https://claytile.in/urbanclay-logo.png'
             }
         },
         'description': post.excerpt,
         'mainEntityOfPage': {
             '@type': 'WebPage',
-            '@id': `https://urbanclay.in/journal/${slug}`
+            '@id': `https://claytile.in/journal/${slug}`
         }
     };
 
@@ -209,7 +209,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                         <p className="text-gray-500 mb-8 font-light">Inspire others with sustainable architecture</p>
                         <div className="flex justify-center">
                             <SocialShare
-                                url={`https://urbanclay.in/journal/${slug}`}
+                                url={`https://claytile.in/journal/${slug}`}
                                 title={post.title}
                                 description={post.excerpt}
                             />

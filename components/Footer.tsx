@@ -64,7 +64,7 @@ export default function Footer() {
                             <li className="pt-4 border-t border-white/5 mt-4">
                                 <p className="text-xs uppercase tracking-wider text-gray-500 mb-2">Sales & Support</p>
                                 <a href="tel:+918080081951" className="block text-white hover:text-[#d8b09a] transition-colors font-medium mb-1">+91 80800 81951</a>
-                                <a href="mailto:sales@urbanclay.in" className="block text-white hover:text-[#d8b09a] transition-colors font-medium">sales@urbanclay.in</a>
+                                <a href="mailto:urbanclay@claytile.in" className="block text-white hover:text-[#d8b09a] transition-colors font-medium">urbanclay@claytile.in</a>
                             </li>
                         </ul>
                     </FooterSection>

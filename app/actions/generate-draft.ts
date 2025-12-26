@@ -85,7 +85,7 @@ Warm regards,
 **Sales Team**
 UrbanClay Studio
 *Handcrafted Excellence*
-sales@urbanclay.in | +91 80800 81951`;
+urbanclay@claytile.in | +91 80800 81951`;
 
     // Simulate API delay for realism
     await new Promise(resolve => setTimeout(resolve, 800));

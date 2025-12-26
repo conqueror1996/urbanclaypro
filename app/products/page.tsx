@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: 'Terracotta Tiles & Clay Bricks Collection | UrbanClay India',
     description: 'Browse India\'s widest range of low-efflorescence terracotta tiles, exposed wirecut bricks, jaali panels, and facade cladding systems.',
     keywords: [
-        'period terracotta tiles',
+        ' terracotta tiles',
         'clay brick tile suppliers',
         'terracotta jaali price',
         'exposed brick wall cost',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Premium Terracotta Collection | UrbanClay',
         description: 'Sustainable, handcrafted clay products for modern architecture.',
-        url: 'https://urbanclay.in/products',
+        url: 'https://claytile.in/products',
         type: 'website',
         locale: 'en_IN',
     }

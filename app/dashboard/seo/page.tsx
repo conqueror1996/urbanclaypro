@@ -190,7 +190,7 @@ export default function SeoDashboard() {
                                 </div>
                                 <div className="font-sans mb-4">
                                     <div className="text-blue-700 text-lg hover:underline cursor-pointer truncate">{selectedPage.meta.title}</div>
-                                    <div className="text-green-700 text-xs mb-1">https://urbanclay.in{selectedPage.url}</div>
+                                    <div className="text-green-700 text-xs mb-1">https://claytile.in{selectedPage.url}</div>
                                     <div className="text-gray-600 text-sm leading-snug">{selectedPage.meta.description || 'No description provided.'}</div>
                                 </div>
 

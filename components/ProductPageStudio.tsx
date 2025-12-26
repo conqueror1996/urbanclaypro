@@ -81,7 +81,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
         },
         offers: {
             '@type': 'Offer',
-            url: `https://urbanclay.in/products/${product.category?.slug}/${product.slug}`,
+            url: `https://claytile.in/products/${product.category?.slug}/${product.slug}`,
             priceCurrency: 'INR',
             price: product.priceRange?.replace(/[^0-9]/g, '') || '150', // Fallback or extract
             availability: 'https://schema.org/InStock',

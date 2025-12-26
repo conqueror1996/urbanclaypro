@@ -7,11 +7,11 @@ import { writeClient } from '@/sanity/lib/write-client';
 const TEMPLATES = {
     'architect': {
         subject: "Quick favor re: [Project Name] credits / Urban Clay",
-        body: `Hi [Name],\n\nHope you’re doing great! We’re currently updating our portfolio and listing [Project Name] as a featured case study on our new website.\n\nWhile we’re at it, could you check if "Urban Clay" is tagged as the material supplier on your own website's project page? It helps us a lot with our digital presence.\n\nHere is the link to use: https://urbanclay.in\n\nLet me know if you need any high-res photos of the terracotta work—we captured some great shots specifically of the cladding details that you're welcome to use.\n\nBest,\n[Your Name]`
+        body: `Hi [Name],\n\nHope you’re doing great! We’re currently updating our portfolio and listing [Project Name] as a featured case study on our new website.\n\nWhile we’re at it, could you check if "Urban Clay" is tagged as the material supplier on your own website's project page? It helps us a lot with our digital presence.\n\nHere is the link to use: https://claytile.in\n\nLet me know if you need any high-res photos of the terracotta work—we captured some great shots specifically of the cladding details that you're welcome to use.\n\nBest,\n[Your Name]`
     },
     'directory': {
         subject: "Listing Update for Urban Clay",
-        body: `Name: Urban Clay\nCategory: Building Materials / Cladding Supplier\nDescription: Urban Clay is India's premier manufacturer of sustainable terracotta cladding, wirecut bricks, and architectural jaalis. We supply eco-friendly clay facade solutions to architects and builders across Mumbai, Delhi, Bangalore, and nationwide.\nWebsite: https://urbanclay.in\nKeywords: Terracotta tiles, exposed wirecut bricks, clay jaali, facade cladding.`
+        body: `Name: Urban Clay\nCategory: Building Materials / Cladding Supplier\nDescription: Urban Clay is India's premier manufacturer of sustainable terracotta cladding, wirecut bricks, and architectural jaalis. We supply eco-friendly clay facade solutions to architects and builders across Mumbai, Delhi, Bangalore, and nationwide.\nWebsite: https://claytile.in\nKeywords: Terracotta tiles, exposed wirecut bricks, clay jaali, facade cladding.`
     }
 };
 

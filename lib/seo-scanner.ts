@@ -49,8 +49,8 @@ async function fetchLivePageData(path: string) {
             missingAltCount: Array.from(doc.querySelectorAll('img')).filter(img => !img.alt && img.src).length,
 
             // Link Profile
-            internalLinks: Array.from(doc.querySelectorAll('a')).filter(a => a.href && (a.href.startsWith('/') || a.href.includes('urbanclay.in'))).length,
-            externalLinks: Array.from(doc.querySelectorAll('a')).filter(a => a.href && a.href.startsWith('http') && !a.href.includes('urbanclay.in')).length,
+            internalLinks: Array.from(doc.querySelectorAll('a')).filter(a => a.href && (a.href.startsWith('/') || a.href.includes('claytile.in'))).length,
+            externalLinks: Array.from(doc.querySelectorAll('a')).filter(a => a.href && a.href.startsWith('http') && !a.href.includes('claytile.in')).length,
 
             // Readability (Flesch Kincaid Approximation)
             readabilityScore: calculateReadability(doc.body.innerText)

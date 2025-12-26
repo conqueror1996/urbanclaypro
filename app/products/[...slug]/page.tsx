@@ -162,7 +162,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                 title: categoryData.metaTitle,
                 description: categoryData.metaDescription,
                 type: 'website',
-                url: `https://urbanclay.in/products/${pathSlug}`,
+                url: `https://claytile.in/products/${pathSlug}`,
                 images: [{
                     url: `/api/og?slug=${pathSlug}&type=category`,
                     width: 1200,
@@ -233,7 +233,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             '@type': 'CollectionPage',
             name: `${displayTitle} Collection`,
             description: metaDescription,
-            url: `https://urbanclay.in/products/${pathSlug}`
+            url: `https://claytile.in/products/${pathSlug}`
         };
 
         return (

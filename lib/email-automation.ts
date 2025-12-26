@@ -119,7 +119,7 @@ export async function sendOrderConfirmation(data: EmailData) {
                 ` : ''}
 
                 <div style="text-align: center; margin-top: 40px;">
-                    <a href="https://urbanclay.in" style="display: inline-block; background: #C17A5F; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                    <a href="https://claytile.in" style="display: inline-block; background: #C17A5F; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
                         Visit Our Website
                     </a>
                 </div>
@@ -209,7 +209,7 @@ function generateEmailHTML(content: string, data: EmailData, isOffer: boolean = 
             </div>
 
             <div style="text-align: center; margin-top: 40px;">
-                <a href="https://urbanclay.in/products" style="display: inline-block; background: #C17A5F; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                <a href="https://claytile.in/products" style="display: inline-block; background: #C17A5F; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
                     ${isOffer ? 'Claim Your Discount' : 'Explore Products'}
                 </a>
             </div>

@@ -26,10 +26,10 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Architectural Projects | UrbanClay Portfolio',
         description: 'Showcasing the best terracotta and clay architecture in India.',
-        url: 'https://urbanclay.in/projects',
+        url: 'https://claytile.in/projects',
         type: 'website',
         locale: 'en_IN',
-        images: ['https://urbanclay.in/images/premium-terracotta-facade.png'],
+        images: ['https://claytile.in/images/premium-terracotta-facade.png'],
     }
 };
 

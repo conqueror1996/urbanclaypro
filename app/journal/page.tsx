@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'The Clay Journal | UrbanClay',
         description: 'Read our latest insights on modern masonry and sustainable design.',
-        url: 'https://urbanclay.in/journal',
+        url: 'https://claytile.in/journal',
         type: 'website',
     }
 };

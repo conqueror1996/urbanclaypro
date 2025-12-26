@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title: data.metaTitle,
             description: data.metaDescription,
             type: 'website',
-            url: `https://urbanclay.in/${data.slug}`,
+            url: `https://claytile.in/${data.slug}`,
             images: ['/og-image.png'],
         },
     };
@@ -47,9 +47,9 @@ export default async function CityPage({ params }: PageProps) {
         '@context': 'https://schema.org',
         '@type': 'LocalBusiness',
         'name': `UrbanClay ${data.name}`,
-        'image': 'https://urbanclay.in/og-image.png',
-        '@id': `https://urbanclay.in/${data.slug}`,
-        'url': `https://urbanclay.in/${data.slug}`,
+        'image': 'https://claytile.in/og-image.png',
+        '@id': `https://claytile.in/${data.slug}`,
+        'url': `https://claytile.in/${data.slug}`,
         'telephone': '+918080081951',
         'priceRange': '₹₹',
         'address': {

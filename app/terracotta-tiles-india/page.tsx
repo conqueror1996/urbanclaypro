@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Terracotta Tiles & Clay Facades India | UrbanClay',
         description: 'Discover premium terracotta and clay products for modern architecture. Direct from manufacturer.',
-        url: 'https://urbanclay.in/terracotta-tiles-india',
+        url: 'https://claytile.in/terracotta-tiles-india',
         siteName: 'UrbanClay',
         locale: 'en_IN',
         type: 'article',
@@ -24,8 +24,8 @@ export default function TerracottaTilesIndia() {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "UrbanClay",
-        "url": "https://urbanclay.in",
-        "logo": "https://urbanclay.in/urbanclay-logo.png",
+        "url": "https://claytile.in",
+        "logo": "https://claytile.in/urbanclay-logo.png",
         "description": "Manufacturer and supplier of premium terracotta tiles, brick cladding, and clay facade panels in India.",
         "address": {
             "@type": "PostalAddress",
@@ -270,7 +270,7 @@ export default function TerracottaTilesIndia() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
                             <a
-                                href="mailto:sales@urbanclay.in"
+                                href="mailto:urbanclay@claytile.in"
                                 className="px-10 py-5 bg-[var(--ink)] text-white rounded-full font-bold text-lg hover:bg-[#4a3e36] transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
                             >
                                 Request Quote

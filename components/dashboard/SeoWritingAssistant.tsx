@@ -81,7 +81,7 @@ export default function SeoWritingAssistant({ title, excerpt, keyword = '' }: Se
                         <div className="w-6 h-6 bg-gray-200 rounded-full text-[8px] flex items-center justify-center text-gray-500">UC</div>
                         <div className="flex flex-col">
                             <span className="text-[10px] text-gray-800">UrbanClay</span>
-                            <span className="text-[8px] text-gray-500">https://urbanclay.in › journal › ...</span>
+                            <span className="text-[8px] text-gray-500">https://claytile.in › journal › ...</span>
                         </div>
                     </div>
                     <h3 className="text-[#1a0dab] text-lg leading-snug hover:underline cursor-pointer truncate font-medium">

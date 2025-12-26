@@ -5,8 +5,8 @@ export const generateOrganizationSchema = () => ({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "UrbanClay",
-    "url": "https://urbanclay.in",
-    "logo": "https://urbanclay.in/images/logo.png",
+    "url": "https://claytile.in",
+    "logo": "https://claytile.in/images/logo.png",
     "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+91-9876543210", // Example
@@ -32,7 +32,7 @@ export const generateProductSchema = (product: Product) => ({
     // Assuming Indian pricing structure could be dynamic, filler for now
     "offers": {
         "@type": "Offer",
-        "url": `https://urbanclay.in/products/${product.category?.slug}/${product.slug}`,
+        "url": `https://claytile.in/products/${product.category?.slug}/${product.slug}`,
         "priceCurrency": "INR",
         "availability": "https://schema.org/InStock"
     }
@@ -52,7 +52,7 @@ export const generateArticleSchema = (post: any) => ({
         "name": "UrbanClay",
         "logo": {
             "@type": "ImageObject",
-            "url": "https://urbanclay.in/logo.png"
+            "url": "https://claytile.in/logo.png"
         }
     },
     "datePublished": post.publishedAt

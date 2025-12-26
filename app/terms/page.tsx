@@ -33,7 +33,7 @@ export default function TermsPage() {
 
                     <hr className="my-10 border-[var(--line)]" />
 
-                    <p className="text-sm italic">For any legal concerns, please contact us at legal@urbanclay.in</p>
+                    <p className="text-sm italic">For any legal concerns, please contact us at legal@claytile.in</p>
                 </div>
             </main>
             <Footer />
