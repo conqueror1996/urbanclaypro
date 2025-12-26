@@ -117,24 +117,16 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                                 return (
                                     <div
                                         key={bIdx}
-                                        className="relative flex-1 rounded-[1px] overflow-hidden min-w-0 min-h-0"
+                                        className="relative flex-1 rounded-[1px] overflow-hidden min-w-0 min-h-0 border-white/10 border-[0.5px]"
                                         style={{
                                             backgroundColor: brickTone,
-                                            boxShadow: '2px 2px 5px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2)'
                                         }}
                                     >
-                                        <div className="absolute inset-0"
+                                        <div className="absolute inset-0 opacity-40"
                                             style={{
                                                 backgroundImage: BRICK_TEXTURE,
-                                                filter: `brightness(${(0.95 + deterministicRandom * 0.1).toFixed(4)})`,
-                                                opacity: 0.6,
-                                                mixBlendMode: 'multiply'
                                             }}
                                         />
-                                        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/40" />
-                                        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/40" />
-                                        <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-white/30" />
-                                        <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-black/30" />
                                     </div>
                                 );
                             })}
@@ -167,24 +159,16 @@ export default function WallStyler({ initialColor = '#b45a3c', variantImages = [
                     key={`${pattern}-${i}`}
                     className={`relative ${spanClass} ${offsetClass} box-border border-r-[3px] md:border-r-[6px] border-transparent`}
                 >
-                    <div className="w-full h-full relative rounded-[1px] overflow-hidden bg-current"
+                    <div className="w-full h-full relative rounded-[1px] overflow-hidden bg-current border-[0.5px] border-white/10"
                         style={{
                             backgroundColor: brickTone,
-                            boxShadow: '3px 3px 6px rgba(0,0,0,0.35), inset 0 1px 1px rgba(255,255,255,0.2)'
                         }}>
 
-                        <div className="absolute inset-0"
+                        <div className="absolute inset-0 opacity-40"
                             style={{
                                 backgroundImage: BRICK_TEXTURE,
-                                filter: `brightness(${(0.95 + deterministicRandom * 0.1).toFixed(4)})`,
-                                opacity: 0.6,
-                                mixBlendMode: 'multiply'
                             }}
                         />
-                        {/* Simplified Borders - Removed expensive divs if possible, but kept for look. Use CSS border if possible? 
-                           Keeping for now but verified count reduction. */}
-                        <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/40" />
-                        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black/40" />
                     </div>
                 </div>
             );
