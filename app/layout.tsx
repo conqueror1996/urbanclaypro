@@ -4,6 +4,7 @@ import "./globals.css";
 import SplashLoader from "@/components/SplashLoader";
 import PageTransition from "@/components/PageTransition";
 import ResourceHints from "@/components/ResourceHints";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const epilogue = Epilogue({
   subsets: ["latin"],
@@ -142,6 +143,7 @@ export default function RootLayout({
           </SampleProvider>
         </SecurityProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
+        <SpeedInsights />
       </body>
     </html>
   );
