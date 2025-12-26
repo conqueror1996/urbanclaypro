@@ -279,21 +279,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                     price: priceInfo.price,
                     availability: 'https://schema.org/InStock'
                 }
-            } : {
-                // Fallback if no price available (prevent GSC error by omitting offers)
-                offers: {
-                    '@type': 'Offer',
-                    availability: 'https://schema.org/InStock',
-                    priceCurrency: 'INR',
-                    price: '0' // Placeholder to conform to schema if strictly needed, or better to omit. 
-                    // Actually, GSC hates price '0' sometimes. 
-                    // Let's use a contact point or Inquiry only, but for this specific 'Offer' error, providing a valid format is key.
-                    // Validating "price" existence is critical.
-                    // If null, we simply don't include 'offers' key at the top level? 
-                    // Usually acceptable. But let's providing a generic structure.
-                    // However, we'll try to omit offers if no price.
-                }
-            })
+            } : {})
         };
 
         // Clean up fallback if we want to be strict:

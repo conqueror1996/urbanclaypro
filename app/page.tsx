@@ -186,8 +186,8 @@ export default async function Home({ searchParams }: Props) {
         // Geo Coordinates (Mumbai)
         geo: {
           '@type': 'GeoCoordinates',
-          latitude: '19.0760',
-          longitude: '72.8777'
+          latitude: '19.1130',
+          longitude: '72.8279'
         },
       }
     ]

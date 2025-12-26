@@ -57,7 +57,7 @@ export default function TextReveal({ text, className = '', delay = 0, highlightW
                         key={index}
                         className={`mr-[0.25em] ${isHighlighted ? highlightClass : ''}`}
                     >
-                        {word}
+                        {word}{' '}
                     </motion.span>
                 );
             })}
