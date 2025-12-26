@@ -133,6 +133,9 @@ export default function MetadataHealthWidget() {
                 </div>
             )}
 
+            <Link href="/dashboard/seo" className="block w-full mt-3 bg-[var(--ink)] text-white py-2 rounded-lg text-xs font-bold hover:bg-black transition-colors">
+                Make Edits in SEO Manager →
+            </Link>
             <div className="mt-4 pt-4 border-t border-gray-100 text-center">
                 <p className="text-[10px] text-gray-400">Scanning {totalProducts} products</p>
             </div>

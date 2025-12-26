@@ -26,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/privacy-policy',
         '/terms',
         '/terracotta-tiles-india',
+        '/wiki',
     ];
 
     const staticPages = staticRoutes.map((route) => ({
@@ -37,13 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // 3. CITY PAGES (High SEO Value - Dynamic from Sanity)
     const cityDocs = await client.fetch(`*[_type == "cityPage"]{ "slug": slug.current, _updatedAt }`);
-
-    // Merge hardcoded CITIES keys if not present in Sanity (optional fallback)
-    // For now, we favor Sanity. If Sanity has data, we use it. 
-    // If you want both, we can combine them. Let's combine for safety during migration.
-    const hardcodedCities = Object.keys(CITIES);
-    const dynamicCitySlugs = cityDocs.map((c: any) => c.slug);
-    const allCitySlugs = Array.from(new Set([...hardcodedCities, ...dynamicCitySlugs]));
+    const allCitySlugs: string[] = cityDocs.map((c: any) => c.slug);
 
     const cityPages = allCitySlugs.map((slug) => ({
         url: `${baseUrl}/${slug}`,
@@ -86,11 +81,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     // 7. JOURNAL / BLOG POSTS (New Content Engine)
+    // 7. JOURNAL / BLOG POSTS (New Content Engine)
     const journalPages = posts.map((post: any) => ({
         url: `${baseUrl}/journal/${post.slug}`,
         lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.75, // Higher than generic pages, content is king
+    }));
+
+    // 8. WIKI / TECH ARTICLES (High Authority Content)
+    const wikiDocs = await client.fetch(`*[_type == "wikiArticle"]{ "slug": slug.current, _updatedAt }`);
+    const wikiPages = wikiDocs.map((doc: any) => ({
+        url: `${baseUrl}/wiki/${doc.slug}`,
+        lastModified: doc._updatedAt ? new Date(doc._updatedAt) : new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.8, // Strong Technical SEO signal
     }));
 
     return [
@@ -99,6 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...categories,
         ...productPages,
         ...projectPages,
-        ...journalPages
+        ...journalPages,
+        ...wikiPages
     ];
 }

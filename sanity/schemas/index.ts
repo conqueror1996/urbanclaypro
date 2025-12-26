@@ -25,8 +25,14 @@ import returnSchema from './return'
 import dispute from './dispute'
 import feedback from './feedback'
 
+import collection from './collection'
+
+import wikiArticle from './wikiArticle'
+import cityPage from './cityPage'
+
 export const schema: { types: SchemaTypeDefinition[] } = {
     types: [
+        collection,
         product,
         project,
         homePage,
@@ -46,6 +52,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         site,
         returnSchema,
         dispute,
-        feedback
+        feedback,
+        wikiArticle,
+        cityPage
     ],
 }

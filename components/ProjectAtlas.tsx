@@ -45,13 +45,24 @@ interface ProjectAtlasProps {
     projects?: Project[];
 }
 
+
+// Deterministic random number generator based on string seed
+const getDeterministicRandom = (seed: string) => {
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        const char = seed.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return (Math.abs(hash) % 1000) / 1000; // 0.0 to 1.0
+};
+
 export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
     const [activeLocation, setActiveLocation] = useState<string | null>(null);
 
     // Dynamic Location Generation
     const projectLocations = React.useMemo(() => {
         const mapped: ProjectLocation[] = [];
-        const usedCities = new Set<string>();
 
         // Sort projects by recency or importance if available
         projects.forEach(project => {
@@ -62,9 +73,10 @@ export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
             const cityKey = Object.keys(CITY_COORDINATES).find(city => locationLower.includes(city));
 
             if (cityKey) {
-                // Add slight jitter to prevent exact overlap
-                const jitterX = (Math.random() - 0.5) * 3;
-                const jitterY = (Math.random() - 0.5) * 3;
+                // Use deterministic jitter to prevent hydration mismatch
+                // We use the slug + axis as seed so the jitter is constant for each project
+                const jitterX = (getDeterministicRandom(project.slug + 'x') - 0.5) * 3;
+                const jitterY = (getDeterministicRandom(project.slug + 'y') - 0.5) * 3;
 
                 mapped.push({
                     id: project.slug,

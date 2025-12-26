@@ -63,7 +63,7 @@ export default defineType({
             description: 'Select the category this collection belongs to (Replaces the old dropdown)',
             type: 'reference',
             group: 'editorial',
-            to: [{ type: 'category' }],
+            to: [{ type: 'category' }, { type: 'collection' }],
         }),
         defineField({
             name: 'range',

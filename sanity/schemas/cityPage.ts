@@ -69,6 +69,22 @@ export default defineType({
             rows: 4,
             description: 'Why terracotta is good for this specific city\'s weather.'
         }),
+        defineField({
+            name: 'weatherContext',
+            title: 'Weather Context Short',
+            type: 'string',
+            description: 'Short phrase like "Hot Dry", "Humid Coastal", etc.',
+            initialValue: 'Tropical'
+        }),
+
+        // DELIVERY INFO
+        defineField({
+            name: 'deliveryTime',
+            title: 'Typical Delivery Time',
+            type: 'string',
+            description: 'e.g. "24-48 Hours" or "3-5 Days"',
+            initialValue: '2-4 Days'
+        }),
 
         // LISTS
         defineField({
@@ -84,6 +100,31 @@ export default defineType({
             type: 'array',
             of: [{ type: 'string' }],
             description: 'Specific product keywords for this city.'
+        }),
+
+        // RICH CONTENT (The "Hyper-Local" Booster)
+        defineField({
+            name: 'faq',
+            title: 'City Specific FAQs',
+            type: 'array',
+            of: [
+                {
+                    type: 'object',
+                    name: 'faqItem',
+                    fields: [
+                        { name: 'question', type: 'string', title: 'Question' },
+                        { name: 'answer', type: 'text', title: 'Answer', rows: 3 }
+                    ]
+                }
+            ],
+            description: 'Add questions specific to this city to boost rank zero potential.'
+        }),
+        defineField({
+            name: 'localImages',
+            title: 'Local Project Gallery',
+            type: 'array',
+            of: [{ type: 'image', options: { hotspot: true } }],
+            description: 'Show projects actually built in this city.'
         })
     ]
 })

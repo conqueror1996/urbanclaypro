@@ -163,6 +163,15 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
         const query = search ? `?${search}` : '';
 
         router.replace(`${pathname}${query}`, { scroll: false });
+
+        // Track Variant Selection
+        if (typeof window !== 'undefined' && (window as any).gtag && v) {
+            (window as any).gtag('event', 'select_content', {
+                content_type: 'product_variant',
+                item_id: `${product.slug}-${v.name}`,
+                variant_name: v.name
+            });
+        }
     };
 
     return (

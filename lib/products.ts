@@ -140,8 +140,27 @@ export async function getRelatedProducts(category: string, currentSlug: string):
         .slice(0, 4);
 }
 
-export async function getCollectionBySlug(collectionSlug: string): Promise<Product | undefined> {
-    return getProduct(collectionSlug);
+// Enhanced Collection Fetcher
+export async function getCollectionBySlug(collectionSlug: string): Promise<any | undefined> {
+    try {
+        const query = groq`*[_type == "collection" && slug.current == $slug][0] {
+            title,
+            description,
+            filterTags,
+            "seo": {
+                "metaTitle": seo.metaTitle,
+                "metaDescription": seo.metaDescription,
+                "keywords": seo.keywords
+            },
+            "imageUrl": featuredImage.asset->url
+        }`;
+
+        const collection = await client.fetch(query, { slug: collectionSlug }, { next: { revalidate: 60 } });
+        return collection || undefined;
+    } catch (error) {
+        console.error('Error fetching collection:', error);
+        return undefined;
+    }
 }
 
 // Optimized query for OG Image generation for Categories

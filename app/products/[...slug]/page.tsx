@@ -7,7 +7,7 @@ import React from 'react';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getProduct, getRelatedProducts } from '@/lib/products';
+import { getProduct, getRelatedProducts, getCollectionBySlug } from '@/lib/products';
 
 // Components
 import ProductPageAnimate from '@/components/ProductPageAnimate';
@@ -178,7 +178,25 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         };
     }
 
-    // 2. Try resolving as Category
+    // 2. Try resolving as Dynamic Collection (Sanity)
+    const dynamicCollection = await getCollectionBySlug(pathSlug);
+    if (dynamicCollection) {
+        return {
+            title: dynamicCollection.seo?.metaTitle || `${dynamicCollection.title} | UrbanClay`,
+            description: dynamicCollection.seo?.metaDescription || dynamicCollection.description,
+            keywords: dynamicCollection.seo?.keywords || [],
+            openGraph: {
+                title: dynamicCollection.seo?.metaTitle,
+                description: dynamicCollection.seo?.metaDescription,
+                images: dynamicCollection.imageUrl ? [dynamicCollection.imageUrl] : []
+            },
+            alternates: {
+                canonical: `https://claytile.in/products/${pathSlug}`
+            }
+        };
+    }
+
+    // 3. Fallback to Hardcoded Category
     const categoryKey = resolveCategoryKey(pathSlug);
     const categoryData = categoryKey ? CATEGORY_METADATA[categoryKey] : null;
 
@@ -298,25 +316,49 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         );
     }
 
-    // B. CHECK FOR CATEGORY (The New "Category Hub")
+    // B. TRY RESOLVING DYNAMIC COLLECTION (Sanity)
+    const dynamicCollection = await getCollectionBySlug(pathSlug);
+
+    // C. TRY RESOLVING HARDCODED CATEGORY (Fallback)
     const categoryKey = resolveCategoryKey(pathSlug);
     const categoryData = categoryKey ? CATEGORY_METADATA[categoryKey] : null;
 
-    if (categoryData) {
-        const { displayTitle, metaDescription } = categoryData;
+    // Unified Logic for Collection Page
+    const collection = dynamicCollection || (categoryData ? {
+        title: categoryData.displayTitle,
+        description: categoryData.metaDescription,
+        // For hardcoded categories, we map keys to tags/slugs manually below
+        filterTags: [categoryData.displayTitle, categoryKey],
+        imageUrl: null
+    } : null);
+
+    if (collection) {
+        const { title, description } = collection;
 
         // Fetch ALL products, then filter server-side
         const allProducts = await import('@/lib/products').then(m => m.getProducts());
-        // Since getProducts returns everything, we filter:
+
+        // Dynamic Filter Logic
+        // If we have explicit filter tags from Sanity, use them.
+        // Otherwise use the title and slug matching (legacy logic).
+        const tagsToMatch = collection.filterTags || [title, categoryKey];
+
         const categoryProducts = Array.isArray(allProducts) ? allProducts.filter((p: any) =>
-            p.category?.title === displayTitle || p.tag === displayTitle || p.category?.slug === categoryKey
+            tagsToMatch.some((tag: string) =>
+                tag && (
+                    p.category?.title === tag ||
+                    p.tag === tag ||
+                    p.category?.slug === tag ||
+                    p.category?.slug === tag?.toLowerCase().replace(/ /g, '-')
+                )
+            )
         ) : [];
 
         const jsonLdCat = {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
-            name: `${displayTitle} Collection`,
-            description: metaDescription,
+            name: `${title} Collection`,
+            description: description,
             url: `https://claytile.in/products/${pathSlug}`
         };
 
@@ -332,13 +374,20 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                                 Collection
                             </span>
                             <h1 className="text-4xl md:text-7xl font-serif text-[#EBE5E0] leading-[0.9] mb-6">
-                                {displayTitle}
+                                {title}
                             </h1>
                             {/* SEO Power Text */}
                             <p className="max-w-2xl text-white/60 text-lg font-light leading-relaxed">
-                                {metaDescription}
+                                {description}
                             </p>
                         </div>
+
+                        {/* Render cover image if available (Dynamic Sanity Only) */}
+                        {collection.imageUrl && (
+                            <div className="hidden md:block w-32 h-32 rounded-lg overflow-hidden border border-white/10">
+                                <Image src={collection.imageUrl} alt={title} width={200} height={200} className="object-cover w-full h-full" />
+                            </div>
+                        )}
                     </div>
 
                     {/* Products Grid */}
@@ -398,6 +447,6 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         );
     }
 
-    // C. 404 (Fallback)
+    // D. 404 (Fallback)
     notFound();
 }

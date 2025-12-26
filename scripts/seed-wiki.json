@@ -1,0 +1,194 @@
+[
+    {
+        "_id": "wiki-efflorescence",
+        "_type": "wikiArticle",
+        "title": "Efflorescence: The Comprehensive Guide",
+        "slug": {
+            "_type": "slug",
+            "current": "efflorescence-guide"
+        },
+        "category": "maintenance",
+        "difficulty": "intermediate",
+        "summary": "Everything you need to know about those white powdery patches on brick walls. Causes, prevention, and permanent cures.",
+        "content": [
+            {
+                "_type": "block",
+                "style": "normal",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Efflorescence is a crystalline deposit of salts that can form on the surface of brick, concrete, or other masonry products. It appears as a white, powdery substance and is a common concern for homeowners."
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "h2",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "What Causes It?"
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "normal",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Three conditions must exist simultaneously for efflorescence to occur:"
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "listItem": "bullet",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Water-soluble salts must be present in the masonry."
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "listItem": "bullet",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Moisture must be present to dissolve these salts."
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "listItem": "bullet",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "A path must exist for the salt solution to migrate to the surface and evaporate."
+                    }
+                ]
+            },
+            {
+                "_type": "infoBox",
+                "type": "Tip",
+                "text": "The simplest way to prevent efflorescence is to control moisture. Ensure proper drainage and use water-repellent sealers."
+            }
+        ]
+    },
+    {
+        "_id": "wiki-thermal",
+        "_type": "wikiArticle",
+        "title": "Thermal Conductivity: Clay vs. Concrete",
+        "slug": {
+            "_type": "slug",
+            "current": "thermal-conductivity-clay-vs-concrete"
+        },
+        "category": "science",
+        "difficulty": "advanced",
+        "summary": "A scientific comparison of thermal lag and insulation properties. Why clay homes stay 5°C cooler in Indian summers.",
+        "content": [
+            {
+                "_type": "block",
+                "style": "normal",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "In the sweltering heat of the Indian sub-continent, the choice of building material defines the comfort of the occupants. Terracotta (burnt clay) has been the material of choice for millennia, not just for tradition, but for physics."
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "h2",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "The Thermal Lag Effect"
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "normal",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Thermal lag is the time it takes for heat to pass through a material. Concrete transfers heat rapidly. Clay, being porous, traps air and slows down this transfer."
+                    }
+                ]
+            },
+            {
+                "_type": "infoBox",
+                "type": "Note",
+                "text": "A 9-inch clay brick wall has a thermal lag of approx 8 hours. This means peak afternoon heat only reaches the interior by late evening, when windows can be opened."
+            }
+        ]
+    },
+    {
+        "_id": "wiki-wirecut",
+        "_type": "wikiArticle",
+        "title": "Wirecut vs. Handmade: A Buyer's Guide",
+        "slug": {
+            "_type": "slug",
+            "current": "wirecut-vs-handmade"
+        },
+        "category": "technical",
+        "difficulty": "beginner",
+        "summary": "Confused between sharp edges and rustic textures? We explain the manufacturing differences and aesthetic outcomes of both styles.",
+        "content": [
+            {
+                "_type": "block",
+                "style": "normal",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "When choosing exposed bricks, the manufacturing process determines the final look. The two primary methods are Wirecut (Extruded) and Handmade (Moulded)."
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "h2",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Wirecut Bricks"
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "normal",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "These are machine-extruded and cut with a wire tension. They offer sharp edges, uniform sizes, and higher compressive strength. Best for modern, clean lines."
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "h2",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Handmade Bricks"
+                    }
+                ]
+            },
+            {
+                "_type": "block",
+                "style": "normal",
+                "children": [
+                    {
+                        "_type": "span",
+                        "text": "Thrown into a mould by hand. Each brick is unique, with creases and soft edges. They are perfect for heritage restoration or giving a 'lived-in' feel to new homes."
+                    }
+                ]
+            }
+        ]
+    }
+]

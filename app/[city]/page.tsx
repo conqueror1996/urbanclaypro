@@ -4,28 +4,38 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CITIES, regions } from '@/lib/locations';
+import { client } from '@/sanity/lib/client';
+import { urlForImage } from '@/sanity/lib/image';
+import { regions } from '@/lib/locations';
+
+// Revalidate every hour
+export const revalidate = 3600;
 
 interface PageProps {
     params: Promise<{ city: string }>;
 }
 
 export async function generateStaticParams() {
-    return Object.keys(CITIES).map((city) => ({
-        city: city,
-    }));
+    const cities = await client.fetch(`*[_type == "cityPage"]{ "city": slug.current }`);
+    return cities;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { city } = await params;
-    const data = CITIES[city];
+
+    const data = await client.fetch(`
+        *[_type == "cityPage" && slug.current == $city][0]{
+            metaTitle,
+            metaDescription,
+            "slug": slug.current
+        }
+    `, { city });
 
     if (!data) return { title: 'City Not Found' };
 
     return {
         title: data.metaTitle,
         description: data.metaDescription,
-        keywords: data.possibleKeywords,
         openGraph: {
             title: data.metaTitle,
             description: data.metaDescription,
@@ -41,10 +51,32 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CityPage({ params }: PageProps) {
     const { city } = await params;
-    const data = CITIES[city];
 
-    // Explicitly fallback to 404 if city not in our list
+    const query = `*[_type == "cityPage" && slug.current == $city][0]{
+        name,
+        "slug": slug.current,
+        region,
+        heroTitle,
+        heroSubtitle,
+        climateAdvice,
+        weatherContext,
+        deliveryTime,
+        areasServed,
+        popularProducts,
+        faq,
+        localImages
+    }`;
+
+    const data = await client.fetch(query, { city });
+
     if (!data) notFound();
+
+    // Default values if fields are missing in Sanity (for safety)
+    const areas = data.areasServed || [];
+    const products = data.popularProducts || [];
+    const delivery = data.deliveryTime || '2-4 days';
+    const weather = data.weatherContext || 'Tropical';
+    const regionCities = regions[data.region as keyof typeof regions] || [];
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -59,13 +91,8 @@ export default async function CityPage({ params }: PageProps) {
             '@type': 'PostalAddress',
             'streetAddress': `${data.name}, India`,
             'addressLocality': data.name,
-            'addressRegion': data.region === 'West' ? 'Maharashtra' : data.region === 'South' ? 'Karnataka/Telangana/Tamil Nadu' : 'Delhi NCR', // Simplified
+            'addressRegion': data.region,
             'addressCountry': 'IN'
-        },
-        'geo': {
-            '@type': 'GeoCoordinates',
-            'latitude': data.coordinates.lat,
-            'longitude': data.coordinates.lng
         },
         'openingHoursSpecification': {
             '@type': 'OpeningHoursSpecification',
@@ -73,7 +100,7 @@ export default async function CityPage({ params }: PageProps) {
             'opens': '09:00',
             'closes': '19:00'
         },
-        'areaServed': data.areasServed.map(area => ({
+        'areaServed': areas.map((area: string) => ({
             '@type': 'Place',
             'name': area
         }))
@@ -110,16 +137,42 @@ export default async function CityPage({ params }: PageProps) {
                         </div>
                         <div className="text-center p-8 bg-[var(--sand)]/30 rounded-2xl border border-[#e5e0d8]">
                             <div className="text-4xl mb-4">🚚</div>
-                            <h3 className="font-serif text-xl mb-3 text-[#2A1E16]">Direct Delivery</h3>
-                            <p className="text-sm text-gray-600 leading-relaxed">Direct site delivery to all areas including {data.areasServed.slice(0, 3).join(', ')}.</p>
+                            <h3 className="font-serif text-xl mb-3 text-[#2A1E16]">Fast Delivery</h3>
+                            <p className="text-sm text-gray-600 leading-relaxed">
+                                Delivery to {data.name} usually takes <strong>{delivery}</strong>. Direct site delivery available.
+                            </p>
                         </div>
                         <div className="text-center p-8 bg-[var(--sand)]/30 rounded-2xl border border-[#e5e0d8]">
                             <div className="text-4xl mb-4">✨</div>
                             <h3 className="font-serif text-xl mb-3 text-[#2A1E16]">Architect Preferred</h3>
-                            <p className="text-sm text-gray-600 leading-relaxed">Trusted by over 500+ architects in {data.name} for premium facades.</p>
+                            <p className="text-sm text-gray-600 leading-relaxed">Trusted by top architects in {data.name} for premium facades.</p>
                         </div>
                     </div>
                 </section>
+
+                {/* Local Project Gallery (New Feature) */}
+                {data.localImages && data.localImages.length > 0 && (
+                    <section className="py-16 bg-gray-50 mb-16">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-[#2A1E16]">
+                                Projects in {data.name}
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {data.localImages.map((img: any, idx: number) => (
+                                    <div key={idx} className="relative h-64 rounded-xl overflow-hidden shadow-sm group">
+                                        <img
+                                            src={urlForImage(img).width(600).height(400).url()}
+                                            alt={`${data.name} Project ${idx + 1}`}
+                                            className="search-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                        />
+                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
 
                 {/* Popular Products for City */}
                 <section className="bg-[#faf7f5] py-24">
@@ -129,11 +182,13 @@ export default async function CityPage({ params }: PageProps) {
                         </h2>
 
                         <div className="grid md:grid-cols-3 gap-8">
-                            {/* We map generic categories but customize the text slightly based on city preference if needed */}
+                            {/* Generic fallbacks if specific products aren't set, or loop through if logic permits. 
+                                For now, we keep the reliable internal linking structure but inject dynamic text.
+                            */}
+
                             <Link href="/products?category=Exposed Brick" className="group">
                                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100">
                                     <div className="h-64 bg-gray-200 relative overflow-hidden">
-                                        {/* Placeholder for city specific imagery if available, or generic product */}
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10"></div>
                                         <img
                                             src="/images/products/wirecut-texture.jpg"
@@ -144,7 +199,7 @@ export default async function CityPage({ params }: PageProps) {
                                     </div>
                                     <div className="p-8">
                                         <h3 className="text-2xl font-serif mb-3 text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">Exposed Bricks</h3>
-                                        <p className="text-gray-500 mb-6 font-light">Perfect for {data.name}'s {data.weatherContext.toLowerCase()} climate.</p>
+                                        <p className="text-gray-500 mb-6 font-light">Perfect for {data.name}'s {weather.toLowerCase()} climate.</p>
                                         <div className="flex items-center text-[var(--terracotta)] font-bold tracking-widest text-xs uppercase">
                                             View Collection <span className="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
                                         </div>
@@ -196,17 +251,31 @@ export default async function CityPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {/* FAQ Section (Loved by Google) */}
+                {/* FAQ Section (Enhanced with Sanity Data) */}
                 <section className="max-w-4xl mx-auto px-6 py-20">
                     <h2 className="text-3xl font-serif mb-12 text-center">Frequently Asked Questions in {data.name}</h2>
                     <div className="space-y-6">
+                        {/* Dynamic FAQs from Sanity */}
+                        {data.faq && data.faq.map((item: any, i: number) => (
+                            <details key={i} className="group bg-white rounded-xl shadow-sm border border-gray-100 open:shadow-md transition-all">
+                                <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
+                                    <h3 className="font-medium text-lg text-[#2A1E16]">{item.question}</h3>
+                                    <span className="transform group-open:rotate-180 transition-transform duration-300">▼</span>
+                                </summary>
+                                <div className="px-6 pb-6 text-gray-600 leading-relaxed">
+                                    {item.answer}
+                                </div>
+                            </details>
+                        ))}
+
+                        {/* Standard FAQs (Fallbacks if no specific ones, or additions) */}
                         <details className="group bg-white rounded-xl shadow-sm border border-gray-100 open:shadow-md transition-all">
                             <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
-                                <h3 className="font-medium text-lg text-[#2A1E16]">What is the delivery time for {data.name}?</h3>
+                                <h3 className="font-medium text-lg text-[#2A1E16]">What is the local delivery time?</h3>
                                 <span className="transform group-open:rotate-180 transition-transform duration-300">▼</span>
                             </summary>
                             <div className="px-6 pb-6 text-gray-600 leading-relaxed">
-                                For most standard products in {data.name}, we offer delivery within 24-48 hours. Custom or bulk orders may take 3-5 days. We deliver to all major areas including {data.areasServed.slice(0, 4).join(', ')}.
+                                For most areas in {data.name}, delivery takes {delivery}. We deliver to all major areas including {areas.slice(0, 4).join(', ')}.
                             </div>
                         </details>
                         <details className="group bg-white rounded-xl shadow-sm border border-gray-100 open:shadow-md transition-all">
@@ -218,15 +287,6 @@ export default async function CityPage({ params }: PageProps) {
                                 Absolutely. {data.climateAdvice}
                             </div>
                         </details>
-                        <details className="group bg-white rounded-xl shadow-sm border border-gray-100 open:shadow-md transition-all">
-                            <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
-                                <h3 className="font-medium text-lg text-[#2A1E16]">Can I see samples in {data.name}?</h3>
-                                <span className="transform group-open:rotate-180 transition-transform duration-300">▼</span>
-                            </summary>
-                            <div className="px-6 pb-6 text-gray-600 leading-relaxed">
-                                Yes, we offer a free sample box service in {data.name}. You can order up to 5 samples online, and they will be delivered to your doorstep for you to touch and feel the quality.
-                            </div>
-                        </details>
                     </div>
                 </section>
 
@@ -234,8 +294,8 @@ export default async function CityPage({ params }: PageProps) {
                 <section className="bg-gray-50 py-16 border-t border-gray-200">
                     <div className="max-w-7xl mx-auto px-6">
                         <p className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8 text-center">Delivering to all areas in {data.name}</p>
-                        <div className="flex flex-wrapjustify-center gap-3 text-center justify-center">
-                            {data.areasServed.map((area) => (
+                        <div className="flex flex-wrap justify-center gap-3 text-center">
+                            {areas.map((area: string) => (
                                 <span key={area} className="text-sm text-gray-500 bg-white px-4 py-2 rounded-full border border-gray-100 shadow-sm">
                                     {area}
                                 </span>
@@ -248,7 +308,7 @@ export default async function CityPage({ params }: PageProps) {
                 <section className="py-12 max-w-7xl mx-auto px-6 text-center">
                     <p className="text-sm text-gray-400 mb-6">Explore other locations in {data.region} India</p>
                     <div className="flex justify-center flex-wrap gap-6 text-[var(--terracotta)] underline decoration-[var(--terracotta)]/30 underline-offset-4">
-                        {(regions[data.region as keyof typeof regions] || [])
+                        {regionCities
                             .filter((c: string) => c !== data.slug)
                             .map((citySlug: string) => (
                                 <Link key={citySlug} href={`/${citySlug}`} className="capitalize hover:decoration-[var(--terracotta)]">
@@ -260,9 +320,7 @@ export default async function CityPage({ params }: PageProps) {
 
                 {/* CTA */}
                 <section className="bg-[#2A1E16] text-white py-24 relative overflow-hidden">
-                    {/* Background Pattern */}
                     <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
-
                     <div className="max-w-4xl mx-auto text-center px-4 relative z-10">
                         <h2 className="text-3xl md:text-5xl font-serif mb-8 max-w-2xl mx-auto">Build with {data.name}'s finest clay materials.</h2>
                         <p className="text-xl mb-12 text-white/70 font-light">
@@ -285,7 +343,6 @@ export default async function CityPage({ params }: PageProps) {
                     </div>
                 </section>
             </main>
-
             <Footer />
         </div>
     );

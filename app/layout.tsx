@@ -113,11 +113,12 @@ import GlobalSampleModal from '@/components/GlobalSampleModal';
 
 import SecurityProvider from "@/components/SecurityProvider";
 import SmartExitPopup from "@/components/SmartExitPopup";
-import AiConsultant from "@/components/AiConsultant";
+
 
 // ... imports
 
 import FootprintTracker from "@/components/FootprintTracker";
+import FloatingSampleBadge from "@/components/FloatingSampleBadge";
 
 export default function RootLayout({
   children,
@@ -139,11 +140,35 @@ export default function RootLayout({
             <WebVitalsReporter />
             <GlobalSampleModal />
             <SmartExitPopup />
-            <AiConsultant />
+            <FloatingSampleBadge />
           </SampleProvider>
         </SecurityProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
         <SpeedInsights />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'UrbanClay',
+              url: 'https://claytile.in',
+              logo: 'https://claytile.in/urbanclay-logo.png',
+              sameAs: [
+                'https://www.instagram.com/urbanclay.in',
+                'https://www.facebook.com/urbanclay.in',
+                'https://www.linkedin.com/company/urbanclay'
+              ],
+              contactPoint: {
+                '@type': 'ContactPoint',
+                telephone: '+91-8080081951',
+                contactType: 'customer service',
+                areaServed: 'IN',
+                availableLanguage: ['en', 'hi']
+              }
+            })
+          }}
+        />
       </body>
     </html>
   );

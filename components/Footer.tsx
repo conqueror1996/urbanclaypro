@@ -49,6 +49,7 @@ export default function Footer() {
                             <li><FooterLink href="/journal">The Clay Journal</FooterLink></li>
                             <li><FooterLink href="/resources">Installation Guides</FooterLink></li>
                             <li><FooterLink href="/resources">Technical Data Sheets</FooterLink></li>
+                            <li><FooterLink href="/wiki">Technical Wiki</FooterLink></li>
                             <li><FooterLink href="/projects">Project Showcase</FooterLink></li>
                             <li><FooterLink href="/architects">For Architects</FooterLink></li>
                             <li><FooterLink href="/guide">Selection Guide</FooterLink></li>
