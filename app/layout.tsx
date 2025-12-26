@@ -89,9 +89,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add your verification codes here when ready
-    google: 'google-site-verification=YOUR_VERIFICATION_CODE',
-    // yandex: 'your-yandex-verification-code',
+    google: 'M3QQNfOSKQ4nnCku83gLqX_Q35z6Lf8eGnjSa1q77fc',
   },
   appleWebApp: {
     capable: true,
