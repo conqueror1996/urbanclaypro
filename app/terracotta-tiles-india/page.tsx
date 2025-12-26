@@ -16,7 +16,18 @@ export const metadata: Metadata = {
         siteName: 'UrbanClay',
         locale: 'en_IN',
         type: 'article',
+        images: [
+            {
+                url: 'https://claytile.in/images/products/wirecut-texture.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Premium Terracotta Tiles India'
+            }
+        ]
     },
+    alternates: {
+        canonical: 'https://claytile.in/terracotta-tiles-india'
+    }
 };
 
 export default function TerracottaTilesIndia() {

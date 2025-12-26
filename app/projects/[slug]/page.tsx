@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
             title: project.title,
             description: project.description?.slice(0, 160),
-            url: `https://urbanclay.in/projects/${slug}`,
+            url: `https://claytile.in/projects/${slug}`,
             siteName: 'UrbanClay',
             locale: 'en_IN',
             type: 'website',
@@ -41,6 +41,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                     alt: project.title,
                 },
             ],
+        },
+        alternates: {
+            canonical: `https://claytile.in/projects/${slug}`
         },
         twitter: {
             card: 'summary_large_image',

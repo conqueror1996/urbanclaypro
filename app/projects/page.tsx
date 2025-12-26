@@ -27,9 +27,13 @@ export const metadata: Metadata = {
         title: 'Architectural Projects | UrbanClay Portfolio',
         description: 'Showcasing the best terracotta and clay architecture in India.',
         url: 'https://claytile.in/projects',
+        siteName: 'UrbanClay',
         type: 'website',
         locale: 'en_IN',
         images: ['https://claytile.in/images/premium-terracotta-facade.png'],
+    },
+    alternates: {
+        canonical: 'https://claytile.in/projects'
     }
 };
 

@@ -33,6 +33,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             url: `https://claytile.in/${data.slug}`,
             images: ['/og-image.png'],
         },
+        alternates: {
+            canonical: `https://claytile.in/${data.slug}`
+        }
     };
 }
 

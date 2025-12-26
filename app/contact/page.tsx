@@ -4,8 +4,35 @@ import Footer from '@/components/Footer';
 import QuoteForm from '@/components/QuoteForm';
 
 export const metadata = {
-    title: 'Contact Us | UrbanClay',
-    description: 'Get in touch with UrbanClay for premium terracotta tiles and facades. Visit our studio in Mumbai or contact us for pan-India delivery.',
+    title: 'Contact Us | UrbanClay Experience Center',
+    description: 'Visit our Mumbai studio or contact us for pan-India delivery of premium terracotta tiles and facades. Phone: +91 80800 81951.',
+    keywords: [
+        'contact urbanclay',
+        'terracotta tiles mumbai',
+        'clay tile showroom',
+        'buy terracotta tiles',
+        'urbanclay address',
+        'facade suppliers india'
+    ],
+    openGraph: {
+        title: 'Contact UrbanClay | Experience Center & Studio',
+        description: 'Visit our studio in Mumbai or get in touch for projects nationwide.',
+        url: 'https://claytile.in/contact',
+        siteName: 'UrbanClay',
+        locale: 'en_IN',
+        type: 'website',
+        images: [
+            {
+                url: 'https://claytile.in/images/studio-entrance.jpg', // Fallback if not exists effectively handled by browser or generous OG defaults usually
+                width: 1200,
+                height: 630,
+                alt: 'UrbanClay Studio Entrance'
+            }
+        ]
+    },
+    alternates: {
+        canonical: 'https://claytile.in/contact'
+    }
 };
 
 export default function ContactPage() {

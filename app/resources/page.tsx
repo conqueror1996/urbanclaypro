@@ -35,6 +35,9 @@ export const metadata: Metadata = {
         description: 'Access material calculators, installation guides, and technical specifications.',
         images: ['https://claytile.in/images/architect-hero-confidence.png'],
     },
+    alternates: {
+        canonical: 'https://claytile.in/resources'
+    }
 };
 
 export default async function ResourcesPage() {
