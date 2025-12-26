@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 import Link from 'next/link';
 import TrafficPulse from '@/components/TrafficPulse';
+import MetadataHealthWidget from '@/components/dashboard/MetadataHealthWidget';
 
 export default function DashboardPage() {
     const [stats, setStats] = useState({
@@ -173,53 +174,61 @@ export default function DashboardPage() {
                 </Link>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
-                <div className="px-8 py-6 border-b border-gray-100/50 flex justify-between items-center bg-gray-50/30">
-                    <div>
-                        <h3 className="font-bold text-[var(--ink)] text-lg">Recent Inquiries</h3>
-                        <p className="text-xs text-gray-400 mt-1">Latest activity from the website</p>
+            {/* CONTENT & LEADS ROW */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* RECENT LEADS (2/3 Width) */}
+                <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
+                    <div className="px-8 py-6 border-b border-gray-100/50 flex justify-between items-center bg-gray-50/30">
+                        <div>
+                            <h3 className="font-bold text-[var(--ink)] text-lg">Recent Inquiries</h3>
+                            <p className="text-xs text-gray-400 mt-1">Latest activity from the website</p>
+                        </div>
+                        <Link href="/dashboard/leads" className="text-xs text-[var(--terracotta)] font-bold uppercase tracking-wider hover:underline">View All Leads</Link>
                     </div>
-                    <Link href="/dashboard/leads" className="text-xs text-[var(--terracotta)] font-bold uppercase tracking-wider hover:underline">View All Leads</Link>
-                </div>
-                <table className="w-full text-sm text-left">
-                    <thead className="bg-gray-50/50 text-gray-400 font-medium uppercase text-[10px] tracking-widest font-sans">
-                        <tr>
-                            <th className="px-8 py-4">Customer</th>
-                            <th className="px-6 py-4">Role</th>
-                            <th className="px-6 py-4">Interest</th>
-                            <th className="px-6 py-4">Date</th>
-                            <th className="px-6 py-4">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                        {recentLeads.length > 0 ? (
-                            recentLeads.map((lead) => (
-                                <tr key={lead._id} className="hover:bg-gray-50/50 transition-colors">
-                                    <td className="px-8 py-4 font-bold text-[var(--ink)]">
-                                        {lead.contact}
-                                        {lead.isSerious && <span className="ml-2 text-xs">🔥</span>}
-                                    </td>
-                                    <td className="px-6 py-4 text-gray-500">{lead.role}</td>
-                                    <td className="px-6 py-4 text-gray-500">{lead.product}</td>
-                                    <td className="px-6 py-4 text-gray-400 text-xs font-mono">
-                                        {new Date(lead.submittedAt).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(lead.status)}`}>
-                                            {lead.status}
-                                        </span>
+                    <table className="w-full text-sm text-left">
+                        <thead className="bg-gray-50/50 text-gray-400 font-medium uppercase text-[10px] tracking-widest font-sans">
+                            <tr>
+                                <th className="px-8 py-4">Customer</th>
+                                <th className="px-6 py-4">Product</th>
+                                <th className="px-6 py-4">Date</th>
+                                <th className="px-6 py-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                            {recentLeads.length > 0 ? (
+                                recentLeads.map((lead) => (
+                                    <tr key={lead._id} className="hover:bg-gray-50/50 transition-colors">
+                                        <td className="px-8 py-4 font-bold text-[var(--ink)]">
+                                            {lead.contact}
+                                            {lead.isSerious && <span className="ml-2 text-xs">🔥</span>}
+                                            <div className="text-[10px] text-gray-400 font-normal">{lead.role}</div>
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-500 max-w-[150px] truncate" title={lead.product}>{lead.product}</td>
+                                        <td className="px-6 py-4 text-gray-400 text-xs font-mono">
+                                            {new Date(lead.submittedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(lead.status)}`}>
+                                                {lead.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={4} className="text-center py-8 text-gray-400">
+                                        No leads found yet.
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={5} className="text-center py-8 text-gray-400">
-                                    No leads found yet.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* SEO HEALTH WIDGET (1/3 Width) */}
+                <div className="lg:col-span-1 h-full">
+                    <MetadataHealthWidget />
+                </div>
             </div>
         </div>
     );

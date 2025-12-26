@@ -35,10 +35,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: route === '' ? 1 : 0.8,
     }));
 
-    // 3. CITY PAGES (High SEO Value)
-    const cityPages = Object.keys(CITIES).map((city) => ({
-        url: `${baseUrl}/${city}`,
-        lastModified: new Date(),
+    // 3. CITY PAGES (High SEO Value - Dynamic from Sanity)
+    const cityDocs = await client.fetch(`*[_type == "cityPage"]{ "slug": slug.current, _updatedAt }`);
+
+    // Merge hardcoded CITIES keys if not present in Sanity (optional fallback)
+    // For now, we favor Sanity. If Sanity has data, we use it. 
+    // If you want both, we can combine them. Let's combine for safety during migration.
+    const hardcodedCities = Object.keys(CITIES);
+    const dynamicCitySlugs = cityDocs.map((c: any) => c.slug);
+    const allCitySlugs = Array.from(new Set([...hardcodedCities, ...dynamicCitySlugs]));
+
+    const cityPages = allCitySlugs.map((slug) => ({
+        url: `${baseUrl}/${slug}`,
+        lastModified: new Date(), // Ideally use _updatedAt from Sanity if available
         changeFrequency: 'weekly' as const,
         priority: 0.85,
     }));
