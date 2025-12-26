@@ -124,8 +124,9 @@ const resolveCategoryKey = (slug: string): string | undefined => {
 };
 
 // Generate Metadata for BOTH Products and Categories
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
     const { slug } = await params;
+    const { variant } = await searchParams;
     const pathSlug = Array.isArray(slug) ? slug[slug.length - 1] : slug;
 
     // 1. Try resolving as Product
@@ -136,18 +137,43 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         const cmsKeywords = product.seo?.keywords || [];
         const baseKeywords = [product.title, product.tag || 'Terracotta', 'UrbanClay'];
         const uniqueKeywords = Array.from(new Set([...cmsKeywords, ...baseKeywords]));
-        const metaTitle = product.seo?.metaTitle || `${product.title} price in India | UrbanClay`;
+
+        let metaTitle = product.seo?.metaTitle || `${product.title} price in India | UrbanClay`;
+        let metaDescription = product.seo?.metaDescription || product.description?.slice(0, 160);
+        let ogImages = [(product as any).seo?.openGraphImage || `/api/og?slug=${pathSlug}`];
+        let canonicalUrl = `https://claytile.in/products/${product.category?.slug || 'collection'}/${product.slug}`;
+
+        // Handle Variant Specific Metadata
+        const variantName = typeof variant === 'string' ? variant : undefined;
+        const selectedVariant = variantName ? product.variants?.find((v: any) => v.name === variantName) : null;
+
+        if (selectedVariant) {
+            // Enhanced Title for Variant
+            metaTitle = `${selectedVariant.name} - ${product.title} | UrbanClay`;
+
+            // Enhanced Description for Variant
+            metaDescription = `Buy ${selectedVariant.name} ${product.title}. ${metaDescription}`;
+
+            // Use Variant Image for OG
+            if (selectedVariant.imageUrl) {
+                ogImages = [selectedVariant.imageUrl];
+            }
+
+            // Update Canonical
+            canonicalUrl += `?variant=${encodeURIComponent(selectedVariant.name)}`;
+        }
 
         return {
             title: metaTitle,
-            description: product.seo?.metaDescription || product.description?.slice(0, 160),
+            description: metaDescription,
             keywords: uniqueKeywords,
             openGraph: {
                 title: metaTitle,
-                images: [(product as any).seo?.openGraphImage || `/api/og?slug=${pathSlug}`]
+                description: metaDescription,
+                images: ogImages
             },
             alternates: {
-                canonical: `https://claytile.in/products/${product.category?.slug || 'collection'}/${product.slug}`
+                canonical: canonicalUrl
             }
         };
     }
@@ -209,12 +235,16 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             return { type: 'Offer', price: cleaned };
         })();
 
+        // Resolve Variant for JSON-LD (consistent with Metadata)
+        const variantName = typeof variant === 'string' ? variant : undefined;
+        const selectedVariant = variantName ? product.variants?.find((v: any) => v.name === variantName) : null;
+
         const jsonLd = {
             '@context': 'https://schema.org',
             '@type': 'Product',
-            name: product.title,
-            image: product.imageUrl,
-            description: product.description,
+            name: selectedVariant ? `${selectedVariant.name} - ${product.title}` : product.title,
+            image: selectedVariant?.imageUrl || product.imageUrl,
+            description: selectedVariant ? `Buy ${selectedVariant.name} ${product.title}. ${product.description || ''}` : product.description,
             brand: { '@type': 'Brand', name: 'UrbanClay' },
             ...(priceInfo ? {
                 offers: priceInfo.type === 'AggregateOffer' ? {
@@ -226,7 +256,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                     offerCount: 1
                 } : {
                     '@type': 'Offer',
-                    url: `https://claytile.in/products/${categoryIdentifier}/${product.slug}`,
+                    url: `https://claytile.in/products/${categoryIdentifier}/${product.slug}${selectedVariant ? `?variant=${encodeURIComponent(selectedVariant.name)}` : ''}`,
                     priceCurrency: 'INR',
                     price: priceInfo.price,
                     availability: 'https://schema.org/InStock'

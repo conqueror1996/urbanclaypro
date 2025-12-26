@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Product } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
 import dynamic from 'next/dynamic';
@@ -83,7 +84,12 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
     );
 };
 
+
+
 export default function ProductPageAnimate({ product, relatedProducts, quoteUrl, variantName }: ProductPageAnimateProps) {
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const { addToBox, isInBox } = useSampleBox();
 
 
@@ -145,6 +151,18 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
         const v = product.variants?.find(v => v.name === variantName) || null;
         setSelectedVariant(v);
         setActiveImageIndex(0);
+
+        // Update URL to reflect selected variant
+        const current = new URLSearchParams(Array.from(searchParams.entries()));
+        if (v) {
+            current.set('variant', v.name);
+        } else {
+            current.delete('variant');
+        }
+        const search = current.toString();
+        const query = search ? `?${search}` : '';
+
+        router.replace(`${pathname}${query}`, { scroll: false });
     };
 
     return (
