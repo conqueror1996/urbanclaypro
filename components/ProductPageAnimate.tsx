@@ -249,6 +249,15 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                         <div className="relative w-full aspect-[4/3] rounded-[2rem] lg:rounded-[3rem] overflow-hidden bg-[#120d0b] border border-white/5 shadow-2xl group">
 
+                            {/* Disclaimer on Border */}
+                            <div className="absolute z-20 pointer-events-none
+                                top-1/2 -left-[72px] w-[160px] -rotate-90
+                                md:top-2 md:left-0 md:right-0 md:w-auto md:rotate-0 md:text-center py-1">
+                                <p className="text-[7px] md:text-[8px] text-gray-400 font-medium uppercase tracking-widest leading-none whitespace-nowrap md:whitespace-normal">
+                                    Note: Color & appearance may vary
+                                </p>
+                            </div>
+
                             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0" />
 
                             <AnimatePresence>

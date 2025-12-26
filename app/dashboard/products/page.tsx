@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getProducts, Product } from '@/lib/products';
+import { getProducts, getDashboardProducts, Product } from '@/lib/products';
 import { authenticatedFetch } from '@/lib/auth-utils';
 
 // Types for our robust hierarchy
@@ -18,7 +18,7 @@ export default function ProductDashboardPage() {
     const refresh = async () => {
         setIsLoading(true);
         try {
-            const data = await getProducts();
+            const data = await getDashboardProducts();
             setProducts(data);
             if (selectedProduct) {
                 // keep selected product in sync
@@ -56,8 +56,13 @@ export default function ProductDashboardPage() {
                     setSelectedProduct(newProd);
                     setViewMode('edit');
                 }
+            } else {
+                throw new Error(json.error || 'Server rejected creation');
             }
-        } catch (e) { alert('Failed to create'); }
+        } catch (e: any) {
+            console.error(e);
+            alert('Failed to create: ' + (e.message || 'Unknown error'));
+        }
     };
 
     // Group products by Category → Range → Series
@@ -332,7 +337,7 @@ import DeleteConfirmationModal from '@/components/admin/DeleteConfirmationModal'
 
 // ... existing code ...
 
-export function ProductEditor({ product, existingProducts, onRefresh }: { product: Product, existingProducts: Product[], onRefresh: () => void }) {
+export function ProductEditor({ product, existingProducts, onRefresh }: { product: Product, existingProducts: Product[], onRefresh: () => Promise<void> }) {
     const [activeTab, setActiveTab] = useState<'details' | 'products' | 'specs' | 'assets' | 'seo'>('details');
     const [form, setForm] = useState(product);
     const [isSaving, setIsSaving] = useState(false);
@@ -370,7 +375,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                     }
                 })
             });
-            onRefresh();
+            await onRefresh();
         } catch (e) {
             console.error(e);
             alert("Failed to save");
@@ -424,7 +429,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
             });
             const json = await res.json();
             if (json.success) {
-                onRefresh();
+                await onRefresh();
                 setEditingVariant(null);
             } else {
                 throw new Error(json.error || "Failed to update variant");
@@ -493,7 +498,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                 }
             })
         });
-        onRefresh();
+        await onRefresh();
     };
 
     const handleGenerateSEO = async () => {
@@ -727,7 +732,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                                                                     }
                                                                 })
                                                             });
-                                                            onRefresh();
+                                                            await onRefresh();
                                                         }
                                                     } catch (err) { alert('Upload failed'); console.error(err); }
                                                 }}

@@ -108,6 +108,22 @@ export async function getProducts(): Promise<Product[]> {
     }
 }
 
+export async function getDashboardProducts(): Promise<Product[]> {
+    try {
+        const adminClient = client.withConfig({ useCdn: false });
+        console.log('Fetching fresh products for dashboard...');
+        const products = await adminClient.fetch(productsQuery, {}, {
+            next: { revalidate: 0 },
+            cache: 'no-store'
+        });
+
+        return enhanceProducts(products || []);
+    } catch (error) {
+        console.error('Error fetching dashboard products:', error);
+        return [];
+    }
+}
+
 export async function getCategories(): Promise<string[]> {
     try {
         const categories = await client.fetch(groq`*[_type == "category"] | order(title asc) { title }`, {}, { next: { revalidate: 60 } });

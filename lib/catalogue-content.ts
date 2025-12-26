@@ -81,6 +81,19 @@ export function generateLuxurySpecs(product: Product): PremiumSpec[] {
                 detail: 'Open geometry forces air to accelerate through the void, naturally cooling the building envelope.'
             });
         }
+        // === FLOOR TILES ===
+        else if (title.includes('floor') || title.includes('paving')) {
+            specs.push({
+                label: 'Surface Finish',
+                value: 'Natural Matte',
+                detail: 'Inherently slip-resistant texture that remains cool underfoot. Perfect for tropical climates.'
+            });
+            specs.push({
+                label: 'Durability',
+                value: 'High Traffic',
+                detail: 'Fired for extreme hardness, suitable for both residential interiors and heavy-footfall verandas.'
+            });
+        }
         // === THIN TILES / CLADDING ===
         else if (title.includes('tile') || title.includes('cladding') || title.includes('slip')) {
             specs.push({
