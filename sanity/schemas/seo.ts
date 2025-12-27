@@ -29,9 +29,16 @@ export default defineType({
         }),
         defineField({
             name: 'openGraphImage',
-            title: 'Open Graph Image',
+            title: 'Open Graph Image (Main)',
             type: 'image',
-            description: 'Image for sharing on social media.',
+            description: 'Primary image for sharing on social media.',
+        }),
+        defineField({
+            name: 'openGraphImages',
+            title: 'Additional Open Graph Images',
+            type: 'array',
+            of: [{ type: 'image' }],
+            description: 'Additional images for sharing. Some platforms may show these as a gallery.',
         }),
         defineField({
             name: 'lastAutomatedUpdate',

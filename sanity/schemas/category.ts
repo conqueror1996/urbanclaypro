@@ -46,5 +46,10 @@ export default defineType({
             type: 'number',
             description: 'Order in which to display this category (lower numbers first)',
         }),
+        defineField({
+            name: 'seo',
+            title: 'SEO Settings',
+            type: 'seo',
+        }),
     ],
 })

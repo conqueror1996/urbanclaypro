@@ -30,32 +30,8 @@ export default {
         },
         {
             name: 'seo',
-            title: 'SEO Metadata',
-            type: 'object',
-            fields: [
-                {
-                    name: 'metaTitle',
-                    title: 'Meta Title',
-                    type: 'string',
-                    description: 'Title for Google Search Results (keep under 60 chars)'
-                },
-                {
-                    name: 'metaDescription',
-                    title: 'Meta Description',
-                    type: 'text',
-                    rows: 3,
-                    description: 'Description for Google Search Results (keep under 160 chars)'
-                },
-                {
-                    name: 'keywords',
-                    title: 'Keywords',
-                    type: 'array',
-                    of: [{ type: 'string' }],
-                    options: {
-                        layout: 'tags'
-                    }
-                }
-            ]
+            title: 'SEO Settings',
+            type: 'seo',
         },
         {
             name: 'filterTags',

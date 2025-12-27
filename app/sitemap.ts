@@ -47,19 +47,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.85,
     }));
 
-    // 4. CATEGORY PAGES (Canonical Pretty URLs)
-    const categories = [
-        'wirecut-bricks',
-        'exposed-bricks',
-        'brick-wall-tiles',
-        'facades',
-        'terracotta-jaali',
-        'breeze-blocks',
-        'roof-tiles',
-        'floor-tiles'
-    ].map((slug) => ({
-        url: `${baseUrl}/products/${slug}`,
-        lastModified: new Date(),
+    // 4. CATEGORY & COLLECTION PAGES (Dynamic from Sanity)
+    const categoryDocs = await client.fetch(`*[(_type == "category" || _type == "collection") && defined(slug.current)]{ "slug": slug.current, _updatedAt }`);
+    const categoryPages = categoryDocs.map((doc: any) => ({
+        url: `${baseUrl}/products/${doc.slug}`,
+        lastModified: doc._updatedAt ? new Date(doc._updatedAt) : new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.9,
     }));
@@ -101,7 +93,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [
         ...staticPages,
         ...cityPages,
-        ...categories,
+        ...categoryPages,
         ...productPages,
         ...projectPages,
         ...journalPages,

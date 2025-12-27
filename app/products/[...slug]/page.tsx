@@ -7,7 +7,7 @@ import React from 'react';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getProduct, getRelatedProducts, getCollectionBySlug } from '@/lib/products';
+import { getProduct, getRelatedProducts, getCollectionBySlug, getProducts } from '@/lib/products';
 
 // Components
 import ProductPageAnimate from '@/components/ProductPageAnimate';
@@ -135,12 +135,24 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     if (product) {
         // ... (Existing Product Metadata Logic)
         const cmsKeywords = product.seo?.keywords || [];
-        const baseKeywords = [product.title, product.tag || 'Terracotta', 'UrbanClay'];
-        const uniqueKeywords = Array.from(new Set([...cmsKeywords, ...baseKeywords]));
+        const variantKeywords = product.variants?.map((v: any) => v.name) || [];
+        const baseKeywords = [product.title, product.tag || 'Terracotta', 'UrbanClay', 'India'];
+        const uniqueKeywords = Array.from(new Set([...cmsKeywords, ...variantKeywords, ...baseKeywords]));
 
         let metaTitle = product.seo?.metaTitle || `${product.title} price in India | UrbanClay`;
         let metaDescription = product.seo?.metaDescription || product.description?.slice(0, 160);
-        let ogImages = [(product as any).seo?.openGraphImage || `/api/og?slug=${pathSlug}`];
+
+        // Gather all possible images for a rich preview
+        const productImages = [
+            product.seo?.openGraphImage,
+            product.imageUrl,
+            ...(product.images || []),
+            ...(product.variants?.map((v: any) => v.imageUrl) || [])
+        ].filter((img): img is string => !!img);
+
+        const uniqueOgImages = Array.from(new Set(productImages)).slice(0, 5);
+        let currentOgImages = uniqueOgImages;
+
         let canonicalUrl = `https://claytile.in/products/${product.category?.slug || 'collection'}/${product.slug}`;
 
         // Handle Variant Specific Metadata
@@ -154,9 +166,9 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
             // Enhanced Description for Variant
             metaDescription = `Buy ${selectedVariant.name} ${product.title}. ${metaDescription}`;
 
-            // Use Variant Image for OG
+            // Prioritize Variant Image for OG
             if (selectedVariant.imageUrl) {
-                ogImages = [selectedVariant.imageUrl];
+                currentOgImages = [selectedVariant.imageUrl, ...uniqueOgImages.filter(img => img !== selectedVariant.imageUrl)];
             }
 
             // Update Canonical
@@ -170,7 +182,16 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
             openGraph: {
                 title: metaTitle,
                 description: metaDescription,
-                images: ogImages
+                images: currentOgImages.map(url => ({
+                    url,
+                    width: 1200,
+                    height: 630,
+                    alt: metaTitle
+                }))
+            },
+            twitter: {
+                card: 'summary_large_image',
+                images: currentOgImages
             },
             alternates: {
                 canonical: canonicalUrl
@@ -178,17 +199,64 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         };
     }
 
-    // 2. Try resolving as Dynamic Collection (Sanity)
+    // 2. Try resolving as Dynamic Collection (Sanity Category or Collection)
     const dynamicCollection = await getCollectionBySlug(pathSlug);
     if (dynamicCollection) {
+        // Fetch products in this collection to extract images and keywords if SEO is sparse
+        const allProducts = await getProducts();
+        const tagsToMatch = dynamicCollection.filterTags || [dynamicCollection.title, pathSlug];
+        const categoryProducts = allProducts.filter((p: any) =>
+            tagsToMatch.some((tag: string) =>
+                tag && (
+                    p.category?.title === tag ||
+                    p.tag === tag ||
+                    p.category?.slug === tag ||
+                    p.category?.slug === tag?.toLowerCase().replace(/ /g, '-')
+                )
+            )
+        );
+
+        // Extract multiple images from products for a rich card
+        const productImages = categoryProducts.map(p => p.imageUrl).filter(Boolean).slice(0, 4);
+        const seoImages = dynamicCollection.seo?.openGraphImages || [];
+        const combinedImages = [...(dynamicCollection.seo?.openGraphImage ? [dynamicCollection.seo.openGraphImage] : []), ...seoImages, ...productImages];
+        const uniqueImages = Array.from(new Set(combinedImages)).filter((img): img is string => !!img).slice(0, 5);
+
+        // Comprehensive Keywords
+        const productTitles = categoryProducts.map(p => p.title);
+        const productTags = categoryProducts.flatMap(p => p.tag ? [p.tag] : []);
+        const baseKeywords = [dynamicCollection.title, 'UrbanClay', 'India', 'Sustainable Architecture'];
+        const uniqueKeywords = Array.from(new Set([
+            ...(dynamicCollection.seo?.keywords || []),
+            ...baseKeywords,
+            ...productTitles,
+            ...productTags
+        ]));
+
+        const metaTitle = dynamicCollection.seo?.metaTitle || `${dynamicCollection.title} Collection | Premium Terracotta | UrbanClay`;
+        const metaDescription = dynamicCollection.seo?.metaDescription || dynamicCollection.description || `Explore our exclusive ${dynamicCollection.title} collection. Sustainable, handcrafted terracotta solutions for modern architecture.`;
+
         return {
-            title: dynamicCollection.seo?.metaTitle || `${dynamicCollection.title} | UrbanClay`,
-            description: dynamicCollection.seo?.metaDescription || dynamicCollection.description,
-            keywords: dynamicCollection.seo?.keywords || [],
+            title: metaTitle,
+            description: metaDescription,
+            keywords: uniqueKeywords,
             openGraph: {
-                title: dynamicCollection.seo?.metaTitle,
-                description: dynamicCollection.seo?.metaDescription,
-                images: dynamicCollection.imageUrl ? [dynamicCollection.imageUrl] : []
+                title: metaTitle,
+                description: metaDescription,
+                images: uniqueImages.map(url => ({
+                    url,
+                    width: 1200,
+                    height: 630,
+                    alt: `${dynamicCollection.title} - UrbanClay`
+                })),
+                type: 'website',
+                url: `https://claytile.in/products/${pathSlug}`,
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: metaTitle,
+                description: metaDescription,
+                images: uniqueImages,
             },
             alternates: {
                 canonical: `https://claytile.in/products/${pathSlug}`
@@ -201,21 +269,36 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     const categoryData = categoryKey ? CATEGORY_METADATA[categoryKey] : null;
 
     if (categoryData) {
+        // Fetch products for this fallback category to get images
+        const allProducts = await getProducts();
+        const categoryProducts = allProducts.filter((p: any) =>
+            p.category?.title === categoryData.displayTitle ||
+            p.tag === categoryData.displayTitle ||
+            p.category?.slug === categoryKey
+        );
+
+        const productImages = categoryProducts.map(p => p.imageUrl).filter(Boolean).slice(0, 4);
+        const images = productImages.length > 0 ? (productImages as string[]) : [`/api/og?slug=${pathSlug}&type=category`];
+
         return {
             title: categoryData.metaTitle,
             description: categoryData.metaDescription,
-            keywords: [...categoryData.keywords, 'UrbanClay', 'India'],
+            keywords: Array.from(new Set([...categoryData.keywords, ...categoryProducts.map(p => p.title), 'UrbanClay', 'India'])),
             openGraph: {
                 title: categoryData.metaTitle,
                 description: categoryData.metaDescription,
                 type: 'website',
                 url: `https://claytile.in/products/${pathSlug}`,
-                images: [{
-                    url: `/api/og?slug=${pathSlug}&type=category`,
+                images: images.map(url => ({
+                    url,
                     width: 1200,
                     height: 630,
-                    alt: `${categoryData.displayTitle} Collection`
-                }]
+                    alt: categoryData.displayTitle
+                }))
+            },
+            twitter: {
+                card: 'summary_large_image',
+                images: images
             },
             alternates: {
                 canonical: `https://claytile.in/products/${pathSlug}`

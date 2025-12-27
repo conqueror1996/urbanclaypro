@@ -90,7 +90,7 @@ export async function sendLeadAlertEmail(lead: any) {
             </table>
 
             <div style="margin-top: 30px; text-align: center;">
-                <a href="https://claytile.in/dashboard/leads" style="${EMAIL_STYLES.button}">View in Dashboard</a>
+                <a href="https://claytile.in/dashboard" style="${EMAIL_STYLES.button}">View in Dashboard</a>
             </div>
         `;
 

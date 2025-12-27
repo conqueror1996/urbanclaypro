@@ -156,19 +156,27 @@ export async function getRelatedProducts(category: string, currentSlug: string):
         .slice(0, 4);
 }
 
-// Enhanced Collection Fetcher
+// Enhanced Collection Fetcher (Unifies Category and Collection documents)
 export async function getCollectionBySlug(collectionSlug: string): Promise<any | undefined> {
     try {
-        const query = groq`*[_type == "collection" && slug.current == $slug][0] {
+        const query = groq`*[(_type == "collection" || _type == "category") && slug.current == $slug][0] {
+            "id": _id,
+            "_type": _type,
             title,
             description,
             filterTags,
+            "displayOrder": displayOrder,
             "seo": {
                 "metaTitle": seo.metaTitle,
                 "metaDescription": seo.metaDescription,
-                "keywords": seo.keywords
+                "keywords": seo.keywords,
+                "openGraphImage": seo.openGraphImage.asset->url,
+                "openGraphImages": seo.openGraphImages[].asset->url
             },
-            "imageUrl": featuredImage.asset->url
+            "imageUrl": select(
+                _type == "collection" => featuredImage.asset->url,
+                _type == "category" => image.asset->url
+            )
         }`;
 
         const collection = await client.fetch(query, { slug: collectionSlug }, { next: { revalidate: 60 } });
