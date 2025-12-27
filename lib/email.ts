@@ -2,21 +2,18 @@ import nodemailer from 'nodemailer';
 import { getTrackingLink } from '@/lib/utils';
 import { EMAIL_STYLES, EMAIL_SIGNATURE, EMAIL_FOOTER } from './email-constants';
 
-// Singleton to reuse connection
-let transporter: nodemailer.Transporter | null = null;
+// Export the transporter directly for use in other files
+export const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+    },
+});
 
 function getTransporter() {
-    if (transporter) return transporter;
-
-    transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-        },
-    });
     return transporter;
 }
 

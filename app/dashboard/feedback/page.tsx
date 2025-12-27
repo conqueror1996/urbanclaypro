@@ -12,6 +12,7 @@ interface Feedback {
         _id: string;
         name: string;
         client: string;
+        clientEmail?: string;
         location: string;
     };
     workmanshipRating: number;
@@ -40,6 +41,7 @@ export default function FeedbackAnalytics() {
                     _id,
                     name,
                     client,
+                    clientEmail,
                     location
                 }
             }`;
@@ -75,8 +77,40 @@ export default function FeedbackAnalytics() {
         );
     }
 
+    // Reply Logic
+    const [replyModalOpen, setReplyModalOpen] = useState(false);
+    const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
+    const [replySubject, setReplySubject] = useState('');
+    const [replyMessage, setReplyMessage] = useState('');
+    const [sendingReply, setSendingReply] = useState(false);
+
+    const openReplyModal = (feedback: Feedback) => {
+        setSelectedFeedback(feedback);
+        setReplySubject(`Re: Feedback for ${feedback.site?.name}`);
+        setReplyMessage(`Thank you for your valuable feedback regarding the ${feedback.site?.name} project.\n\nWe appreciate you taking the time to share your thoughts...`);
+        setReplyModalOpen(true);
+    };
+
+    const handleSendReply = async () => {
+        if (!selectedFeedback?.site.clientEmail) return;
+        setSendingReply(true);
+
+        // Dynamic helper import to avoid server-client boundary issues if any, keeping it clean
+        const { SendReplyEmail } = await import('@/app/actions/reply');
+
+        const res = await SendReplyEmail(selectedFeedback.site.clientEmail, replySubject, replyMessage);
+
+        setSendingReply(false);
+        if (res.success) {
+            alert("Reply sent successfully!");
+            setReplyModalOpen(false);
+        } else {
+            alert("Failed to send reply: " + res.error);
+        }
+    };
+
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 relative">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-serif text-[var(--ink)]">Customer Voice</h1>
@@ -131,7 +165,7 @@ export default function FeedbackAnalytics() {
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: idx * 0.1 }}
-                                className="group p-6 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-lg transition-all border border-transparent hover:border-gray-100"
+                                className="group p-6 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-lg transition-all border border-transparent hover:border-gray-100 relative"
                             >
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
@@ -175,11 +209,69 @@ export default function FeedbackAnalytics() {
                                         ))}
                                     </div>
                                 )}
+
+                                {/* Reply Button */}
+                                {item.site?.clientEmail && (
+                                    <div className="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+                                        <button
+                                            onClick={() => openReplyModal(item)}
+                                            className="text-sm font-bold text-[var(--terracotta)] hover:text-[#a85638] flex items-center gap-2"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" /></svg>
+                                            Reply to Client
+                                        </button>
+                                    </div>
+                                )}
                             </motion.div>
                         ))
                     )}
                 </div>
             </div>
+
+            {/* Reply Modal */}
+            {replyModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95">
+                        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                            <h3 className="font-bold text-[var(--ink)]">Reply to {selectedFeedback?.site?.client}</h3>
+                            <button onClick={() => setReplyModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Subject</label>
+                                <input
+                                    type="text"
+                                    value={replySubject}
+                                    onChange={(e) => setReplySubject(e.target.value)}
+                                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--terracotta)]"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Message</label>
+                                <textarea
+                                    value={replyMessage}
+                                    onChange={(e) => setReplyMessage(e.target.value)}
+                                    rows={6}
+                                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--terracotta)]"
+                                ></textarea>
+                                <p className="text-[10px] text-gray-400 mt-1">* Your official signature will be automatically appended.</p>
+                            </div>
+                        </div>
+                        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+                            <button onClick={() => setReplyModalOpen(false)} className="px-4 py-2 text-sm font-bold text-gray-500 hover:bg-gray-200 rounded-lg">Cancel</button>
+                            <button
+                                onClick={handleSendReply}
+                                disabled={sendingReply}
+                                className="px-6 py-2 text-sm font-bold text-white bg-[var(--terracotta)] hover:bg-[#a85638] rounded-lg shadow-md disabled:opacity-50"
+                            >
+                                {sendingReply ? 'Sending...' : 'Send Email'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

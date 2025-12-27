@@ -9,8 +9,12 @@ export async function trackFootprint(path: string, extraData?: { vitals?: any, e
         const ip = headersList.get('x-forwarded-for') || 'unknown';
         const userAgent = headersList.get('user-agent') || 'unknown';
 
-        // Simple Bot Filter
-        if (userAgent.includes('bot') || userAgent.includes('spider')) return;
+        // Robust Bot Filter
+        const lowerUA = userAgent.toLowerCase();
+        const botSignatures = ['bot', 'spider', 'crawl', 'python', 'curl', 'wget', 'http', 'lighthouse', 'vercel'];
+
+        // Return immediately if it matches any bot signature
+        if (botSignatures.some(sig => lowerUA.includes(sig))) return;
 
         // Simple Device/Browser parsing (can be enhanced with a library like ua-parser-js if needed)
         const isMobile = /mobile/i.test(userAgent);

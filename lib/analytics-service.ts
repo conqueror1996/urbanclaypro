@@ -22,9 +22,13 @@ export async function getTrafficData(): Promise<TrafficReport> {
     try {
         const now = new Date();
         const getStartOfDay = (d: Date) => {
-            const date = new Date(d);
-            date.setHours(0, 0, 0, 0);
-            return date.toISOString();
+            // Shift to IST (UTC+5:30)
+            const offset = 5.5 * 60 * 60 * 1000;
+            const istTime = new Date(d.getTime() + offset);
+            // reset to midnight
+            istTime.setUTCHours(0, 0, 0, 0);
+            // Shift back to UTC for query
+            return new Date(istTime.getTime() - offset).toISOString();
         };
 
         const today = new Date();
@@ -46,11 +50,11 @@ export async function getTrafficData(): Promise<TrafficReport> {
 
         // 1. General Traffic Metrics
         const query = `{
-            "today": count(*[_type == "footprint" && timestamp >= $todayStart]),
-            "yesterday": count(*[_type == "footprint" && timestamp >= $yesterdayStart && timestamp < $todayStart]),
-            "lastMonth": count(*[_type == "footprint" && timestamp >= $monthStart && timestamp < $monthEnd]),
-            "threeMonths": count(*[_type == "footprint" && timestamp >= $threeStart && timestamp < $threeEnd]),
-            "eightMonths": count(*[_type == "footprint" && timestamp >= $eightStart && timestamp < $eightEnd]),
+            "today": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $todayStart]),
+            "yesterday": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $yesterdayStart && timestamp < $todayStart]),
+            "lastMonth": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $monthStart && timestamp < $monthEnd]),
+            "threeMonths": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $threeStart && timestamp < $threeEnd]),
+            "eightMonths": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $eightStart && timestamp < $eightEnd]),
             "errors": *[_type == "footprint" && defined(errors) && timestamp >= $todayStart] | order(timestamp desc) [0...5] { errors, timestamp },
             "referrers": *[_type == "footprint" && timestamp >= $monthStart] { referrer }
         }`;
