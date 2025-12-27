@@ -32,7 +32,7 @@ export default function PremiumImage({
             )}
 
             <Image
-                className={`transition-all duration-700 ease-out ${isLoading && !props.priority ? 'scale-105 blur-lg opacity-0' : 'scale-100 blur-0 opacity-100'
+                className={`${props.priority ? '' : 'transition-all duration-700 ease-out'} ${isLoading && !props.priority ? 'scale-105 blur-lg opacity-0' : 'scale-100 blur-0 opacity-100'
                     } ${className}`}
                 onLoad={() => setIsLoading(false)}
                 alt={alt}

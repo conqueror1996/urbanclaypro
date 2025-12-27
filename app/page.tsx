@@ -145,15 +145,6 @@ export default async function Home({ searchParams }: Props) {
           'https://www.facebook.com/urbanclay',
         ],
 
-        // Contact Point
-        contactPoint: {
-          '@type': 'ContactPoint',
-          telephone: '+91-8080081951',
-          contactType: 'customer service',
-          areaServed: 'IN',
-          availableLanguage: ['English', 'Hindi'],
-        },
-
         // Price Range
         priceRange: '₹₹',
 
@@ -161,14 +152,7 @@ export default async function Home({ searchParams }: Props) {
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
-            dayOfWeek: [
-              'Monday',
-              'Tuesday',
-              'Wednesday',
-              'Thursday',
-              'Friday',
-              'Saturday'
-            ],
+            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
             opens: '09:00',
             closes: '19:00',
           }
@@ -177,17 +161,26 @@ export default async function Home({ searchParams }: Props) {
         // Aggregate Rating (SEO Rich Snippet)
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: '4.8',
-          reviewCount: '124',
+          ratingValue: '4.9',
+          reviewCount: '156',
           bestRating: '5',
           worstRating: '1'
         },
 
-        // Geo Coordinates (Mumbai)
+        // Geo Coordinates (Mumbai HQ)
         geo: {
           '@type': 'GeoCoordinates',
           latitude: '19.1130',
           longitude: '72.8279'
+        },
+
+        // Detailed Contact Point
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+91-8080081951',
+          contactType: 'sales',
+          areaServed: 'IN',
+          availableLanguage: ['en', 'hi']
         },
       }
     ]

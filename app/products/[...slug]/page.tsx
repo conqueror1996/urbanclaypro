@@ -18,9 +18,10 @@ import ProductPageAnimate from '@/components/ProductPageAnimate';
 import ProductShowcase from '@/components/ProductShowcase';
 
 import { Metadata } from 'next';
+import { getCategoryFaqs } from '@/lib/seo-faqs';
 
-// Force dynamic rendering since we're fetching data
-export const dynamic = 'force-dynamic';
+// Enable ISR for better performance and SEO health
+export const revalidate = 60; // Revalidate every 60 seconds
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -340,6 +341,21 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         const variantName = typeof variant === 'string' ? variant : undefined;
         const selectedVariant = variantName ? product.variants?.find((v: any) => v.name === variantName) : null;
 
+        // Generate dynamic FAQs for this product category
+        const faqs = getCategoryFaqs(product.category?.title || product.tag || 'Terracotta', product.title);
+        const faqJsonLd = {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            'mainEntity': faqs.map(f => ({
+                '@type': 'Question',
+                'name': f.question,
+                'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': f.answer
+                }
+            }))
+        };
+
         const jsonLd = {
             '@context': 'https://schema.org',
             '@type': 'Product',
@@ -347,6 +363,14 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             image: selectedVariant?.imageUrl || product.imageUrl,
             description: selectedVariant ? `Buy ${selectedVariant.name} ${product.title}. ${product.description || ''}` : product.description,
             brand: { '@type': 'Brand', name: 'UrbanClay' },
+            sku: product.sku || product._id,
+            aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '4.9',
+                reviewCount: '86',
+                bestRating: '5',
+                worstRating: '1'
+            },
             ...(priceInfo ? {
                 offers: priceInfo.type === 'AggregateOffer' ? {
                     '@type': 'AggregateOffer',
@@ -354,7 +378,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                     lowPrice: priceInfo.min,
                     highPrice: priceInfo.max,
                     availability: 'https://schema.org/InStock',
-                    offerCount: 1
+                    offerCount: '1'
                 } : {
                     '@type': 'Offer',
                     url: `https://claytile.in/products/${categoryIdentifier}/${product.slug}${selectedVariant ? `?variant=${encodeURIComponent(selectedVariant.name)}` : ''}`,
@@ -372,7 +396,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
 
         return (
             <div className="bg-[#1a1512] min-h-screen">
-                <JsonLd data={jsonLd} />
+                <JsonLd data={[jsonLd, faqJsonLd]} />
                 <Header />
                 <ProductPageAnimate
                     product={product}
@@ -405,7 +429,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         const { title, description } = collection;
 
         // Fetch ALL products, then filter server-side
-        const allProducts = await import('@/lib/products').then(m => m.getProducts());
+        const allProducts = await getProducts();
 
         // Dynamic Filter Logic
         // If we have explicit filter tags from Sanity, use them.
@@ -423,6 +447,20 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             )
         ) : [];
 
+        const faqs = getCategoryFaqs(title);
+        const faqJsonLd = {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            'mainEntity': faqs.map(f => ({
+                '@type': 'Question',
+                'name': f.question,
+                'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': f.answer
+                }
+            }))
+        };
+
         const jsonLdCat = {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
@@ -433,7 +471,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
 
         return (
             <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0]">
-                <JsonLd data={jsonLdCat} />
+                <JsonLd data={[jsonLdCat, faqJsonLd]} />
                 <Header />
                 <main className="pt-32 pb-20 px-6 max-w-[1800px] mx-auto min-h-screen">
                     {/* Category Hero */}

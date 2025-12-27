@@ -53,7 +53,6 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 onMouseLeave={() => setIsHoveringText(false)}
                                 className="cursor-default"
                             >
-                                <h1 className="sr-only">{data?.heroHeading || 'India’s most specified terracotta facade system for architects.'}</h1>
                                 <TextReveal
                                     text={data?.heroHeading || 'India’s most specified terracotta facade system for architects.'}
                                     highlightWords={['terracotta']}

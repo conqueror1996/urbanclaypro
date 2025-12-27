@@ -4,12 +4,20 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SplashLoader() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        // Minimal delay for quick branding without LCP penalty
-        // No artificial delay for maximum LCP score
-        setIsLoading(false);
+        // Initial check to see if we should show the loader
+        // We only show it once per session to avoid annoying returning users
+        const hasSeenLoader = sessionStorage.getItem('hasSeenSplash');
+        if (!hasSeenLoader) {
+            setIsLoading(true);
+            const timer = setTimeout(() => {
+                setIsLoading(false);
+                sessionStorage.setItem('hasSeenSplash', 'true');
+            }, 1000); // Show for 1s
+            return () => clearTimeout(timer);
+        }
     }, []);
 
     return (
