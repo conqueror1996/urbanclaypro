@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
     title: 'Terracotta Tiles India | Premium Clay Facade & Brick Cladding Manufacturer',
-    description: 'UrbanClay is India\'s leading manufacturer of premium terracotta tiles, exposed brick cladding, clay facade panels, and jaali. Sustainable, eco-friendly, and pan-India delivery.',
+    description: 'UrbanClay is India\'s leading manufacturer of premium terracotta tiles, brick cladding, and clay facade panels. Sustainable, eco-friendly, and delivered pan-India.',
     keywords: 'terracotta tiles India, clay facade panels India, brick cladding tiles India, terracotta jaali manufacturers, exposed wirecut bricks, sustainable building materials India',
     openGraph: {
         title: 'Terracotta Tiles & Clay Facades India | UrbanClay',

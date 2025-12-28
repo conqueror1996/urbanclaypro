@@ -32,6 +32,13 @@ export default defineType({
             validation: (rule) => rule.required(),
         }),
         defineField({
+            name: 'sku',
+            title: 'SKU / Product Code',
+            description: 'Unique identifier for internal tracking and search engines',
+            type: 'string',
+            group: 'editorial',
+        }),
+        defineField({
             name: 'subtitle',
             title: 'Subtitle',
             type: 'string',

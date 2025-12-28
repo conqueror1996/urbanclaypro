@@ -42,14 +42,22 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       }
     }
   }
-  return {};
+
+  return {
+    title: "UrbanClay® | High-Precision Terracotta Facades",
+    description: "Leading manufacturer of premium terracotta facades, brick cladding & jaali in India. High-precision clay systems for architects. Order samples.",
+    openGraph: {
+      title: "UrbanClay® | Premium Terracotta Facades & Bricks",
+      description: "Leading manufacturer of high-precision terracotta facade systems and bricks in India. Sustainable, low-efflorescence, and architect-preferred.",
+    }
+  };
 }
 
 export default async function Home({ searchParams }: Props) {
   const resolvedParams = await searchParams;
   const injectedKeyword = extractSearchTerm(resolvedParams);
 
-  const products = await getProducts();
+  const products = await getProducts()
   const allProjects = await getProjects();
   const recentProjects = allProjects.slice(0, 3);
   const homePageData = await getHomePageData();

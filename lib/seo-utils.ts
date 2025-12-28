@@ -1,4 +1,11 @@
 
+
+export function truncate(text: string, length: number): string {
+    if (!text) return '';
+    if (text.length <= length) return text;
+    return text.slice(0, length).trim() + '...';
+}
+
 export function calculateSeoScore(title: string, description: string, keyword: string) {
     let score = 100;
     const tips: string[] = [];

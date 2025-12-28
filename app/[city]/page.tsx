@@ -8,6 +8,8 @@ import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import { regions } from '@/lib/locations';
 
+import { truncate } from '@/lib/seo-utils';
+
 // Revalidate every hour
 export const revalidate = 3600;
 
@@ -25,6 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const data = await client.fetch(`
         *[_type == "cityPage" && slug.current == $city][0]{
+            name,
             metaTitle,
             metaDescription,
             "slug": slug.current
@@ -33,12 +36,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!data) return { title: 'City Not Found' };
 
+    const title = data.metaTitle || `UrbanClay ${data.name} | Premium Terracotta Tiles & Facades`;
+    const description = truncate(data.metaDescription || `Discover premium terracotta tiles, brick cladding, and jaali panels in ${data.name}. Pan-India delivery and architect-preferred quality.`, 155);
+
     return {
-        title: data.metaTitle,
-        description: data.metaDescription,
+        title: title,
+        description: description,
         openGraph: {
-            title: data.metaTitle,
-            description: data.metaDescription,
+            title: title,
+            description: description,
             type: 'website',
             url: `https://claytile.in/${data.slug}`,
             images: ['/og-image.png'],

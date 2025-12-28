@@ -25,6 +25,7 @@ try {
 const productsQuery = groq`*[_type == "product"] {
   _id,
   title,
+  sku,
   "slug": slug.current,
   subtitle,
   tag,

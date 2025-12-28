@@ -19,6 +19,7 @@ import ProductShowcase from '@/components/ProductShowcase';
 
 import { Metadata } from 'next';
 import { getCategoryFaqs } from '@/lib/seo-faqs';
+import { truncate } from '@/lib/seo-utils';
 
 // Enable ISR for better performance and SEO health
 export const revalidate = 60; // Revalidate every 60 seconds
@@ -141,7 +142,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         const uniqueKeywords = Array.from(new Set([...cmsKeywords, ...variantKeywords, ...baseKeywords]));
 
         let metaTitle = product.seo?.metaTitle || `${product.title} price in India | UrbanClay`;
-        let metaDescription = product.seo?.metaDescription || product.description?.slice(0, 160);
+        let metaDescription = truncate(product.seo?.metaDescription || product.description, 155);
 
         // Gather all possible images for a rich preview
         const productImages = [
@@ -164,8 +165,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
             // Enhanced Title for Variant
             metaTitle = `${selectedVariant.name} - ${product.title} | UrbanClay`;
 
-            // Enhanced Description for Variant
-            metaDescription = `Buy ${selectedVariant.name} ${product.title}. ${metaDescription}`;
+            // Enhanced Description for Variant (keep it within limits)
+            metaDescription = truncate(`Buy ${selectedVariant.name} ${product.title}. ${metaDescription}`, 155);
 
             // Prioritize Variant Image for OG
             if (selectedVariant.imageUrl) {
@@ -235,7 +236,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         ]));
 
         const metaTitle = dynamicCollection.seo?.metaTitle || `${dynamicCollection.title} Collection | Premium Terracotta | UrbanClay`;
-        const metaDescription = dynamicCollection.seo?.metaDescription || dynamicCollection.description || `Explore our exclusive ${dynamicCollection.title} collection. Sustainable, handcrafted terracotta solutions for modern architecture.`;
+        const metaDescription = truncate(dynamicCollection.seo?.metaDescription || dynamicCollection.description || `Explore our exclusive ${dynamicCollection.title} collection. Sustainable, handcrafted terracotta solutions for modern architecture.`, 155);
 
         return {
             title: metaTitle,

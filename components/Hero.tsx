@@ -54,7 +54,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 className="cursor-default"
                             >
                                 <TextReveal
-                                    text={data?.heroHeading || 'India’s most specified terracotta facade system for architects.'}
+                                    text={data?.heroHeading || 'India’s finest high-precision terracotta facades and brick systems.'}
                                     highlightWords={['terracotta']}
                                     className="text-3xl sm:text-5xl lg:text-[64px] font-serif font-medium leading-[1.05] text-[#2A1E16] tracking-tight"
                                 />

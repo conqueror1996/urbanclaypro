@@ -36,10 +36,10 @@ import { SEO_KEYWORDS } from "@/lib/constants";
 export const metadata: Metadata = {
   metadataBase: new URL('https://claytile.in'),
   title: {
-    default: "UrbanClay® | India’s Finest Terracotta Tiles & Jaali Panels",
+    default: "UrbanClay® | Premium Terracotta Facades & Bricks",
     template: "%s | UrbanClay India"
   },
-  description: "Experience the craft of sustainable architecture with UrbanClay's premium terracotta tiles, brick cladding, and jaali panels. Serving architects and builders across India with low-efflorescence, high-precision clay products. Request free samples today.",
+  description: "India's finest terracotta tiles, brick cladding & jaali. Sustainable, high-precision clay products for architects. Request free samples today!",
   keywords: SEO_KEYWORDS,
   authors: [{ name: "UrbanClay" }],
   creator: "UrbanClay",
