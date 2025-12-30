@@ -116,29 +116,80 @@ export async function sendUserConfirmationEmail(lead: any) {
     }
 
     try {
-        const content = `
-            <h2 style="color: #2A1E16; margin-top: 0; font-size: 24px;">Thank you for your interest.</h2>
-            
-            <p>Hello ${lead.name ? lead.name.split(' ')[0] : 'there'},</p>
-            <p>We confirm receipt of your consultation request for <strong>${lead.product || 'our products'}</strong>.</p>
-            
-            <div style="${EMAIL_STYLES.highlightBox}">
-                <strong style="color: #b45a3c; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Request Details</strong>
-                <div style="margin-top: 10px;">
-                    <strong>Requirement:</strong> ${lead.quantity}<br>
-                    <strong>Location:</strong> ${lead.city || 'Not specified'}
+        // CHECK: Is this a PAID Sample Order?
+        const isPaid = lead.product && lead.product.toLowerCase().includes('paid');
+
+        let content;
+        let subject;
+
+        if (isPaid) {
+            subject = `Order Confirmed: ${lead.product} | UrbanClay`;
+
+            // Extract Payment ID from notes if available (simple regex search)
+            const paymentIdMatch = lead.notes?.match(/Payment ID: (pay_[a-zA-Z0-9]+)/);
+            const paymentId = paymentIdMatch ? paymentIdMatch[1] : 'Online Payment';
+
+            content = `
+                <h2 style="color: #2A1E16; margin-top: 0; font-size: 24px;">Order Confirmed!</h2>
+                
+                <p>Hello ${lead.name ? lead.name.split(' ')[0] : 'there'},</p>
+                <p>Thank you for ordering with UrbanClay. We have received your payment and your sample box is being prepared for dispatch.</p>
+                
+                <div style="background-color: #fcfcfc; border: 1px dashed #d6cbb8; padding: 20px; border-radius: 8px; margin: 24px 0;">
+                    <h3 style="margin: 0 0 15px 0; color: #b45a3c; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Payment Receipt</h3>
+                    
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 5px 0; color: #666;"><strong>Product:</strong></td>
+                            <td style="padding: 5px 0; text-align: right;">${lead.product.replace(' - PAID', '')}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0; color: #666;"><strong>Reference ID:</strong></td>
+                            <td style="padding: 5px 0; text-align: right; font-family: monospace;">${paymentId}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0; color: #666;"><strong>Status:</strong></td>
+                            <td style="padding: 5px 0; text-align: right; color: #16a34a; font-weight: bold;">PAID ✅</td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
 
-            <p>Our architectural team will review your project details and get back to you within 24 hours.</p>
+                <div style="${EMAIL_STYLES.highlightBox}">
+                    <strong style="color: #b45a3c; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Shipping To</strong>
+                    <div style="margin-top: 10px; line-height: 1.5;">
+                        <p style="margin: 0;">${lead.address || lead.city}</p>
+                    </div>
+                </div>
 
-            <p>In the meantime, feel free to browse our <a href="https://claytile.in/products" style="color: #b45a3c; text-decoration: underline;">latest collection</a>.</p>
-        `;
+                <p style="margin-top: 24px;">You will receive another email with the tracking number as soon as our warehouse dispatches the box (usually within 24 hours).</p>
+            `;
+        } else {
+            // STANDARD FREE CONSULTATION EMAIL
+            subject = `We've received your request | UrbanClay`;
+            content = `
+                <h2 style="color: #2A1E16; margin-top: 0; font-size: 24px;">Thank you for your interest.</h2>
+                
+                <p>Hello ${lead.name ? lead.name.split(' ')[0] : 'there'},</p>
+                <p>We confirm receipt of your consultation request for <strong>${lead.product || 'our products'}</strong>.</p>
+                
+                <div style="${EMAIL_STYLES.highlightBox}">
+                    <strong style="color: #b45a3c; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Request Details</strong>
+                    <div style="margin-top: 10px;">
+                        <strong>Requirement:</strong> ${lead.quantity}<br>
+                        <strong>Location:</strong> ${lead.city || 'Not specified'}
+                    </div>
+                </div>
+
+                <p>Our architectural team will review your project details and get back to you within 24 hours.</p>
+
+                <p>In the meantime, feel free to browse our <a href="https://claytile.in/products" style="color: #b45a3c; text-decoration: underline;">latest collection</a>.</p>
+            `;
+        }
 
         const mailOptions = {
             from: `"UrbanClay Support" <${process.env.SMTP_USER}>`,
             to: lead.email,
-            subject: `We've received your request | UrbanClay`,
+            subject: subject,
             html: wrapEmailTemplate(content)
         };
 
