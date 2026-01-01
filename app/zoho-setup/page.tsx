@@ -93,11 +93,21 @@ export default function ZohoSetupPage() {
                                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>
                                         Connection Failure
                                     </div>
-                                    <div className="bg-white p-4 rounded-xl border border-red-200 text-red-600 text-sm font-mono">
-                                        {result.error}
-                                    </div>
+                                    {result.availableOrgs && (
+                                        <div className="mt-4 p-4 bg-white rounded-xl border border-gray-200">
+                                            <p className="text-gray-600 font-bold mb-2">Available Organization IDs:</p>
+                                            <div className="space-y-2">
+                                                {result.availableOrgs.map((org: any) => (
+                                                    <div key={org.id} className="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-100">
+                                                        <span className="text-sm font-medium">{org.name}</span>
+                                                        <code className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded font-bold">{org.id}</code>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                     <div className="text-gray-600 text-sm italic">
-                                        Recommendation: Double check if your ZOHO_DOMAIN in Vercel ends with .in or .com and matches your account location.
+                                        {result.hint || 'Recommendation: Double check if your ZOHO_DOMAIN in Vercel ends with .in or .com.'}
                                     </div>
                                 </div>
                             )}

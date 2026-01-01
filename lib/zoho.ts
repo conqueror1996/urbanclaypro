@@ -149,26 +149,45 @@ export async function testZohoConnection() {
     const accessToken = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
 
-    if (!accessToken) return { success: false, error: 'Authentication Failed. Check Client ID, Secret, and Refresh Token.' };
-    if (!orgId) return { success: false, error: 'Organization ID missing in environment variables.' };
+    if (!accessToken) return { success: false, error: 'Authentication Failed. Please re-generate your Refresh Token and ensure you include "ZohoBooks.fullaccess.all" in the scopes.' };
 
     try {
         const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
-        const response = await fetch(`https://${booksDomain}/api/v3/organizations?organization_id=${orgId}`, {
+
+        // Try to list ALL organizations first to see what we have access to
+        const listResponse = await fetch(`https://${booksDomain}/api/v3/organizations`, {
             method: 'GET',
             headers: { 'Authorization': `Zoho-oauthtoken ${accessToken}` }
         });
-        const data = await response.json();
+        const listData = await listResponse.json();
 
-        if (data.code === 0) {
+        if (listData.code !== 0) {
+            return {
+                success: false,
+                error: `Zoho Auth Success, but API Access Failed: ${listData.message} (Code: ${listData.code})`,
+                hint: 'Ensure your Refresh Token was created with the scope: ZohoBooks.fullaccess.all'
+            };
+        }
+
+        const orgs = listData.organizations || [];
+        const currentOrg = orgs.find((o: any) => o.organization_id === orgId);
+
+        if (currentOrg) {
             return {
                 success: true,
                 message: 'Zoho Books Connected Perfectly!',
-                orgName: data.organizations?.[0]?.name,
-                currency: data.organizations?.[0]?.currency_code
+                orgName: currentOrg.name,
+                currency: currentOrg.currency_code,
+                domain: booksDomain
+            };
+        } else {
+            return {
+                success: false,
+                error: `Org ID "${orgId}" not found in your account.`,
+                availableOrgs: orgs.map((o: any) => ({ name: o.name, id: o.organization_id })),
+                hint: 'Copy one of the IDs below and update your ZOHO_ORG_ID in Vercel.'
             };
         }
-        return { success: false, error: `Zoho API Error: ${data.message} (Code: ${data.code})` };
     } catch (e: any) {
         return { success: false, error: e.message };
     }
