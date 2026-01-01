@@ -1,186 +1,123 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { exchangeZohoCode } from '@/app/actions/zoho-auth';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { testZohoConnection } from '@/lib/zoho'; // This won't work directly because it's a server function, need a server action or just call it from a server component
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+
+// Since we need to run this on the server, we'll use a simple Server Action approach
+async function runDiagnostic() {
+    // We'll import it dynamically to ensure it runs in a server context if called from a server component,
+    // but here we are in a client component. Let's create a server action instead.
+}
 
 export default function ZohoSetupPage() {
-    const searchParams = useSearchParams();
-    const router = useRouter();
-
-    // State
-    const [clientId, setClientId] = useState('');
-    const [clientSecret, setClientSecret] = useState('');
-    const [domain, setDomain] = useState('www.zoho.in');
-
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [result, setResult] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
 
-    // If redirected back with code
-    const code = searchParams.get('code');
-
-    useEffect(() => {
-        // Load from local storage if available (handling the redirect return)
-        const storedId = localStorage.getItem('temp_zoho_id');
-        const storedSecret = localStorage.getItem('temp_zoho_secret');
-        const storedDomain = localStorage.getItem('temp_zoho_domain');
-
-        if (storedId) setClientId(storedId);
-        if (storedSecret) setClientSecret(storedSecret);
-        if (storedDomain) setDomain(storedDomain);
-
-        if (code && storedId && storedSecret) {
-            handleExchange(code, storedId, storedSecret, storedDomain || 'www.zoho.in');
-        }
-    }, [code]);
-
-    const getRedirectUri = () => {
-        if (typeof window !== 'undefined') {
-            return `${window.location.origin}/zoho-setup`;
-        }
-        return '';
-    };
-
-    const handleAuthorize = () => {
-        if (!clientId) return alert("Please enter Client ID");
-
-        // Save for after redirect
-        localStorage.setItem('temp_zoho_id', clientId);
-        localStorage.setItem('temp_zoho_secret', clientSecret);
-        localStorage.setItem('temp_zoho_domain', domain);
-
-        const accountDomain = domain.replace('www.', 'accounts.');
-        const scope = 'ZohoCRM.modules.ALL';
-        const redirect = getRedirectUri();
-
-        const authUrl = `https://${accountDomain}/oauth/v2/auth?scope=${scope}&client_id=${clientId}&response_type=code&access_type=offline&redirect_uri=${redirect}`;
-
-        window.location.href = authUrl;
-    };
-
-    const handleExchange = async (authCode: string, id: string, secret: string, dom: string) => {
-        setLoading(true);
+    const checkConnection = async () => {
+        setStatus('loading');
         try {
-            const redirect = getRedirectUri();
-            const res = await exchangeZohoCode(authCode, id, secret, redirect, dom);
-            setResult(res);
-
-            if (res.success) {
-                // Clear temp storage
-                localStorage.removeItem('temp_zoho_id');
-                localStorage.removeItem('temp_zoho_secret');
-                localStorage.removeItem('temp_zoho_domain');
+            // We'll use a fetch to a temporary API route or just a server action
+            const response = await fetch('/api/zoho/test');
+            const data = await response.json();
+            if (data.success) {
+                setStatus('success');
+                setResult(data);
+            } else {
+                setStatus('error');
+                setResult(data);
             }
-        } catch (e) {
-            console.error(e);
-            alert("Failed to exchange token");
-        } finally {
-            setLoading(false);
+        } catch (err: any) {
+            setStatus('error');
+            setResult({ error: err.message });
         }
     };
 
     return (
-        <div className="min-h-screen bg-[#f8f7f6] p-10 font-sans">
-            <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-xl border border-[#e9e2da]">
-                <h1 className="text-3xl font-serif text-[#2A1E16] mb-2">Zoho CRM Connector</h1>
-                <p className="text-gray-500 mb-8">Authorize UrbanClay to sync leads directly to your Zoho CRM.</p>
+        <div className="min-h-screen bg-[#fcfaf9]">
+            <Header />
+            <main className="max-w-4xl mx-auto pt-32 pb-20 px-6">
+                <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-orange-100">
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center">
+                            <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.04z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-[#2A1E16]">Zoho Connection Diagnostic</h1>
+                            <p className="text-gray-500">Verify your ERP & CRM integration status</p>
+                        </div>
+                    </div>
 
-                {!result?.success ? (
                     <div className="space-y-6">
-                        {loading && (
-                            <div className="p-4 bg-blue-50 text-blue-800 rounded-lg flex items-center gap-3">
-                                <span className="animate-spin text-xl">↻</span>
-                                <strong>Authenticating with Zoho...</strong>
+                        <div className={`p-6 rounded-2xl border ${status === 'success' ? 'bg-green-50 border-green-100' : status === 'error' ? 'bg-red-50 border-red-100' : 'bg-gray-50 border-gray-100'}`}>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="font-bold text-lg">Books & CRM API Status</h3>
+                                <button
+                                    onClick={checkConnection}
+                                    disabled={status === 'loading'}
+                                    className="px-6 py-2 bg-[#2A1E16] text-white rounded-xl text-sm font-bold hover:bg-black transition-all disabled:opacity-50"
+                                >
+                                    {status === 'loading' ? 'Checking...' : 'Run Test'}
+                                </button>
                             </div>
-                        )}
 
-                        {!loading && code && (
-                            <div className="p-4 bg-red-50 text-red-800 rounded-lg">
-                                <strong>Authorization Pending...</strong>
-                                <p>Processing the callback code. If this sticks, please try again.</p>
-                            </div>
-                        )}
+                            {status === 'idle' && (
+                                <p className="text-gray-600">Click the button to test your Zoho credentials and Organization ID.</p>
+                            )}
 
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
-                            <h3 className="font-bold text-gray-700 mb-4">1. Configuration</h3>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Zoho Domain</label>
-                                    <select
-                                        value={domain}
-                                        onChange={e => setDomain(e.target.value)}
-                                        className="w-full p-3 border border-gray-300 rounded-lg"
-                                    >
-                                        <option value="www.zoho.in">Zoho.in (India)</option>
-                                        <option value="www.zoho.com">Zoho.com (US/Global)</option>
-                                        <option value="www.zoho.eu">Zoho.eu (Europe)</option>
-                                    </select>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Client ID</label>
-                                        <input
-                                            type="text"
-                                            value={clientId}
-                                            onChange={e => setClientId(e.target.value)}
-                                            placeholder="1000.xxxx..."
-                                            className="w-full p-3 border border-gray-300 rounded-lg font-mono text-sm"
-                                        />
+                            {status === 'success' && (
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-green-700 font-bold">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                                        Perfect Connection
                                     </div>
-                                    <div>
-                                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Client Secret</label>
-                                        <input
-                                            type="password"
-                                            value={clientSecret}
-                                            onChange={e => setClientSecret(e.target.value)}
-                                            placeholder="••••••••"
-                                            className="w-full p-3 border border-gray-300 rounded-lg font-mono text-sm"
-                                        />
+                                    <div className="grid grid-cols-2 gap-4 text-sm mt-4">
+                                        <div className="bg-white p-3 rounded-lg shadow-sm border border-green-200">
+                                            <span className="block text-gray-400 text-xs uppercase font-bold mb-1">Organization</span>
+                                            <span className="text-[#2A1E16] font-bold">{result.orgName}</span>
+                                        </div>
+                                        <div className="bg-white p-3 rounded-lg shadow-sm border border-green-200">
+                                            <span className="block text-gray-400 text-xs uppercase font-bold mb-1">Currency</span>
+                                            <span className="text-[#2A1E16] font-bold">{result.currency}</span>
+                                        </div>
                                     </div>
                                 </div>
+                            )}
 
-                                <div className="text-xs text-gray-500 mt-2">
-                                    <p>Redirect URI to set in Zoho Console:</p>
-                                    <code className="bg-gray-200 px-2 py-1 rounded block mt-1 select-all">{getRedirectUri()}</code>
+                            {status === 'error' && (
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-red-700 font-bold">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>
+                                        Connection Failure
+                                    </div>
+                                    <div className="bg-white p-4 rounded-xl border border-red-200 text-red-600 text-sm font-mono">
+                                        {result.error}
+                                    </div>
+                                    <div className="text-gray-600 text-sm italic">
+                                        Recommendation: Double check if your ZOHO_DOMAIN in Vercel ends with .in or .com and matches your account location.
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
-                        <button
-                            onClick={handleAuthorize}
-                            className="w-full py-4 bg-[#b45a3c] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#8f4730] transition-all shadow-lg shadow-orange-900/20"
-                        >
-                            Connect to Zoho
-                        </button>
+                        <div className="bg-orange-50 p-6 rounded-2xl border border-orange-100">
+                            <h4 className="font-bold text-[#2A1E16] mb-2 flex items-center gap-2">
+                                <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                Configuration Checklist
+                            </h4>
+                            <ul className="space-y-3 text-sm text-gray-600">
+                                <li className="flex gap-2"><span>1.</span> <strong>ZOHO_ORG_ID</strong> should be the number found in Zoho Books &gt; Settings &gt; Organization Profile.</li>
+                                <li className="flex gap-2"><span>2.</span> <strong>ZOHO_DOMAIN</strong> must be exactly <code>zoho.in</code> for Indian accounts or <code>zoho.com</code> for global.</li>
+                                <li className="flex gap-2"><span>3.</span> <strong>Refresh Token</strong> never expires, but Client ID and Secret must match the App created in Zoho Developer Console.</li>
+                            </ul>
+                        </div>
                     </div>
-                ) : (
-                    <div className="space-y-6">
-                        <div className="p-6 bg-green-50 border border-green-100 rounded-xl text-center">
-                            <div className="text-4xl mb-4">🎉</div>
-                            <h3 className="text-2xl font-bold text-green-900 mb-2">Connected Successfully!</h3>
-                            <p className="text-green-700">Your specific Refresh Token has been generated.</p>
-                        </div>
-
-                        <div className="bg-[#1a1b1e] p-6 rounded-xl border border-gray-800 text-gray-300">
-                            <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Add to your .env file:</label>
-                            <pre className="font-mono text-sm overflow-x-auto whitespace-pre-wrap select-all bg-black/30 p-4 rounded-lg">
-                                ZOHO_CLIENT_ID={clientId}
-                                ZOHO_CLIENT_SECRET={clientSecret}
-                                ZOHO_REFRESH_TOKEN={result.refresh_token}
-                                ZOHO_DOMAIN={domain}
-                            </pre>
-                            <p className="text-xs text-gray-500 mt-4 italic">
-                                ⚠️ Keep this secret safe. Do not share it publicly.
-                            </p>
-                        </div>
-
-                        <a href="/dashboard/samples" className="block text-center text-[#b45a3c] underline font-bold">
-                            Return to Dashboard
-                        </a>
-                    </div>
-                )}
-            </div>
+                </div>
+            </main>
+            <Footer />
         </div>
     );
 }

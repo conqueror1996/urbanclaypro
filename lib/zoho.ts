@@ -134,18 +134,49 @@ export async function searchZohoLeads(query: string) {
     }
 }
 
+export async function testZohoConnection() {
+    const accessToken = await getAccessToken();
+    const orgId = process.env.ZOHO_ORG_ID;
+
+    if (!accessToken) return { success: false, error: 'Authentication Failed. Check Client ID, Secret, and Refresh Token.' };
+    if (!orgId) return { success: false, error: 'Organization ID missing in environment variables.' };
+
+    try {
+        const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
+        const response = await fetch(`https://${booksDomain}/api/v3/organizations?organization_id=${orgId}`, {
+            method: 'GET',
+            headers: { 'Authorization': `Zoho-oauthtoken ${accessToken}` }
+        });
+        const data = await response.json();
+
+        if (data.code === 0) {
+            return {
+                success: true,
+                message: 'Zoho Books Connected Perfectly!',
+                orgName: data.organizations?.[0]?.name,
+                currency: data.organizations?.[0]?.currency_code
+            };
+        }
+        return { success: false, error: `Zoho API Error: ${data.message} (Code: ${data.code})` };
+    } catch (e: any) {
+        return { success: false, error: e.message };
+    }
+}
+
 export async function createZohoInvoice(orderData: any) {
     const accessToken = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
+    const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
 
     if (!accessToken || !orgId) return { success: false, error: 'Config Missing' };
 
     try {
         // 1. Find or Create Customer in Zoho Books
         let contactId = null;
+        const email = (orderData.clientEmail || '').trim().toLowerCase();
 
         // Search by email first
-        const searchResponse = await fetch(`https://books.zoho.in/api/v3/contacts?organization_id=${orgId}&email=${encodeURIComponent(orderData.clientEmail)}`, {
+        const searchResponse = await fetch(`https://${booksDomain}/api/v3/contacts?organization_id=${orgId}&email=${encodeURIComponent(email)}`, {
             method: 'GET',
             headers: { 'Authorization': `Zoho-oauthtoken ${accessToken}` }
         });
@@ -167,7 +198,7 @@ export async function createZohoInvoice(orderData: any) {
                 shipping_address: { address: orderData.shippingAddress }
             };
 
-            const contactResponse = await fetch(`https://books.zoho.in/api/v3/contacts?organization_id=${orgId}`, {
+            const contactResponse = await fetch(`https://${booksDomain}/api/v3/contacts?organization_id=${orgId}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Zoho-oauthtoken ${accessToken}`,
@@ -204,7 +235,7 @@ export async function createZohoInvoice(orderData: any) {
             allow_partial_payments: false
         };
 
-        const invoiceResponse = await fetch(`https://books.zoho.in/api/v3/invoices?organization_id=${orgId}`, {
+        const invoiceResponse = await fetch(`https://${booksDomain}/api/v3/invoices?organization_id=${orgId}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Zoho-oauthtoken ${accessToken}`,
@@ -239,6 +270,8 @@ export async function recordZohoPayment(paymentData: {
     const accessToken = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
 
+    const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
+
     if (!accessToken || !orgId) return { success: false };
 
     try {
@@ -252,7 +285,7 @@ export async function recordZohoPayment(paymentData: {
             invoices: [{ invoice_id: paymentData.invoiceId, amount_applied: paymentData.amount }]
         };
 
-        const response = await fetch(`https://books.zoho.in/api/v3/customerpayments?organization_id=${orgId}`, {
+        const response = await fetch(`https://${booksDomain}/api/v3/customerpayments?organization_id=${orgId}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Zoho-oauthtoken ${accessToken}`,
@@ -271,11 +304,12 @@ export async function recordZohoPayment(paymentData: {
 export async function getZohoInvoicePDF(invoiceId: string) {
     const accessToken = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
+    const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
 
     if (!accessToken || !orgId) return null;
 
     try {
-        const response = await fetch(`https://books.zoho.in/api/v3/invoices/${invoiceId}?organization_id=${orgId}&accept=pdf`, {
+        const response = await fetch(`https://${booksDomain}/api/v3/invoices/${invoiceId}?organization_id=${orgId}&accept=pdf`, {
             method: 'GET',
             headers: {
                 'Authorization': `Zoho-oauthtoken ${accessToken}`
