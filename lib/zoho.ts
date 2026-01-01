@@ -141,35 +141,48 @@ export async function createZohoInvoice(orderData: any) {
     if (!accessToken || !orgId) return { success: false, error: 'Config Missing' };
 
     try {
-        // 1. Create/Find Customer in Zoho Books
-        const contactPayload = {
-            contact_name: orderData.clientName,
-            company_name: orderData.clientName,
-            email: orderData.clientEmail,
-            phone: orderData.clientPhone,
-            gst_no: orderData.gstNumber,
-            pan_no: orderData.panNumber,
-            contact_type: 'customer',
-            billing_address: {
-                address: orderData.billingAddress,
-            },
-            shipping_address: {
-                address: orderData.shippingAddress,
-            }
-        };
+        // 1. Find or Create Customer in Zoho Books
+        let contactId = null;
 
-        const contactResponse = await fetch(`https://books.zoho.in/api/v3/contacts?organization_id=${orgId}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Zoho-oauthtoken ${accessToken}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(contactPayload)
+        // Search by email first
+        const searchResponse = await fetch(`https://books.zoho.in/api/v3/contacts?organization_id=${orgId}&email=${encodeURIComponent(orderData.clientEmail)}`, {
+            method: 'GET',
+            headers: { 'Authorization': `Zoho-oauthtoken ${accessToken}` }
         });
-        const contactResult = await contactResponse.json();
-        const contactId = contactResult.contact?.contact_id;
+        const searchResult = await searchResponse.json();
 
-        if (!contactId) throw new Error("Could not create/find contact in Zoho Books");
+        if (searchResult.contacts && searchResult.contacts.length > 0) {
+            contactId = searchResult.contacts[0].contact_id;
+            console.log(`🔍 Existing Zoho Contact found: ${contactId}`);
+        } else {
+            const contactPayload = {
+                contact_name: orderData.clientName,
+                company_name: orderData.clientName,
+                email: orderData.clientEmail,
+                phone: orderData.clientPhone,
+                gst_no: orderData.gstNumber,
+                pan_no: orderData.panNumber,
+                contact_type: 'customer',
+                billing_address: { address: orderData.billingAddress },
+                shipping_address: { address: orderData.shippingAddress }
+            };
+
+            const contactResponse = await fetch(`https://books.zoho.in/api/v3/contacts?organization_id=${orgId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Zoho-oauthtoken ${accessToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(contactPayload)
+            });
+            const contactResult = await contactResponse.json();
+            contactId = contactResult.contact?.contact_id;
+
+            if (!contactId) {
+                console.error("❌ Zoho Contact Creation Failed:", contactResult);
+                throw new Error(contactResult.message || "Could not create contact in Zoho Books");
+            }
+        }
 
         // 2. Create Invoice
         const invoiceData = {

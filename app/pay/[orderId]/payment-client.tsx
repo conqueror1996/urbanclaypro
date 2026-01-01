@@ -71,12 +71,17 @@ export default function PaymentPageClient({ order }: { order: any }) {
 
         if (verify.success) {
             // Update Backend
-            await markPaymentLinkAsPaid(order.orderId, response.razorpay_payment_id);
+            const updateRes = await markPaymentLinkAsPaid(order.orderId, response.razorpay_payment_id);
 
-            // Reload to show paid state
-            router.refresh();
+            if (updateRes.success) {
+                // Reload to show paid state
+                router.refresh();
+            } else {
+                alert(`Payment Received but Order Update Failed: ${updateRes.error || 'Unknown Error'}. Please contact support with Order ID: ${order.orderId}`);
+                setLoading(false);
+            }
         } else {
-            alert("Payment verification failed!");
+            alert("Payment verification failed! Please check your internet connection.");
             setLoading(false);
         }
     };
