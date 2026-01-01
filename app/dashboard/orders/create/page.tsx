@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { createPaymentLink, findZohoLeads } from '@/app/actions/payment-link';
 import { getProductDropdownData } from '@/app/actions/product-fetcher';
