@@ -96,6 +96,28 @@ export default function DashboardPage() {
                 <TrafficPulse />
             </div>
 
+            {/* QUICK ACTIONS ROW */}
+            <div className="bg-white/40 border border-dashed border-[var(--terracotta)]/30 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-[var(--terracotta)] text-white rounded-xl flex items-center justify-center shadow-lg shadow-orange-900/10">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-[var(--ink)]">Quick Operations</h4>
+                        <p className="text-xs text-gray-500">Need to lock in a deal? Generate a link now.</p>
+                    </div>
+                </div>
+                <div className="flex gap-3 w-full md:w-auto">
+                    <Link
+                        href="/dashboard/orders/create"
+                        className="flex-1 md:flex-none bg-[#2A1E16] text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-black transition-all flex items-center justify-center gap-2 shadow-xl"
+                    >
+                        <span>Generate Payment Link</span>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                    </Link>
+                </div>
+            </div>
+
             {/* REAL SALES STATS */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
