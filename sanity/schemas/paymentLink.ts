@@ -78,6 +78,12 @@ export default defineType({
             type: 'datetime',
             initialValue: () => new Date().toISOString(),
         }),
+        defineField({
+            name: 'expiryDate',
+            title: 'Expiry Date',
+            type: 'datetime',
+            description: 'Optional. Link will automatically expire after this date.',
+        }),
     ],
     preview: {
         select: {

@@ -38,7 +38,10 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Details</p>
                                 <p className="text-gray-900 font-medium">Issue Date: {new Date(order.createdAt).toLocaleDateString()}</p>
                                 <p className="text-gray-900 font-medium">Status:
-                                    <span className={`ml-2 px-2 py-0.5 rounded text-xs font-bold uppercase ${order.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                    <span className={`ml-2 px-2 py-0.5 rounded text-xs font-bold uppercase ${order.status === 'paid' ? 'bg-green-100 text-green-700' :
+                                            order.status === 'expired' ? 'bg-red-100 text-red-700' :
+                                                'bg-yellow-100 text-yellow-700'
+                                        }`}>
                                         {order.status}
                                     </span>
                                 </p>

@@ -6,10 +6,10 @@ import { nanoid } from 'nanoid'
 
 export async function createPaymentLink(data: any) {
     try {
-        // High entropy ID for security (approx 70 years to handle 1% collision probability at 1k ids/hour)
+        // High entropy ID for security
         const orderId = `ORD-${new Date().getFullYear()}-${nanoid(12).toUpperCase()}`;
 
-        const doc = {
+        const doc: any = {
             _type: 'paymentLink',
             orderId,
             clientName: data.clientName,
@@ -21,6 +21,10 @@ export async function createPaymentLink(data: any) {
             terms: data.terms,
             deliveryTimeline: data.deliveryTimeline,
             createdAt: new Date().toISOString()
+        }
+
+        if (data.expiryDate) {
+            doc.expiryDate = data.expiryDate;
         }
 
         const result = await writeClient.create(doc);
@@ -36,12 +40,10 @@ export async function createPaymentLink(data: any) {
             product: `${data.productName} (Link Sent)`,
             quantity: `Rs. ${data.amount}`,
             timeline: data.deliveryTimeline,
-            notes: `Payment Link Generated: https://claytile.in/pay/${orderId}\nOrder ID: ${orderId}`
+            notes: `Payment Link Generated: https://claytile.in/pay/${orderId}\nOrder ID: ${orderId}${data.expiryDate ? `\nExpires: ${data.expiryDate}` : ''}`
         });
 
-        // Return path so client can attach current origin (localhost or domain)
         return { success: true, orderId, linkPath: `/pay/${orderId}` };
-
     } catch (error) {
         console.error("Error creating payment link:", error);
         return { success: false, error: "Failed to generate link" };
@@ -52,9 +54,29 @@ export async function getPaymentLinkDetails(orderId: string) {
     try {
         const query = `*[_type == "paymentLink" && orderId == $orderId][0]`;
         const order = await writeClient.fetch(query, { orderId });
+
+        if (order && order.status === 'pending' && order.expiryDate) {
+            const now = new Date();
+            const expiry = new Date(order.expiryDate);
+            if (now > expiry) {
+                // Auto-expire
+                order.status = 'expired';
+                // Optional: actually patch it in Sanity here
+            }
+        }
+
         return { success: !!order, order };
     } catch (error) {
         return { success: false, error: "Order not found" };
+    }
+}
+
+export async function findZohoLeads(query: string) {
+    try {
+        const { searchZohoLeads } = await import('@/lib/zoho');
+        return await searchZohoLeads(query);
+    } catch (error) {
+        return { success: false, error: "Search failed" };
     }
 }
 

@@ -105,6 +105,47 @@ export async function createZohoLead(leadData: any) {
 }
 
 /**
+ * Search Leads in Zoho CRM
+ */
+export async function searchZohoLeads(query: string) {
+    const accessToken = await getAccessToken();
+    if (!accessToken) return { success: false, error: 'Auth Failed' };
+
+    try {
+        const apiDomain = config.domain.includes('zoho.in') ? 'www.zohoapis.in' : 'www.zohoapis.com';
+        // Use the search API for phone or email or name
+        const url = `https://${apiDomain}/crm/v2/Leads/search?word=${encodeURIComponent(query)}`;
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Zoho-oauthtoken ${accessToken}`
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.data) {
+            return {
+                success: true,
+                leads: result.data.map((lead: any) => ({
+                    id: lead.id,
+                    name: lead.Full_Name || `${lead.First_Name || ''} ${lead.Last_Name || ''}`.trim(),
+                    email: lead.Email,
+                    phone: lead.Phone || lead.Mobile,
+                    company: lead.Company
+                }))
+            };
+        } else {
+            return { success: true, leads: [] };
+        }
+    } catch (error) {
+        console.error("❌ Zoho Search Error:", error);
+        return { success: false, error };
+    }
+}
+
+/**
  * Create an Invoice in Zoho Books / Zoho Invoice
  */
 export async function createZohoInvoice(orderData: any) {
