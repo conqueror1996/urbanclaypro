@@ -20,18 +20,29 @@ async function getAccessToken(): Promise<string | null> {
     }
 
     try {
-        const params = new URLSearchParams({
-            refresh_token: config.refreshToken,
-            client_id: config.clientId,
-            client_secret: config.clientSecret,
-            grant_type: 'refresh_token'
+        const accountDomain = config.domain.replace('www.', 'accounts.');
+        const url = `https://${accountDomain}/oauth/v2/token`;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                refresh_token: config.refreshToken,
+                client_id: config.clientId,
+                client_secret: config.clientSecret,
+                grant_type: 'refresh_token',
+                // Optional: Some clients require redirect_uri even for refresh
+                redirect_uri: `https://${config.domain.includes('in') ? 'claytile.in' : 'urbanclay.in'}`
+            })
         });
 
-        const accountDomain = config.domain.replace('www.', 'accounts.');
-        const url = `https://${accountDomain}/oauth/v2/token?${params.toString()}`;
-
-        const response = await fetch(url, { method: 'POST' });
         const data = await response.json();
+        if (data.error) {
+            console.error("❌ Zoho Auth Error:", data.error);
+            return null;
+        }
 
         return data.access_token || null;
     } catch (error) {
