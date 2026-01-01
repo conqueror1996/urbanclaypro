@@ -70,19 +70,34 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
             paymentId: paymentId
         }).commit();
 
-        // Send Official Receipt Email
+        console.log(`✅ Order ${orderId} marked as paid in Sanity.`);
+
+        // 1. Create ACTUAL Zoho Invoice (Books API)
+        const { createZohoInvoice } = await import('@/lib/zoho');
+        const zohoRes = await createZohoInvoice({
+            ...order,
+            paymentId
+        });
+
+        // 2. Send Official Receipt Email
         const { sendUserConfirmationEmail } = await import('@/lib/email');
-        await sendUserConfirmationEmail({
+        const emailRes = await sendUserConfirmationEmail({
             name: order.clientName,
             email: order.clientEmail,
             product: `${order.productName} - PAID`, // Trigger the PAID template
-            quantity: `₹${order.amount}`,
+            quantity: `₹${order.amount.toLocaleString('en-IN')}`,
             city: 'Online Order',
-            address: 'See Invoice',
-            notes: `Payment ID: ${paymentId}\nOrder ID: ${orderId}`
+            address: 'See Digital Invoice',
+            notes: `Payment ID: ${paymentId}\nOrder ID: ${orderId}${zohoRes.success ? `\nZoho Invoice: ${zohoRes.invoiceId}` : ''}`
         });
 
-        return { success: true };
+        if (emailRes?.success) {
+            console.log(`📧 Confirmation email sent to ${order.clientEmail}`);
+        } else {
+            console.error(`❌ Failed to send confirmation email to ${order.clientEmail}`);
+        }
+
+        return { success: true, zohoInvoiceId: zohoRes.invoiceId };
     } catch (error) {
         console.error("Error updating payment status", error);
         return { success: false, error: "Update failed" };

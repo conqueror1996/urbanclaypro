@@ -98,9 +98,83 @@ export async function createZohoLead(leadData: any) {
             console.error("⚠️ Zoho Implementation Warning:", result);
             return { success: false, details: result };
         }
-
     } catch (error) {
         console.error("❌ Zoho Submission Error:", error);
+        return { success: false, error };
+    }
+}
+
+/**
+ * Create an Invoice in Zoho Books / Zoho Invoice
+ */
+export async function createZohoInvoice(orderData: any) {
+    const accessToken = await getAccessToken();
+    const orgId = process.env.ZOHO_ORG_ID;
+
+    if (!accessToken || !orgId) {
+        console.warn("⚠️ Zoho Books Org ID or Auth missing. Skipping Invoice creation.");
+        return { success: false, error: 'Config Missing' };
+    }
+
+    try {
+        // 1. Create/Find Customer in Zoho Books
+        const contactResponse = await fetch(`https://books.zoho.in/api/v3/contacts?organization_id=${orgId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Zoho-oauthtoken ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contact_name: orderData.clientName,
+                company_name: orderData.clientName,
+                email: orderData.clientEmail,
+                phone: orderData.clientPhone,
+                contact_type: 'customer'
+            })
+        });
+        const contactResult = await contactResponse.json();
+        const contactId = contactResult.contact?.contact_id;
+
+        if (!contactId) throw new Error("Could not create/find contact in Zoho Books");
+
+        // 2. Create Invoice
+        const invoiceData = {
+            customer_id: contactId,
+            reference_number: orderData.orderId,
+            date: new Date().toISOString().split('T')[0],
+            due_date: new Date().toISOString().split('T')[0],
+            line_items: [
+                {
+                    name: orderData.productName,
+                    description: `Order ID: ${orderData.orderId}\nTimeline: ${orderData.deliveryTimeline}`,
+                    rate: orderData.amount,
+                    quantity: 1
+                }
+            ],
+            notes: orderData.terms,
+            allow_partial_payments: false
+        };
+
+        const invoiceResponse = await fetch(`https://books.zoho.in/api/v3/invoices?organization_id=${orgId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Zoho-oauthtoken ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(invoiceData)
+        });
+
+        const result = await invoiceResponse.json();
+
+        if (result.code === 0) {
+            console.log("✅ Zoho Invoice Created:", result.invoice.invoice_id);
+            return { success: true, invoiceId: result.invoice.invoice_id, invoiceUrl: result.invoice.invoice_url };
+        } else {
+            console.error("⚠️ Zoho Invoice Error:", result);
+            return { success: false, error: result.message };
+        }
+    } catch (error) {
+        console.error("❌ Zoho Invoice creation failed:", error);
         return { success: false, error };
     }
 }
