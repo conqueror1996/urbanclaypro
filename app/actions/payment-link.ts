@@ -120,17 +120,24 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
 
         console.log(`✅ Order ${orderId} marked as paid. Zoho Invoice: ${zohoRes.invoiceNumber}`);
 
-        // 1b. Record Payment in Zoho Books if Invoice was created
+        // 1b. Record Payment and Fetch PDF
+        let invoicePdf = null;
         if (zohoRes.success && zohoRes.invoiceId && zohoRes.customerId) {
+            const { getZohoInvoicePDF } = await import('@/lib/zoho');
+
+            // Record Payment
             await recordZohoPayment({
                 customerId: zohoRes.customerId,
                 invoiceId: zohoRes.invoiceId,
                 amount: order.amount,
                 paymentId: paymentId
             });
+
+            // Fetch PDF for attachment
+            invoicePdf = await getZohoInvoicePDF(zohoRes.invoiceId);
         }
 
-        // 2. Send Official Receipt Email
+        // 2. Send Official Receipt Email with Zoho PDF Attached
         const { sendUserConfirmationEmail } = await import('@/lib/email');
         await sendUserConfirmationEmail({
             name: order.clientName,
@@ -138,8 +145,15 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
             product: `${order.lineItems?.[0]?.name || 'Order'} - PAID`,
             quantity: `₹${order.amount.toLocaleString('en-IN')}`,
             city: 'Online Order',
+            lineItems: order.lineItems,
             address: order.billingAddress || 'Digital Invoice',
-            notes: `Zoho Invoice: ${zohoRes.invoiceNumber}\nOrder ID: ${orderId}\nPayment ID: ${paymentId}`
+            notes: `Zoho Invoice: ${zohoRes.invoiceNumber}\nOrder ID: ${orderId}\nPayment ID: ${paymentId}`,
+            attachments: invoicePdf ? [
+                {
+                    filename: `Invoice_${zohoRes.invoiceNumber}.pdf`,
+                    content: invoicePdf
+                }
+            ] : []
         });
 
         return { success: true, zohoInvoiceId: zohoRes.invoiceId, invoiceNumber: zohoRes.invoiceNumber };

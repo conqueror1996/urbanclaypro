@@ -119,19 +119,21 @@ export default function PaymentPageClient({ order }: { order: any }) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center print:hidden">
+                    <a
+                        href={`/api/invoice/${order.orderId}/pdf`}
+                        download
+                        className="px-8 py-3 bg-[#b45a3c] text-white font-bold rounded-xl hover:bg-[#8e452e] transition-all flex items-center justify-center gap-2 shadow-lg"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        Download Official Invoice
+                    </a>
                     <button
                         onClick={() => window.print()}
-                        className="px-8 py-3 bg-[#2A1E16] text-white font-bold rounded-xl hover:bg-black transition-all flex items-center justify-center gap-2 shadow-lg"
+                        className="px-8 py-3 bg-[#2A1E16] text-white font-bold rounded-xl hover:bg-black transition-all flex items-center justify-center gap-2 shadow-sm"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                        Download Invoice (PDF)
+                        Print Receipt
                     </button>
-                    <a
-                        href="/"
-                        className="px-8 py-3 bg-white border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center"
-                    >
-                        Back to Home
-                    </a>
                 </div>
 
                 <p className="mt-12 text-center text-xs text-gray-400 uppercase tracking-widest leading-relaxed">

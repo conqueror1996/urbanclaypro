@@ -158,11 +158,12 @@ export async function sendUserConfirmationEmail(order: any) {
             <p style="margin-top: 40px; font-size: 13px; color: #6b7280; line-height: 1.6;">Our logistics concierge will reach out via WhatsApp with the Live Tracking coordinates once the dispatch cluster has been optimized.</p>
         `;
 
-        const mailOptions = {
+        const mailOptions: any = {
             from: `"UrbanClay Success" <${process.env.SMTP_USER}>`,
             to: order.email,
             subject: subject,
-            html: wrapEmailTemplate(content)
+            html: wrapEmailTemplate(content),
+            attachments: order.attachments || []
         };
 
         await transporter.sendMail(mailOptions);

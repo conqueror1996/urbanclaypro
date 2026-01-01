@@ -254,3 +254,27 @@ export async function recordZohoPayment(paymentData: {
         return { success: false, error };
     }
 }
+
+export async function getZohoInvoicePDF(invoiceId: string) {
+    const accessToken = await getAccessToken();
+    const orgId = process.env.ZOHO_ORG_ID;
+
+    if (!accessToken || !orgId) return null;
+
+    try {
+        const response = await fetch(`https://books.zoho.in/api/v3/invoices/${invoiceId}?organization_id=${orgId}&accept=pdf`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Zoho-oauthtoken ${accessToken}`
+            }
+        });
+
+        if (!response.ok) return null;
+
+        const buffer = await response.arrayBuffer();
+        return Buffer.from(buffer);
+    } catch (error) {
+        console.error("❌ Failed to fetch Zoho PDF:", error);
+        return null;
+    }
+}
