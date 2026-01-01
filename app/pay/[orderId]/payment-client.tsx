@@ -27,7 +27,7 @@ export default function PaymentPageClient({ order }: { order: any }) {
             const orderRes = await createRazorpayOrder(order.amount, receiptId);
 
             if (!orderRes.success || !orderRes.orderId) {
-                alert("Gateway Error. Please try again.");
+                alert(`Gateway Error: ${orderRes.error || 'Please try again.'}`);
                 setLoading(false);
                 return;
             }

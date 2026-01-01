@@ -25,7 +25,7 @@ export async function createRazorpayOrder(amount: number, receiptId: string) {
                 'Authorization': `Basic ${auth}`
             },
             body: JSON.stringify({
-                amount: amount * 100, // Convert to paise
+                amount: Math.round(amount * 100), // Convert to paise and ensure integer
                 currency: 'INR',
                 receipt: receiptId,
                 payment_capture: 1
@@ -36,13 +36,14 @@ export async function createRazorpayOrder(amount: number, receiptId: string) {
 
         if (!response.ok) {
             console.error("Razorpay Order Creation Failed:", order);
-            throw new Error(order.error?.description || "Failed to create order");
+            const errorMsg = order.error?.description || "Failed to create order on payment gateway";
+            return { success: false, error: errorMsg };
         }
 
         return { success: true, orderId: order.id, amount: order.amount, currency: order.currency };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Create Order Error:", error);
-        return { success: false, error: "Failed to initiate payment" };
+        return { success: false, error: error.message || "Failed to initiate payment" };
     }
 }
 
