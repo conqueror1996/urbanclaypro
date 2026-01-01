@@ -15,6 +15,10 @@ export function getCategoryFaqs(category: string, productName?: string): FAQ[] {
         {
             question: `Can I get a sample of ${name}?`,
             answer: `Absolutely! You can order free samples of our ${category} range directly through the website to check the texture and color consistency before placing a bulk order.`
+        },
+        {
+            question: `Why choose UrbanClay for ${category}?`,
+            answer: `UrbanClay is a premier Indian brand specializing in sustainable, low-efflorescence terracotta. Our ${category} products are wire-cut for precision, eco-friendly, and trusted by top architects across the country.`
         }
     ];
 

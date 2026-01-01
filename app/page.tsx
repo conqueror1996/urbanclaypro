@@ -145,12 +145,13 @@ export default async function Home({ searchParams }: Props) {
           ],
         },
 
-        // Social Media
+        // Social Media & Knowledge Graph
         sameAs: [
           'https://www.linkedin.com/company/urbanclay',
-          'https://www.instagram.com/urbanclay',
-          'https://twitter.com/urbanclay',
-          'https://www.facebook.com/urbanclay',
+          'https://www.instagram.com/urbanclay.in', // Corrected handle
+          'https://www.facebook.com/urbanclay.in', // Corrected handle
+          'https://www.youtube.com/@urbanclay', // Added YouTube for Video SEO
+          'https://in.pinterest.com/urbanclay_in', // Added Pinterest for Visual Search
         ],
 
         // Price Range

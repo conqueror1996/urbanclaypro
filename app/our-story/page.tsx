@@ -36,8 +36,34 @@ export const metadata: Metadata = {
 
 import { getAboutPageData } from '@/lib/company';
 
+import JsonLd from '@/components/JsonLd';
+
 export default async function OurStory() {
     const data = await getAboutPageData();
-    return <OurStoryContent data={data} />;
+
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'AboutPage',
+        mainEntity: {
+            '@type': 'Organization',
+            name: 'UrbanClay',
+            foundingDate: '2020',
+            description: 'UrbanClay is India’s leading manufacturer of sustainable, high-precision terracotta cladding and jaali systems.',
+            url: 'https://claytile.in',
+            logo: 'https://claytile.in/urbanclay-logo.png',
+            sameAs: [
+                'https://www.linkedin.com/company/urbanclay',
+                'https://www.instagram.com/urbanclay.in',
+                'https://www.youtube.com/@urbanclay'
+            ]
+        }
+    };
+
+    return (
+        <>
+            <JsonLd data={jsonLd} />
+            <OurStoryContent data={data} />
+        </>
+    );
 }
 

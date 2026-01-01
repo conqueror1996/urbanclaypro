@@ -30,6 +30,7 @@ import collection from './collection'
 import wikiArticle from './wikiArticle'
 import cityPage from './cityPage'
 import architectLead from './architectLead'
+import paymentLink from './paymentLink'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
     types: [
@@ -56,6 +57,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         feedback,
         wikiArticle,
         cityPage,
-        architectLead
+        architectLead,
+        paymentLink
     ],
 }

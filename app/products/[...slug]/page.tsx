@@ -279,8 +279,21 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
             p.category?.slug === categoryKey
         );
 
+        // Robust Image Strategy for Categories
         const productImages = categoryProducts.map(p => p.imageUrl).filter(Boolean).slice(0, 4);
-        const images = productImages.length > 0 ? (productImages as string[]) : [`/api/og?slug=${pathSlug}&type=category`];
+        let images = productImages.length > 0 ? (productImages as string[]) : [];
+
+        // If no product images found, try the helper (which searches via Sanity query more broadly)
+        if (images.length === 0) {
+            const { getCategoryHero } = await import('@/lib/products');
+            const hero = await getCategoryHero(pathSlug);
+            if (hero?.imageUrl) {
+                images = [hero.imageUrl];
+            } else {
+                // Final Fallback: Dynamic OG Generator or Static Backup
+                images = [`https://claytile.in/api/og?slug=${pathSlug}&type=category`];
+            }
+        }
 
         return {
             title: categoryData.metaTitle,

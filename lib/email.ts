@@ -133,35 +133,44 @@ export async function sendUserConfirmationEmail(lead: any) {
                 <h2 style="color: #2A1E16; margin-top: 0; font-size: 24px;">Order Confirmed!</h2>
                 
                 <p>Hello ${lead.name ? lead.name.split(' ')[0] : 'there'},</p>
-                <p>Thank you for ordering with UrbanClay. We have received your payment and your sample box is being prepared for dispatch.</p>
+                <p>We confirm that we have received your payment of <strong>${lead.quantity}</strong>. Please find your official payment receipt below.</p>
                 
-                <div style="background-color: #fcfcfc; border: 1px dashed #d6cbb8; padding: 20px; border-radius: 8px; margin: 24px 0;">
-                    <h3 style="margin: 0 0 15px 0; color: #b45a3c; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">Payment Receipt</h3>
-                    
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr>
-                            <td style="padding: 5px 0; color: #666;"><strong>Product:</strong></td>
-                            <td style="padding: 5px 0; text-align: right;">${lead.product.replace(' - PAID', '')}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 5px 0; color: #666;"><strong>Reference ID:</strong></td>
-                            <td style="padding: 5px 0; text-align: right; font-family: monospace;">${paymentId}</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 5px 0; color: #666;"><strong>Status:</strong></td>
-                            <td style="padding: 5px 0; text-align: right; color: #16a34a; font-weight: bold;">PAID ✅</td>
-                        </tr>
-                    </table>
-                </div>
+                <div style="background-color: #ffffff; border: 1px solid #e5e7eb; padding: 0; border-radius: 12px; margin: 24px 0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                    <!-- Invoice Header -->
+                    <div style="background-color: #f8f7f6; padding: 15px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: bold; color: #4b5563; font-size: 14px;">INVOICE SUMMARY</span>
+                        <span style="font-family: monospace; color: #6b7280; font-size: 12px;">#${paymentId}</span>
+                    </div>
 
-                <div style="${EMAIL_STYLES.highlightBox}">
-                    <strong style="color: #b45a3c; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Shipping To</strong>
-                    <div style="margin-top: 10px; line-height: 1.5;">
-                        <p style="margin: 0;">${lead.address || lead.city}</p>
+                    <div style="padding: 24px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding-bottom: 16px; color: #6b7280; font-size: 14px;">Product</td>
+                                <td style="padding-bottom: 16px; text-align: right; color: #111827; font-weight: 600;">${lead.product.replace(' - PAID', '')}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 16px; color: #6b7280; font-size: 14px;">Amount Paid</td>
+                                <td style="padding-bottom: 16px; text-align: right; color: #111827; font-weight: 600;">${lead.quantity}</td>
+                            </tr>
+                            <tr style="border-top: 1px dashed #e5e7eb;">
+                                <td style="padding-top: 16px; color: #6b7280; font-size: 14px;">Payment Status</td>
+                                <td style="padding-top: 16px; text-align: right;">
+                                    <span style="background-color: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: bold; text-transform: uppercase;">PAID & CONFIRMED</span>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
 
-                <p style="margin-top: 24px;">You will receive another email with the tracking number as soon as our warehouse dispatches the box (usually within 24 hours).</p>
+                <div style="${EMAIL_STYLES.highlightBox}">
+                    <strong style="color: #b45a3c; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Delivery Details</strong>
+                    <div style="margin-top: 10px; line-height: 1.5; color: #4b5563;">
+                        <p style="margin: 0;"><strong>Shipping To:</strong> ${lead.address || 'Address on File'}</p>
+                        <p style="margin: 5px 0 0;"><strong>City:</strong> ${lead.city || 'Online Order'}</p>
+                    </div>
+                </div>
+
+                <p style="margin-top: 24px; color: #4b5563;">You will receive another email with the tracking number as soon as our logistics team dispatches your order.</p>
             `;
         } else {
             // STANDARD FREE CONSULTATION EMAIL
