@@ -73,11 +73,22 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
         console.log(`✅ Order ${orderId} marked as paid in Sanity.`);
 
         // 1. Create ACTUAL Zoho Invoice (Books API)
-        const { createZohoInvoice } = await import('@/lib/zoho');
+        const { createZohoInvoice, recordZohoPayment } = await import('@/lib/zoho');
         const zohoRes = await createZohoInvoice({
             ...order,
             paymentId
         });
+
+        // 1b. Record Payment in Zoho Books if Invoice was created
+        if (zohoRes.success && zohoRes.invoiceId && zohoRes.customerId) {
+            await recordZohoPayment({
+                customerId: zohoRes.customerId,
+                invoiceId: zohoRes.invoiceId,
+                amount: order.amount,
+                paymentId: paymentId
+            });
+            console.log(`✅ Zoho Payment recorded for Invoice ${zohoRes.invoiceId}`);
+        }
 
         // 2. Send Official Receipt Email
         const { sendUserConfirmationEmail } = await import('@/lib/email');
@@ -101,5 +112,16 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
     } catch (error) {
         console.error("Error updating payment status", error);
         return { success: false, error: "Update failed" };
+    }
+}
+
+export async function getAllPaymentLinks() {
+    try {
+        const query = `*[_type == "paymentLink"] | order(createdAt desc)`;
+        const links = await writeClient.fetch(query);
+        return { success: true, links };
+    } catch (error) {
+        console.error("Error fetching payment links:", error);
+        return { success: false, links: [] };
     }
 }

@@ -168,13 +168,72 @@ export async function createZohoInvoice(orderData: any) {
 
         if (result.code === 0) {
             console.log("✅ Zoho Invoice Created:", result.invoice.invoice_id);
-            return { success: true, invoiceId: result.invoice.invoice_id, invoiceUrl: result.invoice.invoice_url };
+            return {
+                success: true,
+                invoiceId: result.invoice.invoice_id,
+                invoiceUrl: result.invoice.invoice_url,
+                customerId: result.invoice.customer_id
+            };
         } else {
             console.error("⚠️ Zoho Invoice Error:", result);
             return { success: false, error: result.message };
         }
     } catch (error) {
         console.error("❌ Zoho Invoice creation failed:", error);
+        return { success: false, error };
+    }
+}
+
+/**
+ * Record a Payment for a specific invoice in Zoho Books
+ */
+export async function recordZohoPayment(paymentData: {
+    customerId: string;
+    invoiceId: string;
+    amount: number;
+    paymentId: string;
+}) {
+    const accessToken = await getAccessToken();
+    const orgId = process.env.ZOHO_ORG_ID;
+
+    if (!accessToken || !orgId) return { success: false };
+
+    try {
+        const payload = {
+            customer_id: paymentData.customerId,
+            payment_mode: 'Razorpay',
+            amount: paymentData.amount,
+            date: new Date().toISOString().split('T')[0],
+            reference_number: paymentData.paymentId,
+            description: `Automatic payment recorded via Website for Invoice ID: ${paymentData.invoiceId}`,
+            invoices: [
+                {
+                    invoice_id: paymentData.invoiceId,
+                    amount_applied: paymentData.amount
+                }
+            ]
+        };
+
+        const response = await fetch(`https://books.zoho.in/api/v3/customerpayments?organization_id=${orgId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Zoho-oauthtoken ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.code === 0) {
+            console.log("✅ Zoho Payment Recorded:", result.payment.payment_id);
+            return { success: true, paymentId: result.payment.payment_id };
+        } else {
+            console.error("⚠️ Zoho Payment Error:", result);
+            return { success: false, error: result.message };
+        }
+    } catch (error) {
+        console.error("❌ Zoho Payment record failed:", error);
         return { success: false, error };
     }
 }
