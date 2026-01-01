@@ -5,10 +5,10 @@ import { writeClient } from '@/sanity/lib/write-client';
 
 export async function GET(
     request: Request,
-    { params }: { params: { orderId: string } }
+    { params }: { params: Promise<{ orderId: string }> }
 ) {
     try {
-        const orderId = params.orderId;
+        const { orderId } = await params;
 
         // 1. Get Zoho Invoice ID from Sanity
         const query = `*[_type == "paymentLink" && orderId == $orderId][0]`;
