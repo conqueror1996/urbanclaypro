@@ -123,38 +123,52 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
         // 1b. Record Payment and Fetch PDF
         let invoicePdf = null;
         if (zohoRes.success && zohoRes.invoiceId && zohoRes.customerId) {
-            const { getZohoInvoicePDF } = await import('@/lib/zoho');
+            try {
+                const { getZohoInvoicePDF } = await import('@/lib/zoho');
 
-            // Record Payment
-            await recordZohoPayment({
-                customerId: zohoRes.customerId,
-                invoiceId: zohoRes.invoiceId,
-                amount: order.amount,
-                paymentId: paymentId
-            });
+                // Record Payment
+                await recordZohoPayment({
+                    customerId: zohoRes.customerId,
+                    invoiceId: zohoRes.invoiceId,
+                    amount: order.amount,
+                    paymentId: paymentId
+                });
 
-            // Fetch PDF for attachment
-            invoicePdf = await getZohoInvoicePDF(zohoRes.invoiceId);
+                // Fetch PDF for attachment
+                invoicePdf = await getZohoInvoicePDF(zohoRes.invoiceId);
+            } catch (zohoError) {
+                console.error("⚠️ Zoho post-processing failed:", zohoError);
+            }
         }
 
-        // 2. Send Official Receipt Email with Zoho PDF Attached
-        const { sendUserConfirmationEmail } = await import('@/lib/email');
-        await sendUserConfirmationEmail({
-            name: order.clientName,
-            email: order.clientEmail,
-            product: `${order.lineItems?.[0]?.name || 'Order'} - PAID`,
-            quantity: `₹${order.amount.toLocaleString('en-IN')}`,
-            city: 'Online Order',
-            lineItems: order.lineItems,
-            address: order.billingAddress || 'Digital Invoice',
-            notes: `Zoho Invoice: ${zohoRes.invoiceNumber}\nOrder ID: ${orderId}\nPayment ID: ${paymentId}`,
-            attachments: invoicePdf ? [
-                {
-                    filename: `Invoice_${zohoRes.invoiceNumber}.pdf`,
-                    content: invoicePdf
-                }
-            ] : []
-        });
+        // 2. Send Official Receipt Email
+        try {
+            const { sendUserConfirmationEmail } = await import('@/lib/email');
+            const emailRes = await sendUserConfirmationEmail({
+                name: order.clientName,
+                email: order.clientEmail,
+                product: `${order.lineItems?.[0]?.name || 'Order'} - PAID`,
+                quantity: `₹${order.amount.toLocaleString('en-IN')}`,
+                city: 'Online Order',
+                lineItems: order.lineItems,
+                address: order.billingAddress || 'Digital Invoice',
+                notes: `Zoho Invoice: ${zohoRes.invoiceNumber || 'Processing'}\nOrder ID: ${orderId}\nPayment ID: ${paymentId}`,
+                attachments: invoicePdf ? [
+                    {
+                        filename: `Invoice_${zohoRes.invoiceNumber || orderId}.pdf`,
+                        content: invoicePdf
+                    }
+                ] : []
+            });
+
+            if (emailRes.success) {
+                console.log("✅ Confirmation email sent successfully.");
+            } else {
+                console.error("❌ Email sending failed:", emailRes.error);
+            }
+        } catch (emailError) {
+            console.error("❌ Critical error in email dispatch:", emailError);
+        }
 
         return { success: true, zohoInvoiceId: zohoRes.invoiceId, invoiceNumber: zohoRes.invoiceNumber };
     } catch (error) {

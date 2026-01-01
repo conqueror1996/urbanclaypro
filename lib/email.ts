@@ -167,10 +167,14 @@ export async function sendUserConfirmationEmail(order: any) {
         };
 
         await transporter.sendMail(mailOptions);
+        console.log(`✅ Email dispatched to ${order.email}`);
         return { success: true };
-    } catch (error) {
-        console.error('❌ Error sending confirmation email:', error);
-        return { success: false, error };
+    } catch (error: any) {
+        console.error('❌ Nodemailer Error:', error.message);
+        if (error.code === 'EAUTH') {
+            console.error('🔑 AUTHENTICATION FAILED: Check your SMTP_USER and SMTP_PASS.');
+        }
+        return { success: false, error: error.message };
     }
 }
 
