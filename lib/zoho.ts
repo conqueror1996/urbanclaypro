@@ -13,10 +13,9 @@ const config: ZohoConfig = {
     domain: process.env.ZOHO_DOMAIN || 'www.zoho.in'
 };
 
-async function getAccessToken(): Promise<string | null> {
+async function getAccessToken(): Promise<{ token: string | null; error?: string }> {
     if (!config.refreshToken || !config.clientId || !config.clientSecret) {
-        console.error("❌ Zoho Configuration Missing.");
-        return null;
+        return { token: null, error: "Missing Client ID, Secret, or Refresh Token in environment." };
     }
 
     try {
@@ -33,7 +32,6 @@ async function getAccessToken(): Promise<string | null> {
                 client_id: config.clientId,
                 client_secret: config.clientSecret,
                 grant_type: 'refresh_token',
-                // Optional: Some clients require redirect_uri even for refresh
                 redirect_uri: `https://${config.domain.includes('in') ? 'claytile.in' : 'urbanclay.in'}`
             })
         });
@@ -41,13 +39,13 @@ async function getAccessToken(): Promise<string | null> {
         const data = await response.json();
         if (data.error) {
             console.error("❌ Zoho Auth Error:", data.error);
-            return null;
+            return { token: null, error: `Zoho Auth Server says: "${data.error}"` };
         }
 
-        return data.access_token || null;
-    } catch (error) {
+        return { token: data.access_token || null };
+    } catch (error: any) {
         console.error("❌ Failed to fetch Zoho Access Token:", error);
-        return null;
+        return { token: null, error: error.message };
     }
 }
 
@@ -79,8 +77,8 @@ export async function getGSTDetails(gstin: string) {
 }
 
 export async function createZohoLead(leadData: any) {
-    const accessToken = await getAccessToken();
-    if (!accessToken) return { success: false, error: 'Auth Failed' };
+    const { token: accessToken, error: authError } = await getAccessToken();
+    if (!accessToken) return { success: false, error: authError || 'Auth Failed' };
 
     const zohoRecord = {
         Company: leadData.firmName || 'Individual/Unknown',
@@ -117,8 +115,8 @@ export async function createZohoLead(leadData: any) {
 }
 
 export async function searchZohoLeads(query: string) {
-    const accessToken = await getAccessToken();
-    if (!accessToken) return { success: false, error: 'Auth Failed' };
+    const { token: accessToken, error: authError } = await getAccessToken();
+    if (!accessToken) return { success: false, error: authError || 'Auth Failed' };
 
     try {
         const apiDomain = config.domain.includes('zoho.in') ? 'www.zohoapis.in' : 'www.zohoapis.com';
@@ -146,10 +144,10 @@ export async function searchZohoLeads(query: string) {
 }
 
 export async function testZohoConnection() {
-    const accessToken = await getAccessToken();
+    const { token: accessToken, error: authError } = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
 
-    if (!accessToken) return { success: false, error: 'Authentication Failed. Please re-generate your Refresh Token and ensure you include "ZohoBooks.fullaccess.all" in the scopes.' };
+    if (!accessToken) return { success: false, error: authError || 'Authentication Failed.' };
 
     try {
         const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
@@ -194,11 +192,12 @@ export async function testZohoConnection() {
 }
 
 export async function createZohoInvoice(orderData: any) {
-    const accessToken = await getAccessToken();
+    const { token: accessToken, error: authError } = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
     const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
 
-    if (!accessToken || !orgId) return { success: false, error: 'Config Missing' };
+    if (!accessToken) return { success: false, error: authError || 'Auth Failed' };
+    if (!orgId) return { success: false, error: 'Config Missing (Org ID)' };
 
     try {
         // 1. Find or Create Customer in Zoho Books
@@ -300,12 +299,12 @@ export async function recordZohoPayment(paymentData: {
     amount: number;
     paymentId: string;
 }) {
-    const accessToken = await getAccessToken();
+    const { token: accessToken, error: authError } = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
 
     const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
 
-    if (!accessToken || !orgId) return { success: false };
+    if (!accessToken || !orgId) return { success: false, error: authError || 'Config Missing' };
 
     try {
         const payload = {
@@ -335,7 +334,7 @@ export async function recordZohoPayment(paymentData: {
 }
 
 export async function getZohoInvoicePDF(invoiceId: string) {
-    const accessToken = await getAccessToken();
+    const { token: accessToken } = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
     const booksDomain = config.domain.includes('zoho.in') ? 'books.zoho.in' : 'books.zoho.com';
 
