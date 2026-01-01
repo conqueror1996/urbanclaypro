@@ -251,14 +251,17 @@ export async function createZohoInvoice(orderData: any) {
             reference_number: orderData.orderId,
             date: new Date().toISOString().split('T')[0],
             due_date: new Date().toISOString().split('T')[0],
-            line_items: orderData.lineItems?.map((item: any) => ({
-                name: item.name,
-                description: item.description,
-                rate: item.rate,
-                quantity: item.quantity,
-                discount: `${item.discount}%`,
-                tax_id: item.taxId // Should be internal Zoho Tax ID
-            })),
+            line_items: orderData.lineItems?.map((item: any) => {
+                const lineItem: any = {
+                    name: item.name,
+                    description: item.description,
+                    rate: item.rate,
+                    quantity: item.quantity,
+                    discount: `${item.discount}%`
+                };
+                if (item.taxId) lineItem.tax_id = item.taxId;
+                return lineItem;
+            }),
             shipping_charge: orderData.shippingCharges || 0,
             adjustment: orderData.adjustment || 0,
             notes: orderData.customerNotes || orderData.terms,
