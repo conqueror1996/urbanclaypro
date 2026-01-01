@@ -20,7 +20,7 @@ export default function OrdersHistoryPage() {
     const filteredLinks = links.filter(link =>
         link.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         link.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        link.productName?.toLowerCase().includes(searchTerm.toLowerCase())
+        (link.lineItems?.[0]?.name || link.productName)?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const getStatusStyle = (status: string) => {
@@ -103,7 +103,8 @@ export default function OrdersHistoryPage() {
                                                 <div className="text-xs text-gray-500">{link.clientPhone}</div>
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-600 max-w-[200px] truncate">
-                                                {link.productName}
+                                                {link.lineItems?.[0]?.name || link.productName}
+                                                {link.lineItems?.length > 1 && <span className="text-[10px] text-gray-400 block">+ {link.lineItems.length - 1} more items</span>}
                                             </td>
                                             <td className="px-6 py-4 text-sm font-bold text-right text-gray-900">
                                                 ₹{link.amount?.toLocaleString('en-IN')}

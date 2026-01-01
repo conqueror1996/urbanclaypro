@@ -6,7 +6,6 @@ import { nanoid } from 'nanoid'
 
 export async function createPaymentLink(data: any) {
     try {
-        // High entropy ID for security
         const orderId = `ORD-${new Date().getFullYear()}-${nanoid(12).toUpperCase()}`;
 
         const doc: any = {
@@ -15,11 +14,20 @@ export async function createPaymentLink(data: any) {
             clientName: data.clientName,
             clientEmail: data.clientEmail,
             clientPhone: data.clientPhone,
-            productName: data.productName,
+            gstNumber: data.gstNumber,
+            panNumber: data.panNumber,
+            billingAddress: data.billingAddress,
+            shippingAddress: data.shippingAddress,
+            lineItems: data.lineItems,
             amount: parseFloat(data.amount),
+            shippingCharges: parseFloat(data.shippingCharges || 0),
+            adjustment: parseFloat(data.adjustment || 0),
+            tdsOption: data.tdsOption,
+            tdsRate: parseFloat(data.tdsRate || 0),
             status: 'pending',
             terms: data.terms,
             deliveryTimeline: data.deliveryTimeline,
+            customerNotes: data.customerNotes,
             createdAt: new Date().toISOString()
         }
 
@@ -29,7 +37,7 @@ export async function createPaymentLink(data: any) {
 
         const result = await writeClient.create(doc);
 
-        // Sync to Zoho
+        // Sync to Zoho CRM as Lead
         await createZohoLead({
             name: data.clientName,
             email: data.clientEmail,
@@ -37,10 +45,10 @@ export async function createPaymentLink(data: any) {
             role: 'Client',
             firmName: data.clientName,
             city: 'Online Order',
-            product: `${data.productName} (Link Sent)`,
+            product: `${data.lineItems?.[0]?.name || 'Products'} ...`,
             quantity: `Rs. ${data.amount}`,
             timeline: data.deliveryTimeline,
-            notes: `Payment Link Generated: https://claytile.in/pay/${orderId}\nOrder ID: ${orderId}${data.expiryDate ? `\nExpires: ${data.expiryDate}` : ''}`
+            notes: `Secure Invoice Created: https://claytile.in/pay/${orderId}\nOrder ID: ${orderId}`
         });
 
         return { success: true, orderId, linkPath: `/pay/${orderId}` };
@@ -59,9 +67,7 @@ export async function getPaymentLinkDetails(orderId: string) {
             const now = new Date();
             const expiry = new Date(order.expiryDate);
             if (now > expiry) {
-                // Auto-expire
                 order.status = 'expired';
-                // Optional: actually patch it in Sanity here
             }
         }
 
@@ -80,19 +86,22 @@ export async function findZohoLeads(query: string) {
     }
 }
 
+export async function verifyGST(gstin: string) {
+    try {
+        const { getGSTDetails } = await import('@/lib/zoho');
+        return await getGSTDetails(gstin);
+    } catch (error) {
+        return { success: false, error: "Verification failed" };
+    }
+}
+
 export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) {
     try {
         const query = `*[_type == "paymentLink" && orderId == $orderId][0]`;
         const order = await writeClient.fetch(query, { orderId });
 
         if (!order) return { success: false, error: "Order not found" };
-
-        await writeClient.patch(order._id).set({
-            status: 'paid',
-            paymentId: paymentId
-        }).commit();
-
-        console.log(`✅ Order ${orderId} marked as paid in Sanity.`);
+        if (order.status === 'paid') return { success: true, zohoInvoiceId: order.zohoInvoiceId };
 
         // 1. Create ACTUAL Zoho Invoice (Books API)
         const { createZohoInvoice, recordZohoPayment } = await import('@/lib/zoho');
@@ -100,6 +109,16 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
             ...order,
             paymentId
         });
+
+        // Update Sanity with Zoho Details
+        await writeClient.patch(order._id).set({
+            status: 'paid',
+            paymentId: paymentId,
+            zohoInvoiceId: zohoRes.invoiceId,
+            zohoInvoiceNumber: zohoRes.invoiceNumber
+        }).commit();
+
+        console.log(`✅ Order ${orderId} marked as paid. Zoho Invoice: ${zohoRes.invoiceNumber}`);
 
         // 1b. Record Payment in Zoho Books if Invoice was created
         if (zohoRes.success && zohoRes.invoiceId && zohoRes.customerId) {
@@ -109,28 +128,21 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
                 amount: order.amount,
                 paymentId: paymentId
             });
-            console.log(`✅ Zoho Payment recorded for Invoice ${zohoRes.invoiceId}`);
         }
 
         // 2. Send Official Receipt Email
         const { sendUserConfirmationEmail } = await import('@/lib/email');
-        const emailRes = await sendUserConfirmationEmail({
+        await sendUserConfirmationEmail({
             name: order.clientName,
             email: order.clientEmail,
-            product: `${order.productName} - PAID`, // Trigger the PAID template
+            product: `${order.lineItems?.[0]?.name || 'Order'} - PAID`,
             quantity: `₹${order.amount.toLocaleString('en-IN')}`,
             city: 'Online Order',
-            address: 'See Digital Invoice',
-            notes: `Payment ID: ${paymentId}\nOrder ID: ${orderId}${zohoRes.success ? `\nZoho Invoice: ${zohoRes.invoiceId}` : ''}`
+            address: order.billingAddress || 'Digital Invoice',
+            notes: `Zoho Invoice: ${zohoRes.invoiceNumber}\nOrder ID: ${orderId}\nPayment ID: ${paymentId}`
         });
 
-        if (emailRes?.success) {
-            console.log(`📧 Confirmation email sent to ${order.clientEmail}`);
-        } else {
-            console.error(`❌ Failed to send confirmation email to ${order.clientEmail}`);
-        }
-
-        return { success: true, zohoInvoiceId: zohoRes.invoiceId };
+        return { success: true, zohoInvoiceId: zohoRes.invoiceId, invoiceNumber: zohoRes.invoiceNumber };
     } catch (error) {
         console.error("Error updating payment status", error);
         return { success: false, error: "Update failed" };

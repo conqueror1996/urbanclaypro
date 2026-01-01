@@ -10,15 +10,12 @@ const config: ZohoConfig = {
     clientId: process.env.ZOHO_CLIENT_ID || '',
     clientSecret: process.env.ZOHO_CLIENT_SECRET || '',
     refreshToken: process.env.ZOHO_REFRESH_TOKEN || '',
-    domain: process.env.ZOHO_DOMAIN || 'www.zoho.in' // Default to India (.in), change to .com or .eu if needed
+    domain: process.env.ZOHO_DOMAIN || 'www.zoho.in'
 };
 
-/**
- * Exchange the Refresh Token for a temporary Access Token
- */
 async function getAccessToken(): Promise<string | null> {
     if (!config.refreshToken || !config.clientId || !config.clientSecret) {
-        console.error("❌ Zoho Configuration Missing: Check ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, and ZOHO_REFRESH_TOKEN env vars.");
+        console.error("❌ Zoho Configuration Missing.");
         return null;
     }
 
@@ -30,21 +27,13 @@ async function getAccessToken(): Promise<string | null> {
             grant_type: 'refresh_token'
         });
 
-        // Zoho Accounts URL depends on region. 
-        // .in -> https://accounts.zoho.in/oauth/v2/token
-        // .com -> https://accounts.zoho.com/oauth/v2/token
         const accountDomain = config.domain.replace('www.', 'accounts.');
         const url = `https://${accountDomain}/oauth/v2/token?${params.toString()}`;
 
         const response = await fetch(url, { method: 'POST' });
         const data = await response.json();
 
-        if (data.access_token) {
-            return data.access_token;
-        } else {
-            console.error("❌ Zoho Token Error:", data);
-            return null;
-        }
+        return data.access_token || null;
     } catch (error) {
         console.error("❌ Failed to fetch Zoho Access Token:", error);
         return null;
@@ -52,28 +41,45 @@ async function getAccessToken(): Promise<string | null> {
 }
 
 /**
- * Create a Lead in Zoho CRM
+ * Search GST Details (Mock logic, can be replaced with real GST API)
  */
+export async function getGSTDetails(gstin: string) {
+    // Structural validation
+    const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+    if (!gstRegex.test(gstin)) return { success: false, error: 'Invalid GST Format' };
+
+    try {
+        // Here we would typically call an external API or Zoho's internal lookup if available
+        // For now, return a success mock or instruct the user to provide API key
+        return {
+            success: true,
+            data: {
+                tradeName: "Urban Clay Client",
+                legalName: "Urban Clay Architecture Private Limited",
+                address: "Plot 45, Industrial Area, Bangalore, KA, 560001",
+                state: "Karnataka",
+                city: "Bangalore",
+                pincode: "560001"
+            }
+        };
+    } catch (error) {
+        return { success: false, error: 'Failed to fetch GST details' };
+    }
+}
+
 export async function createZohoLead(leadData: any) {
     const accessToken = await getAccessToken();
     if (!accessToken) return { success: false, error: 'Auth Failed' };
 
-    // Map your form data to Zoho's Field API Names
-    // Note: 'Last_Name' is mandatory in Zoho.
     const zohoRecord = {
         Company: leadData.firmName || 'Individual/Unknown',
-        Last_Name: leadData.name || leadData.firmName || 'Web Lead', // Fallback if name is missing
+        Last_Name: leadData.name || leadData.firmName || 'Web Lead',
         Email: leadData.email,
         Phone: leadData.contact,
         City: leadData.city,
         Description: `${leadData.notes || ''}\n\n--\nProduct: ${leadData.product}\nQuantity: ${leadData.quantity}\nRole: ${leadData.role}\nTimeline: ${leadData.timeline}`,
-
-        // Custom Logic for Tags/Source
         Lead_Source: 'Website',
-        Designation: leadData.role, // If you have a custom field for this, use its API name (e.g., 'Role_on_Project')
-
-        // You can add custom fields if you know their API names:
-        // "Project_Type": leadData.product 
+        Designation: leadData.role,
     };
 
     try {
@@ -90,88 +96,75 @@ export async function createZohoLead(leadData: any) {
         });
 
         const result = await response.json();
-
         if (result.data && result.data[0].status === 'success') {
-            console.log("✅ Zoho Lead Created:", result.data[0].details.id);
             return { success: true, id: result.data[0].details.id };
-        } else {
-            console.error("⚠️ Zoho Implementation Warning:", result);
-            return { success: false, details: result };
         }
+        return { success: false, details: result };
     } catch (error) {
-        console.error("❌ Zoho Submission Error:", error);
         return { success: false, error };
     }
 }
 
-/**
- * Search Leads in Zoho CRM
- */
 export async function searchZohoLeads(query: string) {
     const accessToken = await getAccessToken();
     if (!accessToken) return { success: false, error: 'Auth Failed' };
 
     try {
         const apiDomain = config.domain.includes('zoho.in') ? 'www.zohoapis.in' : 'www.zohoapis.com';
-        // Use the search API for phone or email or name
         const url = `https://${apiDomain}/crm/v2/Leads/search?word=${encodeURIComponent(query)}`;
 
         const response = await fetch(url, {
             method: 'GET',
-            headers: {
-                'Authorization': `Zoho-oauthtoken ${accessToken}`
-            }
+            headers: { 'Authorization': `Zoho-oauthtoken ${accessToken}` }
         });
 
         const result = await response.json();
-
-        if (result.data) {
-            return {
-                success: true,
-                leads: result.data.map((lead: any) => ({
-                    id: lead.id,
-                    name: lead.Full_Name || `${lead.First_Name || ''} ${lead.Last_Name || ''}`.trim(),
-                    email: lead.Email,
-                    phone: lead.Phone || lead.Mobile,
-                    company: lead.Company
-                }))
-            };
-        } else {
-            return { success: true, leads: [] };
-        }
+        return {
+            success: true,
+            leads: result.data?.map((lead: any) => ({
+                id: lead.id,
+                name: lead.Full_Name || `${lead.First_Name || ''} ${lead.Last_Name || ''}`.trim(),
+                email: lead.Email,
+                phone: lead.Phone || lead.Mobile,
+                company: lead.Company
+            })) || []
+        };
     } catch (error) {
-        console.error("❌ Zoho Search Error:", error);
         return { success: false, error };
     }
 }
 
-/**
- * Create an Invoice in Zoho Books / Zoho Invoice
- */
 export async function createZohoInvoice(orderData: any) {
     const accessToken = await getAccessToken();
     const orgId = process.env.ZOHO_ORG_ID;
 
-    if (!accessToken || !orgId) {
-        console.warn("⚠️ Zoho Books Org ID or Auth missing. Skipping Invoice creation.");
-        return { success: false, error: 'Config Missing' };
-    }
+    if (!accessToken || !orgId) return { success: false, error: 'Config Missing' };
 
     try {
         // 1. Create/Find Customer in Zoho Books
+        const contactPayload = {
+            contact_name: orderData.clientName,
+            company_name: orderData.clientName,
+            email: orderData.clientEmail,
+            phone: orderData.clientPhone,
+            gst_no: orderData.gstNumber,
+            pan_no: orderData.panNumber,
+            contact_type: 'customer',
+            billing_address: {
+                address: orderData.billingAddress,
+            },
+            shipping_address: {
+                address: orderData.shippingAddress,
+            }
+        };
+
         const contactResponse = await fetch(`https://books.zoho.in/api/v3/contacts?organization_id=${orgId}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Zoho-oauthtoken ${accessToken}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                contact_name: orderData.clientName,
-                company_name: orderData.clientName,
-                email: orderData.clientEmail,
-                phone: orderData.clientPhone,
-                contact_type: 'customer'
-            })
+            body: JSON.stringify(contactPayload)
         });
         const contactResult = await contactResponse.json();
         const contactId = contactResult.contact?.contact_id;
@@ -184,15 +177,17 @@ export async function createZohoInvoice(orderData: any) {
             reference_number: orderData.orderId,
             date: new Date().toISOString().split('T')[0],
             due_date: new Date().toISOString().split('T')[0],
-            line_items: [
-                {
-                    name: orderData.productName,
-                    description: `Order ID: ${orderData.orderId}\nTimeline: ${orderData.deliveryTimeline}`,
-                    rate: orderData.amount,
-                    quantity: 1
-                }
-            ],
-            notes: orderData.terms,
+            line_items: orderData.lineItems?.map((item: any) => ({
+                name: item.name,
+                description: item.description,
+                rate: item.rate,
+                quantity: item.quantity,
+                discount: `${item.discount}%`,
+                tax_id: item.taxId // Should be internal Zoho Tax ID
+            })),
+            shipping_charge: orderData.shippingCharges || 0,
+            adjustment: orderData.adjustment || 0,
+            notes: orderData.customerNotes || orderData.terms,
             allow_partial_payments: false
         };
 
@@ -208,26 +203,20 @@ export async function createZohoInvoice(orderData: any) {
         const result = await invoiceResponse.json();
 
         if (result.code === 0) {
-            console.log("✅ Zoho Invoice Created:", result.invoice.invoice_id);
             return {
                 success: true,
                 invoiceId: result.invoice.invoice_id,
+                invoiceNumber: result.invoice.invoice_number,
                 invoiceUrl: result.invoice.invoice_url,
                 customerId: result.invoice.customer_id
             };
-        } else {
-            console.error("⚠️ Zoho Invoice Error:", result);
-            return { success: false, error: result.message };
         }
+        return { success: false, error: result.message };
     } catch (error) {
-        console.error("❌ Zoho Invoice creation failed:", error);
         return { success: false, error };
     }
 }
 
-/**
- * Record a Payment for a specific invoice in Zoho Books
- */
 export async function recordZohoPayment(paymentData: {
     customerId: string;
     invoiceId: string;
@@ -246,13 +235,8 @@ export async function recordZohoPayment(paymentData: {
             amount: paymentData.amount,
             date: new Date().toISOString().split('T')[0],
             reference_number: paymentData.paymentId,
-            description: `Automatic payment recorded via Website for Invoice ID: ${paymentData.invoiceId}`,
-            invoices: [
-                {
-                    invoice_id: paymentData.invoiceId,
-                    amount_applied: paymentData.amount
-                }
-            ]
+            description: `Payment for Invoice ${paymentData.invoiceId}`,
+            invoices: [{ invoice_id: paymentData.invoiceId, amount_applied: paymentData.amount }]
         };
 
         const response = await fetch(`https://books.zoho.in/api/v3/customerpayments?organization_id=${orgId}`, {
@@ -265,16 +249,8 @@ export async function recordZohoPayment(paymentData: {
         });
 
         const result = await response.json();
-
-        if (result.code === 0) {
-            console.log("✅ Zoho Payment Recorded:", result.payment.payment_id);
-            return { success: true, paymentId: result.payment.payment_id };
-        } else {
-            console.error("⚠️ Zoho Payment Error:", result);
-            return { success: false, error: result.message };
-        }
+        return result.code === 0 ? { success: true, paymentId: result.payment.payment_id } : { success: false, error: result.message };
     } catch (error) {
-        console.error("❌ Zoho Payment record failed:", error);
         return { success: false, error };
     }
 }
