@@ -84,8 +84,8 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                     <div>
                                         <p className="text-[10px] text-gray-400 uppercase font-bold">Status</p>
                                         <span className={`inline-block mt-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${order.status === 'paid' ? 'bg-emerald-50 text-emerald-600' :
-                                                order.status === 'expired' ? 'bg-red-50 text-red-600' :
-                                                    'bg-orange-50 text-orange-600 animate-pulse'
+                                            order.status === 'expired' ? 'bg-red-50 text-red-600' :
+                                                'bg-orange-50 text-orange-600 animate-pulse'
                                             }`}>
                                             {order.status}
                                         </span>
@@ -195,12 +195,6 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                 </div>
             </main>
             <Footer />
-
-            <style jsx global>{`
-                body {
-                    background-color: #1a1512;
-                }
-            `}</style>
         </div>
     );
 }

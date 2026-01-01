@@ -51,7 +51,7 @@ function wrapEmailTemplate(content: string, title: string = 'Update from UrbanCl
 }
 
 export async function sendLeadAlertEmail(lead: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) return;
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) return { success: false, error: 'Missing credentials' };
 
     try {
         const isSerious = lead.isSerious || lead.seriousness === 'high';
@@ -82,13 +82,15 @@ export async function sendLeadAlertEmail(lead: any) {
         };
 
         await transporter.sendMail(mailOptions);
+        return { success: true };
     } catch (error) {
         console.error('❌ Error sending admin mail:', error);
+        return { success: false, error };
     }
 }
 
 export async function sendUserConfirmationEmail(order: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !order.email) return;
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !order.email) return { success: false, error: 'Missing credentials or email' };
 
     try {
         // DETAILED PREMIUM RECEIPT
@@ -164,13 +166,15 @@ export async function sendUserConfirmationEmail(order: any) {
         };
 
         await transporter.sendMail(mailOptions);
+        return { success: true };
     } catch (error) {
         console.error('❌ Error sending confirmation email:', error);
+        return { success: false, error };
     }
 }
 
 export async function sendSampleShippedEmail(lead: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) return;
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) return { success: false, error: 'Missing credentials or email' };
 
     try {
         const trackingLink = getTrackingLink(lead.shippingInfo?.courier || '', lead.shippingInfo?.trackingNumber || '');
@@ -203,7 +207,47 @@ export async function sendSampleShippedEmail(lead: any) {
         };
 
         await transporter.sendMail(mailOptions);
+        return { success: true };
     } catch (error) {
         console.error('❌ Error sending shipped email:', error);
+        return { success: false, error };
+    }
+}
+
+export async function sendSampleFollowUpEmail(lead: any) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) return { success: false, error: 'Missing credentials or email' };
+
+    try {
+        const content = `
+            <div style="text-align: center; margin-bottom: 32px;">
+                <h2 style="color: #2A1E16; margin: 0; font-family: 'Playfair Display', serif; font-size: 28px;">Checking In</h2>
+                <p style="color: #6b7280; font-size: 15px; margin-top: 8px;">Regarding your recent sample request.</p>
+            </div>
+
+            <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">Hi ${lead.name ? lead.name.split(' ')[0] : 'there'},</p>
+            <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">It's been a few days since your samples were dispatched. We wanted to ensure they have arrived safely and that the textures meet your design expectations.</p>
+
+            <div style="background-color: #fdfcfb; padding: 32px; border-radius: 20px; border: 1px solid #f5eeee; margin: 32px 0;">
+                <h4 style="margin: 0 0 16px; font-size: 11px; font-weight: bold; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Pro Inspection Tip</h4>
+                <p style="margin: 0; font-size: 14px; color: #2A1E16; line-height: 1.6;">
+                    Terracotta is a living material. We recommend placing the samples against different wall surfaces throughout the day to see how the natural kiln-fired highlights react to shifting light conditions.
+                </p>
+            </div>
+
+            <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">If you have any questions regarding installation details or technical specifications, simply reply to this email.</p>
+        `;
+
+        const mailOptions = {
+            from: `"UrbanClay Support" <${process.env.SMTP_USER}>`,
+            to: lead.email,
+            subject: `Regarding your samples | UrbanClay`,
+            html: wrapEmailTemplate(content)
+        };
+
+        await transporter.sendMail(mailOptions);
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Error sending follow-up email:', error);
+        return { success: false, error };
     }
 }
