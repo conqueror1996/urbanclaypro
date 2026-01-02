@@ -31,6 +31,8 @@ import wikiArticle from './wikiArticle'
 import cityPage from './cityPage'
 import architectLead from './architectLead'
 import paymentLink from './paymentLink'
+import crmLead from './crm-lead'
+import crmInteraction from './crm-interaction'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
     types: [
@@ -58,6 +60,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         wikiArticle,
         cityPage,
         architectLead,
-        paymentLink
+        paymentLink,
+        crmLead,
+        crmInteraction
     ],
 }
