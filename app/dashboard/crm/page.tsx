@@ -61,6 +61,7 @@ function CRMContent() {
     const [showQuoteCalc, setShowQuoteCalc] = useState(false);
     const [quotePrice, setQuotePrice] = useState('120');
     const [quoteResult, setQuoteResult] = useState('');
+    const [quoteUnit, setQuoteUnit] = useState<'piece' | 'sqft'>('sqft');
     const [contacts, setContacts] = useState<any[]>([]);
     const [viewMode, setViewMode] = useState<'pipeline' | 'contacts'>('pipeline');
 
@@ -132,7 +133,9 @@ function CRMContent() {
         const gst = subtotal * 0.18;
         const total = subtotal + gst;
 
-        const text = `*Quick Estimate for ${selectedLead.company || 'your project'}*\n\nHi ${selectedLead.clientName?.split(' ')[0] || 'there'},\nThanks for your enquiry. Preliminary cost for ${qty} units:\n\n- Base Rate: ₹${price}/unit\n- Material Cost: ₹${subtotal.toLocaleString('en-IN')}\n- GST (18%): ₹${gst.toLocaleString('en-IN')}\n\n*Total Est: ₹${total.toLocaleString('en-IN')}* (Excl. Shipping)`;
+        const unitLabel = quoteUnit === 'sqft' ? 'sqft' : 'pieces';
+
+        const text = `*Quick Estimate for ${selectedLead.company || 'your project'}*\n\nHi ${selectedLead.clientName?.split(' ')[0] || 'there'},\nThanks for your enquiry. Preliminary cost for ${qty} ${unitLabel}:\n\n- Base Rate: ₹${price}/${quoteUnit}\n- Material Cost: ₹${subtotal.toLocaleString('en-IN')}\n- GST (18%): ₹${gst.toLocaleString('en-IN')}\n\n*Total Est: ₹${total.toLocaleString('en-IN')}* (Excl. Shipping)`;
         setQuoteResult(text);
     };
 
@@ -149,12 +152,13 @@ function CRMContent() {
         const qty = parseInt((selectedLead.requirements?.match(/\d+/)?.[0] || '100'));
         const price = parseInt(quotePrice);
         const subtotal = qty * price;
+        const unitLabel = quoteUnit === 'sqft' ? 'sqft' : 'pcs';
 
         // @ts-ignore
         autoTable(doc, {
             startY: 40,
-            head: [['Item', 'Qty', 'Unit Price', 'Subtotal']],
-            body: [[selectedLead.company || 'Materials', qty, `Rs.${price}`, `Rs.${subtotal}`]],
+            head: [['Item', 'Qty', `Rate/${quoteUnit}`, 'Subtotal']],
+            body: [[selectedLead.company || 'Materials', `${qty} ${unitLabel}`, `Rs.${price}`, `Rs.${subtotal}`]],
             theme: 'grid',
             headStyles: { fillColor: [42, 30, 22] }
         });
@@ -701,15 +705,31 @@ function CRMContent() {
                                                     <h4 className="text-xs font-bold text-blue-600 uppercase tracking-widest">Pricing Calculator</h4>
                                                     <button onClick={() => setShowQuoteCalc(false)} className="text-blue-300">×</button>
                                                 </div>
-                                                <div className="flex gap-3 mb-4">
-                                                    <input
-                                                        type="number"
-                                                        placeholder="Price per unit"
-                                                        value={quotePrice}
-                                                        onChange={e => setQuotePrice(e.target.value)}
-                                                        className="flex-1 p-3 bg-white border border-blue-100 rounded-xl outline-none text-sm"
-                                                    />
-                                                    <button onClick={handleCalculateQuote} className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Calculate</button>
+                                                <div className="flex flex-col gap-4 mb-4">
+                                                    <div className="flex bg-white p-1 rounded-xl border border-blue-100 self-start">
+                                                        <button
+                                                            onClick={() => setQuoteUnit('sqft')}
+                                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all ${quoteUnit === 'sqft' ? 'bg-blue-600 text-white' : 'text-blue-400'}`}
+                                                        >
+                                                            per Sqft
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setQuoteUnit('piece')}
+                                                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all ${quoteUnit === 'piece' ? 'bg-blue-600 text-white' : 'text-blue-400'}`}
+                                                        >
+                                                            per Piece
+                                                        </button>
+                                                    </div>
+                                                    <div className="flex gap-3">
+                                                        <input
+                                                            type="number"
+                                                            placeholder={`Price per ${quoteUnit}`}
+                                                            value={quotePrice}
+                                                            onChange={e => setQuotePrice(e.target.value)}
+                                                            className="flex-1 p-3 bg-white border border-blue-100 rounded-xl outline-none text-sm"
+                                                        />
+                                                        <button onClick={handleCalculateQuote} className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Calculate</button>
+                                                    </div>
                                                 </div>
                                                 {quoteResult && (
                                                     <div className="space-y-3">
