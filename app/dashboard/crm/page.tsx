@@ -185,19 +185,37 @@ function CRMContent() {
 
     const handleCreateDeal = async (data: any) => {
         try {
-            await createCRMLead({
+            // Validation check before sending
+            if (!data.clientName || !data.phone) {
+                alert("❌ Client Name and Phone are required.");
+                return;
+            }
+
+            const cleanData = {
                 ...data,
-                potentialValue: parseFloat(data.potentialValue) || 0
-            });
+                potentialValue: Number(data.potentialValue) || 0
+            };
+
+            await createCRMLead(cleanData);
+
             setShowNewDealModal(false);
             setShowImportModal(false);
-            setNewDealForm({ clientName: '', company: '', phone: '', email: '', potentialValue: '', stage: 'new', role: 'architect', requirements: '' });
+            setNewDealForm({
+                clientName: '',
+                company: '',
+                phone: '',
+                email: '',
+                potentialValue: '',
+                stage: 'new',
+                role: 'architect',
+                requirements: ''
+            });
             setViewMode('pipeline');
             fetchLeads();
             alert("✅ Deal successfully started!");
-        } catch (error) {
-            console.error(error);
-            alert("❌ Failed to create deal. Please check fields.");
+        } catch (error: any) {
+            console.error("Deal Creation Error:", error);
+            alert(`❌ Failed to create deal: ${error.message || 'Unknown error'}`);
         }
     };
 

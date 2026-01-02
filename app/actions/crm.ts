@@ -1,3 +1,5 @@
+'use server';
+
 import { client } from '@/sanity/lib/client';
 import { writeClient } from '@/sanity/lib/write-client';
 
@@ -47,11 +49,20 @@ export async function addCRMInteraction(leadId: string, interaction: {
 }
 
 export async function createCRMLead(leadData: any) {
-    return await writeClient.create({
-        _type: 'crmLead',
-        ...leadData,
-        submittedAt: new Date().toISOString()
-    });
+    try {
+        console.log("Attempting to create CRM Lead with data:", leadData);
+        const result = await writeClient.create({
+            _type: 'crmLead',
+            ...leadData,
+            submittedAt: new Date().toISOString()
+        });
+        console.log("CRM Lead created successfully:", result._id);
+        return result;
+    } catch (error: any) {
+        console.error("CRITICAL: Sanity Lead Creation Failed", error);
+        // Throw detailed error to be caught by the frontend
+        throw new Error(error.message || "Failed to create lead in Sanity");
+    }
 }
 
 export async function saveGoogleContactsToSanity(contacts: any[]) {
