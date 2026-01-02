@@ -1,45 +1,26 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-interface BlogPost {
+export interface RelatedArticle {
     slug: string;
     title: string;
     excerpt: string;
-    readTime: string;
-    category: string;
-    image?: string;
+    readTime?: string;
+    category?: string;
+    mainImage?: string; // Mapped from sanity
+    publishedAt?: string;
 }
 
-const RELATED_ARTICLES: BlogPost[] = [
-    {
-        slug: 'best-terracotta-tiles-indian-homes-2025',
-        title: 'Best Terracotta Tiles for Indian Homes in 2025',
-        excerpt: 'Discover the best terracotta tiles for Indian homes. Compare wirecut, handmade & pressed options with expert recommendations.',
-        readTime: '8 min read',
-        category: 'Buying Guide',
-        image: 'https://images.unsplash.com/photo-1620619767323-b95a89183081?q=80&w=800&auto=format&fit=crop' // Terracotta/Brick texture
-    },
-    {
-        slug: 'terracotta-vs-ceramic-tiles-comparison',
-        title: 'Terracotta vs Ceramic Tiles: Which is Better?',
-        excerpt: 'Complete comparison of terracotta and ceramic tiles. Compare price, durability, and maintenance for Indian homes.',
-        readTime: '7 min read',
-        category: 'Comparison Guide',
-        image: 'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?q=80&w=800&auto=format&fit=crop' // Modern clean interior
-    },
-    {
-        slug: 'how-to-choose-clay-tiles-architects-guide',
-        title: 'How to Choose Clay Tiles: Architect\'s Guide',
-        excerpt: 'Expert guide on selecting clay tiles. Learn about specifications, quality checks, and installation for your project.',
-        readTime: '9 min read',
-        category: 'Technical Guide',
-        image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop' // Architect planning/detail
-    }
-];
+interface RelatedArticlesProps {
+    posts?: RelatedArticle[];
+}
 
-export default function RelatedArticles() {
+export default function RelatedArticles({ posts = [] }: RelatedArticlesProps) {
+    if (!posts || posts.length === 0) return null;
+
     return (
         <section className="bg-[#FAF7F3] py-24 border-t border-[#e9e2da]">
             <div className="max-w-[1800px] mx-auto px-6 md:px-12">
@@ -64,7 +45,7 @@ export default function RelatedArticles() {
 
                 {/* Editorial Grid / Mobile Carousel */}
                 <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-visible pb-8 md:pb-0 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-                    {RELATED_ARTICLES.map((article, idx) => (
+                    {posts.map((article, idx) => (
                         <motion.div
                             key={article.slug}
                             initial={{ opacity: 0, y: 20 }}
@@ -75,24 +56,32 @@ export default function RelatedArticles() {
                         >
                             <Link href={`/journal/${article.slug}`} className="block">
                                 {/* Image Container */}
-                                <div className="relative aspect-[4/3] overflow-hidden bg-gray-200 mb-8">
+                                <div className="relative aspect-[4/3] overflow-hidden bg-gray-200 mb-8 rounded-sm">
                                     <div className="absolute inset-0 bg-[#2A1E16]/0 group-hover:bg-[#2A1E16]/10 transition-colors duration-500 z-10" />
-                                    <img
-                                        src={article.image}
-                                        alt={article.title}
-                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-                                    />
+                                    {article.mainImage ? (
+                                        <Image
+                                            src={article.mainImage}
+                                            alt={article.title}
+                                            fill
+                                            sizes="(max-width: 768px) 90vw, 33vw"
+                                            className="object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500">
+                                            No Image
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Content */}
                                 <div className="space-y-4 px-2">
                                     <div className="flex items-center gap-4 text-xs font-medium uppercase tracking-[0.2em] text-gray-400">
-                                        <span className="text-[var(--terracotta)]">{article.category}</span>
+                                        <span className="text-[var(--terracotta)]">{article.category || 'Architecture'}</span>
                                         <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                                        <span>{article.readTime}</span>
+                                        <span>{article.readTime || '5 min read'}</span>
                                     </div>
 
-                                    <h3 className="text-2xl font-serif text-[#2A1E16] leading-snug group-hover:text-[#a85638] transition-colors duration-300">
+                                    <h3 className="text-2xl font-serif text-[#2A1E16] leading-snug group-hover:text-[#a85638] transition-colors duration-300 line-clamp-2">
                                         {article.title}
                                     </h3>
 

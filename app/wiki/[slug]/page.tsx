@@ -126,6 +126,8 @@ const ptComponents = {
     }
 }
 
+import JsonLd from '@/components/JsonLd';
+
 export default async function WikiArticlePage({ params }: PageProps) {
     const { slug } = await params;
 
@@ -138,6 +140,7 @@ export default async function WikiArticlePage({ params }: PageProps) {
             difficulty,
             content,
             _updatedAt,
+            _createdAt,
             relatedProducts[]->{
                 title,
                 "slug": slug.current,
@@ -153,8 +156,32 @@ export default async function WikiArticlePage({ params }: PageProps) {
 
     if (!article) notFound();
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: article.title,
+        description: article.summary,
+        image: article.relatedProducts?.[0]?.image ? urlForImage(article.relatedProducts[0].image).url() : 'https://claytile.in/og-image.png',
+        datePublished: article._createdAt,
+        dateModified: article._updatedAt,
+        author: {
+            '@type': 'Organization',
+            name: 'UrbanClay'
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'UrbanClay',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://claytile.in/icon.png'
+            }
+        },
+        proficiencyLevel: article.difficulty
+    };
+
     return (
         <div className="min-h-screen bg-white">
+            <JsonLd data={jsonLd} />
             <Header />
 
             <main className="pt-32 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

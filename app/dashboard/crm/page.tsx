@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getCRMLeads, updateCRMLeadStage, addCRMInteraction, createCRMLead, getCRMContacts, getLabours, getSites, createSiteFromLead, addFeedback } from '@/app/actions/crm';
+import { getCRMLeads, updateCRMLeadStage, addCRMInteraction, createCRMLead, getCRMContacts, getLabours, getSites, createSiteFromLead, addFeedback, updateCRMLead, deleteCRMLead } from '@/app/actions/crm';
 import { generateCRMSmartReply } from '@/app/actions/crm-ai';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
@@ -15,6 +15,7 @@ import { CRMStats } from '@/components/dashboard/crm/CRMStats';
 import { CRMFilters } from '@/components/dashboard/crm/CRMFilters';
 import { CRMLeadCard } from '@/components/dashboard/crm/CRMLeadCard';
 import { CRMDetailPanel } from '@/components/dashboard/crm/CRMDetailPanel';
+import { CRMKanbanBoard } from '@/components/dashboard/crm/CRMKanbanBoard';
 
 const STAGES = [
     { label: 'New', value: 'new', color: 'bg-indigo-50 text-indigo-700 border-indigo-100' },
@@ -45,7 +46,7 @@ function CRMContent() {
 
     // UI State
     const [loading, setLoading] = useState(true);
-    const [viewMode, setViewMode] = useState<'pipeline' | 'contacts' | 'dormant'>('pipeline');
+    const [viewMode, setViewMode] = useState<'pipeline' | 'kanban' | 'contacts' | 'dormant'>('kanban');
     const [activeTab, setActiveTab] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedLead, setSelectedLead] = useState<any | null>(null);
@@ -201,13 +202,60 @@ function CRMContent() {
         finally { setIsSubmittingFeedback(false); }
     };
 
+    const handleUpdateLead = async (leadId: string, data: any) => {
+        try {
+            await updateCRMLead(leadId, data);
+
+            // Optimistic update locally
+            setLeads(prev => prev.map(l => l._id === leadId ? { ...l, ...data } : l));
+            if (selectedLead && selectedLead._id === leadId) {
+                setSelectedLead({ ...selectedLead, ...data });
+            }
+
+            alert("Lead archive updated.");
+        } catch (e) {
+            console.error(e);
+            alert("Update failed.");
+        }
+    };
+
+    const handleDeleteLead = async (leadId: string) => {
+        if (!confirm("Are you sure you want to delete this opportunity? This action cannot be undone.")) return;
+
+        try {
+            await deleteCRMLead(leadId);
+
+            // Remove locally
+            setLeads(prev => prev.filter(l => l._id !== leadId));
+            setSelectedLead(null);
+
+            alert("Opportunity removed from archive.");
+        } catch (e) {
+            console.error(e);
+            alert("Deletion failed.");
+        }
+    };
+
     const filteredLeads = leads.filter(lead => {
         const matchesSearch = (lead.clientName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || (lead.company?.toLowerCase() || '').includes(searchTerm.toLowerCase());
         const dormant = isDormant(lead);
         if (viewMode === 'dormant') return matchesSearch && dormant;
+        if (viewMode === 'kanban') return matchesSearch && !dormant;
         const matchesTab = activeTab === 'all' ? true : lead.stage === activeTab;
         return matchesSearch && matchesTab && !dormant;
     });
+
+    const handleDragEnd = async (result: any) => {
+        if (!result.destination) return;
+        const { draggableId, destination } = result;
+        const newStage = destination.droppableId;
+
+        // Optimistic Update
+        const updatedLeads = leads.map(l => l._id === draggableId ? { ...l, stage: newStage } : l);
+        setLeads(updatedLeads);
+
+        await updateCRMLeadStage(draggableId, newStage);
+    };
 
     const overdueCount = leads.filter(l => isOverdue(l.nextFollowUp) && !['won', 'lost'].includes(l.stage)).length;
 
@@ -279,6 +327,15 @@ function CRMContent() {
                             <Loader2 className="w-10 h-10 animate-spin text-[#b45a3c]" />
                             <p className="text-[10px] font-black uppercase text-[#8c7b70] tracking-[0.2em]">Synchronizing Archive...</p>
                         </div>
+                    ) : viewMode === 'kanban' ? (
+                        <CRMKanbanBoard
+                            leads={filteredLeads}
+                            stages={STAGES}
+                            onDragEnd={handleDragEnd}
+                            onLeadClick={setSelectedLead}
+                            isOverdue={l => isOverdue(l)}
+                            getDealHealth={getDealHealth}
+                        />
                     ) : (viewMode === 'pipeline' || viewMode === 'dormant') ? (
                         <div className="grid grid-cols-1 gap-4">
                             <AnimatePresence mode="popLayout">
@@ -345,6 +402,8 @@ function CRMContent() {
                     setFeedbackForm={setFeedbackForm}
                     handleSubmitFeedback={handleSubmitFeedback}
                     isSubmittingFeedback={isSubmittingFeedback}
+                    handleUpdateLead={handleUpdateLead}
+                    handleDeleteLead={handleDeleteLead}
                 />
 
                 {/* Creation Modal - Simplified Professional */}

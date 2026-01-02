@@ -8,6 +8,7 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getProduct, getRelatedProducts, getCollectionBySlug, getProducts } from '@/lib/products';
+import { getJournalPosts } from '@/lib/journal';
 
 // Components
 import ProductPageAnimate from '@/components/ProductPageAnimate';
@@ -336,6 +337,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         // Render Product Page
         const categoryIdentifier = product.category?.slug || product.tag;
         const relatedProducts = await getRelatedProducts(categoryIdentifier, pathSlug);
+        const journalPosts = (await getJournalPosts()).slice(0, 3);
         const quoteUrl = `/?product=${encodeURIComponent(product.title)}${typeof variant === 'string' ? `&variant=${encodeURIComponent(variant)}` : ''}#quote`;
 
         // Parse Price Logic
@@ -408,15 +410,27 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             delete (jsonLd as any).offers;
         }
 
+        const breadcrumbJsonLd = {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+                { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://claytile.in' },
+                { '@type': 'ListItem', 'position': 2, 'name': 'Products', 'item': 'https://claytile.in/products' },
+                { '@type': 'ListItem', 'position': 3, 'name': product.category?.title || 'Collection', 'item': `https://claytile.in/products/${categoryIdentifier}` },
+                { '@type': 'ListItem', 'position': 4, 'name': product.title, 'item': `https://claytile.in/products/${categoryIdentifier}/${product.slug}` }
+            ]
+        };
+
         return (
             <div className="bg-[#1a1512] min-h-screen">
-                <JsonLd data={[jsonLd, faqJsonLd]} />
+                <JsonLd data={[jsonLd, faqJsonLd, breadcrumbJsonLd]} />
                 <Header />
                 <ProductPageAnimate
                     product={product}
                     relatedProducts={relatedProducts}
                     quoteUrl={quoteUrl}
                     variantName={typeof variant === 'string' ? variant : undefined}
+                    journalPosts={journalPosts}
                 />
                 <Footer />
             </div>
@@ -483,9 +497,19 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             url: `https://claytile.in/products/${pathSlug}`
         };
 
+        const breadcrumbJsonLd = {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+                { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://claytile.in' },
+                { '@type': 'ListItem', 'position': 2, 'name': 'Products', 'item': 'https://claytile.in/products' },
+                { '@type': 'ListItem', 'position': 3, 'name': title, 'item': `https://claytile.in/products/${pathSlug}` }
+            ]
+        };
+
         return (
             <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0]">
-                <JsonLd data={[jsonLdCat, faqJsonLd]} />
+                <JsonLd data={[jsonLdCat, faqJsonLd, breadcrumbJsonLd]} />
                 <Header />
                 <main className="pt-32 pb-20 px-6 max-w-[1800px] mx-auto min-h-screen">
                     {/* Category Hero */}

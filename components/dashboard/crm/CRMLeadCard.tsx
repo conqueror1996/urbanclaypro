@@ -52,7 +52,7 @@ export function CRMLeadCard({ lead, onClick, isOverdue, getDealHealth, stages }:
             </div>
 
             {/* Financials & Progress */}
-            <div className="flex-1 grid grid-cols-2 gap-10 w-full md:w-auto px-6 border-l border-[#e9e2da]/40">
+            <div className="flex-1 grid grid-cols-2 gap-10 w-full md:w-auto md:px-6 md:border-l border-t md:border-t-0 pt-6 md:pt-0 border-[#e9e2da]/40">
                 <div className="space-y-1">
                     <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-widest">Est. Valuation</p>
                     <p className="font-serif text-lg text-[#2a1e16] font-medium">₹{lead.potentialValue?.toLocaleString('en-IN') || 'TBD'}</p>
@@ -66,7 +66,7 @@ export function CRMLeadCard({ lead, onClick, isOverdue, getDealHealth, stages }:
             </div>
 
             {/* Milestones & Actions */}
-            <div className="flex-1 flex items-center justify-between w-full md:w-auto pl-6 border-l border-[#e9e2da]/40">
+            <div className="flex-1 flex items-center justify-between w-full md:w-auto md:pl-6 md:border-l border-t md:border-t-0 pt-6 md:pt-0 border-[#e9e2da]/40">
                 <div className="space-y-1">
                     <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-widest">Context Milestone</p>
                     <div className="flex items-center gap-2 mt-1.5">

@@ -4,8 +4,8 @@ import React from 'react';
 import { Search, TrendingUp, Clock, UserPlus, Filter, X } from 'lucide-react';
 
 interface CRMFiltersProps {
-    viewMode: 'pipeline' | 'contacts' | 'dormant';
-    setViewMode: (mode: 'pipeline' | 'contacts' | 'dormant') => void;
+    viewMode: 'pipeline' | 'kanban' | 'contacts' | 'dormant';
+    setViewMode: (mode: 'pipeline' | 'kanban' | 'contacts' | 'dormant') => void;
     activeTab: string;
     setActiveTab: (tab: string) => void;
     searchTerm: string;
@@ -30,7 +30,8 @@ export function CRMFilters({
                 {/* View Switcher - More Professional Pills */}
                 <div className="flex bg-white p-1 rounded-2xl border border-[#e9e2da]/50 shadow-sm w-full md:w-auto">
                     {[
-                        { id: 'pipeline', label: 'Deal Pipeline', icon: TrendingUp },
+                        { id: 'kanban', label: 'Board View', icon: Filter },
+                        { id: 'pipeline', label: 'List View', icon: TrendingUp },
                         { id: 'dormant', label: 'The Graveyard', icon: Clock },
                         { id: 'contacts', label: 'Global Contacts', icon: UserPlus },
                     ].map((mode) => (
@@ -38,8 +39,8 @@ export function CRMFilters({
                             key={mode.id}
                             onClick={() => setViewMode(mode.id as any)}
                             className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all flex-1 md:flex-none ${viewMode === mode.id
-                                    ? 'bg-[#2a1e16] text-white shadow-lg'
-                                    : 'text-[#8c7b70] hover:text-[#2a1e16] hover:bg-[#FAF9F6]'
+                                ? 'bg-[#2a1e16] text-white shadow-lg'
+                                : 'text-[#8c7b70] hover:text-[#2a1e16] hover:bg-[#FAF9F6]'
                                 }`}
                         >
                             <mode.icon className="w-3.5 h-3.5" />
@@ -75,8 +76,8 @@ export function CRMFilters({
                     <button
                         onClick={() => setActiveTab('all')}
                         className={`px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${activeTab === 'all'
-                                ? 'bg-white border-[#2a1e16] text-[#2a1e16] shadow-sm'
-                                : 'bg-transparent border-transparent text-[#8c7b70] hover:bg-white/50'
+                            ? 'bg-white border-[#2a1e16] text-[#2a1e16] shadow-sm'
+                            : 'bg-transparent border-transparent text-[#8c7b70] hover:bg-white/50'
                             }`}
                     >
                         Global Pool
@@ -90,8 +91,8 @@ export function CRMFilters({
                             key={stage.value}
                             onClick={() => setActiveTab(stage.value)}
                             className={`px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${activeTab === stage.value
-                                    ? 'bg-white border-[#2a1e16] text-[#2a1e16] shadow-sm'
-                                    : 'bg-transparent border-transparent text-[#8c7b70] hover:bg-white/50'
+                                ? 'bg-white border-[#2a1e16] text-[#2a1e16] shadow-sm'
+                                : 'bg-transparent border-transparent text-[#8c7b70] hover:bg-white/50'
                                 }`}
                         >
                             {stage.label}

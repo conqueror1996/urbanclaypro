@@ -12,6 +12,7 @@ import CoverageCalculator from '@/components/product-page/CoverageCalculator';
 // import PatternVisualizer from '@/components/product-page/PatternVisualizer';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import RelatedArticles from '@/components/RelatedArticles';
+import { RelatedArticle } from '@/components/RelatedArticles';
 
 const WallStyler = dynamic(() => import('./WallStyler'), {
     ssr: false,
@@ -25,6 +26,7 @@ interface ProductPageAnimateProps {
     relatedProducts: Product[];
     quoteUrl: string;
     variantName?: string;
+    journalPosts?: RelatedArticle[];
 }
 
 const CuratedProductCard = ({ product }: { product: Product }) => {
@@ -63,7 +65,7 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
                         >
                             <Image
                                 src={activeImage}
-                                alt={product.title}
+                                alt={product.title + ' ' + (product.category?.title || 'Terracotta') + ' - UrbanClay'}
                                 fill
                                 sizes="(max-width: 768px) 50vw, 25vw"
                                 className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -86,7 +88,7 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
 
 
 
-export default function ProductPageAnimate({ product, relatedProducts, quoteUrl, variantName }: ProductPageAnimateProps) {
+export default function ProductPageAnimate({ product, relatedProducts, quoteUrl, variantName, journalPosts }: ProductPageAnimateProps) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -273,7 +275,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         {activeImage && (
                                             <Image
                                                 src={activeImage}
-                                                alt={product.title}
+                                                alt={product.title + ' ' + (product.category?.title || 'Terracotta') + ' - UrbanClay'}
                                                 fill
                                                 sizes="(max-width: 768px) 100vw, 50vw"
                                                 className="object-cover"
@@ -319,7 +321,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             {v.imageUrl ? (
                                                 <Image
                                                     src={v.imageUrl}
-                                                    alt={v.name}
+                                                    alt={v.altText || `${v.name} - ${product.title} - UrbanClay`}
                                                     fill
                                                     sizes="56px"
                                                     className="object-cover"
@@ -411,7 +413,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     {v.imageUrl ? (
                                         <Image
                                             src={v.imageUrl}
-                                            alt={v.name}
+                                            alt={v.altText || `${v.name} - ${product.title} - UrbanClay`}
                                             fill
                                             sizes="80px"
                                             className="object-cover"
@@ -660,7 +662,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             }
 
             {/* Related Articles Section */}
-            <RelatedArticles />
+            <RelatedArticles posts={journalPosts} />
 
             <QuoteModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} productName={product.title} variantName={selectedVariant?.name} />
 

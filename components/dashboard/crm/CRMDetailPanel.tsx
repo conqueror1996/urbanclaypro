@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     X, Phone, MessageSquare, Calendar, AlertCircle, TrendingUp,
     ArrowRight, Star, HardHat, CheckCircle2, Loader2, FileText,
-    Send, Sparkles, Receipt
+    Send, Sparkles, Receipt, Pencil, Trash2, Save, Link2
 } from 'lucide-react';
+import { createPaymentLink } from '@/app/actions/payment-link';
 
 interface CRMDetailPanelProps {
     lead: any;
@@ -37,6 +38,8 @@ interface CRMDetailPanelProps {
     setFeedbackForm: (form: any) => void;
     handleSubmitFeedback: () => void;
     isSubmittingFeedback: boolean;
+    handleUpdateLead: (id: string, data: any) => void;
+    handleDeleteLead: (id: string) => void;
 }
 
 export function CRMDetailPanel({
@@ -67,8 +70,36 @@ export function CRMDetailPanel({
     feedbackForm,
     setFeedbackForm,
     handleSubmitFeedback,
-    isSubmittingFeedback
+    isSubmittingFeedback,
+    handleUpdateLead,
+    handleDeleteLead
 }: CRMDetailPanelProps) {
+    const [isEditing, setIsEditing] = React.useState(false);
+    const [editForm, setEditForm] = React.useState({
+        clientName: '',
+        company: '',
+        phone: '',
+        email: '',
+        potentialValue: 0
+    });
+
+    React.useEffect(() => {
+        if (lead) {
+            setEditForm({
+                clientName: lead.clientName || '',
+                company: lead.company || '',
+                phone: lead.phone || '',
+                email: lead.email || '',
+                potentialValue: lead.potentialValue || 0
+            });
+        }
+    }, [lead]);
+
+    const saveChanges = () => {
+        handleUpdateLead(lead._id, editForm);
+        setIsEditing(false);
+    };
+
     if (!lead) return null;
 
     const isActiveSite = sites.some(s => s.clientPhone === lead.phone);
@@ -92,8 +123,8 @@ export function CRMDetailPanel({
                 className="fixed top-0 right-0 h-full w-full max-w-3xl bg-[#FAF9F6] shadow-2xl z-[70] overflow-y-auto flex flex-col"
             >
                 {/* Panel Header */}
-                <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-[#e9e2da]/50 p-8 flex justify-between items-center">
-                    <div className="space-y-1">
+                <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-[#e9e2da]/50 p-8 flex justify-between items-start md:items-center gap-4">
+                    <div className="space-y-1 flex-1">
                         <div className="flex items-center gap-3 mb-2">
                             <span className="px-2 py-1 bg-[#2a1e16] text-[#FAF9F6] rounded-md text-[9px] font-bold uppercase tracking-[0.2em]">
                                 UID: {lead._id?.slice(-8).toUpperCase()}
@@ -102,19 +133,80 @@ export function CRMDetailPanel({
                                 {stages.find(s => s.value === (lead.stage || 'new'))?.label}
                             </span>
                         </div>
-                        <h2 className="text-3xl font-serif text-[#2a1e16] font-medium leading-none">{lead.clientName}</h2>
-                        <div className="flex items-center gap-2 text-[11px] font-bold text-[#8c7b70] uppercase tracking-widest mt-2">
-                            <span className="text-[#b45a3c]">{lead.company || 'Private Portfolio'}</span>
-                            <span className="opacity-20">|</span>
-                            <span>{lead.phone}</span>
-                        </div>
+
+                        {isEditing ? (
+                            <div className="space-y-3 max-w-lg">
+                                <input
+                                    value={editForm.clientName}
+                                    onChange={e => setEditForm({ ...editForm, clientName: e.target.value })}
+                                    className="w-full text-3xl font-serif text-[#2a1e16] bg-white border border-[#b45a3c]/30 rounded-lg px-2 py-1 outline-none"
+                                    placeholder="Client Name"
+                                />
+                                <div className="grid grid-cols-2 gap-2">
+                                    <input
+                                        value={editForm.company}
+                                        onChange={e => setEditForm({ ...editForm, company: e.target.value })}
+                                        className="text-xs font-bold uppercase tracking-widest bg-white border border-[#b45a3c]/30 rounded px-2 py-1 outline-none text-[#b45a3c]"
+                                        placeholder="Company/Project"
+                                    />
+                                    <input
+                                        value={editForm.phone}
+                                        onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
+                                        className="text-xs font-bold uppercase tracking-widest bg-white border border-[#b45a3c]/30 rounded px-2 py-1 outline-none text-[#8c7b70]"
+                                        placeholder="Phone"
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <h2 className="text-3xl font-serif text-[#2a1e16] font-medium leading-none">{lead.clientName}</h2>
+                                <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-[#8c7b70] uppercase tracking-widest mt-2">
+                                    <span className="text-[#b45a3c]">{lead.company || 'Private Portfolio'}</span>
+                                    <span className="opacity-20 hidden md:inline">|</span>
+                                    <span className="block md:inline w-full md:w-auto">{lead.phone}</span>
+                                </div>
+                            </>
+                        )}
                     </div>
-                    <button
-                        onClick={onClose}
-                        className="w-12 h-12 bg-[#FAF9F6] hover:bg-rose-50 hover:text-rose-600 rounded-2xl flex items-center justify-center transition-all group"
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
+
+                    <div className="flex items-center gap-2">
+                        {isEditing ? (
+                            <button
+                                onClick={saveChanges}
+                                className="w-10 h-10 bg-[#b45a3c] text-white rounded-xl flex items-center justify-center hover:bg-[#96472d] transition-all shadow-lg shadow-[#b45a3c]/20"
+                                title="Save Changes"
+                            >
+                                <Save className="w-4 h-4" />
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className="w-10 h-10 bg-white text-[#8c7b70] border border-[#e9e2da] rounded-xl flex items-center justify-center hover:bg-[#FAF9F6] hover:text-[#2a1e16] transition-all"
+                                title="Edit Details"
+                            >
+                                <Pencil className="w-4 h-4" />
+                            </button>
+                        )}
+
+                        {isEditing && (
+                            <button
+                                onClick={() => handleDeleteLead(lead._id)}
+                                className="w-10 h-10 bg-rose-50 text-rose-600 border border-rose-100 rounded-xl flex items-center justify-center hover:bg-rose-100 transition-all"
+                                title="Delete Opportunity"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        )}
+
+                        <div className="w-px h-8 bg-[#e9e2da] mx-1" />
+
+                        <button
+                            onClick={onClose}
+                            className="w-10 h-10 bg-[#FAF9F6] hover:bg-rose-50 hover:text-rose-600 rounded-xl flex items-center justify-center transition-all group border border-transparent hover:border-rose-100"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="p-8 space-y-10">
@@ -129,8 +221,8 @@ export function CRMDetailPanel({
                                     key={s.value}
                                     onClick={() => handleStageChange(lead._id, s.value)}
                                     className={`px-4 py-2.5 rounded-xl text-[10px] font-extrabold uppercase tracking-wider transition-all border ${lead.stage === s.value
-                                            ? 'bg-[#2a1e16] border-[#2a1e16] text-white shadow-lg'
-                                            : 'bg-[#FAF9F6] border-[#e9e2da] text-[#8c7b70] hover:border-[#b45a3c]/30'
+                                        ? 'bg-[#2a1e16] border-[#2a1e16] text-white shadow-lg'
+                                        : 'bg-[#FAF9F6] border-[#e9e2da] text-[#8c7b70] hover:border-[#b45a3c]/30'
                                         }`}
                                 >
                                     {s.label}
@@ -214,6 +306,30 @@ export function CRMDetailPanel({
                                                     <button onClick={handleDownloadPDF} className="flex-1 bg-white border border-sky-200 text-sky-600 py-2.5 rounded-xl text-[9px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-50 transition-all">
                                                         <FileText className="w-3.5 h-3.5" /> PDF
                                                     </button>
+                                                    <button
+                                                        onClick={async () => {
+                                                            if (!confirm("Generate a formal payment link for this quote?")) return;
+                                                            const result = await createPaymentLink({
+                                                                clientName: lead.clientName,
+                                                                clientEmail: lead.email,
+                                                                clientPhone: lead.phone,
+                                                                amount: Number(quotePrice) * parseInt((lead.requirements?.match(/\d+/)?.[0] || '100')),
+                                                                lineItems: [{ name: `Project Supply: ${lead.requirements}`, quantity: parseInt((lead.requirements?.match(/\d+/)?.[0] || '100')), rate: Number(quotePrice), amount: Number(quotePrice) * parseInt((lead.requirements?.match(/\d+/)?.[0] || '100')) }],
+                                                                deliveryTimeline: 'Immediate',
+                                                                terms: '50% Advance',
+                                                                billingAddress: lead.company || 'Site Address',
+                                                                shippingAddress: lead.company || 'Site Address'
+                                                            });
+                                                            if (result.success) {
+                                                                prompt("Payment Link Generated. Copy & Send:", `https://claytile.in${result.linkPath}`);
+                                                            } else {
+                                                                alert("Failed to generate link.");
+                                                            }
+                                                        }}
+                                                        className="flex-1 bg-emerald-50 border border-emerald-200 text-emerald-600 py-2.5 rounded-xl text-[9px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-100 transition-all"
+                                                    >
+                                                        <Link2 className="w-3.5 h-3.5" /> Payment Link
+                                                    </button>
                                                     <button onClick={() => window.open(`https://wa.me/${lead.phone?.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(quoteResult)}`, '_blank')} className="flex-[2] bg-sky-600 text-white py-2.5 rounded-xl text-[9px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-sky-700 transition-all shadow-lg shadow-sky-600/20">
                                                         <Send className="w-3.5 h-3.5" /> Dispatch Estimate
                                                     </button>
@@ -231,8 +347,8 @@ export function CRMDetailPanel({
                                                 type="button"
                                                 onClick={() => setInteractionForm({ ...interactionForm, type })}
                                                 className={`py-4 rounded-xl text-[9px] font-bold uppercase tracking-widest flex flex-col items-center gap-2 transition-all border ${interactionForm.type === type
-                                                        ? 'bg-[#2a1e16] border-[#2a1e16] text-white shadow-lg'
-                                                        : 'bg-[#FAF9F6] border-[#e9e2da] text-[#8c7b70] hover:bg-white'
+                                                    ? 'bg-[#2a1e16] border-[#2a1e16] text-white shadow-lg'
+                                                    : 'bg-[#FAF9F6] border-[#e9e2da] text-[#8c7b70] hover:bg-white'
                                                     }`}
                                             >
                                                 {type === 'call' && <Phone className="w-4 h-4" />}

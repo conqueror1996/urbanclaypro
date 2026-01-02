@@ -191,13 +191,23 @@ export async function getCollectionBySlug(collectionSlug: string): Promise<any |
 // Optimized query for OG Image generation for Categories
 export async function getCategoryHero(categorySlug: string): Promise<{ title: string, imageUrl: string } | undefined> {
     try {
-        // Try finding a product in this category with an image
-        const query = groq`*[_type == "product" && (category->slug.current == $slug || tag == $slug)][0] {
+        // 1. Try to find the actual Category document first
+        const categoryQuery = groq`*[_type == "category" && slug.current == $slug][0] {
+            title,
+            "imageUrl": image.asset->url
+        }`;
+
+        const categoryDoc = await client.fetch(categoryQuery, { slug: categorySlug }, { next: { revalidate: 3600 } });
+
+        // 2. Fallback: Find a representative product
+        const productQuery = groq`*[_type == "product" && (category->slug.current == $slug || tag == $slug)][0] {
             title,
             "imageUrl": images[0].asset->url
         }`;
 
-        // Mapping for Titles (since we don't have a category document always)
+        const productDoc = await client.fetch(productQuery, { slug: categorySlug }, { next: { revalidate: 3600 } });
+
+        // Mapping for Titles (Legacy Fallback)
         const slugToTitle: Record<string, string> = {
             'exposed-bricks': 'Exposed Bricks',
             'brick-wall-tiles': 'Brick Wall Tiles',
@@ -207,13 +217,15 @@ export async function getCategoryHero(categorySlug: string): Promise<{ title: st
             'facades': 'Clay Facade Panels'
         };
 
-        const result = await client.fetch(query, { slug: categorySlug }, { next: { revalidate: 3600 } });
+        // Logic: specific category doc > product fallback > hardcoded fallback
+        const title = categoryDoc?.title
+            || slugToTitle[categorySlug]
+            || (productDoc ? `${productDoc.title} Collection` : 'UrbanClay Collection');
 
-        if (result) {
-            return {
-                title: slugToTitle[categorySlug] || result.title + ' Collection', // Use official title or fallback
-                imageUrl: result.imageUrl
-            };
+        const imageUrl = categoryDoc?.imageUrl || productDoc?.imageUrl;
+
+        if (title && imageUrl) {
+            return { title, imageUrl };
         }
         return undefined;
     } catch (e) {

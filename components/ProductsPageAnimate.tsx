@@ -465,7 +465,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                                 {variant.imageUrl ? (
                                                                     <Image
                                                                         src={variant.imageUrl}
-                                                                        alt={variant.name}
+                                                                        alt={variant.altText || `${variant.name} ${product.title} - ${product.category?.title || 'Terracotta'} tile by UrbanClay`}
                                                                         fill
                                                                         sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                                                                         className="object-cover transition-transform duration-1000 group-hover:scale-110"
@@ -540,7 +540,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                     {variant.imageUrl ? (
                                                         <Image
                                                             src={variant.imageUrl}
-                                                            alt={variant.name}
+                                                            alt={variant.altText || `${variant.name} ${product.title} - ${product.category?.title || 'Terracotta'} tile by UrbanClay`}
                                                             fill
                                                             sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                                                             className="object-cover transition-transform duration-1000 group-hover:scale-110"

@@ -18,6 +18,17 @@ export async function updateCRMLeadStage(leadId: string, stage: string) {
         .commit();
 }
 
+export async function updateCRMLead(leadId: string, data: any) {
+    return await writeClient
+        .patch(leadId)
+        .set(data)
+        .commit();
+}
+
+export async function deleteCRMLead(leadId: string) {
+    return await writeClient.delete(leadId);
+}
+
 export async function addCRMInteraction(leadId: string, interaction: {
     type: string;
     summary: string;

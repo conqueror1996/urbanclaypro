@@ -75,9 +75,6 @@ export const metadata: Metadata = {
     icon: '/icon.png',
     apple: '/apple-icon.png',
   },
-  alternates: {
-    canonical: 'https://claytile.in',
-  },
   robots: {
     index: true,
     follow: true,
@@ -145,55 +142,6 @@ export default function RootLayout({
         </SecurityProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
         <SpeedInsights />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'LocalBusiness',
-              name: 'UrbanClay',
-              image: 'https://claytile.in/urbanclay-logo.png',
-              '@id': 'https://claytile.in',
-              url: 'https://claytile.in',
-              telephone: '+91-8080081951',
-              email: 'urbanclay@claytile.in',
-              priceRange: '₹₹',
-              address: {
-                '@type': 'PostalAddress',
-                streetAddress: 'Laxmi Industrial Estate, Andheri West',
-                addressLocality: 'Mumbai',
-                addressRegion: 'Maharashtra',
-                postalCode: '400053',
-                addressCountry: 'IN'
-              },
-              geo: {
-                '@type': 'GeoCoordinates',
-                latitude: 19.1130,
-                longitude: 72.8279
-              },
-              openingHoursSpecification: [
-                {
-                  '@type': 'OpeningHoursSpecification',
-                  dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-                  opens: '10:00',
-                  closes: '19:00'
-                }
-              ],
-              sameAs: [
-                'https://www.instagram.com/urbanclay.in',
-                'https://www.facebook.com/urbanclay.in',
-                'https://www.linkedin.com/company/urbanclay'
-              ],
-              contactPoint: {
-                '@type': 'ContactPoint',
-                telephone: '+91-8080081951',
-                contactType: 'customer service',
-                areaServed: 'IN',
-                availableLanguage: ['en', 'hi']
-              }
-            })
-          }}
-        />
       </body>
     </html>
   );

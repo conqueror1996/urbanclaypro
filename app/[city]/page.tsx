@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
 import { client } from '@/sanity/lib/client';
 import { urlForImage } from '@/sanity/lib/image';
 import { regions } from '@/lib/locations';
@@ -84,7 +85,8 @@ export default async function CityPage({ params }: PageProps) {
     const weather = data.weatherContext || 'Tropical';
     const regionCities = regions[data.region as keyof typeof regions] || [];
 
-    const jsonLd = {
+    // 1. Local Business Schema
+    const localBusinessJsonLd = {
         '@context': 'https://schema.org',
         '@type': 'LocalBusiness',
         'name': `UrbanClay ${data.name}`,
@@ -112,12 +114,49 @@ export default async function CityPage({ params }: PageProps) {
         }))
     };
 
+    // 2. Breadcrumb Schema
+    const breadcrumbJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': 'https://claytile.in'
+            },
+            {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': `Review: ${data.name}`,
+                'item': `https://claytile.in/${data.slug}`
+            }
+        ]
+    };
+
+    // 3. FAQ Schema
+    const allFaqs = [
+        ...(data.faq || []).map((f: any) => ({ q: f.question, a: f.answer })),
+        { q: "What is the local delivery time?", a: `For most areas in ${data.name}, delivery takes ${delivery}. We deliver to all major areas including ${areas.slice(0, 4).join(', ')}.` },
+        { q: `Are terracotta tiles suitable for ${data.name}'s climate?`, a: `Absolutely. ${data.climateAdvice}` }
+    ];
+
+    const faqJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': allFaqs.map((faq: any) => ({
+            '@type': 'Question',
+            'name': faq.q,
+            'acceptedAnswer': {
+                '@type': 'Answer',
+                'text': faq.a
+            }
+        }))
+    };
+
     return (
         <div className="min-h-screen bg-white">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JsonLd data={[localBusinessJsonLd, breadcrumbJsonLd, faqJsonLd]} />
             <Header />
 
             <main className="pt-32 pb-20">

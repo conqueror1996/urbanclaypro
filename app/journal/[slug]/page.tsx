@@ -122,12 +122,12 @@ export default async function BlogPostPage({ params }: PageProps) {
 
     if (!post) notFound();
 
-    const jsonLd = {
+    const blogJsonLd = {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         'headline': post.title,
         'image': post.mainImage ? [post.mainImage] : undefined,
-        'datePublished': post.date, // Assumes post.date is ISO formatted or close to it. If not, might need parsing.
+        'datePublished': post.date, // Assumes post.date is ISO formatted
         'author': {
             '@type': 'Organization',
             'name': 'UrbanClay'
@@ -147,11 +147,36 @@ export default async function BlogPostPage({ params }: PageProps) {
         }
     };
 
+    const breadcrumbJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': 'https://claytile.in'
+            },
+            {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Journal',
+                'item': 'https://claytile.in/journal'
+            },
+            {
+                '@type': 'ListItem',
+                'position': 3,
+                'name': post.title,
+                'item': `https://claytile.in/journal/${slug}`
+            }
+        ]
+    };
+
     return (
         <div className="bg-[#fcfbf9] min-h-screen selection:bg-[var(--terracotta)] selection:text-white">
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify([blogJsonLd, breadcrumbJsonLd]) }}
             />
             <Header />
 
