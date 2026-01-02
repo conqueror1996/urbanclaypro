@@ -519,7 +519,7 @@ function CRMContent() {
                             }
                         </div>
                     )
-                )}
+                    }
                 </div>
 
                 {/* MODALS */}
