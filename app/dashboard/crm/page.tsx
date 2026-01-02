@@ -183,7 +183,7 @@ function CRMContent() {
             });
             setShowNewDealModal(false);
             setShowImportModal(false);
-            setNewDealForm({ clientName: '', company: '', phone: '', email: '', potentialValue: '', stage: 'new' });
+            setNewDealForm({ clientName: '', company: '', phone: '', email: '', potentialValue: '', stage: 'new', role: 'architect', requirements: '' });
             fetchLeads();
         } catch (error) {
             console.error(error);
