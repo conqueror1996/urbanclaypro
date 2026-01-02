@@ -10,6 +10,25 @@ export default {
             validation: (Rule: any) => Rule.required()
         },
         {
+            name: 'role',
+            title: 'Client Role',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Architect', value: 'architect' },
+                    { title: 'Interior Designer', value: 'designer' },
+                    { title: 'Contractor / Builder', value: 'contractor' },
+                    { title: 'End User / Owner', value: 'owner' }
+                ]
+            }
+        },
+        {
+            name: 'requirements',
+            title: 'Detailed Requirements',
+            type: 'text',
+            description: 'What products are they looking for? (e.g. 500sqft Jaali)'
+        },
+        {
             name: 'company',
             title: 'Company / Project Name',
             type: 'string'

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getCRMLeads, updateCRMLeadStage, addCRMInteraction, createCRMLead } from '@/app/actions/crm';
+import { generateCRMSmartReply } from '@/app/actions/crm-ai';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import {
@@ -53,6 +54,14 @@ function CRMContent() {
     const [activeTab, setActiveTab] = useState('all');
     const [isLoggingInteraction, setIsLoggingInteraction] = useState(false);
 
+    const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+    const [aiDraft, setAiDraft] = useState('');
+
+    // Quote State
+    const [showQuoteCalc, setShowQuoteCalc] = useState(false);
+    const [quotePrice, setQuotePrice] = useState('120');
+    const [quoteResult, setQuoteResult] = useState('');
+
     // New Deal Form State
     const [newDealForm, setNewDealForm] = useState({
         clientName: '',
@@ -60,7 +69,9 @@ function CRMContent() {
         phone: '',
         email: '',
         potentialValue: '',
-        stage: 'new'
+        stage: 'new',
+        role: 'architect',
+        requirements: ''
     });
 
     const [interactionForm, setInteractionForm] = useState({
@@ -99,6 +110,52 @@ function CRMContent() {
     const handleStageChange = async (leadId: string, newStage: string) => {
         setLeads(prev => prev.map(l => l._id === leadId ? { ...l, stage: newStage } : l));
         await updateCRMLeadStage(leadId, newStage);
+    };
+
+    const handleGenerateAI = async () => {
+        if (!selectedLead) return;
+        setIsGeneratingAI(true);
+        const reply = await generateCRMSmartReply(selectedLead, selectedLead.interactions || []);
+        setAiDraft(reply);
+        setIsGeneratingAI(false);
+    };
+
+    const handleCalculateQuote = () => {
+        if (!selectedLead) return;
+        const qty = parseInt((selectedLead.requirements?.match(/\d+/)?.[0] || '100'));
+        const price = parseInt(quotePrice);
+        const subtotal = qty * price;
+        const gst = subtotal * 0.18;
+        const total = subtotal + gst;
+
+        const text = `*Quick Estimate for ${selectedLead.company || 'your project'}*\n\nHi ${selectedLead.clientName?.split(' ')[0] || 'there'},\nThanks for your enquiry. Preliminary cost for ${qty} units:\n\n- Base Rate: ₹${price}/unit\n- Material Cost: ₹${subtotal.toLocaleString('en-IN')}\n- GST (18%): ₹${gst.toLocaleString('en-IN')}\n\n*Total Est: ₹${total.toLocaleString('en-IN')}* (Excl. Shipping)`;
+        setQuoteResult(text);
+    };
+
+    const handleDownloadPDF = async () => {
+        if (!selectedLead) return;
+        const { default: jsPDF } = await import('jspdf');
+        const { default: autoTable } = await import('jspdf-autotable');
+        const doc = new jsPDF();
+
+        doc.setFontSize(22); doc.text("QUOTATION", 14, 20);
+        doc.setFontSize(10); doc.text("UrbanClay | premium terra-cotta solutions", 14, 28);
+        doc.text(`Lead ID: ${selectedLead._id.slice(-6)}`, 150, 20);
+
+        const qty = parseInt((selectedLead.requirements?.match(/\d+/)?.[0] || '100'));
+        const price = parseInt(quotePrice);
+        const subtotal = qty * price;
+
+        // @ts-ignore
+        autoTable(doc, {
+            startY: 40,
+            head: [['Item', 'Qty', 'Unit Price', 'Subtotal']],
+            body: [[selectedLead.company || 'Materials', qty, `Rs.${price}`, `Rs.${subtotal}`]],
+            theme: 'grid',
+            headStyles: { fillColor: [42, 30, 22] }
+        });
+
+        doc.save(`UrbanClay_Quote_${selectedLead.clientName}.pdf`);
     };
 
     const handleLogInteraction = async (e: React.FormEvent) => {
@@ -422,11 +479,20 @@ function CRMContent() {
                                 <h2 className="text-2xl font-bold mb-6">Create New Deal</h2>
                                 <form onSubmit={(e) => { e.preventDefault(); handleCreateDeal(newDealForm); }} className="space-y-4">
                                     <input placeholder="Client Name" className="w-full p-3 border rounded-xl" value={newDealForm.clientName} onChange={e => setNewDealForm({ ...newDealForm, clientName: e.target.value })} required />
-                                    <input placeholder="Company / Project" className="w-full p-3 border rounded-xl" value={newDealForm.company} onChange={e => setNewDealForm({ ...newDealForm, company: e.target.value })} />
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <select className="w-full p-3 border rounded-xl text-gray-500" value={newDealForm.role} onChange={e => setNewDealForm({ ...newDealForm, role: e.target.value })}>
+                                            <option value="architect">Architect</option>
+                                            <option value="designer">Designer</option>
+                                            <option value="contractor">Contractor</option>
+                                            <option value="owner">Owner</option>
+                                        </select>
+                                        <input placeholder="Company / Project" className="w-full p-3 border rounded-xl" value={newDealForm.company} onChange={e => setNewDealForm({ ...newDealForm, company: e.target.value })} />
+                                    </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <input placeholder="Phone" className="w-full p-3 border rounded-xl" value={newDealForm.phone} onChange={e => setNewDealForm({ ...newDealForm, phone: e.target.value })} required />
                                         <input placeholder="Potential Value (₹)" type="number" className="w-full p-3 border rounded-xl" value={newDealForm.potentialValue} onChange={e => setNewDealForm({ ...newDealForm, potentialValue: e.target.value })} />
                                     </div>
+                                    <textarea placeholder="Specific Requirements (e.g. 200sqft Jaali)" className="w-full p-3 border rounded-xl h-24" value={newDealForm.requirements} onChange={e => setNewDealForm({ ...newDealForm, requirements: e.target.value })} />
                                     <button className="w-full bg-[#2a1e16] text-white py-3 rounded-xl font-bold">Start Deal</button>
                                 </form>
                             </motion.div>
@@ -534,10 +600,69 @@ function CRMContent() {
                                                 Engage & Log
                                             </h3>
                                             <div className="flex gap-2">
+                                                <button
+                                                    onClick={handleGenerateAI}
+                                                    disabled={isGeneratingAI}
+                                                    className="px-2 py-1 bg-purple-50 text-purple-700 text-[10px] font-bold rounded border border-purple-100 hover:bg-purple-100 transition-all flex items-center gap-1"
+                                                >
+                                                    {isGeneratingAI ? <Loader2 className="w-3 h-3 animate-spin" /> : '✨ AI Draft'}
+                                                </button>
+                                                <button
+                                                    onClick={() => setShowQuoteCalc(!showQuoteCalc)}
+                                                    className="px-2 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded border border-blue-100 hover:bg-blue-100 transition-all flex items-center gap-1"
+                                                >
+                                                    📜 Quick Quote
+                                                </button>
                                                 <button onClick={() => window.open(getWhatsAppLink(selectedLead, 'followup'), '_blank')} className="px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded border border-green-100 hover:bg-green-100 transition-all">💬 Followup</button>
-                                                <button onClick={() => window.open(getWhatsAppLink(selectedLead, 'sample'), '_blank')} className="px-2 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded border border-blue-100 hover:bg-blue-100 transition-all">📦 Sample</button>
                                             </div>
                                         </div>
+
+                                        {showQuoteCalc && (
+                                            <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100 mb-6">
+                                                <div className="flex justify-between mb-4">
+                                                    <h4 className="text-xs font-bold text-blue-600 uppercase tracking-widest">Pricing Calculator</h4>
+                                                    <button onClick={() => setShowQuoteCalc(false)} className="text-blue-300">×</button>
+                                                </div>
+                                                <div className="flex gap-3 mb-4">
+                                                    <input
+                                                        type="number"
+                                                        placeholder="Price per unit"
+                                                        value={quotePrice}
+                                                        onChange={e => setQuotePrice(e.target.value)}
+                                                        className="flex-1 p-3 bg-white border border-blue-100 rounded-xl outline-none text-sm"
+                                                    />
+                                                    <button onClick={handleCalculateQuote} className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Calculate</button>
+                                                </div>
+                                                {quoteResult && (
+                                                    <div className="space-y-3">
+                                                        <textarea readOnly value={quoteResult} className="w-full bg-white/50 border border-blue-100 rounded-xl p-3 text-xs h-24 font-mono" />
+                                                        <div className="flex gap-2">
+                                                            <button onClick={handleDownloadPDF} className="flex-1 bg-white border border-blue-200 text-blue-600 py-2 rounded-xl text-xs font-bold">⬇️ PDF</button>
+                                                            <button onClick={() => {
+                                                                const phone = selectedLead.phone?.replace(/[^0-9]/g, '');
+                                                                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(quoteResult)}`, '_blank');
+                                                            }} className="flex-1 bg-green-600 text-white py-2 rounded-xl text-xs font-bold">💬 Send</button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {aiDraft && (
+                                            <div className="bg-purple-50/50 p-4 rounded-2xl border border-purple-100 mb-4 animate-in fade-in slide-in-from-top-2">
+                                                <p className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-2">AI Suggestion</p>
+                                                <p className="text-sm text-purple-900 leading-relaxed italic">"{aiDraft}"</p>
+                                                <button
+                                                    onClick={() => {
+                                                        const phone = selectedLead.phone?.replace(/[^0-9]/g, '');
+                                                        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(aiDraft)}`, '_blank');
+                                                    }}
+                                                    className="mt-3 text-[10px] font-bold text-purple-600 underline"
+                                                >
+                                                    Send this via WhatsApp →
+                                                </button>
+                                            </div>
+                                        )}
                                         <form onSubmit={handleLogInteraction} className="space-y-4 bg-blue-50/10 p-5 rounded-2xl border border-blue-100/30">
                                             <div className="flex gap-2">
                                                 {['call', 'whatsapp', 'email', 'meeting'].map(type => (
