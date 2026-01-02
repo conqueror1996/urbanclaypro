@@ -188,9 +188,12 @@ function CRMContent() {
             setShowNewDealModal(false);
             setShowImportModal(false);
             setNewDealForm({ clientName: '', company: '', phone: '', email: '', potentialValue: '', stage: 'new', role: 'architect', requirements: '' });
+            setViewMode('pipeline');
             fetchLeads();
+            alert("✅ Deal successfully started!");
         } catch (error) {
             console.error(error);
+            alert("❌ Failed to create deal. Please check fields.");
         }
     };
 
@@ -483,30 +486,40 @@ function CRMContent() {
                             {contacts
                                 .filter(c => c.name?.toLowerCase().includes(searchTerm.toLowerCase()) || c.phone?.includes(searchTerm))
                                 .map(contact => (
-                                    <div key={contact._id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center font-bold text-[#2a1e16]">{contact.name.charAt(0)}</div>
-                                                <div>
-                                                    <h4 className="font-bold text-[#2a1e16] uppercase text-sm">{contact.name}</h4>
-                                                    <p className="text-xs text-gray-400">{contact.phone || 'No Phone'}</p>
-                                                </div>
+                                    <div key={contact._id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group flex flex-col justify-between h-full">
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center font-bold text-[#2a1e16] text-lg">{contact.name.charAt(0)}</div>
+                                            <div className="min-w-0">
+                                                <h4 className="font-bold text-[#2a1e16] uppercase text-sm truncate">{contact.name}</h4>
+                                                <p className="text-xs text-gray-400 truncate">{contact.phone || 'No Phone'}</p>
                                             </div>
-                                            <button
-                                                onClick={() => {
-                                                    setNewDealForm({ ...newDealForm, clientName: contact.name, phone: contact.phone, email: contact.email });
-                                                    setShowNewDealModal(true);
-                                                }}
-                                                className="opacity-0 group-hover:opacity-100 bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition-all"
-                                            >
-                                                Start Deal
-                                            </button>
                                         </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setNewDealForm({
+                                                    clientName: contact.name || '',
+                                                    phone: contact.phone || '',
+                                                    email: contact.email || '',
+                                                    company: '',
+                                                    potentialValue: '',
+                                                    stage: 'new',
+                                                    role: 'architect',
+                                                    requirements: ''
+                                                });
+                                                setShowNewDealModal(true);
+                                            }}
+                                            className="bg-blue-600 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase transition-all shadow-md shadow-blue-100 flex items-center gap-1 shrink-0"
+                                        >
+                                            <Plus className="w-3 h-3" />
+                                            Start Deal
+                                        </button>
                                     </div>
                                 ))
                             }
                         </div>
-                    )}
+                    )
+                )}
                 </div>
 
                 {/* MODALS */}
@@ -813,6 +826,6 @@ function CRMContent() {
                     )}
                 </AnimatePresence>
             </div>
-        </div>
+        </div >
     );
 }
