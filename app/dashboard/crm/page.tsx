@@ -163,14 +163,35 @@ function CRMContent() {
         actionToday: leads.filter(l => l.nextFollowUp && new Date(l.nextFollowUp).toDateString() === new Date().toDateString()).length
     };
 
+    const getDealHealth = (lastContact: string) => {
+        if (!lastContact) return { label: 'New', color: 'text-blue-500', bg: 'bg-blue-50' };
+        const days = Math.floor((new Date().getTime() - new Date(lastContact).getTime()) / (1000 * 3600 * 24));
+        if (days <= 2) return { label: 'Healthy', color: 'text-green-500', bg: 'bg-green-50' };
+        if (days <= 5) return { label: 'Stale', color: 'text-orange-500', bg: 'bg-orange-50' };
+        return { label: 'At Risk', color: 'text-red-500', bg: 'bg-red-50' };
+    };
+
+    const getWhatsAppLink = (lead: any, template: string) => {
+        const phone = lead.phone?.replace(/[^0-9]/g, '');
+        const name = lead.clientName?.split(' ')[0] || 'Sir/Ma\'am';
+        const templates: any = {
+            followup: `Hi ${name}, this is UrbanClay. Checking in to see if you had a chance to review the quotation for your project. Let me know if you need any revisions.`,
+            sample: `Hi ${name}, your UrbanClay samples have been prepared and are ready for dispatch. Could you please confirm the site contact person's number?`,
+            closing: `Hi ${name}, we are finalizing our production schedule for this week. Would you like to confirm your order to ensure timely delivery?`
+        };
+        return `https://wa.me/${phone}?text=${encodeURIComponent(templates[template] || '')}`;
+    };
+
+    const overdueTasks = leads.filter(l => l.nextFollowUp && new Date(l.nextFollowUp) < new Date() && l.stage !== 'won' && l.stage !== 'lost');
+
     return (
         <div className="min-h-screen bg-[#f8f9fa] p-4 md:p-8">
             <div className="max-w-7xl mx-auto space-y-8">
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
-                        <h1 className="text-3xl font-serif text-[#2a1e16] font-bold">Sales Pipeline</h1>
-                        <p className="text-gray-500 mt-1">Focus on what matters. Track deals and follow-ups.</p>
+                        <h1 className="text-3xl font-serif text-[#2a1e16] font-bold">CRM Engine 🎯</h1>
+                        <p className="text-gray-500 mt-1">Track velocity, manage objections, and close deals.</p>
                     </div>
                     <div className="flex gap-3">
                         <button
@@ -189,6 +210,30 @@ function CRMContent() {
                         </button>
                     </div>
                 </div>
+
+                {/* TASK INBOX - NEW COMPONENT */}
+                {overdueTasks.length > 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
+                        className="bg-red-50 border border-red-100 rounded-3xl p-6"
+                    >
+                        <div className="flex items-center gap-2 mb-4">
+                            <Clock className="w-5 h-5 text-red-500" />
+                            <h2 className="text-red-900 font-bold uppercase tracking-widest text-sm">Overdue Follow-ups ({overdueTasks.length})</h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {overdueTasks.slice(0, 3).map(task => (
+                                <div key={task._id} onClick={() => setSelectedLead(task)} className="bg-white p-4 rounded-2xl shadow-sm border border-red-200 cursor-pointer hover:shadow-md transition-all group">
+                                    <p className="font-bold text-[#2a1e16] flex items-center justify-between">
+                                        {task.clientName}
+                                        <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-red-500 transition-colors" />
+                                    </p>
+                                    <p className="text-xs text-red-500 font-bold mt-1">Due {new Date(task.nextFollowUp).toLocaleDateString()}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -276,15 +321,27 @@ function CRMContent() {
                             >
                                 {/* Client Info */}
                                 <div className="flex-1 flex items-center gap-4 w-full md:w-auto">
-                                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-[#2a1e16] font-bold text-lg shrink-0">
-                                        {lead.clientName?.charAt(0)}
+                                    <div className="relative">
+                                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-[#2a1e16] font-bold text-lg shrink-0">
+                                            {lead.clientName?.charAt(0)}
+                                        </div>
+                                        <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getDealHealth(lead.lastContactDate).bg.replace('bg-', 'bg-')}`}>
+                                            <div className={`w-full h-full rounded-full ${getDealHealth(lead.lastContactDate).color.replace('text-', 'bg-')}`} />
+                                        </div>
                                     </div>
                                     <div className="min-w-0">
-                                        <h3 className="font-bold text-[#2a1e16] truncate group-hover:text-blue-600 transition-colors uppercase font-sans tracking-tight">{lead.clientName}</h3>
+                                        <div className="flex items-center gap-2">
+                                            <h3 className="font-bold text-[#2a1e16] truncate group-hover:text-blue-600 transition-colors uppercase font-sans tracking-tight">{lead.clientName}</h3>
+                                            {lead.statusIndicator && (
+                                                <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 text-[8px] font-bold uppercase border border-amber-100">
+                                                    {lead.statusIndicator.replace('_', ' ')}
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-sm text-gray-400 truncate mt-1 flex items-center gap-2">
                                             {lead.company || 'Direct Client'}
                                             <span className="w-1 h-1 bg-gray-200 rounded-full" />
-                                            {lead.phone}
+                                            {getDealHealth(lead.lastContactDate).label}
                                         </p>
                                     </div>
                                 </div>
@@ -471,10 +528,16 @@ function CRMContent() {
 
                                     {/* Interaction Logging Form */}
                                     <div className="space-y-4">
-                                        <h3 className="font-bold text-[#2a1e16] flex items-center gap-2">
-                                            <MessageSquare className="w-4 h-4 text-blue-500" />
-                                            Log Interaction
-                                        </h3>
+                                        <div className="flex justify-between items-center">
+                                            <h3 className="font-bold text-[#2a1e16] flex items-center gap-2">
+                                                <MessageSquare className="w-4 h-4 text-blue-500" />
+                                                Engage & Log
+                                            </h3>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => window.open(getWhatsAppLink(selectedLead, 'followup'), '_blank')} className="px-2 py-1 bg-green-50 text-green-700 text-[10px] font-bold rounded border border-green-100 hover:bg-green-100 transition-all">💬 Followup</button>
+                                                <button onClick={() => window.open(getWhatsAppLink(selectedLead, 'sample'), '_blank')} className="px-2 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded border border-blue-100 hover:bg-blue-100 transition-all">📦 Sample</button>
+                                            </div>
+                                        </div>
                                         <form onSubmit={handleLogInteraction} className="space-y-4 bg-blue-50/10 p-5 rounded-2xl border border-blue-100/30">
                                             <div className="flex gap-2">
                                                 {['call', 'whatsapp', 'email', 'meeting'].map(type => (

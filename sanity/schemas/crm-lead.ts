@@ -75,8 +75,22 @@ export default {
                     { title: 'Waiting for Client', value: 'waiting_client' },
                     { title: 'Action Needed - UrbanClay', value: 'action_needed' },
                     { title: 'Price Objection', value: 'price_objection' },
+                    { title: 'Color/Quality Concern', value: 'quality_objection' },
                     { title: 'Timeline Issue', value: 'timeline_issue' },
                     { title: 'Decision Pending', value: 'pending' }
+                ]
+            }
+        },
+        {
+            name: 'projectTimeline',
+            title: 'Project Stage / Site Readiness',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Concept / Architect Planning', value: 'planning' },
+                    { title: 'Foundation / Brickwork', value: 'foundation' },
+                    { title: 'Finishing / Plastering', value: 'finishing' },
+                    { title: 'Immediate Requirement', value: 'immediate' }
                 ]
             }
         },
