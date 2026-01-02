@@ -62,6 +62,8 @@ function CRMContent() {
     const [quotePrice, setQuotePrice] = useState('120');
     const [quoteResult, setQuoteResult] = useState('');
 
+    const [importSearchTerm, setImportSearchTerm] = useState('');
+
     // New Deal Form State
     const [newDealForm, setNewDealForm] = useState({
         clientName: '',
@@ -512,20 +514,38 @@ function CRMContent() {
                                 className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-white rounded-3xl shadow-2xl z-[110] p-8 max-h-[80vh] flex flex-col"
                             >
                                 <h2 className="text-2xl font-bold mb-2">Import from Google</h2>
-                                <p className="text-gray-500 mb-6">Click on a contact to start a deal with them.</p>
+                                <p className="text-gray-500 mb-4">Click on a contact to start a deal with them.</p>
+
+                                <div className="relative mb-4">
+                                    <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search by name or number..."
+                                        value={importSearchTerm}
+                                        onChange={(e) => setImportSearchTerm(e.target.value)}
+                                        className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:bg-white focus:border-blue-500 transition-all text-sm"
+                                    />
+                                </div>
+
                                 <div className="flex-1 overflow-y-auto space-y-2 pr-2">
-                                    {importData.map((c, i) => (
-                                        <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-blue-50 cursor-pointer transition-all border border-transparent hover:border-blue-100" onClick={() => handleCreateDeal({ clientName: c.name, phone: c.phone, email: c.email, stage: 'new' })}>
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-blue-600">{c.name.charAt(0)}</div>
-                                                <div>
-                                                    <p className="font-bold text-sm uppercase">{c.name}</p>
-                                                    <p className="text-xs text-gray-400">{c.phone || c.email}</p>
+                                    {importData
+                                        .filter(c =>
+                                            c.name?.toLowerCase().includes(importSearchTerm.toLowerCase()) ||
+                                            c.phone?.includes(importSearchTerm) ||
+                                            c.email?.toLowerCase().includes(importSearchTerm.toLowerCase())
+                                        )
+                                        .map((c, i) => (
+                                            <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-blue-50 cursor-pointer transition-all border border-transparent hover:border-blue-100" onClick={() => handleCreateDeal({ clientName: c.name, phone: c.phone, email: c.email, stage: 'new' })}>
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-bold text-blue-600">{c.name.charAt(0)}</div>
+                                                    <div>
+                                                        <p className="font-bold text-sm uppercase">{c.name}</p>
+                                                        <p className="text-xs text-gray-400">{c.phone || c.email}</p>
+                                                    </div>
                                                 </div>
+                                                <ArrowRight className="w-4 h-4 text-gray-300" />
                                             </div>
-                                            <ArrowRight className="w-4 h-4 text-gray-300" />
-                                        </div>
-                                    ))}
+                                        ))}
                                 </div>
                                 <button onClick={() => setShowImportModal(false)} className="mt-6 w-full py-3 text-gray-400 font-bold">Cancel</button>
                             </motion.div>
