@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GOOGLE_CONFIG, fetchGoogleContacts } from '@/lib/google-contacts';
+import { saveGoogleContactsToSanity } from '@/app/actions/crm';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -10,7 +11,6 @@ export async function GET(request: Request) {
     }
 
     try {
-        // Exchange code for tokens
         const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
             method: 'POST',
             body: new URLSearchParams({
@@ -28,15 +28,19 @@ export async function GET(request: Request) {
             return NextResponse.json({ error: tokens.error_description }, { status: 500 });
         }
 
+        // 1. Fetch ALL contacts (using the pagination built into fetchGoogleContacts)
         const contacts = await fetchGoogleContacts(tokens.access_token);
 
-        // Return the contacts to the frontend for selection
-        // In a real app, you might save these to a session or temporary storage
-        // Here we'll redirect back to CRM with the contacts (simplification)
+        // 2. Save directly to Sanity
+        if (contacts && contacts.length > 0) {
+            await saveGoogleContactsToSanity(contacts);
+        }
 
-        return NextResponse.redirect(`${GOOGLE_CONFIG.redirectUri.replace('/api/crm/google/callback', '/dashboard/crm')}?sync=success&data=${encodeURIComponent(JSON.stringify(contacts.slice(0, 50)))}`);
+        // 3. Redirect back with success flag (no data in URL!)
+        return NextResponse.redirect(`${GOOGLE_CONFIG.redirectUri.replace('/api/crm/google/callback', '/dashboard/crm')}?sync=complete&count=${contacts.length}`);
 
     } catch (error: any) {
+        console.error("Callback Error:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

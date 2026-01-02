@@ -53,3 +53,34 @@ export async function createCRMLead(leadData: any) {
         submittedAt: new Date().toISOString()
     });
 }
+
+export async function saveGoogleContactsToSanity(contacts: any[]) {
+    const BATCH_SIZE = 50;
+
+    for (let i = 0; i < contacts.length; i += BATCH_SIZE) {
+        const batch = contacts.slice(i, i + BATCH_SIZE);
+        const transaction = writeClient.transaction();
+
+        for (const contact of batch) {
+            const cleanPhone = contact.phone?.replace(/[^0-9]/g, '');
+            const cleanEmail = contact.email?.replace(/[^a-zA-Z0-9]/g, '');
+            const id = `contact-${cleanPhone || cleanEmail || Math.random().toString(36).substring(7)}`;
+
+            transaction.createIfNotExists({
+                _id: id,
+                _type: 'crmContact',
+                name: contact.name,
+                phone: contact.phone,
+                email: contact.email,
+                source: 'google',
+                lastSyncedAt: new Date().toISOString()
+            });
+        }
+        await transaction.commit();
+    }
+    return { success: true };
+}
+
+export async function getCRMContacts() {
+    return await client.fetch(`*[_type == "crmContact"] | order(name asc)`);
+}

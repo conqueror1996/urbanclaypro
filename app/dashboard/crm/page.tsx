@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getCRMLeads, updateCRMLeadStage, addCRMInteraction, createCRMLead } from '@/app/actions/crm';
+import { getCRMLeads, updateCRMLeadStage, addCRMInteraction, createCRMLead, getCRMContacts } from '@/app/actions/crm';
 import { generateCRMSmartReply } from '@/app/actions/crm-ai';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
@@ -61,6 +61,8 @@ function CRMContent() {
     const [showQuoteCalc, setShowQuoteCalc] = useState(false);
     const [quotePrice, setQuotePrice] = useState('120');
     const [quoteResult, setQuoteResult] = useState('');
+    const [contacts, setContacts] = useState<any[]>([]);
+    const [viewMode, setViewMode] = useState<'pipeline' | 'contacts'>('pipeline');
 
     const [importSearchTerm, setImportSearchTerm] = useState('');
 
@@ -85,20 +87,15 @@ function CRMContent() {
 
     useEffect(() => {
         fetchLeads();
+        fetchContacts();
 
-        // Handle Google Sync Redirect
+        // Handle Google Sync Complete
         const syncStatus = searchParams.get('sync');
-        const syncData = searchParams.get('data');
-        if (syncStatus === 'success' && syncData) {
-            try {
-                const parsed = JSON.parse(decodeURIComponent(syncData));
-                setImportData(parsed);
-                setShowImportModal(true);
-                // Clear URL
-                router.replace('/dashboard/crm');
-            } catch (e) {
-                console.error("Sync parsing failed", e);
-            }
+        const syncCount = searchParams.get('count');
+        if (syncStatus === 'complete') {
+            alert(`🎉 Successfully synced ${syncCount} contacts to Sanity!`);
+            fetchContacts();
+            router.replace('/dashboard/crm');
         }
     }, [searchParams]);
 
@@ -107,6 +104,11 @@ function CRMContent() {
         const data = await getCRMLeads();
         setLeads(data);
         setLoading(false);
+    };
+
+    const fetchContacts = async () => {
+        const data = await getCRMContacts();
+        setContacts(data);
     };
 
     const handleStageChange = async (leadId: string, newStage: string) => {
@@ -333,24 +335,41 @@ function CRMContent() {
 
                 {/* Filter & View Control */}
                 <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-                    <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
+                    <div className="flex bg-white rounded-2xl p-1 border border-gray-100 shadow-sm mr-4">
                         <button
-                            onClick={() => setActiveTab('all')}
-                            className={`px-4 py-2 rounded-full text-xs font-bold uppercase transition-all whitespace-nowrap ${activeTab === 'all' ? 'bg-[#2a1e16] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200'}`}
+                            onClick={() => setViewMode('pipeline')}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase transition-all ${viewMode === 'pipeline' ? 'bg-[#2a1e16] text-white' : 'text-gray-400'}`}
                         >
-                            All Deals
+                            Pipeline 🚀
                         </button>
-                        {STAGES.map(stage => (
-                            <button
-                                key={stage.value}
-                                onClick={() => setActiveTab(stage.value)}
-                                className={`px-4 py-2 rounded-full text-xs font-bold uppercase transition-all whitespace-nowrap ${activeTab === stage.value ? 'bg-[#2a1e16] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200'}`}
-                            >
-                                {stage.label}
-                                <span className="ml-2 font-normal opacity-60">{leads.filter(l => l.stage === stage.value).length}</span>
-                            </button>
-                        ))}
+                        <button
+                            onClick={() => setViewMode('contacts')}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase transition-all ${viewMode === 'contacts' ? 'bg-[#2a1e16] text-white' : 'text-gray-400'}`}
+                        >
+                            Address Book 📒
+                        </button>
                     </div>
+
+                    {viewMode === 'pipeline' && (
+                        <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
+                            <button
+                                onClick={() => setActiveTab('all')}
+                                className={`px-4 py-2 rounded-full text-xs font-bold uppercase transition-all whitespace-nowrap ${activeTab === 'all' ? 'bg-[#2a1e16] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200'}`}
+                            >
+                                All Deals
+                            </button>
+                            {STAGES.map(stage => (
+                                <button
+                                    key={stage.value}
+                                    onClick={() => setActiveTab(stage.value)}
+                                    className={`px-4 py-2 rounded-full text-xs font-bold uppercase transition-all whitespace-nowrap ${activeTab === stage.value ? 'bg-[#2a1e16] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200'}`}
+                                >
+                                    {stage.label}
+                                    <span className="ml-2 font-normal opacity-60">{leads.filter(l => l.stage === stage.value).length}</span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
                     <div className="relative w-full md:w-64">
                         <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                         <input
@@ -368,98 +387,124 @@ function CRMContent() {
                     {loading ? (
                         <div className="flex flex-col items-center justify-center p-20 gap-4">
                             <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
-                            <p className="text-gray-400 font-medium">Loading your pipeline...</p>
+                            <p className="text-gray-400 font-medium">Loading...</p>
                         </div>
-                    ) : filteredLeads.length > 0 ? (
-                        filteredLeads.map((lead) => (
-                            <motion.div
-                                key={lead._id}
-                                layoutId={lead._id}
-                                onClick={() => setSelectedLead(lead)}
-                                className={`group bg-white rounded-2xl p-5 border transition-all hover:shadow-lg cursor-pointer flex flex-col md:flex-row items-center gap-6 ${isOverdue(lead.nextFollowUp) && lead.stage !== 'won' ? 'border-red-100 bg-red-50/10' : 'border-gray-100'}`}
-                            >
-                                {/* Client Info */}
-                                <div className="flex-1 flex items-center gap-4 w-full md:w-auto">
-                                    <div className="relative">
-                                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-[#2a1e16] font-bold text-lg shrink-0">
-                                            {lead.clientName?.charAt(0)}
+                    ) : viewMode === 'pipeline' ? (
+                        filteredLeads.length > 0 ? (
+                            filteredLeads.map((lead) => (
+                                <motion.div
+                                    key={lead._id}
+                                    layoutId={lead._id}
+                                    onClick={() => setSelectedLead(lead)}
+                                    className={`group bg-white rounded-2xl p-5 border transition-all hover:shadow-lg cursor-pointer flex flex-col md:flex-row items-center gap-6 ${isOverdue(lead.nextFollowUp) && lead.stage !== 'won' ? 'border-red-100 bg-red-50/10' : 'border-gray-100'}`}
+                                >
+                                    {/* Client Info */}
+                                    <div className="flex-1 flex items-center gap-4 w-full md:w-auto">
+                                        <div className="relative">
+                                            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-[#2a1e16] font-bold text-lg shrink-0">
+                                                {lead.clientName?.charAt(0)}
+                                            </div>
+                                            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getDealHealth(lead.lastContactDate).bg.replace('bg-', 'bg-')}`}>
+                                                <div className={`w-full h-full rounded-full ${getDealHealth(lead.lastContactDate).color.replace('text-', 'bg-')}`} />
+                                            </div>
                                         </div>
-                                        <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getDealHealth(lead.lastContactDate).bg.replace('bg-', 'bg-')}`}>
-                                            <div className={`w-full h-full rounded-full ${getDealHealth(lead.lastContactDate).color.replace('text-', 'bg-')}`} />
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <h3 className="font-bold text-[#2a1e16] truncate group-hover:text-blue-600 transition-colors uppercase font-sans tracking-tight">{lead.clientName}</h3>
+                                                {lead.statusIndicator && (
+                                                    <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 text-[8px] font-bold uppercase border border-amber-100">
+                                                        {lead.statusIndicator.replace('_', ' ')}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p className="text-sm text-gray-400 truncate mt-1 flex items-center gap-2">
+                                                {lead.company || 'Direct Client'}
+                                                <span className="w-1 h-1 bg-gray-200 rounded-full" />
+                                                {getDealHealth(lead.lastContactDate).label}
+                                            </p>
                                         </div>
                                     </div>
-                                    <div className="min-w-0">
-                                        <div className="flex items-center gap-2">
-                                            <h3 className="font-bold text-[#2a1e16] truncate group-hover:text-blue-600 transition-colors uppercase font-sans tracking-tight">{lead.clientName}</h3>
-                                            {lead.statusIndicator && (
-                                                <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 text-[8px] font-bold uppercase border border-amber-100">
-                                                    {lead.statusIndicator.replace('_', ' ')}
-                                                </span>
+
+                                    {/* Deal Info */}
+                                    <div className="flex-1 grid grid-cols-2 md:grid-cols-2 gap-4 w-full md:w-auto border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
+                                        <div>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Potential Value</p>
+                                            <p className="font-bold text-gray-700">₹ {lead.potentialValue?.toLocaleString('en-IN') || 'TBD'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stage</p>
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${STAGES.find(s => s.value === (lead.stage || 'new'))?.color}`}>
+                                                {STAGES.find(s => s.value === (lead.stage || 'new'))?.label}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Follow Up Info */}
+                                    <div className="flex-1 w-full md:w-auto border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Next Action</p>
+                                        <div className="flex items-center gap-2 mt-1">
+                                            {lead.nextFollowUp ? (
+                                                <>
+                                                    <Clock className={`w-3.5 h-3.5 ${isOverdue(lead.nextFollowUp) && lead.stage !== 'won' ? 'text-red-500' : 'text-blue-500'}`} />
+                                                    <span className={`text-sm font-bold ${isOverdue(lead.nextFollowUp) && lead.stage !== 'won' ? 'text-red-600' : 'text-blue-600'}`}>
+                                                        {new Date(lead.nextFollowUp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <span className="text-sm text-gray-300 italic">No task set</span>
                                             )}
                                         </div>
-                                        <p className="text-sm text-gray-400 truncate mt-1 flex items-center gap-2">
-                                            {lead.company || 'Direct Client'}
-                                            <span className="w-1 h-1 bg-gray-200 rounded-full" />
-                                            {getDealHealth(lead.lastContactDate).label}
-                                        </p>
                                     </div>
-                                </div>
 
-                                {/* Deal Info */}
-                                <div className="flex-1 grid grid-cols-2 md:grid-cols-2 gap-4 w-full md:w-auto border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
-                                    <div>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Potential Value</p>
-                                        <p className="font-bold text-gray-700">₹ {lead.potentialValue?.toLocaleString('en-IN') || 'TBD'}</p>
+                                    {/* Actions */}
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                window.open(`https://wa.me/${lead.phone?.replace(/[^0-9]/g, '')}`, '_blank');
+                                            }}
+                                            className="p-2 text-gray-300 hover:text-green-500 hover:bg-green-50 rounded-xl transition-all"
+                                        >
+                                            <MessageSquare className="w-5 h-5" />
+                                        </button>
+                                        <button className="p-2 text-gray-300 hover:text-[#2a1e16] hover:bg-gray-50 rounded-xl transition-all">
+                                            <MoreVertical className="w-5 h-5" />
+                                        </button>
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stage</p>
-                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${STAGES.find(s => s.value === (lead.stage || 'new'))?.color}`}>
-                                            {STAGES.find(s => s.value === (lead.stage || 'new'))?.label}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Follow Up Info */}
-                                <div className="flex-1 w-full md:w-auto border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Next Action</p>
-                                    <div className="flex items-center gap-2 mt-1">
-                                        {lead.nextFollowUp ? (
-                                            <>
-                                                <Clock className={`w-3.5 h-3.5 ${isOverdue(lead.nextFollowUp) && lead.stage !== 'won' ? 'text-red-500' : 'text-blue-500'}`} />
-                                                <span className={`text-sm font-bold ${isOverdue(lead.nextFollowUp) && lead.stage !== 'won' ? 'text-red-600' : 'text-blue-600'}`}>
-                                                    {new Date(lead.nextFollowUp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                                                </span>
-                                            </>
-                                        ) : (
-                                            <span className="text-sm text-gray-300 italic">No task set</span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Actions */}
-                                <div className="flex items-center gap-2 shrink-0">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            window.open(`https://wa.me/${lead.phone?.replace(/[^0-9]/g, '')}`, '_blank');
-                                        }}
-                                        className="p-2 text-gray-300 hover:text-green-500 hover:bg-green-50 rounded-xl transition-all"
-                                    >
-                                        <MessageSquare className="w-5 h-5" />
-                                    </button>
-                                    <button className="p-2 text-gray-300 hover:text-[#2a1e16] hover:bg-gray-50 rounded-xl transition-all">
-                                        <MoreVertical className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))
-                    ) : (
-                        <div className="bg-white rounded-3xl p-20 text-center border border-dashed border-gray-200">
-                            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-300">
-                                <UserPlus className="w-8 h-8" />
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className="bg-white rounded-3xl p-20 text-center border border-dashed border-gray-200">
+                                <h3 className="text-lg font-bold text-gray-600">No deals found</h3>
                             </div>
-                            <h3 className="text-lg font-bold text-gray-600">No deals found</h3>
-                            <p className="text-gray-400 max-w-xs mx-auto mt-2">Start by adding a new deal or importing your contacts.</p>
+                        )
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {contacts
+                                .filter(c => c.name?.toLowerCase().includes(searchTerm.toLowerCase()) || c.phone?.includes(searchTerm))
+                                .map(contact => (
+                                    <div key={contact._id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center font-bold text-[#2a1e16]">{contact.name.charAt(0)}</div>
+                                                <div>
+                                                    <h4 className="font-bold text-[#2a1e16] uppercase text-sm">{contact.name}</h4>
+                                                    <p className="text-xs text-gray-400">{contact.phone || 'No Phone'}</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    setNewDealForm({ ...newDealForm, clientName: contact.name, phone: contact.phone, email: contact.email });
+                                                    setShowNewDealModal(true);
+                                                }}
+                                                className="opacity-0 group-hover:opacity-100 bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition-all"
+                                            >
+                                                Start Deal
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            }
                         </div>
                     )}
                 </div>
