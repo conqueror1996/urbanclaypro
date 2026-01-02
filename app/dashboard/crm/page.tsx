@@ -134,10 +134,14 @@ function CRMContent() {
     };
 
     const handleGoogleSync = () => {
-        const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '1014125340809-placeholder.apps.googleusercontent.com';
+        const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+        if (!clientId) {
+            alert("Google Client ID not found in environment variables. Please check Vercel settings.");
+            return;
+        }
         const redirectUri = `${window.location.origin}/api/crm/google/callback`;
         const scope = 'https://www.googleapis.com/auth/contacts.readonly';
-        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline`;
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
         window.location.href = url;
     };
 
