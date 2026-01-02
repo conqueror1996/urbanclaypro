@@ -95,3 +95,46 @@ export async function saveGoogleContactsToSanity(contacts: any[]) {
 export async function getCRMContacts() {
     return await client.fetch(`*[_type == "crmContact"] | order(name asc)`);
 }
+
+export async function getLabours() {
+    return await client.fetch(`*[_type == "labour"] | order(name asc)`);
+}
+
+export async function getSites() {
+    return await client.fetch(`*[_type == "site"] | order(name asc)`);
+}
+
+export async function createSiteFromLead(lead: any) {
+    try {
+        const result = await writeClient.create({
+            _type: 'site',
+            name: `${lead.company || lead.clientName}'s Project`,
+            client: lead.clientName,
+            clientPhone: lead.phone,
+            clientEmail: lead.email,
+            status: 'planned',
+            startDate: new Date().toISOString().split('T')[0],
+            notes: `Converted from CRM Lead. Initial requirements: ${lead.requirements}`
+        });
+        return result;
+    } catch (error: any) {
+        console.error("Site Creation Failed", error);
+        throw new Error(error.message);
+    }
+}
+
+export async function addFeedback(feedback: { name: string, rating: number, comment: string, leadId?: string }) {
+    try {
+        const result = await writeClient.create({
+            _type: 'feedback',
+            name: feedback.name,
+            rating: feedback.rating,
+            comment: feedback.comment,
+            submittedAt: new Date().toISOString()
+        });
+        return result;
+    } catch (error: any) {
+        console.error("Feedback Submission Failed", error);
+        throw new Error(error.message);
+    }
+}
