@@ -50,7 +50,7 @@ export default function CreateOrderPage() {
         tdsOption: 'none',
         tdsRate: 0,
         lineItems: [
-            { name: '', description: '', hsnCode: '', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }
+            { name: '', description: '', hsnCode: '', unit: 'pcs', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }
         ]
     });
 
@@ -110,7 +110,7 @@ export default function CreateOrderPage() {
     const addLineItem = () => {
         setFormData({
             ...formData,
-            lineItems: [...formData.lineItems, { name: '', description: '', hsnCode: '', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }]
+            lineItems: [...formData.lineItems, { name: '', description: '', hsnCode: '', unit: 'pcs', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }]
         });
     };
 
@@ -379,12 +379,22 @@ export default function CreateOrderPage() {
                                                     />
                                                 </td>
                                                 <td className="px-4 py-6 align-top">
-                                                    <input
-                                                        type="number"
-                                                        value={item.quantity}
-                                                        onChange={(e) => updateLineItem(idx, 'quantity', Number(e.target.value))}
-                                                        className="w-full p-3 text-center font-bold bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
-                                                    />
+                                                    <div className="flex gap-2">
+                                                        <input
+                                                            type="number"
+                                                            value={item.quantity}
+                                                            onChange={(e) => updateLineItem(idx, 'quantity', Number(e.target.value))}
+                                                            className="w-16 p-3 text-center font-bold bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
+                                                        />
+                                                        <select
+                                                            value={item.unit || 'pcs'}
+                                                            onChange={(e) => updateLineItem(idx, 'unit', e.target.value)}
+                                                            className="w-20 p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold text-gray-600 focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none cursor-pointer appearance-none"
+                                                        >
+                                                            <option value="pcs">Pcs</option>
+                                                            <option value="sqft">Sq.ft</option>
+                                                        </select>
+                                                    </div>
                                                 </td>
                                                 <td className="px-4 py-6 align-top">
                                                     <div className="relative">
