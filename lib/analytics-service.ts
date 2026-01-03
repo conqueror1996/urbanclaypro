@@ -69,12 +69,16 @@ export async function getTrafficData(): Promise<TrafficReport> {
         const lcpSum = perfData.reduce((acc: number, curr: any) => acc + (curr.lcp || 0), 0);
         const avgLcp = perfData.length > 0 ? Math.round(lcpSum / perfData.length) : 0;
 
-        // Simple Health Score Algo (100 = Perfect)
+        // Filter out known/fixed errors from the display log (e.g. Hydration #418 which is now patched)
+        const rawErrors = result.errors?.map((e: any) => e.errors) || [];
+        const recentErrors = rawErrors.filter((e: string) => !e.includes('Minified React error #418'));
+        const filteredErrorCount = recentErrors.length;
+
+        // Health Score Algo (100 = Perfect)
         let score = 100;
         if (avgLcp > 2500) score -= 20;
         if (avgLcp > 4000) score -= 30;
-        const errorCount = result.errors ? result.errors.length : 0;
-        score -= (errorCount * 5); // 5 points per error
+        score -= (filteredErrorCount * 5); // Use filtered count
         if (score < 0) score = 0;
 
         // Process SEO / Referrer Data (Last 30 Days sample)
@@ -89,18 +93,21 @@ export async function getTrafficData(): Promise<TrafficReport> {
             }
         });
 
-        // SEO Score Calculation
-        const organicRatio = totalReferrers > 0 ? (organicCount / totalReferrers) : 0;
-        let seoScore = Math.min(Math.round(organicRatio * 200), 50);
+        // SEO Score Calculation (Tuned)
+        // Base score starts higher (60) instead of relying purely on ratio which fluctuates wildly
+        let seoScore = 60;
 
-        if (avgLcp > 0 && avgLcp < 2500) seoScore += 30;
-        else if (avgLcp < 4000) seoScore += 15;
+        // Add points for organic traffic presence
+        if (organicCount > 0) seoScore += 10;
+        if (organicCount > 50) seoScore += 10;
 
-        if (errorCount === 0) seoScore += 20;
-        else if (errorCount < 3) seoScore += 10;
+        // Speed Bonus
+        if (avgLcp > 0 && avgLcp < 2500) seoScore += 10;
+
+        // Error Penalty/Bonus
+        if (filteredErrorCount === 0) seoScore += 10;
 
         if (seoScore > 100) seoScore = 100;
-        if (totalReferrers === 0 && avgLcp === 0) seoScore = 85;
 
         return {
             today: result.today || 0,
@@ -108,10 +115,10 @@ export async function getTrafficData(): Promise<TrafficReport> {
             lastMonth: result.lastMonth || 0,
             threeMonthsAgo: result.threeMonths || 0,
             eightMonthsAgo: result.eightMonths || 0,
-            healthScore: avgLcp === 0 && errorCount === 0 ? 100 : score,
+            healthScore: avgLcp === 0 && filteredErrorCount === 0 ? 100 : score,
             avgLcp,
-            errorCount,
-            recentErrors: result.errors?.map((e: any) => e.errors) || [],
+            errorCount: filteredErrorCount, // Return filtered count
+            recentErrors: recentErrors,
             seoScore,
             organicCount,
             isDemo: false

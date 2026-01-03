@@ -20,6 +20,7 @@ export default function DashboardPage() {
         avgRating: '0.0'
     });
     const [recentLeads, setRecentLeads] = useState<any[]>([]);
+    const [topPartners, setTopPartners] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -30,6 +31,7 @@ export default function DashboardPage() {
         if (res.success && res.stats) {
             setStats(res.stats);
             setRecentLeads(res.recentLeads);
+            if (res.topPartners) setTopPartners(res.topPartners);
             setLastUpdated(new Date());
         }
         setLoading(false);
@@ -242,6 +244,84 @@ export default function DashboardPage() {
                     {/* Background Pattern */}
                     <svg className="absolute right-0 top-0 h-full w-auto text-white/5 transform translate-x-1/4" viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="50" /></svg>
                 </Link>
+            </div>
+
+            {/* B2B INTELLIGENCE ROW */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {/* KEY ACCOUNTS WIDGET */}
+                <div className="bg-[#2A1E16] text-white p-6 rounded-2xl shadow-lg relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z" /></svg>
+                    </div>
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 className="text-xl font-serif text-[var(--sand)]">Key Accounts</h3>
+                                <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">Top Revenue Partners</p>
+                            </div>
+                            <span className="bg-white/10 text-white/60 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">Whales 🐳</span>
+                        </div>
+                        <div className="space-y-4">
+                            {topPartners.length > 0 ? (
+                                topPartners.map((partner: any, i: number) => (
+                                    <div key={i} className="flex justify-between items-center border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center font-bold text-xs text-[var(--terracotta)]">
+                                                {i + 1}
+                                            </div>
+                                            <div>
+                                                <div className="font-bold text-sm text-[var(--sand)]">{partner.name}</div>
+                                                <div className="text-[10px] text-white/40">{partner.deals} Active Deals</div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="font-serif text-[var(--sand)]">₹{(partner.value / 100000).toFixed(1)}L</div>
+                                            <div className="text-[10px] text-white/30">Lifetime</div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-6 text-white/20 text-xs uppercase tracking-widest font-bold">
+                                    No B2B Data Yet
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* B2B QUICK CALCULATOR */}
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col justify-between">
+                    <div>
+                        <h3 className="text-lg font-bold text-[var(--ink)] mb-1">Wholesale Estimator</h3>
+                        <p className="text-xs text-gray-400 mb-6">Quick quote for bulk inquiries (Tier 2 Pricing)</p>
+
+                        <div className="bg-gray-50/50 rounded-xl p-4 space-y-4 border border-gray-100">
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-gray-500 uppercase">Volume (Sq.ft)</span>
+                                <input type="number" placeholder="2500" className="w-24 text-right bg-white border border-gray-200 rounded p-1 text-sm font-bold text-[var(--ink)] focus:ring-1 focus:ring-[var(--terracotta)] outline-none" id="quick-calc-vol" onChange={(e) => {
+                                    const val = parseInt(e.target.value) || 0;
+                                    const rate = val > 5000 ? 85 : (val > 1000 ? 95 : 110);
+                                    const el = document.getElementById('calc-res');
+                                    if (el) el.innerText = `₹${(val * rate).toLocaleString('en-IN')}`;
+                                    const rateEl = document.getElementById('calc-rate');
+                                    if (rateEl) rateEl.innerText = `@ ₹${rate}/sqft`;
+                                }} />
+                            </div>
+                            <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                                <span className="text-sm font-bold text-[var(--terracotta)]">Estimate</span>
+                                <div className="text-right">
+                                    <div className="text-xl font-serif text-[var(--ink)]" id="calc-res">₹0</div>
+                                    <div className="text-[10px] text-gray-400" id="calc-rate">@ Base Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-50 flex gap-2">
+                        <Link href="/dashboard/crm" className="flex-1 py-2 bg-gray-50 text-gray-600 text-xs font-bold uppercase tracking-wide rounded-lg hover:bg-gray-100 text-center flex items-center justify-center gap-2">
+                            Create Deal
+                        </Link>
+                    </div>
+                </div>
             </div>
 
             {/* CONTENT & LEADS ROW */}

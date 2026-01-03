@@ -35,7 +35,17 @@ export async function getDashboardData() {
         return {
             success: true,
             stats,
-            recentLeads: leads.slice(0, 5)
+            recentLeads: leads.slice(0, 5),
+            topPartners: Object.values(leads.reduce((acc: any, lead: any) => {
+                const name = lead.company || lead.contact || 'Unknown';
+                if (!acc[name]) acc[name] = { name, value: 0, deals: 0, lastActive: lead.submittedAt };
+                acc[name].value += (Number(lead.potentialValue) || 0);
+                acc[name].deals += 1;
+                if (new Date(lead.submittedAt) > new Date(acc[name].lastActive)) acc[name].lastActive = lead.submittedAt;
+                return acc;
+            }, {}))
+                .sort((a: any, b: any) => b.value - a.value)
+                .slice(0, 4)
         };
 
     } catch (error) {
