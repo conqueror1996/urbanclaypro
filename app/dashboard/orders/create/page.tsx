@@ -338,112 +338,127 @@ export default function CreateOrderPage() {
 
                             <div className="overflow-x-auto custom-scrollbar pb-4">
                                 <table className="w-full text-sm min-w-[1000px]">
-                                    <thead className="bg-[#fcfaf9] text-gray-400 font-bold text-[10px] uppercase tracking-widest border-b border-gray-50">
+                                    <thead className="bg-[#f8f9fb] text-[#777] font-semibold text-[13px] border-b border-[#eecad3]/20">
                                         <tr>
-                                            <th className="px-6 py-6 text-left w-[30%]">Item Details</th>
-                                            <th className="px-4 py-6 text-left w-[10%]">HSN/SAC</th>
-                                            <th className="px-4 py-6 text-center w-[10%]">Qty</th>
-                                            <th className="px-4 py-6 text-left w-[15%]">Rate (₹)</th>
-                                            <th className="px-4 py-6 text-left w-[10%]">Disc %</th>
-                                            <th className="px-4 py-6 text-left w-[10%]">Tax %</th>
-                                            <th className="px-6 py-6 text-right w-[15%]">Amount</th>
-                                            <th className="px-4 py-6 w-[3%]"></th>
+                                            <th className="px-5 py-3 text-left w-[35%] font-medium">Item Details</th>
+                                            <th className="px-3 py-3 text-right w-[15%] font-medium">Quantity</th>
+                                            <th className="px-3 py-3 text-right w-[15%] font-medium">Rate</th>
+                                            <th className="px-3 py-3 text-right w-[12%] font-medium">Tax</th>
+                                            <th className="px-5 py-3 text-right w-[15%] font-medium">Amount</th>
+                                            <th className="px-2 py-3 w-[5%]"></th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-50">
+                                    <tbody className="divide-y divide-gray-100">
                                         {formData.lineItems.map((item: any, idx: number) => (
-                                            <tr key={idx} className="group hover:bg-gray-50/50 transition-colors">
-                                                <td className="px-6 py-6 align-top">
-                                                    <div className="space-y-3">
-                                                        <input
+                                            <tr key={idx} className="group hover:bg-[#fbfcfd] transition-colors align-top">
+                                                <td className="px-5 py-4">
+                                                    <div className="space-y-2">
+                                                        <textarea
                                                             value={item.name}
                                                             onChange={(e) => updateLineItem(idx, 'name', e.target.value)}
-                                                            placeholder="Item Name / Service Title"
-                                                            className="w-full p-3 font-bold text-gray-800 border-b border-gray-100 focus:border-[var(--terracotta)] bg-transparent outline-none transition-all placeholder:font-normal"
+                                                            placeholder="Type an item name"
+                                                            rows={1}
+                                                            className="w-full p-2 font-medium text-gray-900 border-none bg-transparent placeholder-gray-400 focus:ring-0 focus:bg-gray-50 rounded-md resize-none overflow-hidden m-0 text-[14px] leading-tight"
+                                                            style={{ minHeight: '38px', height: 'auto' }}
+                                                            onInput={(e: any) => {
+                                                                e.target.style.height = 'auto';
+                                                                e.target.style.height = e.target.scrollHeight + 'px';
+                                                            }}
                                                         />
-                                                        <textarea
-                                                            value={item.description}
-                                                            onChange={(e) => updateLineItem(idx, 'description', e.target.value)}
-                                                            placeholder="Add specific details or description here..."
-                                                            rows={2}
-                                                            className="w-full p-2 text-xs text-gray-500 bg-gray-50/30 rounded-lg border border-transparent focus:bg-white focus:border-gray-100 outline-none resize-none transition-all"
-                                                        />
+                                                        <div className="flex gap-2">
+                                                            <input
+                                                                value={item.hsnCode}
+                                                                onChange={(e) => updateLineItem(idx, 'hsnCode', e.target.value)}
+                                                                placeholder="HSN/SAC"
+                                                                className="w-24 p-1 text-xs text-gray-500 border border-gray-200 rounded px-2 focus:border-blue-400 outline-none"
+                                                            />
+                                                            <input
+                                                                value={item.description}
+                                                                onChange={(e) => updateLineItem(idx, 'description', e.target.value)}
+                                                                placeholder="Description (Optional)"
+                                                                className="flex-1 p-1 text-xs text-gray-500 border border-transparent focus:border-b focus:border-gray-200 focus:bg-gray-50 outline-none transition-all"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-6 align-top">
-                                                    <input
-                                                        value={item.hsnCode}
-                                                        onChange={(e) => updateLineItem(idx, 'hsnCode', e.target.value)}
-                                                        placeholder="123456"
-                                                        className="w-full p-3 font-mono text-xs bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
-                                                    />
-                                                </td>
-                                                <td className="px-4 py-6 align-top">
-                                                    <div className="flex gap-2">
+                                                <td className="px-3 py-4">
+                                                    <div className="flex items-center justify-end gap-2">
                                                         <input
                                                             type="number"
+                                                            min="0"
                                                             value={item.quantity}
-                                                            onChange={(e) => updateLineItem(idx, 'quantity', Number(e.target.value))}
-                                                            className="w-16 p-3 text-center font-bold bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
+                                                            onChange={(e) => {
+                                                                const val = Number(e.target.value);
+                                                                updateLineItem(idx, 'quantity', val < 0 ? 0 : val);
+                                                            }}
+                                                            className="w-20 p-2 text-right text-gray-900 border border-gray-300 rounded hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all no-spinner"
                                                         />
                                                         <select
                                                             value={item.unit || 'pcs'}
                                                             onChange={(e) => updateLineItem(idx, 'unit', e.target.value)}
-                                                            className="w-20 p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold text-gray-600 focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none cursor-pointer appearance-none"
+                                                            className="w-16 p-2 text-xs bg-gray-50 border border-gray-300 rounded text-gray-600 outline-none"
                                                         >
-                                                            <option value="pcs">Pcs</option>
-                                                            <option value="sqft">Sq.ft</option>
+                                                            <option value="pcs">pcs</option>
+                                                            <option value="sqft">ft²</option>
+                                                            <option value="box">box</option>
                                                         </select>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-6 align-top">
-                                                    <div className="relative">
-                                                        <span className="absolute left-3 top-3 text-gray-400 font-light">₹</span>
+                                                <td className="px-3 py-4 text-right">
+                                                    <div className="relative inline-block w-28">
+                                                        <span className="absolute left-2 top-2 text-gray-400 text-xs">₹</span>
                                                         <input
                                                             type="number"
+                                                            min="0"
                                                             value={item.rate}
-                                                            onChange={(e) => updateLineItem(idx, 'rate', Number(e.target.value))}
-                                                            className="w-full p-3 pl-7 font-mono bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
+                                                            onChange={(e) => {
+                                                                const val = Number(e.target.value);
+                                                                updateLineItem(idx, 'rate', val < 0 ? 0 : val);
+                                                            }}
+                                                            className="w-full p-2 pl-5 text-right text-gray-900 border border-gray-300 rounded hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all no-spinner"
                                                         />
                                                     </div>
-                                                </td>
-                                                <td className="px-4 py-6 align-top">
-                                                    <div className="relative">
+                                                    <div className="mt-2 flex justify-end items-center gap-1">
+                                                        <span className="text-[10px] text-gray-400 uppercase">Disc %</span>
                                                         <input
                                                             type="number"
+                                                            min="0"
+                                                            max="100"
                                                             value={item.discount}
-                                                            onChange={(e) => updateLineItem(idx, 'discount', Number(e.target.value))}
-                                                            className="w-full p-3 text-center bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
+                                                            onChange={(e) => {
+                                                                const val = Number(e.target.value);
+                                                                updateLineItem(idx, 'discount', val < 0 ? 0 : val);
+                                                            }}
+                                                            className="w-12 p-1 text-right text-xs border-b border-gray-200 focus:border-blue-500 outline-none no-spinner"
                                                         />
-                                                        <span className="absolute right-3 top-3 text-gray-400 text-xs">%</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-6 align-top">
+                                                <td className="px-3 py-4 text-right">
                                                     <select
                                                         value={item.taxRate}
                                                         onChange={(e) => updateLineItem(idx, 'taxRate', Number(e.target.value))}
-                                                        className="w-full p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold text-gray-600 focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none cursor-pointer appearance-none"
+                                                        className="w-full p-2 text-right bg-transparent border-none text-gray-600 focus:ring-0 cursor-pointer text-xs"
                                                     >
-                                                        <option value={0}>GST 0%</option>
-                                                        <option value={5}>GST 5%</option>
-                                                        <option value={12}>GST 12%</option>
-                                                        <option value={18}>GST 18%</option>
-                                                        <option value={28}>GST 28%</option>
+                                                        <option value={0}>0%</option>
+                                                        <option value={5}>5%</option>
+                                                        <option value={12}>12%</option>
+                                                        <option value={18}>18%</option>
+                                                        <option value={28}>28%</option>
                                                     </select>
                                                 </td>
-                                                <td className="px-6 py-6 align-top text-right">
-                                                    <div className="p-3 font-bold text-lg text-[#2a1e16] bg-gray-50/50 rounded-xl border border-transparent group-hover:bg-white group-hover:border-gray-100 transition-all">
+                                                <td className="px-5 py-4 text-right">
+                                                    <span className="font-semibold text-gray-900 text-[15px]">
                                                         ₹{((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                                                    </div>
+                                                    </span>
                                                 </td>
-                                                <td className="px-4 py-6 align-middle text-center">
+                                                <td className="px-2 py-4 text-center">
                                                     <button
                                                         type="button"
                                                         onClick={() => removeLineItem(idx)}
-                                                        className="w-8 h-8 flex items-center justify-center rounded-full text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                                                        className="text-gray-300 hover:text-red-500 transition-colors p-1"
                                                         title="Remove Item"
                                                     >
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -462,11 +477,11 @@ export default function CreateOrderPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Standard Delivery Timeline</label>
-                                    <input name="deliveryTimeline" value={formData.deliveryTimeline} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50" />
+                                    <input name="deliveryTimeline" value={formData.deliveryTimeline} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-lg bg-gray-50/50 focus:bg-white focus:border-blue-400 outline-none transition-all" />
                                 </div>
                                 <div>
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Customer Notes (Printed on Invoice)</label>
-                                    <input name="customerNotes" value={formData.customerNotes} onChange={handleInputChange} placeholder="e.g. Please call before unloading" className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50" />
+                                    <input name="customerNotes" value={formData.customerNotes} onChange={handleInputChange} placeholder="e.g. Please call before unloading" className="w-full p-4 border border-gray-100 rounded-lg bg-gray-50/50 focus:bg-white focus:border-blue-400 outline-none transition-all" />
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Public Terms & Disclaimer</label>
@@ -506,9 +521,13 @@ export default function CreateOrderPage() {
                                         <input
                                             name="shippingCharges"
                                             type="number"
+                                            min="0"
                                             value={formData.shippingCharges}
-                                            onChange={handleInputChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white font-mono"
+                                            onChange={(e) => {
+                                                const val = Number(e.target.value);
+                                                setFormData({ ...formData, shippingCharges: val < 0 ? 0 : val });
+                                            }}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white font-mono no-spinner"
                                         />
                                     </div>
                                     <div className="relative">
@@ -518,7 +537,7 @@ export default function CreateOrderPage() {
                                             type="number"
                                             value={formData.adjustment}
                                             onChange={handleInputChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white font-mono"
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white font-mono no-spinner"
                                         />
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
@@ -532,7 +551,7 @@ export default function CreateOrderPage() {
                                         </div>
                                         <div>
                                             <label className="block text-[10px] uppercase font-bold text-white/30 mb-1">Rate %</label>
-                                            <input name="tdsRate" type="number" value={formData.tdsRate} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs font-mono" />
+                                            <input name="tdsRate" type="number" min="0" value={formData.tdsRate} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white text-xs font-mono no-spinner" />
                                         </div>
                                     </div>
                                 </div>
@@ -707,6 +726,15 @@ export default function CreateOrderPage() {
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
                     background: #ddd;
+                }
+                /* Hide Spinner Arrows */
+                .no-spinner::-webkit-inner-spin-button, 
+                .no-spinner::-webkit-outer-spin-button { 
+                   -webkit-appearance: none; 
+                   margin: 0; 
+                }
+                .no-spinner { 
+                   -moz-appearance: textfield; 
                 }
             `}</style>
         </div>
