@@ -221,7 +221,11 @@ export async function GET(
         });
 
     } catch (error) {
-        console.error("PDF Generation Error:", error);
-        return NextResponse.json({ error: 'PDF generation failed' }, { status: 500 });
+        console.error("PDF Generation Error (Detailed):", error);
+        return NextResponse.json({
+            error: 'PDF generation failed',
+            details: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined
+        }, { status: 500 });
     }
 }
