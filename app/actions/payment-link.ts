@@ -124,9 +124,7 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
         let invoicePdf = null;
         if (zohoRes.success && zohoRes.invoiceId && zohoRes.customerId) {
             try {
-                const { getZohoInvoicePDF } = await import('@/lib/zoho');
-
-                // Record Payment
+                // Record Payment in Zoho (keep this for accounting)
                 await recordZohoPayment({
                     customerId: zohoRes.customerId,
                     invoiceId: zohoRes.invoiceId,
@@ -134,10 +132,17 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
                     paymentId: paymentId
                 });
 
-                // Fetch PDF for attachment
-                invoicePdf = await getZohoInvoicePDF(zohoRes.invoiceId);
+                // Generate OUR Custom PDF for the email (Unified Brand Experience)
+                const { generateInvoicePDF } = await import('@/lib/invoice-generator');
+                // Ensure order object has the latest invoice numbers
+                const invoiceOrder = {
+                    ...order,
+                    zohoInvoiceNumber: zohoRes.invoiceNumber,
+                    status: 'paid' // Force paid status for correct PDF rendering
+                };
+                invoicePdf = await generateInvoicePDF(invoiceOrder);
             } catch (zohoError) {
-                console.error("⚠️ Zoho post-processing failed:", zohoError);
+                console.error("⚠️ Post-processing error:", zohoError);
             }
         }
 
