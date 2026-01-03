@@ -79,8 +79,12 @@ export default function DashboardPage() {
                                 Syncing...
                             </span>
                         )}
+                        {/* Client-only timestamp to prevent hydration mismatch */}
                         {!isRefreshing && lastUpdated && (
-                            <span className="text-[10px] text-gray-300">
+                            <span
+                                className="text-[10px] text-gray-300"
+                                suppressHydrationWarning
+                            >
                                 Updated {lastUpdated.toLocaleTimeString()}
                             </span>
                         )}
