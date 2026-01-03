@@ -126,6 +126,18 @@ export default function OrdersHistoryPage() {
                                                     >
                                                         📋
                                                     </button>
+
+                                                    {link.status === 'paid' && (
+                                                        <a
+                                                            href={`/api/invoice/${link.orderId}/pdf`}
+                                                            target="_blank"
+                                                            className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-400 hover:text-green-600 transition-all font-bold"
+                                                            title="Download Invoice"
+                                                        >
+                                                            ⬇️
+                                                        </a>
+                                                    )}
+
                                                     <Link
                                                         href={`/pay/${link.orderId}`}
                                                         target="_blank"
