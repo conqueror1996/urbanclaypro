@@ -11,6 +11,8 @@ import autoTable from 'jspdf-autotable'; // Ensure we import it to avoid tree-sh
 const _ = autoTable;
 import { getPaymentLinkDetails } from '@/app/actions/payment-link';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
     request: NextRequest,
     props: { params: Promise<{ orderId: string }> }

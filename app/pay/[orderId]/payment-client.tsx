@@ -125,7 +125,7 @@ export default function PaymentPageClient({ order }: { order: any }) {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center print:hidden">
                     <a
-                        href={`/api/invoice/${order.orderId}/pdf`}
+                        href={`/api/invoice/${order.orderId}/pdf?t=${new Date().getTime()}`}
                         download
                         className="px-8 py-3 bg-[#b45a3c] text-white font-bold rounded-xl hover:bg-[#8e452e] transition-all flex items-center justify-center gap-2 shadow-lg"
                     >
