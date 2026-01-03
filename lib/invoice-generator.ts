@@ -12,16 +12,20 @@ export async function generateInvoicePDF(order: any) {
         const doc: any = new jsPDF();
         const pageWidth = doc.internal.pageSize.width;
 
+        console.log("Generating Invoice PDF for:", order.orderId);
         // --- HEADER ---
         // Logo (Top Left)
         try {
             const logoPath = path.join(process.cwd(), 'public/urbanclay-logo.png');
+            console.log("Looking for logo at:", logoPath);
             if (fs.existsSync(logoPath)) {
                 const logoBase64 = fs.readFileSync(logoPath).toString('base64');
                 doc.addImage(logoBase64, 'PNG', 15, 10, 25, 25);
+            } else {
+                console.warn("Logo file not found");
             }
         } catch (e) {
-            console.error("Logo load failed", e);
+            console.error("Logo load failed (continuing without logo):", e);
         }
 
         // Heading Label (Top Right)
