@@ -191,6 +191,28 @@ function CRMContent() {
         finally { setIsCreatingSite(false); }
     };
 
+    const handleUpdateLead = async (id: string, data: any) => {
+        // Optimistic update
+        if (selectedLead && selectedLead._id === id) {
+            setSelectedLead({ ...selectedLead, ...data });
+        }
+        setLeads(prev => prev.map(l => l._id === id ? { ...l, ...data } : l));
+
+        await updateCRMLead(id, data);
+        await fetchInitialData(); // Full sync
+    };
+
+    const handleDeleteLead = async (id: string) => {
+        if (!confirm("Are you sure you want to delete this opportunity? This cannot be undone.")) return;
+
+        // Optimistic update
+        setLeads(prev => prev.filter(l => l._id !== id));
+        if (selectedLead?._id === id) setSelectedLead(null);
+
+        await deleteCRMLead(id);
+        await fetchInitialData();
+    };
+
     const handleSubmitFeedback = async () => {
         if (!selectedLead) return;
         setIsSubmittingFeedback(true);
@@ -202,39 +224,7 @@ function CRMContent() {
         finally { setIsSubmittingFeedback(false); }
     };
 
-    const handleUpdateLead = async (leadId: string, data: any) => {
-        try {
-            await updateCRMLead(leadId, data);
 
-            // Optimistic update locally
-            setLeads(prev => prev.map(l => l._id === leadId ? { ...l, ...data } : l));
-            if (selectedLead && selectedLead._id === leadId) {
-                setSelectedLead({ ...selectedLead, ...data });
-            }
-
-            alert("Lead archive updated.");
-        } catch (e) {
-            console.error(e);
-            alert("Update failed.");
-        }
-    };
-
-    const handleDeleteLead = async (leadId: string) => {
-        if (!confirm("Are you sure you want to delete this opportunity? This action cannot be undone.")) return;
-
-        try {
-            await deleteCRMLead(leadId);
-
-            // Remove locally
-            setLeads(prev => prev.filter(l => l._id !== leadId));
-            setSelectedLead(null);
-
-            alert("Opportunity removed from archive.");
-        } catch (e) {
-            console.error(e);
-            alert("Deletion failed.");
-        }
-    };
 
     const filteredLeads = leads.filter(lead => {
         const matchesSearch = (lead.clientName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || (lead.company?.toLowerCase() || '').includes(searchTerm.toLowerCase());
@@ -372,39 +362,44 @@ function CRMContent() {
                     )}
                 </div>
 
+
                 {/* Deep Detail Panel */}
-                <CRMDetailPanel
-                    lead={selectedLead}
-                    onClose={() => setSelectedLead(null)}
-                    stages={STAGES}
-                    handleStageChange={handleStageChange}
-                    handleGenerateAI={handleGenerateAI}
-                    isGeneratingAI={isGeneratingAI}
-                    aiDraft={aiDraft}
-                    showQuoteCalc={showQuoteCalc}
-                    setShowQuoteCalc={setShowQuoteCalc}
-                    quotePrice={quotePrice}
-                    setQuotePrice={setQuotePrice}
-                    quoteUnit={quoteUnit}
-                    setQuoteUnit={setQuoteUnit}
-                    handleCalculateQuote={handleCalculateQuote}
-                    quoteResult={quoteResult}
-                    handleDownloadPDF={handleDownloadPDF}
-                    interactionForm={interactionForm}
-                    setInteractionForm={setInteractionForm}
-                    handleLogInteraction={handleLogInteraction}
-                    isLoggingInteraction={isLoggingInteraction}
-                    sites={sites}
-                    labours={labours}
-                    handleCreateSite={handleCreateSite}
-                    isCreatingSite={isCreatingSite}
-                    feedbackForm={feedbackForm}
-                    setFeedbackForm={setFeedbackForm}
-                    handleSubmitFeedback={handleSubmitFeedback}
-                    isSubmittingFeedback={isSubmittingFeedback}
-                    handleUpdateLead={handleUpdateLead}
-                    handleDeleteLead={handleDeleteLead}
-                />
+                <AnimatePresence>
+                    {selectedLead && (
+                        <CRMDetailPanel
+                            lead={selectedLead}
+                            onClose={() => setSelectedLead(null)}
+                            stages={STAGES}
+                            handleStageChange={handleStageChange}
+                            handleGenerateAI={handleGenerateAI}
+                            isGeneratingAI={isGeneratingAI}
+                            aiDraft={aiDraft}
+                            showQuoteCalc={showQuoteCalc}
+                            setShowQuoteCalc={setShowQuoteCalc}
+                            quotePrice={quotePrice}
+                            setQuotePrice={setQuotePrice}
+                            quoteUnit={quoteUnit}
+                            setQuoteUnit={setQuoteUnit}
+                            handleCalculateQuote={handleCalculateQuote}
+                            quoteResult={quoteResult}
+                            handleDownloadPDF={handleDownloadPDF}
+                            interactionForm={interactionForm}
+                            setInteractionForm={setInteractionForm}
+                            handleLogInteraction={handleLogInteraction}
+                            isLoggingInteraction={isLoggingInteraction}
+                            sites={sites}
+                            labours={labours}
+                            handleCreateSite={handleCreateSite}
+                            isCreatingSite={isCreatingSite}
+                            feedbackForm={feedbackForm}
+                            setFeedbackForm={setFeedbackForm}
+                            handleSubmitFeedback={handleSubmitFeedback}
+                            isSubmittingFeedback={isSubmittingFeedback}
+                            handleUpdateLead={handleUpdateLead}
+                            handleDeleteLead={handleDeleteLead}
+                        />
+                    )}
+                </AnimatePresence>
 
                 {/* Creation Modal - Simplified Professional */}
                 <AnimatePresence>

@@ -107,7 +107,7 @@ export function CRMDetailPanel({
     const assignedLabours = labours.filter(l => l.currentSite?._ref === siteData?._id);
 
     return (
-        <AnimatePresence>
+        <>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -542,6 +542,6 @@ export function CRMDetailPanel({
                     </div>
                 </div>
             </motion.div>
-        </AnimatePresence>
+        </>
     );
 }
