@@ -141,18 +141,18 @@ export async function GET(
             },
             bodyStyles: {
                 textColor: [60, 60, 60],
-                fontSize: 10,
+                fontSize: 9,
                 cellPadding: 8,
                 valign: 'top',
                 lineColor: [240, 240, 240],
                 lineWidth: { bottom: 0.1 } // Only bottom border
             },
             columnStyles: {
-                0: { cellWidth: 90 },
-                1: { halign: 'center', cellWidth: 20 },
-                2: { halign: 'right' },
-                3: { halign: 'center' },
-                4: { halign: 'right', fontStyle: 'bold' }
+                0: { cellWidth: 85 }, // Description
+                1: { halign: 'center', cellWidth: 20 }, // Qty
+                2: { halign: 'right', cellWidth: 30 }, // Rate
+                3: { halign: 'center', cellWidth: 15 }, // Disc
+                4: { halign: 'right', cellWidth: 30, fontStyle: 'bold' } // Amount
             },
             didDrawPage: (data: any) => {
                 doc.setFontSize(8);
