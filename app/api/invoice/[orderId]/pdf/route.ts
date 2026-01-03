@@ -1,7 +1,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable'; // Ensure we import it to avoid tree-shaking
+// Trigger side effect for autoTable attachment
+// @ts-ignore
+const _ = autoTable;
 import { getPaymentLinkDetails } from '@/app/actions/payment-link';
 
 export async function GET(
@@ -94,7 +97,7 @@ export async function GET(
             `Rs. ${((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`
         ]);
 
-        (doc as any).autoTable({
+        autoTable(doc, {
             startY: tableY,
             head: [['Item Description', 'Qty', 'Rate', 'Disc', 'Amount']],
             body: tableData,

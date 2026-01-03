@@ -24,8 +24,23 @@ export default function CreateOrderPage() {
         clientPhone: '',
         gstNumber: '',
         panNumber: '',
-        billingAddress: '',
-        shippingAddress: '',
+
+        // Granular Billing Address
+        billingAttention: '',
+        billingStreet: '',
+        billingCity: '',
+        billingState: '',
+        billingZip: '',
+        billingCountry: 'India',
+
+        // Granular Shipping Address
+        shippingAttention: '',
+        shippingStreet: '',
+        shippingCity: '',
+        shippingState: '',
+        shippingZip: '',
+        shippingCountry: 'India',
+
         deliveryTimeline: '3-4 Weeks',
         terms: '1. 100% Advance Payment.\n2. Goods once sold cannot be returned.\n3. Unloading at site is client responsibility.',
         customerNotes: '',
@@ -35,7 +50,7 @@ export default function CreateOrderPage() {
         tdsOption: 'none',
         tdsRate: 0,
         lineItems: [
-            { name: '', description: '', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }
+            { name: '', description: '', hsnCode: '', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }
         ]
     });
 
@@ -53,8 +68,16 @@ export default function CreateOrderPage() {
             setFormData({
                 ...formData,
                 clientName: res.data.tradeName || formData.clientName,
-                billingAddress: res.data.address,
-                shippingAddress: res.data.address // Default to same
+                // Auto-populate Billing
+                billingStreet: res.data.address || '',
+                billingCity: res.data.city || '',
+                billingState: res.data.state || '',
+                billingZip: res.data.pincode || '',
+                // Copy to Shipping by default
+                shippingStreet: res.data.address || '',
+                shippingCity: res.data.city || '',
+                shippingState: res.data.state || '',
+                shippingZip: res.data.pincode || '',
             });
         } else {
             alert(res.error || 'GST Verification failed');
@@ -87,9 +110,16 @@ export default function CreateOrderPage() {
     const addLineItem = () => {
         setFormData({
             ...formData,
-            lineItems: [...formData.lineItems, { name: '', description: '', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }]
+            lineItems: [...formData.lineItems, { name: '', description: '', hsnCode: '', quantity: 1, rate: 0, discount: 0, taxRate: 18, taxId: '' }]
         });
     };
+
+    // ... (removeLineItem, updateLineItem, handleInputChange, calculateTotals remain mostly same)
+
+    // BUT we need to update the Address Section in the return JSX
+    // AND the Line Items Table to include HSN Code
+
+    // ... [Original removeLineItem, updateLineItem, handleInputChange, calculateTotals impl] ...
 
     const removeLineItem = (index: number) => {
         if (formData.lineItems.length === 1) return;
@@ -109,7 +139,6 @@ export default function CreateOrderPage() {
         setFormData((prev: any) => ({ ...prev, [name]: value }));
     };
 
-    // Calculation Logic
     const calculateTotals = () => {
         let subtotal = 0;
         let totalTax = 0;
@@ -129,7 +158,6 @@ export default function CreateOrderPage() {
         const netBeforeAdjustments = subtotal - totalDiscount + totalTax + Number(formData.shippingCharges);
         let finalTotal = netBeforeAdjustments + Number(formData.adjustment);
 
-        // TDS/TCS Adjustment
         if (formData.tdsOption === 'tds') {
             finalTotal -= (subtotal - totalDiscount) * (formData.tdsRate / 100);
         } else if (formData.tdsOption === 'tcs') {
@@ -147,8 +175,14 @@ export default function CreateOrderPage() {
         setGeneratedLink(null);
         setGeneratedOrderId(null);
 
+        // Construct composite address for the simple view/backend compatibility
+        const billingAddressComposite = `${formData.billingStreet}, ${formData.billingCity}, ${formData.billingState} - ${formData.billingZip}`;
+        const shippingAddressComposite = `${formData.shippingStreet}, ${formData.shippingCity}, ${formData.shippingState} - ${formData.shippingZip}`;
+
         const data = {
             ...formData,
+            billingAddress: billingAddressComposite, // Keep valid for PDF
+            shippingAddress: shippingAddressComposite, // Keep valid for PDF
             amount: finalTotal,
         };
 
@@ -167,7 +201,7 @@ export default function CreateOrderPage() {
     return (
         <div className="min-h-screen bg-[#fcfaf9] p-4 md:p-8 font-sans">
             <div className="max-w-7xl mx-auto">
-                {/* Header Area */}
+                {/* Header ... */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
                         <h1 className="text-4xl font-serif text-[#2a1e16] tracking-tight">Generate Professional Invoice</h1>
@@ -184,7 +218,6 @@ export default function CreateOrderPage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    {/* LEFT PANEL: INPUT FIELDS (8 cols) */}
                     <div className="lg:col-span-8 space-y-8">
 
                         {/* 1. Client & GST Section */}
@@ -257,13 +290,36 @@ export default function CreateOrderPage() {
                                     </div>
                                 </div>
 
-                                <div className="md:col-span-1">
-                                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Billing Address</label>
-                                    <textarea name="billingAddress" rows={4} value={formData.billingAddress} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 text-sm leading-relaxed" placeholder="Complete registered office address..." />
+                                {/* GRANULAR BILLING ADDRESS */}
+                                <div className="md:col-span-1 bg-gray-50/50 p-4 rounded-2xl space-y-3">
+                                    <h4 className="text-xs font-bold text-[#2A1E16] flex items-center gap-2">
+                                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                                        Billing Address
+                                    </h4>
+                                    <input name="billingAttention" value={formData.billingAttention} onChange={handleInputChange} placeholder="Attention (Optional)" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                    <textarea name="billingStreet" value={formData.billingStreet} onChange={handleInputChange} placeholder="Street / Area" rows={2} className="w-full p-2 text-sm border border-gray-200 rounded-lg resize-none" />
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <input name="billingCity" value={formData.billingCity} onChange={handleInputChange} placeholder="City" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                        <input name="billingZip" value={formData.billingZip} onChange={handleInputChange} placeholder="Zip Code" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                    </div>
+                                    <input name="billingState" value={formData.billingState} onChange={handleInputChange} placeholder="State" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                    <input name="billingCountry" value={formData.billingCountry} onChange={handleInputChange} placeholder="Country" className="w-full p-2 text-sm border border-gray-200 rounded-lg bg-gray-100" readOnly />
                                 </div>
-                                <div className="md:col-span-1">
-                                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Shipping Address</label>
-                                    <textarea name="shippingAddress" rows={4} value={formData.shippingAddress} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 text-sm leading-relaxed" placeholder="Project delivery site address..." />
+
+                                {/* GRANULAR SHIPPING ADDRESS */}
+                                <div className="md:col-span-1 bg-gray-50/50 p-4 rounded-2xl space-y-3">
+                                    <h4 className="text-xs font-bold text-[#2A1E16] flex items-center gap-2">
+                                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
+                                        Shipping Address
+                                    </h4>
+                                    <input name="shippingAttention" value={formData.shippingAttention} onChange={handleInputChange} placeholder="Attention (Optional)" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                    <textarea name="shippingStreet" value={formData.shippingStreet} onChange={handleInputChange} placeholder="Street / Area" rows={2} className="w-full p-2 text-sm border border-gray-200 rounded-lg resize-none" />
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <input name="shippingCity" value={formData.shippingCity} onChange={handleInputChange} placeholder="City" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                        <input name="shippingZip" value={formData.shippingZip} onChange={handleInputChange} placeholder="Zip Code" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                    </div>
+                                    <input name="shippingState" value={formData.shippingState} onChange={handleInputChange} placeholder="State" className="w-full p-2 text-sm border border-gray-200 rounded-lg" />
+                                    <input name="shippingCountry" value={formData.shippingCountry} onChange={handleInputChange} placeholder="Country" className="w-full p-2 text-sm border border-gray-200 rounded-lg bg-gray-100" readOnly />
                                 </div>
                             </div>
                         </div>
@@ -280,78 +336,105 @@ export default function CreateOrderPage() {
                                 </button>
                             </div>
 
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
+                            <div className="overflow-x-auto custom-scrollbar pb-4">
+                                <table className="w-full text-sm min-w-[1000px]">
                                     <thead className="bg-[#fcfaf9] text-gray-400 font-bold text-[10px] uppercase tracking-widest border-b border-gray-50">
                                         <tr>
-                                            <th className="px-8 py-4 text-left">Item / Service Name</th>
-                                            <th className="px-4 py-4 text-center">Qty</th>
-                                            <th className="px-4 py-4 text-left">Rate (₹)</th>
-                                            <th className="px-4 py-4 text-left">Disc %</th>
-                                            <th className="px-4 py-4 text-left">Tax %</th>
-                                            <th className="px-4 py-4 text-right">Amount</th>
-                                            <th className="px-4 py-4"></th>
+                                            <th className="px-6 py-6 text-left w-[30%]">Item Details</th>
+                                            <th className="px-4 py-6 text-left w-[10%]">HSN/SAC</th>
+                                            <th className="px-4 py-6 text-center w-[10%]">Qty</th>
+                                            <th className="px-4 py-6 text-left w-[15%]">Rate (₹)</th>
+                                            <th className="px-4 py-6 text-left w-[10%]">Disc %</th>
+                                            <th className="px-4 py-6 text-left w-[10%]">Tax %</th>
+                                            <th className="px-6 py-6 text-right w-[15%]">Amount</th>
+                                            <th className="px-4 py-6 w-[3%]"></th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
                                         {formData.lineItems.map((item: any, idx: number) => (
                                             <tr key={idx} className="group hover:bg-gray-50/50 transition-colors">
-                                                <td className="px-8 py-4">
+                                                <td className="px-6 py-6 align-top">
+                                                    <div className="space-y-3">
+                                                        <input
+                                                            value={item.name}
+                                                            onChange={(e) => updateLineItem(idx, 'name', e.target.value)}
+                                                            placeholder="Item Name / Service Title"
+                                                            className="w-full p-3 font-bold text-gray-800 border-b border-gray-100 focus:border-[var(--terracotta)] bg-transparent outline-none transition-all placeholder:font-normal"
+                                                        />
+                                                        <textarea
+                                                            value={item.description}
+                                                            onChange={(e) => updateLineItem(idx, 'description', e.target.value)}
+                                                            placeholder="Add specific details or description here..."
+                                                            rows={2}
+                                                            className="w-full p-2 text-xs text-gray-500 bg-gray-50/30 rounded-lg border border-transparent focus:bg-white focus:border-gray-100 outline-none resize-none transition-all"
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 py-6 align-top">
                                                     <input
-                                                        value={item.name}
-                                                        onChange={(e) => updateLineItem(idx, 'name', e.target.value)}
-                                                        placeholder="Item title"
-                                                        className="w-full p-2 border border-transparent focus:border-gray-100 rounded-lg bg-transparent"
-                                                    />
-                                                    <input
-                                                        value={item.description}
-                                                        onChange={(e) => updateLineItem(idx, 'description', e.target.value)}
-                                                        placeholder="Quick description..."
-                                                        className="w-full p-1 text-[10px] text-gray-400 bg-transparent outline-none italic"
+                                                        value={item.hsnCode}
+                                                        onChange={(e) => updateLineItem(idx, 'hsnCode', e.target.value)}
+                                                        placeholder="123456"
+                                                        className="w-full p-3 font-mono text-xs bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
                                                     />
                                                 </td>
-                                                <td className="px-4 py-4 w-20">
+                                                <td className="px-4 py-6 align-top">
                                                     <input
                                                         type="number"
                                                         value={item.quantity}
                                                         onChange={(e) => updateLineItem(idx, 'quantity', Number(e.target.value))}
-                                                        className="w-full p-2 text-center border-b border-gray-100 bg-transparent font-medium"
+                                                        className="w-full p-3 text-center font-bold bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
                                                     />
                                                 </td>
-                                                <td className="px-4 py-4 w-32">
-                                                    <input
-                                                        type="number"
-                                                        value={item.rate}
-                                                        onChange={(e) => updateLineItem(idx, 'rate', Number(e.target.value))}
-                                                        className="w-full p-2 border-b border-gray-100 bg-transparent font-mono"
-                                                    />
+                                                <td className="px-4 py-6 align-top">
+                                                    <div className="relative">
+                                                        <span className="absolute left-3 top-3 text-gray-400 font-light">₹</span>
+                                                        <input
+                                                            type="number"
+                                                            value={item.rate}
+                                                            onChange={(e) => updateLineItem(idx, 'rate', Number(e.target.value))}
+                                                            className="w-full p-3 pl-7 font-mono bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
+                                                        />
+                                                    </div>
                                                 </td>
-                                                <td className="px-4 py-4 w-16 text-gray-400">
-                                                    <input
-                                                        type="number"
-                                                        value={item.discount}
-                                                        onChange={(e) => updateLineItem(idx, 'discount', Number(e.target.value))}
-                                                        className="w-full p-2 border-b border-gray-100 bg-transparent text-xs"
-                                                    />
+                                                <td className="px-4 py-6 align-top">
+                                                    <div className="relative">
+                                                        <input
+                                                            type="number"
+                                                            value={item.discount}
+                                                            onChange={(e) => updateLineItem(idx, 'discount', Number(e.target.value))}
+                                                            className="w-full p-3 text-center bg-white border border-gray-100 rounded-xl focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none transition-all"
+                                                        />
+                                                        <span className="absolute right-3 top-3 text-gray-400 text-xs">%</span>
+                                                    </div>
                                                 </td>
-                                                <td className="px-4 py-4 w-20 text-gray-400">
+                                                <td className="px-4 py-6 align-top">
                                                     <select
                                                         value={item.taxRate}
                                                         onChange={(e) => updateLineItem(idx, 'taxRate', Number(e.target.value))}
-                                                        className="w-full p-1 bg-transparent text-xs"
+                                                        className="w-full p-3 bg-white border border-gray-100 rounded-xl text-xs font-bold text-gray-600 focus:ring-2 focus:ring-[var(--terracotta)]/10 outline-none cursor-pointer appearance-none"
                                                     >
-                                                        <option value={0}>0%</option>
-                                                        <option value={5}>5%</option>
-                                                        <option value={12}>12%</option>
-                                                        <option value={18}>18%</option>
-                                                        <option value={28}>28%</option>
+                                                        <option value={0}>GST 0%</option>
+                                                        <option value={5}>GST 5%</option>
+                                                        <option value={12}>GST 12%</option>
+                                                        <option value={18}>GST 18%</option>
+                                                        <option value={28}>GST 28%</option>
                                                     </select>
                                                 </td>
-                                                <td className="px-4 py-4 text-right font-bold text-[#2a1e16]">
-                                                    ₹{((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                <td className="px-6 py-6 align-top text-right">
+                                                    <div className="p-3 font-bold text-lg text-[#2a1e16] bg-gray-50/50 rounded-xl border border-transparent group-hover:bg-white group-hover:border-gray-100 transition-all">
+                                                        ₹{((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                                    </div>
                                                 </td>
-                                                <td className="px-4 py-4 text-center">
-                                                    <button type="button" onClick={() => removeLineItem(idx)} className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">✕</button>
+                                                <td className="px-4 py-6 align-middle text-center">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeLineItem(idx)}
+                                                        className="w-8 h-8 flex items-center justify-center rounded-full text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                                                        title="Remove Item"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -360,7 +443,7 @@ export default function CreateOrderPage() {
                             </div>
                         </div>
 
-                        {/* 3. Notes & Logistics */}
+                        {/* 3. Notes ... */}
                         <div className="bg-white p-8 rounded-3xl shadow-xl shadow-gray-200/40 border border-gray-100 space-y-6">
                             <div className="flex items-center gap-3">
                                 <span className="w-8 h-8 bg-gray-100 text-[#2a1e16] rounded-lg flex items-center justify-center font-bold text-sm">03</span>

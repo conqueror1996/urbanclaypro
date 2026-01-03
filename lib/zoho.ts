@@ -226,8 +226,24 @@ export async function createZohoInvoice(orderData: any) {
                 gst_no: orderData.gstNumber,
                 pan_no: orderData.panNumber,
                 contact_type: 'customer',
-                billing_address: { address: orderData.billingAddress },
-                shipping_address: { address: orderData.shippingAddress }
+                billing_address: {
+                    attention: orderData.billingAttention || '',
+                    address: orderData.billingStreet,
+                    city: orderData.billingCity,
+                    state: orderData.billingState,
+                    zip: orderData.billingZip,
+                    country: orderData.billingCountry,
+                    phone: orderData.clientPhone
+                },
+                shipping_address: {
+                    attention: orderData.shippingAttention || '',
+                    address: orderData.shippingStreet,
+                    city: orderData.shippingCity,
+                    state: orderData.shippingState,
+                    zip: orderData.shippingZip,
+                    country: orderData.shippingCountry,
+                    phone: orderData.clientPhone
+                }
             };
 
             const contactResponse = await fetch(`https://${booksDomain}/api/v3/contacts?organization_id=${orgId}`, {
@@ -253,10 +269,12 @@ export async function createZohoInvoice(orderData: any) {
             reference_number: orderData.orderId,
             date: new Date().toISOString().split('T')[0],
             due_date: new Date().toISOString().split('T')[0],
+            place_of_supply: orderData.billingState, // Important for GST
             line_items: orderData.lineItems?.map((item: any) => {
                 const lineItem: any = {
                     name: item.name,
                     description: item.description,
+                    hsn_or_sac: item.hsnCode, // Pass HSN
                     rate: item.rate,
                     quantity: item.quantity,
                     discount: `${item.discount}%`
