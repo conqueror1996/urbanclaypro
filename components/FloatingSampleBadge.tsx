@@ -4,9 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useSampleBox } from '@/context/SampleContext';
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { usePathname } from 'next/navigation';
+
 export default function FloatingSampleBadge() {
     const { box, setBoxOpen } = useSampleBox();
     const [isVisible, setIsVisible] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const checkVisibility = () => {
@@ -18,6 +21,8 @@ export default function FloatingSampleBadge() {
 
         return () => window.removeEventListener('scroll', checkVisibility);
     }, [box.length]);
+
+    if (pathname?.startsWith('/pay')) return null;
 
     return (
         <AnimatePresence>

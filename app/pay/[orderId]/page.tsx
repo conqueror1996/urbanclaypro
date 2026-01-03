@@ -2,8 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { getPaymentLinkDetails } from '@/app/actions/payment-link';
 import PaymentPageClient from './payment-client';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import Image from 'next/image';
 
 export default async function PaymentPage({ params }: { params: Promise<{ orderId: string }> }) {
     const { orderId } = await params;
@@ -40,19 +39,28 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
     const { subtotal, totalDiscount, totalTax, settlementAdjust } = calculateTotals();
 
     return (
-        <div className="bg-[#1a1512] min-h-screen">
-            <Header />
-            <main className="pt-32 pb-20 px-4">
-                <div className="max-w-4xl mx-auto bg-white rounded-3xl overflow-hidden shadow-2xl">
+        <div className="bg-[#f0ece9] min-h-screen flex flex-col font-sans text-[#1a1512]">
+            {/* Minimal Header */}
+            <header className="w-full py-6 flex justify-center items-center bg-[#2A1E16] shadow-sm">
+                <div className="relative w-32 h-10">
+                    <Image
+                        src="/urbanclay-logo.png"
+                        alt="UrbanClay"
+                        fill
+                        className="object-contain brightness-0 invert"
+                        priority
+                    />
+                </div>
+            </header>
+
+            <main className="flex-1 w-full max-w-4xl mx-auto p-4 md:p-8">
+                <div className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
 
                     {/* Official Banner */}
-                    <div className="bg-[#2A1E16] p-10 text-center text-white relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-full bg-[url('/noise.png')] opacity-10"></div>
-                        <div className="relative z-10">
-                            <p className="text-[var(--terracotta)] font-bold uppercase tracking-[0.3em] text-[10px] mb-3">Authentic Secure Invoice</p>
-                            <h1 className="text-4xl font-serif">Settlement & Disbursement</h1>
-                            <p className="opacity-40 text-[10px] mt-4 font-mono tracking-widest uppercase">Token ID: {order.orderId}</p>
-                        </div>
+                    <div className="bg-white p-10 pb-0 text-center relative overflow-hidden text-[#2A1E16]">
+                        <p className="text-[var(--terracotta)] font-bold uppercase tracking-[0.3em] text-[10px] mb-3">Secure Payment Portal</p>
+                        <h1 className="text-4xl font-serif font-bold">Tax Invoice & Settlement</h1>
+                        <p className="text-gray-400 text-[10px] mt-2 font-mono tracking-widest uppercase">REF: {order.orderId}</p>
                     </div>
 
                     <div className="p-8 md:p-14">
@@ -224,7 +232,11 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                     </div>
                 </div>
             </main>
-            <Footer />
+
+            {/* Minimal Footer */}
+            <footer className="text-center py-8 text-[10px] text-gray-400 uppercase tracking-widest">
+                &copy; {new Date().getFullYear()} UrbanClay Architecture Pvt Ltd. All rights reserved.
+            </footer>
         </div>
     );
 }

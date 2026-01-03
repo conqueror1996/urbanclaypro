@@ -20,7 +20,7 @@ export default function SmartExitPopup() {
 
     useEffect(() => {
         // Don't run on dashboard/studio routes
-        if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/studio')) {
+        if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/studio') || pathname?.startsWith('/pay')) {
             return;
         }
 
@@ -90,7 +90,7 @@ export default function SmartExitPopup() {
     // Don't render anything if:
     // 1. Not visible
     // 2. On dashboard/studio routes (double safety)
-    if (!isVisible || pathname?.startsWith('/dashboard') || pathname?.startsWith('/studio')) return null;
+    if (!isVisible || pathname?.startsWith('/dashboard') || pathname?.startsWith('/studio') || pathname?.startsWith('/pay')) return null;
 
     // Determine Mode: 'AbandonedCart' vs 'LeadMagnet'
     const mode = box.length > 0 ? 'AbandonedCart' : 'LeadMagnet';
