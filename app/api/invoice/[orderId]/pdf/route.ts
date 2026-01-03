@@ -132,20 +132,20 @@ export async function GET(
             body: tableData,
             theme: 'plain', // Cleaner premium look vs grid
             headStyles: {
-                fillColor: [245, 245, 245], // Very light grey header
+                fillColor: [248, 248, 248],
                 textColor: [100, 100, 100],
                 fontStyle: 'bold',
                 fontSize: 9,
                 halign: 'left',
-                cellPadding: 8
+                cellPadding: { top: 4, bottom: 4, left: 2, right: 2 }
             },
             bodyStyles: {
                 textColor: [60, 60, 60],
                 fontSize: 9,
-                cellPadding: 8,
+                cellPadding: { top: 4, bottom: 4, left: 2, right: 2 },
                 valign: 'top',
                 lineColor: [240, 240, 240],
-                lineWidth: { bottom: 0.1 } // Only bottom border
+                lineWidth: { bottom: 0.1 }
             },
             columnStyles: {
                 0: { cellWidth: 85 }, // Description
