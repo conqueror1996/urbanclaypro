@@ -8,7 +8,11 @@ export async function GET() {
     // Create detailed product list with URLs
     const productList = products.map(p => {
         const url = `https://claytile.in/products/${p.category?.slug || 'collection'}/${p.slug}`;
-        return `- [${p.title}](${url}): ${p.description}. Specifications: ${p.specifications?.map(s => `${s.label}: ${s.value}`).join(', ')}`;
+        const specs = p.specs ? Object.entries(p.specs)
+            .filter(([_, value]) => value) // Remove empty values
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(', ') : '';
+        return `- [${p.title}](${url}): ${p.description}. Specifications: ${specs}`;
     }).join('\n');
 
     // Recent Projects
