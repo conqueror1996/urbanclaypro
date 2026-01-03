@@ -248,7 +248,7 @@ export default function ZohoSetupPage() {
                                             <li>Go to <a href="https://api-console.zoho.in" target="_blank" className="underline font-bold">Zoho API Console</a>.</li>
                                             <li>Create a "Server-based Application".</li>
                                             <li>Set Homepage URL: <code>{typeof window !== 'undefined' ? window.location.origin : '...'}</code></li>
-                                            <li>Set Authorized Redirect URI: <code>{typeof window !== 'undefined' ? `${window.location.origin}/zoho-setup` : '...'}</code></li>
+                                            <li>Set Authorized Redirect URI: <code>{typeof window !== 'undefined' ? `${window.location.origin}/zoho-setup` : 'https://claytile.in/zoho-setup'}</code> (Add both localhost:3000/... and your domain).</li>
                                             <li>Copy Client ID and Secret below.</li>
                                         </ol>
                                     </div>
