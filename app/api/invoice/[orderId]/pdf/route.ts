@@ -30,51 +30,48 @@ export async function GET(
         const pageWidth = doc.internal.pageSize.width;
 
         // --- HEADER ---
-        // Logo
+        // Logo (Top Left)
         try {
             const logoPath = path.join(process.cwd(), 'public/urbanclay-logo.png');
             if (fs.existsSync(logoPath)) {
                 const logoBase64 = fs.readFileSync(logoPath).toString('base64');
-                doc.addImage(logoBase64, 'PNG', pageWidth - 50, 10, 35, 35); // Top Right Logo
+                // Use a fixed width and reasonable height, or use 'alias' for auto if supported, but typically w/h needed.
+                // Assuming logo is roughly square or vertical. Let's try 30x30 roughly or adjust based on common shape. 
+                // Creating a clean look.
+                doc.addImage(logoBase64, 'PNG', 15, 10, 25, 25);
             }
         } catch (e) {
             console.error("Logo load failed", e);
         }
 
-        // Brand Name (Top Left)
-        doc.setFont("times", "bold");
-        doc.setFontSize(26);
-        doc.setTextColor(42, 30, 22);
-        doc.text("UrbanClay", 15, 25);
+        // We removed the Brand Name text on the left as requested.
 
-        // Tagline
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text("PREMIUM CLAY SOLUTIONS", 15, 30);
+        // Tagline (Removed as per instruction to remove "UrbanClay" text)
+        // doc.setFont("helvetica", "bold");
+        // doc.setFontSize(8);
+        // doc.setTextColor(150, 150, 150);
+        // doc.text("PREMIUM CLAY SOLUTIONS", 15, 30);
 
-        // Heading Label
+        // Heading Label (Top Right)
         const isPaid = order.status === 'paid';
         doc.setFont("helvetica", "bold");
         doc.setFontSize(22);
-        doc.setTextColor(isPaid ? 42 : 220, isPaid ? 30 : 220, isPaid ? 22 : 220); // Darker if Paid
-        // Position below logo on right, or center? 
-        // Standard: Right aligned below logo or similar
-        doc.text(isPaid ? "TAX INVOICE" : "PROFORMA", pageWidth - 15, 55, { align: 'right' });
+        doc.setTextColor(isPaid ? 42 : 220, isPaid ? 30 : 220, isPaid ? 22 : 220);
+        doc.text(isPaid ? "TAX INVOICE" : "PROFORMA", pageWidth - 15, 25, { align: 'right' });
 
         // Meta Info (Right Side, below label)
         doc.setFontSize(9);
         doc.setTextColor(100, 100, 100);
-        let metaY = 62;
+        let metaY = 32;
         doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, pageWidth - 15, metaY, { align: 'right' });
         doc.text(`${isPaid ? 'Invoice No' : 'Ref #'}: ${isPaid ? (order.zohoInvoiceNumber || order.orderId) : order.orderId}`, pageWidth - 15, metaY + 5, { align: 'right' });
         if (order.expiryDate) {
-            doc.setTextColor(220, 50, 50);
+            doc.setTextColor(220, 50, 50); // Red Color
             doc.text(`Valid Until: ${new Date(order.expiryDate).toLocaleDateString()}`, pageWidth - 15, metaY + 10, { align: 'right' });
         }
 
         // --- CLIENT DETAILS ---
-        const startY = 75;
+        const startY = 60; // Moved up slightly since logo is compact
 
         // Billed To
         doc.setFont("helvetica", "bold");
@@ -83,9 +80,9 @@ export async function GET(
         doc.text("BILLED TO", 15, startY);
 
         doc.setFont("times", "bold");
-        doc.setFontSize(12);
+        doc.setFontSize(14); // Slightly larger
         doc.setTextColor(42, 30, 22);
-        doc.text(order.clientName || "Valued Client", 15, startY + 6);
+        doc.text(order.clientName || "Valued Client", 15, startY + 7);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
@@ -94,10 +91,10 @@ export async function GET(
         // Construct Full Address Block
         const billingAddr = order.billingAddress || "";
         const addressLines = doc.splitTextToSize(billingAddr, 80);
-        doc.text(addressLines, 15, startY + 12);
+        doc.text(addressLines, 15, startY + 14);
 
         // Contact Info
-        let currentY = startY + 12 + (addressLines.length * 4) + 4;
+        let currentY = startY + 14 + (addressLines.length * 4) + 4;
         doc.setFontSize(9);
         if (order.clientEmail) doc.text(order.clientEmail, 15, currentY);
         if (order.clientPhone) doc.text(order.clientPhone, 15, currentY + 5);
@@ -108,41 +105,50 @@ export async function GET(
         }
 
         // --- TABLE ---
-        const tableY = Math.max(currentY + 20, 110); // Ensure header clearance
+        const tableY = Math.max(currentY + 25, 100);
 
         const tableData = order.lineItems.map((item: any) => {
-            // Description handling
-            const desc = item.description ? `\n${item.description}` : '';
+            // Explicitly putting description on new line if it exists
+            // We use 'content' object for cell
             return [
-                { content: item.name + desc, styles: { fontStyle: 'bold' } },
+                {
+                    content: item.name + (item.description ? `\n${item.description}` : ''),
+                    styles: {
+                        fontStyle: 'bold',
+                        textColor: [42, 30, 22]
+                    }
+                },
                 `${item.quantity} ${item.unit || 'pcs'}`,
-                `Rs. ${item.rate.toLocaleString('en-IN')}`, // Using 'Rs.' for reliability
+                `Rs. ${item.rate.toLocaleString('en-IN')}`,
                 `${item.discount}%`,
                 { content: `Rs. ${((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, styles: { halign: 'right' } }
             ];
         });
 
+        // @ts-ignore
         autoTable(doc, {
             startY: tableY,
             head: [['Item Details', 'Qty', 'Rate', 'Disc', 'Amount']],
             body: tableData,
-            theme: 'grid', // Use grid to separate items better
+            theme: 'plain', // Cleaner premium look vs grid
             headStyles: {
-                fillColor: [42, 30, 22],
-                textColor: [255, 255, 255],
+                fillColor: [245, 245, 245], // Very light grey header
+                textColor: [100, 100, 100],
                 fontStyle: 'bold',
                 fontSize: 9,
-                halign: 'left'
+                halign: 'left',
+                cellPadding: 8
             },
             bodyStyles: {
                 textColor: [60, 60, 60],
-                fontSize: 9,
-                cellPadding: 4,
+                fontSize: 10,
+                cellPadding: 8,
                 valign: 'top',
-                lineColor: [230, 230, 230]
+                lineColor: [240, 240, 240],
+                lineWidth: { bottom: 0.1 } // Only bottom border
             },
             columnStyles: {
-                0: { cellWidth: 80 }, // Wide for description
+                0: { cellWidth: 90 },
                 1: { halign: 'center', cellWidth: 20 },
                 2: { halign: 'right' },
                 3: { halign: 'center' },
@@ -222,14 +228,19 @@ export async function GET(
         doc.setFontSize(10);
         doc.text("Total Payable", rightAlign - 70, currentTotalsY, { align: 'right' });
 
-        // Terms...
+        // Terms
         if (order.terms) {
-            const termsY = Math.max(currentTotalsY + 20, finalY + 40); // ensure space
+            const termsY = currentTotalsY + 20;
             doc.setFont("helvetica", "bold");
             doc.setFontSize(8);
             doc.setTextColor(150, 150, 150);
-            doc.text("TERMS AND CONDITIONS", 15, termsY); // Moved terms lower ? May overlap if list is long?
-            // Actually finalY + 50 is safer.
+            doc.text("TERMS AND CONDITIONS", 15, termsY);
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(7);
+            doc.setTextColor(80, 80, 80);
+            const splitTerms = doc.splitTextToSize(order.terms, pageWidth - 30);
+            doc.text(splitTerms, 15, termsY + 5);
         }
 
         // ... (Buffer generation same as before)
@@ -238,7 +249,7 @@ export async function GET(
         return new NextResponse(pdfBuffer, {
             headers: {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename="Proforma_${orderId}.pdf"`
+                'Content-Disposition': `attachment; filename="Invoice_${orderId}.pdf"`
             }
         });
 
