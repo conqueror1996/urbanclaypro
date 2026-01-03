@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import React, { useEffect, useState, useCallback } from 'react';
+import { getDashboardData } from '@/app/actions/dashboard-data';
 import Link from 'next/link';
-import { Plus, Link as LinkIcon, PenTool, Activity, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Plus, Link as LinkIcon, PenTool, Activity, RefreshCw } from 'lucide-react';
 import TrafficPulse from '@/components/TrafficPulse';
 import MetadataHealthWidget from '@/components/dashboard/MetadataHealthWidget';
 
@@ -21,46 +21,32 @@ export default function DashboardPage() {
     });
     const [recentLeads, setRecentLeads] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+    const loadData = useCallback(async (showLoading = false) => {
+        if (showLoading) setIsRefreshing(true);
+        const res = await getDashboardData();
+        if (res.success && res.stats) {
+            setStats(res.stats);
+            setRecentLeads(res.recentLeads);
+            setLastUpdated(new Date());
+        }
+        setLoading(false);
+        setIsRefreshing(false);
+    }, []);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Fetch all leads to update stats
-                const query = `{
-                    "leads": *[_type == "lead"] | order(submittedAt desc),
-                    "vendorCount": count(*[_type == "vendor"]),
-                    "labourCount": count(*[_type == "labour"]),
-                    "stockCount": count(*[_type == "stock"]),
-                    "disputeCount": count(*[_type == "dispute" && status == "open"]),
-                    "feedback": *[_type == "feedback"] { workmanshipRating, materialRating, serviceRating }
-                }`;
-                const data = await client.fetch(query);
-                const leads = data.leads;
+        loadData(); // Initial Load
 
-                setStats({
-                    total: leads.length,
-                    serious: leads.filter((l: any) => l.isSerious).length,
-                    new: leads.filter((l: any) => l.status === 'new').length,
-                    converted: leads.filter((l: any) => l.status === 'converted').length,
-                    vendors: data.vendorCount,
-                    labours: data.labourCount,
-                    stocks: data.stockCount,
-                    disputes: data.disputeCount,
-                    avgRating: data.feedback?.length
-                        ? (data.feedback.reduce((acc: number, curr: any) => acc + ((curr.workmanshipRating + curr.materialRating + curr.serviceRating) / 3), 0) / data.feedback.length).toFixed(1)
-                        : '0.0'
-                });
+        // "Lazy Load" / Live Polling effect as requested for better visibility
+        const interval = setInterval(() => {
+            loadData(true);
+        }, 15000); // Check every 15s for new leads
 
-                setRecentLeads(leads.slice(0, 5));
-            } catch (error) {
-                console.error('Failed to fetch dashboard data', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        return () => clearInterval(interval);
+    }, [loadData]);
 
-        fetchData();
-    }, []);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -82,13 +68,33 @@ export default function DashboardPage() {
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex justify-between items-end">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
                     <h2 className="text-3xl font-serif text-[var(--ink)]">Overview</h2>
-                    <p className="text-gray-500 mt-1">Welcome back, Admin. Here's your real-time performance.</p>
+                    <div className="flex items-center gap-3 mt-1">
+                        <p className="text-gray-500 text-sm">Real-time performance metrics.</p>
+                        {isRefreshing && (
+                            <span className="text-[10px] bg-[var(--terracotta)]/10 text-[var(--terracotta)] px-2 py-0.5 rounded-full font-bold animate-pulse flex items-center gap-1">
+                                <span className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></span>
+                                Syncing...
+                            </span>
+                        )}
+                        {!isRefreshing && lastUpdated && (
+                            <span className="text-[10px] text-gray-300">
+                                Updated {lastUpdated.toLocaleTimeString()}
+                            </span>
+                        )}
+                    </div>
                 </div>
                 <div className="flex gap-3">
-                    <button onClick={() => window.location.reload()} className="bg-[var(--terracotta)] text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md shadow-orange-900/10 hover:bg-[#a85638] transition-colors">Refresh Data</button>
+                    <button
+                        onClick={() => loadData(true)}
+                        className="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-lg text-sm font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center gap-2"
+                        disabled={isRefreshing}
+                    >
+                        <RefreshCw size={14} className={isRefreshing ? 'animate-spin' : ''} />
+                        Refresh
+                    </button>
                 </div>
             </div>
 
