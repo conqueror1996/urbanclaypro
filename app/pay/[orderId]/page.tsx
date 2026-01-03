@@ -180,6 +180,18 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                         {/* Action Component */}
                         <div className="mt-16">
                             <PaymentPageClient order={order} />
+
+                            {order.status !== 'paid' && (
+                                <div className="mt-8 text-center">
+                                    <a
+                                        href={`/api/invoice/${order.orderId}/pdf`}
+                                        target="_blank"
+                                        className="text-xs font-bold text-gray-400 hover:text-[var(--terracotta)] underline decoration-dotted underline-offset-4 transition-colors uppercase tracking-widest"
+                                    >
+                                        Download Proforma Invoice (PDF)
+                                    </a>
+                                </div>
+                            )}
                         </div>
 
                         <div className="mt-12 text-center">

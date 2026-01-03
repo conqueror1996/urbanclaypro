@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { client } from '@/sanity/lib/client';
 import Link from 'next/link';
+import { Plus, Link as LinkIcon, PenTool, Activity, AlertTriangle, CheckCircle } from 'lucide-react';
 import TrafficPulse from '@/components/TrafficPulse';
 import MetadataHealthWidget from '@/components/dashboard/MetadataHealthWidget';
 
@@ -97,24 +98,61 @@ export default function DashboardPage() {
             </div>
 
             {/* QUICK ACTIONS ROW */}
-            <div className="bg-white/40 border border-dashed border-[var(--terracotta)]/30 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-[var(--terracotta)] text-white rounded-xl flex items-center justify-center shadow-lg shadow-orange-900/10">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-[var(--ink)]">Quick Operations</h4>
-                        <p className="text-xs text-gray-500">Need to lock in a deal? Generate a link now.</p>
-                    </div>
-                </div>
-                <div className="flex gap-3 w-full md:w-auto">
+            {/* QUICK ACTIONS GRID */}
+            <div>
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Quick Operations</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <Link
                         href="/dashboard/orders/create"
-                        className="flex-1 md:flex-none bg-[#2A1E16] text-white px-8 py-3 rounded-xl font-bold text-sm hover:bg-black transition-all flex items-center justify-center gap-2 shadow-xl"
+                        className="group bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-[var(--terracotta)]/30 hover:shadow-md transition-all flex flex-col gap-3"
                     >
-                        <span>Generate Payment Link</span>
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                        <div className="w-10 h-10 bg-[var(--terracotta)]/10 text-[var(--terracotta)] rounded-lg flex items-center justify-center group-hover:bg-[var(--terracotta)] group-hover:text-white transition-colors">
+                            <LinkIcon className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <span className="font-bold text-[var(--ink)] block text-sm">Payment Link</span>
+                            <span className="text-[10px] text-gray-400">Create & Share</span>
+                        </div>
                     </Link>
+
+                    <Link
+                        href="/dashboard/products"
+                        className="group bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-[var(--terracotta)]/30 hover:shadow-md transition-all flex flex-col gap-3"
+                    >
+                        <div className="w-10 h-10 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                            <Plus className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <span className="font-bold text-[var(--ink)] block text-sm">Add Product</span>
+                            <span className="text-[10px] text-gray-400">Update Catalog</span>
+                        </div>
+                    </Link>
+
+                    <Link
+                        href="/dashboard/campaigns"
+                        className="group bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:border-[var(--terracotta)]/30 hover:shadow-md transition-all flex flex-col gap-3"
+                    >
+                        <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                            <PenTool className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <span className="font-bold text-[var(--ink)] block text-sm">New Campaign</span>
+                            <span className="text-[10px] text-gray-400">Marketing Blast</span>
+                        </div>
+                    </Link>
+
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-3">
+                        <div className="w-10 h-10 bg-gray-100 text-gray-500 rounded-lg flex items-center justify-center">
+                            <Activity className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <span className="font-bold text-[var(--ink)] block text-sm">System Status</span>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span className="text-[10px] text-emerald-600 font-bold">All Systems Operational</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

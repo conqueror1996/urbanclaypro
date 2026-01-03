@@ -106,6 +106,11 @@ export default function ZohoSetupPage() {
                                             </div>
                                         </div>
                                     )}
+                                    {result.error && (
+                                        <div className="p-3 bg-red-100 text-red-800 rounded-lg text-sm font-mono break-all border border-red-200">
+                                            {result.error}
+                                        </div>
+                                    )}
                                     <div className="text-gray-600 text-sm italic">
                                         {result.hint || 'Recommendation: Double check if your ZOHO_DOMAIN in Vercel ends with .in or .com.'}
                                     </div>

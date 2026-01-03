@@ -19,7 +19,11 @@ async function getAccessToken(): Promise<{ token: string | null; error?: string 
     }
 
     try {
-        const accountDomain = config.domain.replace('www.', 'accounts.');
+        // Determine accounts domain robustly
+        let accountDomain = 'accounts.zoho.com';
+        if (config.domain.includes('.in')) accountDomain = 'accounts.zoho.in';
+        if (config.domain.includes('.eu')) accountDomain = 'accounts.zoho.eu';
+
         const url = `https://${accountDomain}/oauth/v2/token`;
 
         const response = await fetch(url, {
@@ -31,8 +35,7 @@ async function getAccessToken(): Promise<{ token: string | null; error?: string 
                 refresh_token: config.refreshToken,
                 client_id: config.clientId,
                 client_secret: config.clientSecret,
-                grant_type: 'refresh_token',
-                redirect_uri: `https://${config.domain.includes('in') ? 'claytile.in' : 'urbanclay.in'}`
+                grant_type: 'refresh_token'
             })
         });
 

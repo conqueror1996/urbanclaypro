@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function CreateOrderPage() {
     const [loading, setLoading] = useState(false);
     const [generatedLink, setGeneratedLink] = useState<string | null>(null);
+    const [generatedOrderId, setGeneratedOrderId] = useState<string | null>(null);
     const [products, setProducts] = useState<any[]>([]);
     const [showPreview, setShowPreview] = useState(false);
 
@@ -144,6 +145,7 @@ export default function CreateOrderPage() {
         e.preventDefault();
         setLoading(true);
         setGeneratedLink(null);
+        setGeneratedOrderId(null);
 
         const data = {
             ...formData,
@@ -156,6 +158,7 @@ export default function CreateOrderPage() {
         if (result.success) {
             const origin = typeof window !== 'undefined' ? window.location.origin : 'https://claytile.in';
             setGeneratedLink(`${origin}${result.linkPath}`);
+            setGeneratedOrderId(result.orderId || '');
         } else {
             alert('Failed to generate secure link');
         }
@@ -473,6 +476,16 @@ export default function CreateOrderPage() {
                                     >
                                         Share on WhatsApp
                                     </a>
+
+                                    {generatedOrderId && (
+                                        <a
+                                            href={`/api/invoice/${generatedOrderId}/pdf`}
+                                            target="_blank"
+                                            className="w-full py-3 bg-[var(--ink)] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-black transition-all text-xs border border-white/10"
+                                        >
+                                            <span className="text-lg">📄</span> Download PDF
+                                        </a>
+                                    )}
                                 </motion.div>
                             )}
                         </div>

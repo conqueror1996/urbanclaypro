@@ -8,15 +8,29 @@ import {
     ChevronLeft, ChevronRight, LayoutDashboard, Target, Users,
     Receipt, Package, ShoppingBag, RotateCcw, Activity,
     Truck, Cpu, PenTool, Globe, BookOpen, MessageSquare,
-    LayoutTemplate, LogOut
+    LayoutTemplate, LogOut, Search
 } from 'lucide-react';
+import CommandPalette from '@/components/dashboard/CommandPalette';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isCommandOpen, setIsCommandOpen] = useState(false);
     const pathname = usePathname();
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                setIsCommandOpen(prev => !prev);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && localStorage.getItem('uc_admin_auth') === 'true') {
@@ -139,16 +153,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
                     <span className="font-serif text-lg tracking-wide">UrbanClay</span>
                 </div>
-                <button
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="p-2 text-white/80 hover:text-white"
-                >
-                    {isMobileMenuOpen ? (
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                    ) : (
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-                    )}
-                </button>
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => setIsCommandOpen(true)}
+                        className="text-white/80 hover:text-white"
+                    >
+                        <Search className="w-5 h-5" />
+                    </button>
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="text-white/80 hover:text-white"
+                    >
+                        {isMobileMenuOpen ? (
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        ) : (
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        )}
+                    </button>
+                </div>
             </div>
 
             {/* Sidebar Overlay for Mobile */}
@@ -195,10 +217,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
 
                     <div className="flex-1 overflow-y-auto space-y-8 pr-2 scrollbar-hide mask-fade-bottom">
+                        {/* SEARCH TRIGGER */}
+                        <div className="px-2 mb-6">
+                            <button
+                                onClick={() => setIsCommandOpen(true)}
+                                className={`
+                                    w-full bg-[#2a221f] hover:bg-[#3d322d] border border-white/5 rounded-xl flex items-center gap-3 transition-all group
+                                    ${isCollapsed ? 'justify-center p-3' : 'px-4 py-3'}
+                                `}
+                            >
+                                <Search className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                                {(!isCollapsed || isMobileMenuOpen) && (
+                                    <div className="flex flex-1 justify-between items-center text-sm">
+                                        <span className="text-gray-400 group-hover:text-gray-200">Search...</span>
+                                        <div className="flex gap-1">
+                                            <span className="bg-white/10 text-gray-500 rounded px-1.5 text-[10px] font-mono">⌘</span>
+                                            <span className="bg-white/10 text-gray-500 rounded px-1.5 text-[10px] font-mono">K</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </button>
+                        </div>
+
                         {NAV_GROUPS.map((group, idx) => (
                             <div key={group.title}>
                                 {(!isCollapsed || isMobileMenuOpen) && (
-                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8c7b70] mb-3 px-2">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-3 px-2">
                                         {group.title}
                                     </h3>
                                 )}
@@ -216,13 +260,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                                     rounded-xl
                                                     ${isActive
                                                         ? 'bg-gradient-to-r from-[#b45a3c]/20 to-transparent text-[#b45a3c]'
-                                                        : 'text-[#8c7b70] hover:bg-white/5 hover:text-[#e9e2da]'
+                                                        : 'text-white/60 hover:bg-white/5 hover:text-white'
                                                     }
                                                 `}
                                                 title={isCollapsed ? item.label : ''}
                                             >
                                                 <div className={`
-                                                    ${isActive ? 'text-[#b45a3c]' : 'text-[#8c7b70] group-hover:text-[#e9e2da]'}
+                                                    ${isActive ? 'text-[#b45a3c]' : 'text-white/60 group-hover:text-white'}
                                                     transition-colors
                                                 `}>
                                                     <item.icon className={`w-5 h-5 ${isCollapsed ? 'w-6 h-6' : ''}`} strokeWidth={isActive ? 2.5 : 2} />
@@ -248,7 +292,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <div className={`mt-auto pt-6 border-t border-white/5 shrink-0 ${isCollapsed ? 'items-center' : ''}`}>
                         <button
                             onClick={handleLogout}
-                            className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} w-full text-[#8c7b70] hover:text-rose-400 hover:bg-rose-500/10 p-3 rounded-xl transition-all group`}
+                            className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} w-full text-white/50 hover:text-rose-400 hover:bg-rose-500/10 p-3 rounded-xl transition-all group`}
                             title="Sign Out"
                         >
                             <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -267,6 +311,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {children}
                 </div>
             </main>
+
+            <CommandPalette isOpen={isCommandOpen} onClose={() => setIsCommandOpen(false)} />
         </div>
     );
 }
