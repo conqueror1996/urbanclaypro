@@ -49,6 +49,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     openGraph: {
       title: "UrbanClay® | Premium Terracotta Facades & Bricks",
       description: "Leading manufacturer of high-precision terracotta facade systems and bricks in India. Sustainable, low-efflorescence, and architect-preferred.",
+    },
+    alternates: {
+      canonical: 'https://claytile.in',
     }
   };
 }
