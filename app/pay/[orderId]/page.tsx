@@ -105,56 +105,74 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                         </div>
 
                         {/* Line Items Table */}
-                        <div className="mb-12 border border-gray-100 rounded-[2rem] overflow-hidden bg-gray-50/30">
+                        <div className="mb-12 border border-gray-100 rounded-2xl overflow-hidden bg-white">
                             <table className="w-full text-left">
-                                <thead className="bg-[#fcfaf9] text-gray-400 text-[10px] font-extrabold uppercase tracking-widest border-b border-gray-100">
+                                <thead className="bg-gray-50/50 text-gray-400 text-[10px] font-bold uppercase tracking-wider border-b border-gray-100">
                                     <tr>
-                                        <th className="px-8 py-5">Particulars</th>
-                                        <th className="px-6 py-5 text-center">Qty</th>
-                                        <th className="px-6 py-5 text-right whitespace-nowrap">Amount (₹)</th>
+                                        <th className="px-8 py-4 w-[40%]">Item & Description</th>
+                                        <th className="px-4 py-4 text-center w-[15%]">Qty</th>
+                                        <th className="px-4 py-4 text-right w-[15%]">Rate</th>
+                                        <th className="px-4 py-4 text-right w-[10%]">Tax</th>
+                                        <th className="px-8 py-4 text-right w-[20%]">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     {order.lineItems?.map((item: any, i: number) => (
-                                        <tr key={i} className="hover:bg-white/50 transition-colors">
-                                            <td className="px-8 py-6">
-                                                <div className="font-bold text-[#2A1E16] text-lg">{item.name}</div>
-                                                <div className="text-[11px] text-gray-400 mt-1 italic">{item.description}</div>
+                                        <tr key={i} className="hover:bg-[#fcfaf9] transition-colors group">
+                                            <td className="px-8 py-5 align-top">
+                                                <div className="font-semibold text-[#2A1E16] text-sm">{item.name}</div>
+                                                {item.description && (
+                                                    <div className="text-[11px] text-gray-500 mt-1 leading-relaxed">{item.description}</div>
+                                                )}
                                             </td>
-                                            <td className="px-6 py-6 text-center font-mono font-bold text-gray-400">{item.quantity}</td>
-                                            <td className="px-8 py-6 text-right font-bold text-[#2A1E16]">
+                                            <td className="px-4 py-5 text-center px-4 align-top">
+                                                <span className="font-mono text-xs font-medium text-gray-600 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                                                    {item.quantity} {item.unit || 'pcs'}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-5 text-right font-mono text-xs text-gray-600 align-top">
+                                                ₹{item.rate.toLocaleString('en-IN')}
+                                            </td>
+                                            <td className="px-4 py-5 text-right font-mono text-xs text-gray-400 align-top">
+                                                {item.taxRate}%
+                                            </td>
+                                            <td className="px-8 py-5 text-right font-medium text-[#2A1E16] text-sm align-top">
                                                 ₹{((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
-                                <tfoot className="border-t border-gray-100">
-                                    <tr className="text-gray-500 text-sm">
-                                        <td colSpan={2} className="px-8 py-3 text-right">Subtotal & Tax</td>
-                                        <td className="px-8 py-3 text-right font-mono">₹{(subtotal - totalDiscount + totalTax).toLocaleString('en-IN')}</td>
+                                <tfoot className="bg-[#fcfaf9] border-t border-gray-100">
+                                    <tr className="text-gray-500 text-xs">
+                                        <td colSpan={4} className="px-8 pt-6 pb-2 text-right">Subtotal & Tax</td>
+                                        <td className="px-8 pt-6 pb-2 text-right font-mono text-gray-900">₹{(subtotal - totalDiscount + totalTax).toLocaleString('en-IN')}</td>
                                     </tr>
                                     {order.shippingCharges > 0 && (
-                                        <tr className="text-gray-500 text-sm">
-                                            <td colSpan={2} className="px-8 py-2 text-right">Shipping / Logistics</td>
-                                            <td className="px-8 py-2 text-right font-mono">₹{order.shippingCharges.toLocaleString('en-IN')}</td>
+                                        <tr className="text-gray-500 text-xs">
+                                            <td colSpan={4} className="px-8 py-2 text-right">Shipping / Logistics</td>
+                                            <td className="px-8 py-2 text-right font-mono text-gray-900">₹{order.shippingCharges.toLocaleString('en-IN')}</td>
                                         </tr>
                                     )}
                                     {Math.abs(order.adjustment) > 0 && (
-                                        <tr className="text-gray-500 text-sm">
-                                            <td colSpan={2} className="px-8 py-2 text-right">Adjustments</td>
-                                            <td className="px-8 py-2 text-right font-mono">₹{order.adjustment.toLocaleString('en-IN')}</td>
+                                        <tr className="text-gray-500 text-xs">
+                                            <td colSpan={4} className="px-8 py-2 text-right">Adjustments</td>
+                                            <td className="px-8 py-2 text-right font-mono text-gray-900">₹{order.adjustment.toLocaleString('en-IN')}</td>
                                         </tr>
                                     )}
                                     {order.tdsOption !== 'none' && (
-                                        <tr className="text-gray-500 text-sm italic">
-                                            <td colSpan={2} className="px-8 py-2 text-right uppercase text-[10px] font-bold tracking-widest">{order.tdsOption} Adjustment ({order.tdsRate}%)</td>
-                                            <td className="px-8 py-2 text-right font-mono">₹{settlementAdjust.toLocaleString('en-IN')}</td>
+                                        <tr className="text-gray-500 text-xs italic">
+                                            <td colSpan={4} className="px-8 py-2 text-right uppercase text-[10px] font-bold tracking-widest">{order.tdsOption} Adjustment ({order.tdsRate}%)</td>
+                                            <td className="px-8 py-2 text-right font-mono text-gray-900">₹{settlementAdjust.toLocaleString('en-IN')}</td>
                                         </tr>
                                     )}
-                                    <tr className="bg-[#2A1E16] text-white">
-                                        <td colSpan={2} className="px-8 py-6 text-right font-bold uppercase tracking-widest text-xs">Gross Settlement Amount</td>
-                                        <td className="px-8 py-6 text-right text-3xl font-serif text-[var(--terracotta)]">
-                                            ₹{order.amount.toLocaleString('en-IN')}
+                                    <tr>
+                                        <td colSpan={5} className="p-4">
+                                            <div className="bg-[#2A1E16] text-white rounded-xl flex items-center justify-between px-8 py-5 mt-2">
+                                                <span className="font-bold uppercase tracking-widest text-xs opacity-80">Total Payable Amount</span>
+                                                <span className="text-2xl font-serif text-[var(--terracotta)]">
+                                                    ₹{order.amount.toLocaleString('en-IN')}
+                                                </span>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tfoot>
