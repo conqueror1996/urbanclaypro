@@ -103,7 +103,10 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                         <div
                             className="relative h-full min-h-[400px] lg:min-h-[600px] w-full"
                         >
-                            <HeroVisual imageUrl={data?.heroImageUrl} />
+                            <HeroVisual
+                                imageUrl={data?.heroImageUrl}
+                                alt={data?.heroHeading ? `${data.heroHeading} - UrbanClay India` : undefined}
+                            />
                         </div>
                     </div>
                 </div>

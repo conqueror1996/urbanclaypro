@@ -16,7 +16,12 @@ export async function getProductDropdownData() {
             _id,
             title,
             "category": category->title,
-            priceRange
+            priceRange,
+            "imageUrl": coalesce(
+                images[0].asset->url,
+                variants[0].image.asset->url,
+                texturePackage.seamlessPreview.asset->url
+            )
         }`);
         return products;
     } catch (error) {

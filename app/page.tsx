@@ -19,6 +19,7 @@ const QuoteForm = dynamic(() => import('@/components/QuoteForm'));
 const Footer = dynamic(() => import('@/components/Footer'));
 const OurStoryTeaser = dynamic(() => import('@/components/OurStoryTeaser'));
 const FAQSchema = dynamic(() => import('@/components/FAQSchema'));
+const HomeSEOContent = dynamic(() => import('@/components/HomeSEOContent'));
 
 
 
@@ -44,11 +45,11 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   }
 
   return {
-    title: "UrbanClay® | High-Precision Terracotta Facades",
-    description: "Leading manufacturer of premium terracotta facades, brick cladding & jaali in India. High-precision clay systems for architects. Order samples.",
+    title: "UrbanClay® | Terracotta Tiles, Brick Cladding & Jaali India",
+    description: "Buy premium clay floor tiles, terracotta wall cladding & exposed wirecut bricks. Sustainable, low-efflorescence & pan-India delivery. UrbanClay® - The Architect's Choice.",
     openGraph: {
-      title: "UrbanClay® | Premium Terracotta Facades & Bricks",
-      description: "Leading manufacturer of high-precision terracotta facade systems and bricks in India. Sustainable, low-efflorescence, and architect-preferred.",
+      title: "UrbanClay® | Premium Terracotta Tiles, Cladding & Jaali",
+      description: "India's trusted manufacturer of clay floor tiles, wall cladding & jaali panels. 100% Natural & Sustainable. Pan-India Delivery.",
     },
     alternates: {
       canonical: 'https://claytile.in',
@@ -213,6 +214,11 @@ export default async function Home({ searchParams }: Props) {
       {/* Signature Collections */}
       <ScrollReveal className="bg-white">
         <SignatureCollection products={products} />
+      </ScrollReveal>
+
+      {/* SEO Content Section - Plain HTML for Crawlers */}
+      <ScrollReveal className="bg-[#fcf8f6]">
+        <HomeSEOContent />
       </ScrollReveal>
 
       {/* Our Story - Sand Background (Already set in component, but ensuring flow) */}

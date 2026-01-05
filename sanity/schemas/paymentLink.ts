@@ -146,6 +146,13 @@ export default defineType({
             readOnly: true
         }),
         defineField({
+            name: 'paidAt',
+            title: 'Paid At',
+            type: 'datetime',
+            readOnly: true,
+            description: 'Timestamp when payment was confirmed'
+        }),
+        defineField({
             name: 'paymentId',
             title: 'Razorpay Payment ID',
             type: 'string',

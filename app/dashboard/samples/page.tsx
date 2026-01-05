@@ -78,7 +78,11 @@ export default function SamplesDashboard() {
         setOrders(prev => prev.map(o => o._id === orderId ? { ...o, fulfillmentStatus: asStatus as any } : o));
 
         try {
-            await updateSampleStatus(orderId, asStatus);
+            const res = await updateSampleStatus(orderId, asStatus);
+            if (res.emailError) {
+                console.warn("Email warning:", res.emailError);
+                // Optionally notify UI
+            }
         } catch (error) {
             console.error("Failed to update status", error);
             fetchOrders(); // Revert on error
@@ -109,7 +113,10 @@ export default function SamplesDashboard() {
                 }
             } : o));
 
-            await updateSampleStatus(shippingModalOrder._id, 'shipped', shippingForm);
+            const res = await updateSampleStatus(shippingModalOrder._id, 'shipped', shippingForm);
+            if (res.emailError) {
+                alert(`⚠️ Shipment saved, but Email Failed: ${JSON.stringify(res.emailError)}`);
+            }
             setShippingModalOrder(null);
             setShippingForm({ courier: '', trackingNumber: '' });
         } catch (error) {
@@ -144,9 +151,20 @@ export default function SamplesDashboard() {
 
                                 try {
                                     setLoading(true);
-                                    await import('@/app/actions/simulate-lead').then(m => m.createTestLead(email));
+                                    const result = await import('@/app/actions/simulate-lead').then(m => m.createTestLead(email));
                                     await fetchOrders();
-                                    alert("Test order created! Check 'New Requests' column.");
+
+                                    if (result.success) {
+                                        let msg = "✅ Test Order Created!";
+                                        if (result.emailStatus) {
+                                            const adminStatus = result.emailStatus.admin.success ? "✅ Sent" : `❌ Failed (${JSON.stringify(result.emailStatus.admin.error)})`;
+                                            const userStatus = result.emailStatus.user.success ? "✅ Sent" : `❌ Failed (${JSON.stringify(result.emailStatus.user.error)})`;
+                                            msg += `\n\nAdmin Alert: ${adminStatus}\nUser Email: ${userStatus}`;
+                                        }
+                                        alert(msg);
+                                    } else {
+                                        alert(`❌ Failed to create order: ${result.error}`);
+                                    }
                                 } catch (e) {
                                     alert("Failed to create test order");
                                     console.error(e);

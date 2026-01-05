@@ -98,10 +98,22 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                             {order.status}
                                         </span>
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] text-gray-400 uppercase font-bold">Created</p>
-                                        <p className="text-gray-900 font-bold">{new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
-                                    </div>
+                                    {order.status === 'paid' && order.paidAt ? (
+                                        <div>
+                                            <p className="text-[10px] text-gray-400 uppercase font-bold">Paid On</p>
+                                            <p className="text-emerald-700 font-bold">
+                                                {new Date(order.paidAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                                                <span className="text-[10px] text-gray-400 ml-1 block font-mono">
+                                                    {new Date(order.paidAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                                                </span>
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <p className="text-[10px] text-gray-400 uppercase font-bold">Created</p>
+                                            <p className="text-gray-900 font-bold">{new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
+                                        </div>
+                                    )}
                                     {order.expiryDate && (
                                         <div>
                                             <p className="text-[10px] text-gray-400 uppercase font-bold">Valid Until</p>

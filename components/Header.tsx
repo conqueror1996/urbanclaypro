@@ -54,6 +54,7 @@ const navLinks = [
     { href: '/projects', label: 'Projects' },
     { href: '/journal', label: 'Journal' },
     { href: '/guide', label: 'Selection Guide' },
+    { href: '/catalogue', label: 'Catalogue' },
     { href: '/architects', label: 'For Architects' },
     { href: '/#quote', label: 'Contact' }
 ];

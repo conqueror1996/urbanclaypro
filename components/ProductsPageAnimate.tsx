@@ -188,7 +188,7 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                         </h1>
                     </div>
                     <div className="max-w-md text-white/40 text-sm leading-loose md:text-right">
-                        <p>Explore our curated collection of handcrafted terracotta, designed for the modern architectural vernacular.</p>
+                        <p>Explore our curated collection of handcrafted terracotta iron-rich clay, blended for strength and fired at controlled temperatures.</p>
                     </div>
                 </div>
 

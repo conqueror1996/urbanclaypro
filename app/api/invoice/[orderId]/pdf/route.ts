@@ -3,13 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import jsPDF from 'jspdf';
 import fs from 'fs';
 import path from 'path';
+import autoTable from 'jspdf-autotable';
+import { getPaymentLinkDetails } from '@/app/actions/payment-link';
 
-// ... (imports remain)
-import autoTable from 'jspdf-autotable'; // Ensure we import it to avoid tree-shaking
-// Trigger side effect for autoTable attachment
 // @ts-ignore
 const _ = autoTable;
-import { getPaymentLinkDetails } from '@/app/actions/payment-link';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,240 +25,291 @@ export async function GET(
             return NextResponse.json({ error: 'Order not found' }, { status: 404 });
         }
 
-        // Initialize PDF
         const doc: any = new jsPDF();
         const pageWidth = doc.internal.pageSize.width;
+        const pageHeight = doc.internal.pageSize.height;
+        const margin = 15;
+
+        // --- ZOHO STYLE THEME ---
+        const colorText: [number, number, number] = [30, 30, 30]; // Nearly black
+        const colorSubText: [number, number, number] = [80, 80, 80]; // Dark Gray
+        const colorLightGray: [number, number, number] = [245, 245, 245]; // Very Light Gray
+        const colorLine: [number, number, number] = [230, 230, 230]; // Border lines
 
         // --- HEADER ---
-        // Logo (Top Left)
+        // 1. Logo (Top Left)
         try {
             const logoPath = path.join(process.cwd(), 'public/urbanclay-logo.png');
             if (fs.existsSync(logoPath)) {
                 const logoBase64 = fs.readFileSync(logoPath).toString('base64');
-                // Use a fixed width and reasonable height, or use 'alias' for auto if supported, but typically w/h needed.
-                // Assuming logo is roughly square or vertical. Let's try 30x30 roughly or adjust based on common shape. 
-                // Creating a clean look.
-                doc.addImage(logoBase64, 'PNG', 15, 10, 25, 25);
+                doc.addImage(logoBase64, 'PNG', margin, 15, 20, 20);
             }
-        } catch (e) {
-            console.error("Logo load failed", e);
-        }
+        } catch (e) { }
 
-        // We removed the Brand Name text on the left as requested.
-
-        // Tagline (Removed as per instruction to remove "UrbanClay" text)
-        // doc.setFont("helvetica", "bold");
-        // doc.setFontSize(8);
-        // doc.setTextColor(150, 150, 150);
-        // doc.text("PREMIUM CLAY SOLUTIONS", 15, 30);
-
-        // Heading Label (Top Right)
-        const isPaid = order.status === 'paid';
+        // 2. Company Address (Top Right)
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(22);
-        doc.setTextColor(isPaid ? 42 : 220, isPaid ? 30 : 220, isPaid ? 22 : 220);
-        doc.text(isPaid ? "TAX INVOICE" : "PROFORMA", pageWidth - 15, 25, { align: 'right' });
+        doc.setFontSize(10);
+        doc.setTextColor(...colorText);
+        doc.text("Urbanclay Earthy Elements", pageWidth - margin, 18, { align: 'right' });
 
-        // Meta Info (Right Side, below label)
-        doc.setFontSize(9);
-        doc.setTextColor(100, 100, 100);
-        let metaY = 32;
-        doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, pageWidth - 15, metaY, { align: 'right' });
-        doc.text(`${isPaid ? 'Invoice No' : 'Ref #'}: ${isPaid ? (order.zohoInvoiceNumber || order.orderId) : order.orderId}`, pageWidth - 15, metaY + 5, { align: 'right' });
-        if (order.expiryDate) {
-            doc.setTextColor(220, 50, 50); // Red Color
-            doc.text(`Valid Until: ${new Date(order.expiryDate).toLocaleDateString()}`, pageWidth - 15, metaY + 10, { align: 'right' });
-        }
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...colorSubText);
+        const companyAddr = [
+            "#610, 80 Feet Rd, 4th Block",
+            "Koramangala, Bengaluru, Karnataka 560034",
+            "India",
+            "GSTIN: 29AAICU5657L1Z9"
+        ];
+        let addrY = 23;
+        companyAddr.forEach(line => {
+            doc.text(line, pageWidth - margin, addrY, { align: 'right' });
+            addrY += 4;
+        });
 
-        // --- CLIENT DETAILS ---
-        const startY = 60; // Moved up slightly since logo is compact
+        // 3. Document Title (Centered)
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(14);
+        doc.setTextColor(...colorText);
+        doc.setCharSpace(1);
+        doc.text("PROFORMA INVOICE", pageWidth / 2, 50, { align: 'center' });
+        doc.setCharSpace(0);
 
-        // Billed To
+        // 4. Quote# (Right side aligned with title level)
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(9);
-        doc.setTextColor(150, 150, 150);
-        doc.text("BILLED TO", 15, startY);
+        doc.setFontSize(10);
+        doc.text(`# ${order.orderId}`, pageWidth - margin, 50, { align: 'right' });
 
-        doc.setFont("times", "bold");
-        doc.setFontSize(14); // Slightly larger
-        doc.setTextColor(42, 30, 22);
-        doc.text(order.clientName || "Valued Client", 15, startY + 7);
+
+        // --- CLIENT & ADDRESS INFO ---
+        let contentY = 65;
+
+        // Bill To
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(...colorSubText);
+        doc.text("Bill To", margin, contentY);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(...colorText);
+        doc.text(order.clientName || "Valued Client", margin, contentY + 5);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-        doc.setTextColor(80, 80, 80);
+        doc.setTextColor(...colorText);
+        const billingAddr = doc.splitTextToSize(order.billingAddress || "", 80);
+        doc.text(billingAddr, margin, contentY + 10);
 
-        // Construct Full Address Block
-        const billingAddr = order.billingAddress || "";
-        const addressLines = doc.splitTextToSize(billingAddr, 80);
-        doc.text(addressLines, 15, startY + 14);
-
-        // Contact Info
-        let currentY = startY + 14 + (addressLines.length * 4) + 4;
-        doc.setFontSize(9);
-        if (order.clientEmail) doc.text(order.clientEmail, 15, currentY);
-        if (order.clientPhone) doc.text(order.clientPhone, 15, currentY + 5);
+        let clientCursorY = contentY + 10 + (billingAddr.length * 4);
 
         if (order.gstNumber) {
-            doc.setFont("courier", "bold");
-            doc.text(`GSTIN: ${order.gstNumber}`, 15, currentY + 12);
+            clientCursorY += 5;
+            doc.setFont("helvetica", "bold");
+            doc.text(`GSTIN: ${order.gstNumber}`, margin, clientCursorY);
         }
 
+        // Ship To
+        let shipToY = clientCursorY + 10;
+        if (order.shippingAddress && order.shippingAddress !== order.billingAddress) {
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(8);
+            doc.setTextColor(...colorSubText);
+            doc.text("Ship To", margin, shipToY);
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.setTextColor(...colorText);
+            const shippingAddr = doc.splitTextToSize(order.shippingAddress || "", 80);
+            doc.text(shippingAddr, margin, shipToY + 5);
+        }
+
+        // --- DATE STRIP ---
+        const stripY = Math.max(shipToY + 20, 110);
+
+        doc.setFillColor(...colorLightGray);
+        doc.rect(margin, stripY, pageWidth - (margin * 2), 12, 'F');
+
+        const col1X = margin + 5;
+        const col2X = margin + 80;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.setTextColor(...colorText);
+
+        doc.text("Proforma Date", col1X, stripY + 4);
+        doc.text("Expiry Date", col2X, stripY + 4);
+
+        doc.setFont("helvetica", "normal");
+        doc.text(new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }), col1X, stripY + 9);
+        if (order.expiryDate) {
+            doc.text(new Date(order.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }), col2X, stripY + 9);
+        }
+
+        // --- SUBJECT ---
+        const subjectY = stripY + 18;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.setTextColor(...colorText);
+        doc.text("Subject:", margin, subjectY);
+        doc.setFont("helvetica", "normal");
+        doc.text("Proforma Invoice for Clay Materials", margin + 18, subjectY);
+
         // --- TABLE ---
-        const tableY = Math.max(currentY + 25, 100);
+        const tableY = subjectY + 10;
 
-        const tableData = order.lineItems.map((item: any) => {
-            // Explicitly putting description on new line if it exists
-            // We use 'content' object for cell
-            return [
-                {
-                    content: item.name + (item.description ? `\n${item.description}` : ''),
-                    styles: {
-                        fontStyle: 'bold',
-                        textColor: [42, 30, 22]
-                    }
-                },
-                `${item.quantity} ${item.unit || 'pcs'}`,
-                `Rs. ${item.rate.toLocaleString('en-IN')}`,
-                `${item.discount}%`,
-                { content: `Rs. ${((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, styles: { halign: 'right' } }
-            ];
-        });
+        const tableBody = order.lineItems.map((item: any, index: number) => [
+            index + 1,
+            item.name,
+            item.quantity,
+            item.rate.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
+            ((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })
+        ]);
 
-        // @ts-ignore
         autoTable(doc, {
             startY: tableY,
-            head: [['Item Details', 'Qty', 'Rate', 'Disc', 'Amount']],
-            body: tableData,
-            theme: 'plain', // Cleaner premium look vs grid
+            head: [['#', 'Item & Description', 'Qty', 'Rate', 'Amount']],
+            body: tableBody,
+            theme: 'plain', // Use plain to strip default grid lines
             headStyles: {
-                fillColor: [248, 248, 248],
-                textColor: [100, 100, 100],
+                fillColor: colorLightGray,
+                textColor: colorText,
                 fontStyle: 'bold',
-                fontSize: 9,
+                font: 'helvetica',
+                fontSize: 8,
                 halign: 'left',
-                cellPadding: { top: 4, bottom: 4, left: 2, right: 2 }
+                cellPadding: 3
             },
             bodyStyles: {
-                textColor: [60, 60, 60],
+                textColor: colorText,
                 fontSize: 9,
-                cellPadding: { top: 4, bottom: 4, left: 2, right: 2 },
+                cellPadding: 3,
                 valign: 'top',
-                lineColor: [240, 240, 240],
-                lineWidth: { bottom: 0.1 }
+                lineColor: colorLine,
+                lineWidth: { bottom: 0.1 } // Only horizontal dividers
             },
             columnStyles: {
-                0: { cellWidth: 85 }, // Description
-                1: { halign: 'center', cellWidth: 20 }, // Qty
-                2: { halign: 'right', cellWidth: 30 }, // Rate
-                3: { halign: 'center', cellWidth: 15 }, // Disc
-                4: { halign: 'right', cellWidth: 30, fontStyle: 'bold' } // Amount
+                0: { cellWidth: 10, halign: 'center' },
+                1: { cellWidth: 90 },
+                2: { cellWidth: 20, halign: 'center' },
+                3: { cellWidth: 30, halign: 'right' },
+                4: { cellWidth: 30, halign: 'right' }
             },
-            didDrawPage: (data: any) => {
-                doc.setFontSize(8);
-                doc.setTextColor(150, 150, 150);
-                doc.text("UrbanClay Architecture Pvt Ltd", 15, doc.internal.pageSize.height - 10);
+            margin: { left: margin, right: margin },
+            didDrawCell: (data: any) => {
+                if (data.section === 'body' && data.column.index === 1) {
+                    const item = order.lineItems[data.row.index];
+                    const cell = data.cell;
+                    const cleanX = cell.x + 3;
+                    const cleanY = cell.y + 4;
+
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(9);
+                    doc.text(item.name, cleanX, cleanY);
+
+                    if (item.description) {
+                        const nameDim = doc.getTextDimensions(item.name);
+                        doc.setFont("helvetica", "normal");
+                        doc.setFontSize(8);
+                        doc.setTextColor(...colorSubText);
+                        doc.text(item.description, cleanX, cleanY + nameDim.h + 2);
+                        doc.setTextColor(...colorText);
+                    }
+                }
+            },
+            willDrawCell: (data: any) => {
+                // Hide default text to prevent overlap with didDrawCell
+                if (data.section === 'body' && data.column.index === 1) {
+                    doc.setTextColor(255, 255, 255);
+                }
             }
         });
 
-        // --- TOTALS ---
-        // (doc as any).autoTable is NOT attached, so we use the state from the library or the last call
-        // The lastAutoTable property is usually attached to doc by the plugin
+        // --- FOOTER & TOTALS ---
+        // @ts-ignore
         const finalY = (doc as any).lastAutoTable.finalY + 10;
-        const rightAlign = pageWidth - 15;
 
         let subtotal = 0;
         let totalDiscount = 0;
         let totalTax = 0;
-        // Collect Tax Rates
-        const taxRates = new Set<number>();
-
         order.lineItems.forEach((item: any) => {
-            const lineSub = item.rate * item.quantity;
-            const lineDisc = lineSub * (item.discount / 100);
-            const taxable = lineSub - lineDisc;
-            const lineTax = taxable * (item.taxRate / 100);
+            const amount = item.rate * item.quantity;
+            const disc = amount * (item.discount / 100);
+            const taxable = amount - disc;
+            const tax = taxable * (item.taxRate / 100);
+            subtotal += amount;
+            totalDiscount += disc;
+            totalTax += tax;
+        });
+        const shipping = order.shippingCharges || 0;
+        const adjustment = order.adjustment || 0;
+        const finalTotal = subtotal - totalDiscount + totalTax + shipping + adjustment;
 
-            subtotal += lineSub;
-            totalDiscount += lineDisc;
-            totalTax += lineTax;
-            if (item.taxRate > 0) taxRates.add(item.taxRate);
+        // Bank Details
+        let cursorY = finalY;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.setTextColor(...colorText);
+        doc.text("Bank Details", margin, cursorY);
+        cursorY += 5;
+
+        doc.setFont("helvetica", "normal");
+        const bankDetails = [
+            "Bank: HDFC BANK OF INDIA",
+            "Name: URBANCLAY",
+            "A/c: 50200072175102",
+            "IFSC: HDFC0001452",
+            "Branch: Chembur"
+        ];
+        bankDetails.forEach(line => {
+            doc.text(line, margin, cursorY);
+            cursorY += 4;
         });
 
-        let currentTotalsY = finalY;
-        const addTotalRow = (label: string, value: string, isBold = false, color = [60, 60, 60], fontSize = 10) => {
-            doc.setFont("helvetica", isBold ? "bold" : "normal");
-            doc.setFontSize(fontSize);
-            doc.setTextColor(color[0], color[1], color[2]);
-            doc.text(label, rightAlign - 60, currentTotalsY, { align: 'right' });
-            doc.text(value, rightAlign, currentTotalsY, { align: 'right' });
-            currentTotalsY += 6;
+        // Totals
+        let summaryY = finalY;
+        const summaryX = pageWidth - margin - 80;
+        const summaryEnd = pageWidth - margin;
+
+        const addTotalRow = (label: string, value: string, isTotal = false) => {
+            doc.setFont("helvetica", isTotal ? "bold" : "normal");
+            doc.setFontSize(isTotal ? 10 : 9);
+            doc.setTextColor(...colorText);
+
+            doc.text(label, summaryX, summaryY);
+            doc.text(value, summaryEnd, summaryY, { align: 'right' });
+            summaryY += 6;
         };
 
-        addTotalRow("Subtotal", `Rs. ${subtotal.toLocaleString('en-IN')}`);
+        addTotalRow("Sub Total", `Rs. ${subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
+        if (totalDiscount > 0) addTotalRow("Discount", `(-) Rs. ${totalDiscount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
+        addTotalRow("GST Total", `(+) Rs. ${totalTax.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
+        if (shipping > 0) addTotalRow("Shipping", `(+) Rs. ${shipping.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
+        if (adjustment !== 0) addTotalRow("Adjustment", `(+) Rs. ${adjustment.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`);
 
-        if (totalDiscount > 0) {
-            addTotalRow("Discount", `- Rs. ${totalDiscount.toLocaleString('en-IN')}`, false, [16, 185, 129]);
-        }
+        doc.setDrawColor(...colorLine);
+        doc.line(summaryX, summaryY - 2, summaryEnd, summaryY - 2);
 
-        // Show GST with %
-        const taxLabel = taxRates.size === 1
-            ? `GST (@${Array.from(taxRates)[0]}%)`
-            : "Total GST";
+        summaryY += 2;
+        addTotalRow("Total", `Rs. ${finalTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, true);
 
-        addTotalRow(taxLabel, `Rs. ${totalTax.toLocaleString('en-IN')}`);
+        // Authorized Signatory
+        const footerY = Math.max(cursorY + 20, summaryY + 20);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.text("For Urbanclay Earthy Elements", summaryEnd, footerY - 15, { align: 'right' });
+        doc.text("Authorized Signatory", summaryEnd, footerY, { align: 'right' });
 
-        if (order.shippingCharges > 0) {
-            addTotalRow("Shipping & Handling", `Rs. ${order.shippingCharges.toLocaleString('en-IN')}`);
-        }
-
-        if (order.adjustment !== 0) {
-            addTotalRow("Adjustment", `Rs. ${order.adjustment.toLocaleString('en-IN')}`);
-        }
-
-        currentTotalsY += 4;
-        doc.setLineWidth(0.5);
-        doc.setDrawColor(200, 200, 200);
-        doc.line(rightAlign - 70, currentTotalsY - 6, rightAlign, currentTotalsY - 6);
-
-        doc.setFont("times", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(42, 30, 22);
-        doc.text(`Rs. ${order.amount.toLocaleString('en-IN')}`, rightAlign, currentTotalsY, { align: 'right' });
-        doc.setFontSize(10);
-        doc.text("Total Payable", rightAlign - 70, currentTotalsY, { align: 'right' });
-
-        // Terms
-        if (order.terms) {
-            const termsY = currentTotalsY + 20;
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
-            doc.text("TERMS AND CONDITIONS", 15, termsY);
-
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(7);
-            doc.setTextColor(80, 80, 80);
-            const splitTerms = doc.splitTextToSize(order.terms, pageWidth - 30);
-            doc.text(splitTerms, 15, termsY + 5);
-        }
-
-        // ... (Buffer generation same as before)
         const pdfBuffer = doc.output('arraybuffer');
 
         return new NextResponse(pdfBuffer, {
             headers: {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename="Invoice_${orderId}.pdf"`
-            }
+                'Content-Disposition': `inline; filename="proforma-${order.orderId}.pdf"`,
+            },
         });
-
     } catch (error) {
-        console.error("PDF Generation Error (Detailed):", error);
-        return NextResponse.json({
-            error: 'PDF generation failed',
-            details: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : undefined
-        }, { status: 500 });
+        console.error('Error generating PDF:', error);
+        return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
     }
 }

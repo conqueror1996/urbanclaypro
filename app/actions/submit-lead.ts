@@ -57,23 +57,38 @@ export async function submitLead(formData: any) {
 
         // 3. Email Automation
         // 3. Email Automation
+        // 3. Email Automation
         // A. Admin Alert (Send for ALL leads now)
         console.log('🚀 New Lead Saved:', result._id);
-        sendLeadAlertEmail({ ...doc, _id: result._id }).catch(err => console.error('Admin Alert Failed', err));
 
-        if (doc.email && doc.email.includes('@')) {
-            sendUserConfirmationEmail({ ...doc, _id: result._id }).catch(err => console.error('Auto-Reply Failed', err));
-        }
+        // We await these now to return status to the caller (useful for testing/debugging)
+        const adminEmailPromise = sendLeadAlertEmail({ ...doc, _id: result._id });
+        const userEmailPromise = (doc.email && doc.email.includes('@'))
+            ? sendUserConfirmationEmail({ ...doc, _id: result._id })
+            : Promise.resolve({ success: false, error: 'No valid email' });
+
+        const [adminEmailRes, userEmailRes] = await Promise.all([adminEmailPromise, userEmailPromise]);
+
+        if (!adminEmailRes.success) console.error('Admin Alert Failed', adminEmailRes.error);
+        if (!userEmailRes.success && doc.email) console.error('Auto-Reply Failed', userEmailRes.error);
 
         // 4. Send to Zoho CRM
-        // We do this asynchronously so we don't block the UI response
+        // We do this asynchronously so we don't block the UI response too much (emails are fast enough)
         createZohoLead({
             ...formData,
             // Ensure simple defaults if missing
             name: formData.name || formData.firmName?.split(' ')[0] || 'Unknown',
         }).catch(err => console.error('Zoho Sync Failed:', err));
 
-        return { success: true, id: result._id, isSerious }
+        return {
+            success: true,
+            id: result._id,
+            isSerious,
+            emailStatus: {
+                admin: adminEmailRes,
+                user: userEmailRes
+            }
+        }
     } catch (error) {
         console.error('Error submitting lead:', error)
         return { success: false, error: 'Failed to save lead' }

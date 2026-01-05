@@ -22,7 +22,7 @@ export default function FloatingSampleBadge() {
         return () => window.removeEventListener('scroll', checkVisibility);
     }, [box.length]);
 
-    if (pathname?.startsWith('/pay')) return null;
+    if (pathname?.startsWith('/pay') || pathname?.startsWith('/dashboard') || pathname?.startsWith('/studio')) return null;
 
     return (
         <AnimatePresence>

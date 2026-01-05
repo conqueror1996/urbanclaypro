@@ -113,6 +113,7 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
         // Update Sanity with Zoho Details
         await writeClient.patch(order._id).set({
             status: 'paid',
+            paidAt: new Date().toISOString(),
             paymentId: paymentId,
             zohoInvoiceId: zohoRes.invoiceId,
             zohoInvoiceNumber: zohoRes.invoiceNumber
@@ -184,6 +185,24 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
 
 export async function getAllPaymentLinks() {
     try {
+        // 1. Cleanup: Delete pending links created > 24 hours ago
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+        const cleanupQuery = `*[_type == "paymentLink" && status == "pending" && createdAt < $cutoff]`;
+
+        // Fetch stale links first to know what we're deleting (optional, but good for logging/safety)
+        const staleLinks = await writeClient.fetch(cleanupQuery, { cutoff: twentyFourHoursAgo });
+
+        if (staleLinks.length > 0) {
+            console.log(`🧹 Cleaning up ${staleLinks.length} stale pending payment links...`);
+
+            // Delete them in a transaction or parallel promises
+            const deletePromises = staleLinks.map((link: any) => writeClient.delete(link._id));
+            await Promise.all(deletePromises);
+
+            console.log(`✅ Deleted ${staleLinks.length} stale links.`);
+        }
+
+        // 2. Return fresh list
         const query = `*[_type == "paymentLink"] | order(createdAt desc)`;
         const links = await writeClient.fetch(query);
         return { success: true, links };

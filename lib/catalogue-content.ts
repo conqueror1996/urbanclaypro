@@ -157,22 +157,69 @@ export function generateLuxurySpecs(product: Product): PremiumSpec[] {
 }
 
 export function generateArtisticDescription(product: Product): string {
+    // 1. Use CMS Description if available (and short enough to be a quote)
+    if (product.description && product.description.length > 20 && product.description.length < 150) {
+        return product.description;
+    }
+
     const title = product.title.toLowerCase();
 
-    // Context-aware "Power Commands" / Branding Statements
-    if (title.includes('jaali') || title.includes('screen')) {
-        return "Sculpt light. Breathe life. A porous boundary between you and the city.";
-    }
-    if (title.includes('tile') && title.includes('rustic')) {
-        return "The character of ancient stone, engineered for the modern skyscraper.";
-    }
-    if (title.includes('tile')) {
-        return "A lightweight skin of fired earth. Redefine the envelope without the weight.";
-    }
-    if (title.includes('handmade')) {
-        return "Imperfection is the luxury. Every brick tells the story of the hand that made it.";
+    // 2. Dynamic Templates based on Title Keywords
+    // JAALIS / SCREENS
+    if (title.includes('jaali') || title.includes('screen') || title.includes('breeze')) {
+        const patterns = [
+            "Sculpt light. Breathe life. A porous boundary between you and the city.",
+            `The ${product.title} redefines the threshold between inside and out.`,
+            "A geometric interplay of shadow and ventilation for the passive home.",
+            "Ancient cooling wisdom, re-fired for the contemporary facade.",
+            "Filtering harsh sunlight into a soft, dancing pattern on your floors."
+        ];
+        // Use a pseudo-random index based on title length to keep it consistent per product but varied across products
+        return patterns[title.length % patterns.length];
     }
 
-    // Default
-    return "Timeless clay architecture. Built to outlast the century.";
+    // TILES / CLADDING
+    if (title.includes('tile') || title.includes('cladding') || title.includes('slip')) {
+        const patterns = [
+            "The character of ancient stone, engineered for the modern skyscraper.",
+            "A lightweight skin of fired earth. Redefine the envelope without the weight.",
+            `Transform any surface into a monolith of ${title.includes('grey') || title.includes('black') ? 'shadow' : 'warmth'}.`,
+            "Precision-cut veneer that brings the geology of the kiln to your interiors.",
+            "Tactile minimalism. A surface that demands to be touched."
+        ];
+        return patterns[title.length % patterns.length];
+    }
+
+    // HANDMADE BRICKS
+    if (title.includes('handmade') || title.includes('antique')) {
+        const patterns = [
+            "Imperfection is the luxury. Every brick tells the story of the hand that made it.",
+            "Not just a building block, but a piece of frozen history.",
+            "Soft edges and wandering textures that machines simply cannot replicate.",
+            "Honest, raw, and unpretentious. The ultimate counter-signal to digital perfection.",
+            "Warmth that radiates from the core of the clay itself."
+        ];
+        return patterns[title.length % patterns.length];
+    }
+
+    // EXPOSED / WIRECUT BRICKS
+    if (title.includes('wirecut') || title.includes('exposed') || title.includes('solid')) {
+        const patterns = [
+            "Sharp lines for the disciplined architect.",
+            "Timeless clay architecture. Built to outlast the century.",
+            "The fundamental atom of construction, perfected.",
+            "Rigid geometry meets organic material. The best of both worlds.",
+            "A dense, iron-rich body designed for unplastered honesty."
+        ];
+        return patterns[title.length % patterns.length];
+    }
+
+    // Default Fallbacks with some variety
+    const defaults = [
+        "Timeless clay architecture. Built to outlast the century.",
+        "Forged in fire, designed for permanence.",
+        `The ${product.title} stands as a testament to enduring material quality.`,
+        "Natural, sustainable, and undeniably beautiful."
+    ];
+    return defaults[title.length % defaults.length];
 }

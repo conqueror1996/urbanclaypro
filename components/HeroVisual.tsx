@@ -7,9 +7,10 @@ import { motion, useReducedMotion, useMotionValue, useTransform, useSpring } fro
 
 interface HeroVisualProps {
     imageUrl?: string;
+    alt?: string;
 }
 
-export default function HeroVisual({ imageUrl }: HeroVisualProps) {
+export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
     const prefersReducedMotion = useReducedMotion();
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -139,7 +140,7 @@ export default function HeroVisual({ imageUrl }: HeroVisualProps) {
                     {imageUrl ? (
                         <PremiumImage
                             src={imageUrl}
-                            alt="Premium Terracotta Product"
+                            alt={alt || "UrbanClay Terracotta Facade & Roofing Tiles"}
                             fill
                             className="object-cover"
                             containerClassName="w-full h-full"
