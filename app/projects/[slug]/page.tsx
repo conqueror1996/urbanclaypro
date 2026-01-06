@@ -5,6 +5,7 @@ import { getProject } from '@/lib/products';
 import { Metadata } from 'next';
 import ProjectDetailView from '@/components/project-page/ProjectDetailView';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -23,9 +24,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
+    const productsUsedNames = project.productsUsed?.map(p => p.title) || [];
+    const baseKeywords = [project.title, project.location, project.type, 'Architectural Facade', 'UrbanClay Projects'];
+    const keywords = Array.from(new Set([...baseKeywords, ...productsUsedNames]));
+
     return {
-        title: `${project.title} | UrbanClay Projects`,
-        description: project.description?.slice(0, 160) || `Check out ${project.title} by UrbanClay.`,
+        title: `${project.title} | ${project.location} | UrbanClay Case Study`,
+        description: project.description?.slice(0, 160) || `Explore the architectural excellence of ${project.title} in ${project.location}, featuring premium UrbanClay materials.`,
+        keywords: keywords,
         openGraph: {
             title: project.title,
             description: project.description?.slice(0, 160),
@@ -35,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             type: 'website',
             images: [
                 {
-                    url: `/api/og?type=project&slug=${slug}`,
+                    url: project.imageUrl || `/api/og?type=project&slug=${slug}`,
                     width: 1200,
                     height: 630,
                     alt: project.title,
@@ -47,9 +53,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${project.title} | UrbanClay Projects`,
+            title: `${project.title} | ${project.location}`,
             description: project.description?.slice(0, 200),
-            images: [`/api/og?type=project&slug=${slug}`],
+            images: [project.imageUrl || `/api/og?type=project&slug=${slug}`],
         },
     };
 }
@@ -62,8 +68,40 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         notFound();
     }
 
+    const breadcrumbJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://claytile.in' },
+            { '@type': 'ListItem', 'position': 2, 'name': 'Projects', 'item': 'https://claytile.in/projects' },
+            { '@type': 'ListItem', 'position': 3, 'name': project.title, 'item': `https://claytile.in/projects/${project.slug}` }
+        ]
+    };
+
+    const projectJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'CreativeWork',
+        'name': project.title,
+        'description': project.description || `Architectural project in ${project.location} featuring UrbanClay materials.`,
+        'image': project.imageUrl,
+        'contentLocation': {
+            '@type': 'Place',
+            'name': project.location
+        },
+        'author': {
+            '@type': 'Organization',
+            'name': 'UrbanClay'
+        },
+        'about': project.productsUsed?.map(p => ({
+            '@type': 'Product',
+            'name': p.title,
+            'url': `https://claytile.in/products/${p.category || 'collection'}/${p.slug}`
+        })) || []
+    };
+
     return (
         <React.Fragment>
+            <JsonLd data={[breadcrumbJsonLd, projectJsonLd]} />
             <Header />
             <main>
                 <ProjectDetailView project={project} />

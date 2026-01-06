@@ -197,7 +197,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                                                 >
                                                     <Image
                                                         src={img}
-                                                        alt={`Detail ${idx}`}
+                                                        alt={`${project.title} - Architectural Detail ${idx + 1} - ${project.location}`}
                                                         fill
                                                         className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
                                                     />

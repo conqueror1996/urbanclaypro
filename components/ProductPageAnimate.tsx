@@ -13,6 +13,7 @@ import CoverageCalculator from '@/components/product-page/CoverageCalculator';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import RelatedArticles from '@/components/RelatedArticles';
 import { RelatedArticle } from '@/components/RelatedArticles';
+import ProductShowcase from '@/components/ProductShowcase';
 
 const WallStyler = dynamic(() => import('./WallStyler'), {
     ssr: false,
@@ -662,6 +663,17 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             }
 
             {/* Related Articles Section */}
+
+            {product.relatedProjects && product.relatedProjects.length > 0 && (
+                <div className="max-w-[1400px] mx-auto px-4 md:px-8 mb-16">
+                    <ProductShowcase
+                        projects={product.relatedProjects}
+                        title={`Case Studies featuring ${product.title}`}
+                        description={`Explore how leading architects integrated ${product.title} into their designs.`}
+                    />
+                </div>
+            )}
+
             <RelatedArticles posts={journalPosts} />
 
             <QuoteModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} productName={product.title} variantName={selectedVariant?.name} />
