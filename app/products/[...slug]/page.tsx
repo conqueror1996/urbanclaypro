@@ -508,17 +508,17 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         };
 
         return (
-            <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0]">
+            <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0] overflow-x-hidden">
                 <JsonLd data={[jsonLdCat, faqJsonLd, breadcrumbJsonLd]} />
                 <Header />
-                <main className="pt-32 pb-20 px-6 max-w-[1800px] mx-auto min-h-screen">
+                <main className="pt-32 pb-20 px-4 md:px-6 max-w-[1800px] mx-auto min-h-screen">
                     {/* Category Hero */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 border-b border-white/10 pb-12">
                         <div>
                             <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
                                 Collection
                             </span>
-                            <h1 className="text-4xl md:text-7xl font-serif text-[#EBE5E0] leading-[0.9] mb-6">
+                            <h1 className="text-4xl md:text-7xl font-serif text-[#EBE5E0] leading-[0.9] mb-6 break-words">
                                 {title}
                             </h1>
                             {/* SEO Power Text */}
@@ -553,7 +553,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                                     </div>
 
                                     {/* Variants Grid */}
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 md:gap-x-8 gap-y-12">
                                         {(product.variants || [{ name: 'Standard', imageUrl: product.imageUrl }]).map((variant: any, idx: number) => (
                                             <Link
                                                 key={idx}

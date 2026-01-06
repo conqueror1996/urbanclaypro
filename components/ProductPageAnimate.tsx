@@ -180,7 +180,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
         <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-0 lg:pb-0 overflow-x-hidden w-full relative">
 
             {/* --- HERO SECTION: Swiss Hierarchy --- */}
-            <section className="relative min-h-[90vh] flex flex-col pt-28 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto">
+            <section className="relative min-h-[90vh] flex flex-col pt-28 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto overflow-hidden">
 
                 {/* Background Text - Large decorative text */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
@@ -196,8 +196,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                 <div className="flex-1 grid lg:grid-cols-12 gap-4 lg:gap-24 items-center">
 
-                    {/* LEFT: Typography & Context */}
-                    <div className="lg:col-span-5 relative z-10 flex flex-col justify-center order-1 lg:order-1">
+                    {/* LEFT: Typography & Context --- added min-w-0 to prevent grid overflow */}
+                    <div className="lg:col-span-5 relative z-10 flex flex-col justify-center order-1 lg:order-1 min-w-0">
                         <div className="mb-8 hidden lg:block">
                             <Breadcrumbs range={product.range} />
                         </div>
@@ -214,10 +214,10 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             </span>
 
                             {/* H1: Commanding, Minimal */}
-                            <h1 className="text-4xl md:text-7xl lg:text-8xl font-serif text-[#EBE5E0] leading-[0.9] mb-4 lg:mb-8 tracking-tight break-words hyphens-auto w-full">
+                            <h1 className="text-4xl md:text-7xl lg:text-8xl font-serif text-[#EBE5E0] leading-[0.9] mb-4 lg:mb-8 tracking-tight break-words hyphens-auto w-full max-w-full overflow-hidden">
                                 {product.title}
                                 {(selectedVariant?.name || product.variants?.find(v => v.imageUrl === activeImage)?.name) && (
-                                    <span className="block text-3xl md:text-5xl lg:text-6xl text-[var(--terracotta)] mt-2 font-light italic">
+                                    <span className="block text-3xl md:text-5xl lg:text-6xl text-[var(--terracotta)] mt-2 font-light italic break-words">
                                         {selectedVariant?.name || product.variants?.find(v => v.imageUrl === activeImage)?.name}
                                     </span>
                                 )}
@@ -246,8 +246,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         </motion.div>
                     </div>
 
-                    {/* RIGHT: Product Container + Chips (Visual Block) */}
-                    <div className="lg:col-span-7 w-full flex flex-col gap-6 lg:gap-10 items-center justify-center order-2 lg:order-2">
+                    {/* RIGHT: Product Container + Chips (Visual Block) --- added min-w-0 */}
+                    <div className="lg:col-span-7 w-full flex flex-col gap-6 lg:gap-10 items-center justify-center order-2 lg:order-2 min-w-0">
 
                         <div className="relative w-full aspect-[4/3] rounded-[2rem] lg:rounded-[3rem] overflow-hidden bg-[#120d0b] border border-white/5 shadow-2xl group">
 
@@ -531,7 +531,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                                 {spec.label}
                                             </span>
                                             <div>
-                                                <span className="block text-xl font-bold leading-none tracking-tight uppercase mb-2 text-[#EBE5E0]">
+                                                <span className="block text-xl font-bold leading-none tracking-tight uppercase mb-2 text-[#EBE5E0] break-words">
                                                     {spec.value}
                                                 </span>
                                                 <p className="text-xs leading-relaxed text-white/50 font-medium">
