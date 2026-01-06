@@ -25,6 +25,7 @@ const HomeSEOContent = dynamic(() => import('@/components/HomeSEOContent'));
 const TrustBar = dynamic(() => import('@/components/TrustBar'));
 const TechnicalEdge = dynamic(() => import('@/components/TechnicalEdge'));
 const Sustainability = dynamic(() => import('@/components/Sustainability'));
+const TechnicalFAQ = dynamic(() => import('@/components/TechnicalFAQ'));
 
 
 
@@ -133,6 +134,18 @@ export default async function Home({ searchParams }: Props) {
                 '@type': 'Product',
                 name: 'Terracotta Tiles',
                 description: 'Low-efflorescence clay brick tiles for facades and interiors',
+                image: 'https://claytile.in/images/premium-terracotta-facade.png',
+                brand: {
+                  '@type': 'Brand',
+                  name: 'UrbanClay'
+                },
+                offers: {
+                  '@type': 'Offer',
+                  priceCurrency: 'INR',
+                  price: '45',
+                  availability: 'https://schema.org/InStock',
+                  url: 'https://claytile.in/products'
+                }
               },
             },
             {
@@ -141,6 +154,18 @@ export default async function Home({ searchParams }: Props) {
                 '@type': 'Product',
                 name: 'Jaali Panels',
                 description: 'Decorative terracotta jaali panels for ventilation and aesthetics',
+                image: 'https://claytile.in/images/breeze-block-interior.png',
+                brand: {
+                  '@type': 'Brand',
+                  name: 'UrbanClay'
+                },
+                offers: {
+                  '@type': 'Offer',
+                  priceCurrency: 'INR',
+                  price: '120',
+                  availability: 'https://schema.org/InStock',
+                  url: 'https://claytile.in/products'
+                }
               },
             },
             {
@@ -149,6 +174,18 @@ export default async function Home({ searchParams }: Props) {
                 '@type': 'Product',
                 name: 'Exposed Bricks',
                 description: 'Wirecut, pressed, and handmade exposed clay bricks',
+                image: 'https://claytile.in/images/commercial-facade-cladding.png',
+                brand: {
+                  '@type': 'Brand',
+                  name: 'UrbanClay'
+                },
+                offers: {
+                  '@type': 'Offer',
+                  priceCurrency: 'INR',
+                  price: '85',
+                  availability: 'https://schema.org/InStock',
+                  url: 'https://claytile.in/products'
+                }
               },
             },
           ],
@@ -217,6 +254,11 @@ export default async function Home({ searchParams }: Props) {
       {/* Strategic placement: Solving for Efflorescence/Warpage before browsing collection */}
       <ScrollReveal>
         <TechnicalEdge />
+      </ScrollReveal>
+
+      {/* 2.5 TECHNICAL DEEP DIVE - Knowledge for Specifiers */}
+      <ScrollReveal>
+        <TechnicalFAQ />
       </ScrollReveal>
 
       {/* 3. PEER VALIDATION - National Scale & Trusted Partnerships */}

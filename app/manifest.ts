@@ -1,30 +1,30 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'UrbanClay Atelier',
+        name: 'UrbanClay Premium Terracotta',
         short_name: 'UrbanClay',
-        description: 'Premium Terracotta Tiles & Jaali Panels | Pan-India Delivery',
+        description: "India's premier manufacturer of sustainable terracotta tiles and bricks.",
         start_url: '/',
         display: 'standalone',
-        background_color: '#faf7f3',
+        background_color: '#FAF7F3',
         theme_color: '#b45a3c',
         icons: [
             {
-                src: '/favicon.ico',
-                sizes: 'any',
-                type: 'image/x-icon',
-            },
-            {
-                src: '/icon-192.png',
-                sizes: '192x192',
+                src: '/icon.png',
+                sizes: '32x32',
                 type: 'image/png',
             },
             {
-                src: '/icon-512.png',
+                src: '/apple-icon.png',
+                sizes: '180x180',
+                type: 'image/png',
+            },
+            {
+                src: '/icon.png',
                 sizes: '512x512',
                 type: 'image/png',
             },
         ],
-    };
+    }
 }

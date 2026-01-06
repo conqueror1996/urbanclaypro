@@ -405,9 +405,16 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             } : {})
         };
 
-        // Clean up fallback if we want to be strict:
+        // Ensure we always have an offer to satisfy GSC requirements
         if (!priceInfo) {
-            delete (jsonLd as any).offers;
+            (jsonLd as any).offers = {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "INR",
+                "availability": "https://schema.org/InStock",
+                "url": `https://claytile.in/products/${categoryIdentifier}/${product.slug}`,
+                "description": "Price available upon request. Contact UrbanClay for a custom quote."
+            };
         }
 
         const breadcrumbJsonLd = {
