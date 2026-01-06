@@ -2,13 +2,15 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { getJournalPost } from '@/lib/journal';
+import { getJournalPost, getSuggestedPosts } from '@/lib/journal';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import SocialShare from '@/components/SocialShare';
 import { PortableText } from '@portabletext/react';
 import { urlForImage } from '@/sanity/lib/image';
+import RelatedArticles from '@/components/RelatedArticles';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -21,8 +23,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!post) return { title: 'Article Not Found' };
 
     return {
-        title: `${post.title} | The Clay Journal`,
+        title: `${post.title} | The Clay Journal | UrbanClay`,
         description: post.excerpt,
+        keywords: [post.category || 'Architecture', 'Terracotta', 'Sustainability', 'Brick Design', 'India Architecture'],
         openGraph: {
             title: post.title,
             description: post.excerpt,
@@ -51,11 +54,12 @@ const ptComponents = {
             }
             return (
                 <figure className="my-12 -mx-6 md:-mx-12 lg:-mx-24 group">
-                    <div className="overflow-hidden rounded-xl shadow-2xl bg-gray-100">
-                        <img
+                    <div className="overflow-hidden rounded-xl shadow-2xl bg-gray-100 relative aspect-video">
+                        <Image
                             src={urlForImage(value).width(1200).url()}
                             alt={value.alt || 'UrbanClay Journal Image'}
-                            className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.01]"
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-[1.01]"
                         />
                     </div>
                     {value.caption && (
@@ -119,6 +123,7 @@ const ptComponents = {
 export default async function BlogPostPage({ params }: PageProps) {
     const { slug } = await params;
     const post = await getJournalPost(slug);
+    const suggestedPosts = await getSuggestedPosts(slug);
 
     if (!post) notFound();
 
@@ -127,48 +132,36 @@ export default async function BlogPostPage({ params }: PageProps) {
         '@type': 'BlogPosting',
         'headline': post.title,
         'image': post.mainImage ? [post.mainImage] : undefined,
-        'datePublished': post.date, // Assumes post.date is ISO formatted
+        'datePublished': post.publishedAt,
+        'dateModified': post.publishedAt,
         'author': {
             '@type': 'Organization',
-            'name': 'UrbanClay'
+            'name': 'UrbanClay',
+            'url': 'https://claytile.in/our-story'
         },
         'publisher': {
             '@type': 'Organization',
             'name': 'UrbanClay',
             'logo': {
                 '@type': 'ImageObject',
-                'url': 'https://claytile.in/urbanclay-logo.png'
+                'url': 'https://claytile.in/logo.png'
             }
         },
         'description': post.excerpt,
         'mainEntityOfPage': {
             '@type': 'WebPage',
             '@id': `https://claytile.in/journal/${slug}`
-        }
+        },
+        'keywords': post.category || 'Architecture'
     };
 
     const breadcrumbJsonLd = {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         'itemListElement': [
-            {
-                '@type': 'ListItem',
-                'position': 1,
-                'name': 'Home',
-                'item': 'https://claytile.in'
-            },
-            {
-                '@type': 'ListItem',
-                'position': 2,
-                'name': 'Journal',
-                'item': 'https://claytile.in/journal'
-            },
-            {
-                '@type': 'ListItem',
-                'position': 3,
-                'name': post.title,
-                'item': `https://claytile.in/journal/${slug}`
-            }
+            { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://claytile.in' },
+            { '@type': 'ListItem', 'position': 2, 'name': 'Journal', 'item': 'https://claytile.in/journal' },
+            { '@type': 'ListItem', 'position': 3, 'name': post.title, 'item': `https://claytile.in/journal/${slug}` }
         ]
     };
 
@@ -180,7 +173,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             />
             <Header />
 
-            <article className="pt-32 pb-24">
+            <article className="pt-32 pb-12">
                 {/* Immersive Header */}
                 <div className="max-w-5xl mx-auto px-6 mb-20">
                     <div className="flex flex-col items-center text-center">
@@ -208,10 +201,12 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {(post.mainImage || post.imageUrl) && (
                     <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 mb-20">
                         <div className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl shadow-2xl">
-                            <img
-                                src={post.mainImage || post.imageUrl}
-                                alt={post.title}
+                            <Image
+                                src={post.mainImage || post.imageUrl || ''}
+                                alt={`${post.title} - UrbanClay Journal`}
+                                fill
                                 className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-[2s] ease-out"
+                                priority
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
                         </div>
@@ -231,6 +226,26 @@ export default async function BlogPostPage({ params }: PageProps) {
                         <div className="w-20 h-[1px] bg-[#2A1E16]"></div>
                     </div>
 
+                    {/* Related Products Cross-Link */}
+                    {post.relatedProducts && post.relatedProducts.length > 0 && (
+                        <div className="mb-20 bg-[#FAF8F6] p-8 md:p-12 rounded-3xl border border-[#2A1E16]/5">
+                            <h3 className="text-2xl font-serif text-[#2A1E16] mb-8">Featured Materials</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                {post.relatedProducts.map((p, i) => (
+                                    <Link key={i} href={`/products/${p.categorySlug || 'products'}/${p.slug}`} className="group flex gap-6 items-center">
+                                        <div className="w-24 h-24 relative rounded-xl overflow-hidden flex-shrink-0 bg-white">
+                                            <Image src={p.imageUrl} alt={p.title} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-serif text-lg text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">{p.title}</h4>
+                                            <span className="text-xs uppercase tracking-widest text-gray-400">View Details →</span>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     {/* Social Share */}
                     <div className="bg-white rounded-2xl p-10 shadow-lg border border-[#e5e0d8] text-center">
                         <h3 className="text-2xl font-serif text-[#2A1E16] mb-4">Share this story</h3>
@@ -245,7 +260,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     </div>
 
                     {/* Navigation */}
-                    <div className="mt-16 flex items-center justify-between">
+                    <div className="mt-16 flex items-center justify-between border-b border-gray-100 pb-12">
                         <Link
                             href="/journal"
                             className="group flex items-center gap-3 text-gray-500 hover:text-[var(--terracotta)] transition-colors"
@@ -261,10 +276,17 @@ export default async function BlogPostPage({ params }: PageProps) {
                 </div>
             </article>
 
+            {/* Suggested Reading */}
+            {suggestedPosts.length > 0 && (
+                <div className="pb-24">
+                    <RelatedArticles posts={suggestedPosts} />
+                </div>
+            )}
+
             {/* Premium CTA */}
             <section className="relative py-28 overflow-hidden bg-[#2A1E16]">
                 <div className="absolute inset-0 opacity-10">
-                    <img src="/pattern-grid.png" alt="" className="w-full h-full object-cover" />
+                    <img src="https://claytile.in/images/pattern-grid.png" alt="" className="w-full h-full object-cover" />
                 </div>
                 <div className="relative max-w-4xl mx-auto px-6 text-center text-white">
                     <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-8 leading-tight">

@@ -24,6 +24,12 @@ export interface JournalPost {
     readTime?: string;
     date?: string;
     imageUrl?: string;
+    relatedProducts?: {
+        title: string;
+        slug: string;
+        imageUrl: string;
+        categorySlug: string;
+    }[];
 }
 
 export async function getJournalPosts(): Promise<JournalPost[]> {
@@ -64,7 +70,14 @@ export async function getJournalPost(slug: string): Promise<JournalPost | null> 
             "mainImage": mainImage.asset->url,
             publishedAt,
             author,
-            body
+            category,
+            body,
+            "relatedProducts": relatedProducts[]->{
+                title,
+                "slug": slug.current,
+                "imageUrl": images[0].asset->url,
+                "categorySlug": category->slug.current
+            }
         }`;
         const post = await client.fetch(query, { slug }, { next: { revalidate: 60 } });
 
@@ -73,11 +86,36 @@ export async function getJournalPost(slug: string): Promise<JournalPost | null> 
         return {
             ...post,
             date: post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently',
-            readTime: '5 min read',
-            category: 'Architecture'
+            readTime: post.body ? `${Math.ceil(JSON.stringify(post.body).split(' ').length / 200)} min read` : '5 min read',
+            category: post.category || 'Architecture'
         };
     } catch (error) {
         console.error('Error fetching journal post:', error);
         return null;
+    }
+}
+
+export async function getSuggestedPosts(currentSlug: string): Promise<JournalPost[]> {
+    try {
+        const query = groq`*[_type == "journal" && slug.current != $currentSlug] | order(publishedAt desc)[0...3] {
+            _id,
+            title,
+            "slug": slug.current,
+            excerpt,
+            "mainImage": mainImage.asset->url,
+            publishedAt,
+            category,
+            body
+        }`;
+        const posts = await client.fetch(query, { currentSlug }, { next: { revalidate: 60 } });
+        return posts.map((p: any) => ({
+            ...p,
+            date: p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently',
+            readTime: p.body ? `${Math.ceil(JSON.stringify(p.body).split(' ').length / 200)} min read` : '5 min read',
+            category: p.category || 'Architecture'
+        }));
+    } catch (error) {
+        console.error('Error fetching suggested posts:', error);
+        return [];
     }
 }
