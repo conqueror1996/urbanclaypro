@@ -148,7 +148,7 @@ export async function verifyPaymentAndSubmitLead(
 
             // Trigger Integrations (Emails, Zoho) - Fire and Forget
             // We reconstruct the lead object for the email templates
-            const fullLeadDoc = { ...updatedLead, _id: leadId };
+            const fullLeadDoc = { ...updatedLead, _id: leadId } as any;
 
             // Send Emails
             const adminEmailPromise = sendLeadAlertEmail(fullLeadDoc);
