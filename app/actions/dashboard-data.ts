@@ -23,6 +23,7 @@ export async function getDashboardData() {
             serious: leads.filter((l: any) => l.isSerious).length,
             new: leads.filter((l: any) => l.status === 'new').length,
             converted: leads.filter((l: any) => l.status === 'converted').length,
+            abandoned: leads.filter((l: any) => l.status === 'payment_pending').length,
             vendors: data.vendorCount || 0,
             labours: data.labourCount || 0,
             stocks: data.stockCount || 0,

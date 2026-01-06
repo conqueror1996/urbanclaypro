@@ -6,9 +6,10 @@ import { ReactNode } from 'react';
 interface ScrollRevealProps {
     children: ReactNode;
     className?: string;
+    id?: string;
 }
 
-export default function ScrollReveal({ children, className = '' }: ScrollRevealProps) {
+export default function ScrollReveal({ children, className = '', id }: ScrollRevealProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -16,6 +17,7 @@ export default function ScrollReveal({ children, className = '' }: ScrollRevealP
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             className={className}
+            id={id}
         >
             {children}
         </motion.div>

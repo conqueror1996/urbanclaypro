@@ -16,9 +16,9 @@ export default function Footer() {
                             <Image
                                 src="/urbanclay-logo.png"
                                 alt="UrbanClay"
-                                width={120}
-                                height={40}
-                                className="h-10 w-auto opacity-90 brightness-0 invert"
+                                width={160}
+                                height={50}
+                                className="h-10 md:h-12 lg:h-14 w-auto opacity-90 brightness-0 invert"
                             />
                         </Link>
                         <p className="text-gray-400 text-sm leading-relaxed max-w-xs">

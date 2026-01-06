@@ -15,6 +15,7 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
     const { box } = useSampleBox();
     const [step, setStep] = useState<'details' | 'payment' | 'processing' | 'success'>('details');
     const [loading, setLoading] = useState(false);
+    const pendingLeadIdRef = React.useRef<string | null>(null);
 
     // Lock body scroll when modal is open
     useEffect(() => {
@@ -24,6 +25,7 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
         } else {
             document.body.style.overflow = 'unset';
             document.documentElement.style.overflow = 'unset';
+            pendingLeadIdRef.current = null; // Reset on close
         }
         return () => {
             document.body.style.overflow = 'unset';
@@ -85,14 +87,36 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
 
         setLoading(true);
         try {
-            // 1. Create Server-Side Order
+            // Prepare Pending Lead Data
+            const sampleItems = sampleType === 'regular' ? box.map(s => s.name) : ['Curated Premium Collection'];
+            const leadPayload = {
+                role: formData.role,
+                product: sampleType === 'regular' ? `Sample Box (${box.length}) - Attempted` : 'Curated Samples - Attempted',
+                firmName: formData.role === 'Architect' ? formData.name + ' Studio' : 'Private Residence',
+                city: formData.city,
+                quantity: 'Sample Box',
+                timeline: 'Immediate',
+                contact: formData.phone,
+                email: formData.email,
+                address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
+                notes: `Checkout initialized.`,
+                isSampleRequest: true,
+                sampleItems: sampleItems,
+            };
+
+            // 1. Create Server-Side Order & Save Pending Lead
             const receiptId = `rcpt_${Date.now().toString().slice(-8)}`;
-            const orderRes = await createRazorpayOrder(currentPricing.price, receiptId);
+            const orderRes = await createRazorpayOrder(currentPricing.price, receiptId, leadPayload);
 
             if (!orderRes.success || !orderRes.orderId) {
                 alert("Failed to initialize payment gateway. Please try again.");
                 setLoading(false);
                 return;
+            }
+
+            // Store the Pending Lead ID for finalization
+            if (orderRes.leadId) {
+                pendingLeadIdRef.current = orderRes.leadId;
             }
 
             setStep('payment');
@@ -146,28 +170,20 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
     const handleVerification = async (response: any) => {
         setStep('processing');
         try {
-            // Prepare Lead Data
-            const sampleItems = sampleType === 'regular' ? box.map(s => s.name) : ['Curated Premium Collection'];
-
-            const leadData = {
-                role: formData.role,
-                product: sampleType === 'regular' ? `Sample Box (${box.length}) - PAID` : 'Curated Samples - PAID',
-                firmName: formData.role === 'Architect' ? formData.name + ' Studio' : 'Private Residence',
-                city: formData.city,
-                quantity: 'Sample Box',
-                timeline: 'Immediate',
-                contact: formData.phone,
-                email: formData.email,
-                address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
-                notes: `PAID ORDER via Razorpay.`, // Payment IDs will be added by server action
-                isSampleRequest: true,
-                sampleItems: sampleItems,
-                fulfillmentStatus: 'pending'
-            };
-
-            // 2. Verify Payment AND Submit Lead in one Atomic Server Action
-            // This ensures no lead is created unless payment is verified on server
+            // 2. Verify Payment AND Finalize Lead
             const { verifyPaymentAndSubmitLead } = await import('@/app/actions/payment');
+
+            // If we have a pending lead ID, use it. Otherwise fall back to sending full data (Legacy safety)
+            const payload = pendingLeadIdRef.current
+                ? pendingLeadIdRef.current
+                : { /* Fallback reconstruction of lead data in case ref was lost (unlikely) */
+                    role: formData.role,
+                    product: 'Sample Box - PAID (Legacy Fallback)',
+                    contact: formData.phone,
+                    email: formData.email,
+                    notes: `PAID via Legacy Flow.`,
+                    isSampleRequest: true
+                };
 
             const result = await verifyPaymentAndSubmitLead(
                 {
@@ -175,7 +191,7 @@ export default function CheckoutModal({ isOpen, onClose, sampleType }: CheckoutM
                     paymentId: response.razorpay_payment_id,
                     signature: response.razorpay_signature
                 },
-                leadData
+                payload
             );
 
             if (result.success) {

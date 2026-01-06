@@ -54,7 +54,6 @@ const navLinks = [
     { href: '/projects', label: 'Projects' },
     { href: '/journal', label: 'Journal' },
     { href: '/guide', label: 'Selection Guide' },
-    { href: '/catalogue', label: 'Catalogue' },
     { href: '/architects', label: 'For Architects' },
     { href: '/#quote', label: 'Contact' }
 ];
@@ -112,10 +111,9 @@ export default function Header() {
                     <Image
                         src="/urbanclay-logo.png"
                         alt="UrbanClay Logo"
-                        width={140}
-                        height={40}
-                        className="h-9 md:h-11 w-auto group-hover:opacity-80 transition-opacity duration-300"
-                        style={{ width: 'auto', height: 'auto' }}
+                        width={240}
+                        height={120}
+                        className="h-12 md:h-20 lg:h-24 w-auto group-hover:opacity-80 transition-opacity duration-300"
                         priority
                     />
                 </Link>

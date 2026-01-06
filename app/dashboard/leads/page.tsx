@@ -23,7 +23,7 @@ interface Lead {
     requirement?: string; // New
     isSerious: boolean;
     seriousness: 'low' | 'medium' | 'high';
-    status: 'new' | 'contacted' | 'converted' | 'lost';
+    status: 'new' | 'contacted' | 'converted' | 'lost' | 'payment_pending';
     submittedAt: string;
     isSampleRequest?: boolean; // New
     sampleItems?: string[]; // New
@@ -57,6 +57,14 @@ export default function LeadsDashboard() {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+
+    // Handle URL Params for filtering (e.g. from Dashboard)
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const status = params.get('status');
+        if (status) setStatusFilter(status);
+    }, []);
+
     const itemsPerPage = 8; // Showing 8 items per page
 
     const fetchLeads = async () => {
@@ -191,6 +199,7 @@ export default function LeadsDashboard() {
             case 'new': return 'bg-[var(--terracotta)]/10 text-[var(--terracotta)]';
             case 'contacted': return 'bg-orange-100/50 text-orange-700';
             case 'converted': return 'bg-emerald-50 text-emerald-700';
+            case 'payment_pending': return 'bg-amber-50 text-amber-700 font-bold animate-pulse ring-1 ring-amber-200';
             case 'lost': return 'bg-gray-100 text-gray-500';
             default: return 'bg-gray-100/50 text-gray-700';
         }
@@ -404,7 +413,7 @@ export default function LeadsDashboard() {
 
                 {/* Status Tabs */}
                 <div className="flex gap-2 overflow-x-auto pb-2 border-b border-gray-200">
-                    {['all', 'new', 'contacted', 'converted', 'lost'].map((status) => (
+                    {['all', 'new', 'payment_pending', 'contacted', 'converted', 'lost'].map((status) => (
                         <button
                             key={status}
                             onClick={() => setStatusFilter(status)}
@@ -588,6 +597,7 @@ export default function LeadsDashboard() {
                                             className={`px-3 py-1.5 rounded-lg text-sm font-medium outline-none border border-transparent hover:border-gray-300 focus:border-[var(--terracotta)] ${getStatusColor(selectedLead.status)}`}
                                         >
                                             <option value="new">New Lead</option>
+                                            <option value="payment_pending">Payment Pending (Abandonment)</option>
                                             <option value="contacted">Contacted</option>
                                             <option value="converted">Deal Won</option>
                                             <option value="lost">Deal Lost</option>

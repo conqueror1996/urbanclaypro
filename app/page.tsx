@@ -21,6 +21,11 @@ const OurStoryTeaser = dynamic(() => import('@/components/OurStoryTeaser'));
 const FAQSchema = dynamic(() => import('@/components/FAQSchema'));
 const HomeSEOContent = dynamic(() => import('@/components/HomeSEOContent'));
 
+// New UX Strategy Components
+const TrustBar = dynamic(() => import('@/components/TrustBar'));
+const TechnicalEdge = dynamic(() => import('@/components/TechnicalEdge'));
+const Sustainability = dynamic(() => import('@/components/Sustainability'));
+
 
 
 export const revalidate = 60; // Revalidate every 60 seconds
@@ -204,57 +209,57 @@ export default async function Home({ searchParams }: Props) {
       <JsonLd data={jsonLd} />
       <FAQSchema />
       <Header />
+
+      {/* 1. HERO - Architectural Statement */}
       <Hero data={homePageData} injectedKeyword={injectedKeyword} />
 
-      {/* Soft Gradient Divider */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 opacity-40">
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-[var(--terracotta)] to-transparent" />
-      </div>
+      {/* 2. TRUST BAR - Peer Validation */}
+      <TrustBar />
 
-      {/* Signature Collections */}
+      {/* 3. SYSTEMS - Categorized Discovery */}
       <ScrollReveal className="bg-white">
         <SignatureCollection products={products} />
       </ScrollReveal>
 
-      {/* SEO Content Section - Plain HTML for Crawlers */}
+      {/* 4. THE TECHNICAL EDGE - Performance Proof */}
+      <ScrollReveal>
+        <TechnicalEdge />
+      </ScrollReveal>
+
+      {/* 5. PROJECT SHOWCASE - Proof of Execution */}
+      <ScrollReveal className="bg-white">
+        <Projects projects={recentProjects} />
+      </ScrollReveal>
+
+      {/* 6. THE ARCHITECT’S TOOLKIT - Intent-Based Conversion */}
+      <ScrollReveal className="bg-[var(--sand)]">
+        <Tools products={products} />
+      </ScrollReveal>
+
+      {/* 7. THE SUSTAINABILITY PILLAR */}
+      <ScrollReveal>
+        <Sustainability />
+      </ScrollReveal>
+
+      {/* LOGISTICS & REACH - ATLAS */}
+      <ScrollReveal className="bg-[var(--ink)]">
+        <ProjectAtlas projects={allProjects} />
+      </ScrollReveal>
+
+      {/* SEO & STORY (Secondary) */}
       <ScrollReveal className="bg-[#fcf8f6]">
+        <OurStoryTeaser data={homePageData} />
         <HomeSEOContent />
       </ScrollReveal>
 
-      {/* Our Story - Sand Background (Already set in component, but ensuring flow) */}
-      <ScrollReveal>
-        <OurStoryTeaser data={homePageData} />
-      </ScrollReveal>
-
-      {/* Architects - Light Terracotta Tint */}
-      <ScrollReveal className="bg-[#fcf8f6]">
-        <Architects />
-      </ScrollReveal>
-
-      {/* Quote Form - Moved Higher as requested */}
-      <ScrollReveal className="bg-white">
+      {/* FINAL CONVERSION - QUOTE FORM */}
+      <ScrollReveal className="bg-white" id="quote">
         <Suspense fallback={<div className="py-20 text-center">Loading form...</div>}>
           <QuoteForm />
         </Suspense>
       </ScrollReveal>
 
-      {/* Projects - White Background */}
-      <ScrollReveal className="bg-white">
-        <Projects projects={recentProjects} />
-      </ScrollReveal>
-
-      {/* Tools - Sand Background */}
-      <ScrollReveal className="bg-[var(--sand)]">
-        <Tools products={products} />
-      </ScrollReveal>
-
-
-      {/* Project Atlas - Global Reach */}
-      <ScrollReveal className="bg-[var(--ink)]">
-        <ProjectAtlas projects={allProjects} />
-      </ScrollReveal>
-
-      {/* Footer Section */}
+      {/* FOOTER */}
       <ScrollReveal className="bg-white">
         <KilnPreview />
         <Footer />
