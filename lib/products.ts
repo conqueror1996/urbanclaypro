@@ -298,13 +298,15 @@ export interface HomePageData {
     heroHeading?: string;
     heroSubheading?: string;
     ourStoryImageUrl?: string;
+    trustedFirms?: { name: string }[];
 }
 
 const homePageQuery = groq`*[_type == "homePage"][0] {
   "heroImageUrl": heroImage.asset->url,
   heroHeading,
   heroSubheading,
-  "ourStoryImageUrl": ourStoryImage.asset->url
+  "ourStoryImageUrl": ourStoryImage.asset->url,
+  trustedFirms
 }`;
 
 export async function getHomePageData(): Promise<HomePageData | null> {

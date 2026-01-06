@@ -210,56 +210,41 @@ export default async function Home({ searchParams }: Props) {
       <FAQSchema />
       <Header />
 
-      {/* 1. HERO - Architectural Statement */}
+      {/* 1. IDENTITY HERO - System vs. Product Positioning */}
       <Hero data={homePageData} injectedKeyword={injectedKeyword} />
 
-      {/* 2. TRUST BAR - Peer Validation */}
-      <TrustBar />
-
-      {/* 3. SYSTEMS - Categorized Discovery */}
-      <ScrollReveal className="bg-white">
-        <SignatureCollection products={products} />
-      </ScrollReveal>
-
-      {/* 4. THE TECHNICAL EDGE - Performance Proof */}
+      {/* 2. THE FAILURE PROTOCOL - Eliminating Architectural Pain Points */}
+      {/* Strategic placement: Solving for Efflorescence/Warpage before browsing collection */}
       <ScrollReveal>
         <TechnicalEdge />
       </ScrollReveal>
 
-      {/* 5. PROJECT SHOWCASE - Proof of Execution */}
+      {/* 3. PEER VALIDATION - National Scale & Trusted Partnerships */}
+      <TrustBar firms={homePageData?.trustedFirms} />
+
+      {/* 4. SYSTEM ARCHITECTURES - Application-Based Discovery */}
+      <ScrollReveal className="bg-white">
+        <SignatureCollection products={products} />
+      </ScrollReveal>
+
+      {/* 5. EXECUTION ARCHIVE - Commercial & Luxury Residential Proof */}
       <ScrollReveal className="bg-white">
         <Projects projects={recentProjects} />
       </ScrollReveal>
 
-      {/* 6. THE ARCHITECT’S TOOLKIT - Intent-Based Conversion */}
+      {/* 6. THE SPECIFIER TOOLKIT - BIM, CAD & Design Utilities */}
       <ScrollReveal className="bg-[var(--sand)]">
         <Tools products={products} />
       </ScrollReveal>
 
-      {/* 7. THE SUSTAINABILITY PILLAR */}
-      <ScrollReveal>
-        <Sustainability />
-      </ScrollReveal>
-
-      {/* LOGISTICS & REACH - ATLAS */}
-      <ScrollReveal className="bg-[var(--ink)]">
-        <ProjectAtlas projects={allProjects} />
-      </ScrollReveal>
-
-      {/* SEO & STORY (Secondary) */}
-      <ScrollReveal className="bg-[#fcf8f6]">
-        <OurStoryTeaser data={homePageData} />
-        <HomeSEOContent />
-      </ScrollReveal>
-
-      {/* FINAL CONVERSION - QUOTE FORM */}
+      {/* 7. THE TECHNICAL DESK - Project-Specific Consultation */}
       <ScrollReveal className="bg-white" id="quote">
         <Suspense fallback={<div className="py-20 text-center">Loading form...</div>}>
           <QuoteForm />
         </Suspense>
       </ScrollReveal>
 
-      {/* FOOTER */}
+      {/* FOOTER & LOGISTICS BADGE */}
       <ScrollReveal className="bg-white">
         <KilnPreview />
         <Footer />

@@ -54,8 +54,8 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 className="cursor-default"
                             >
                                 <TextReveal
-                                    text={data?.heroHeading || 'India’s finest high-precision terracotta facades and brick systems.'}
-                                    highlightWords={['terracotta']}
+                                    text={data?.heroHeading || 'The Engineered Clay Facade.'}
+                                    highlightWords={['Engineered']}
                                     className="text-3xl sm:text-5xl lg:text-[64px] font-serif font-medium leading-[1.05] text-[#2A1E16] tracking-tight"
                                 />
                             </div>
@@ -66,7 +66,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.6 }}
                             >
-                                {data?.heroSubheading || 'Buildings deserve a skin — not decoration.'}
+                                {data?.heroSubheading || 'Beyond decorative cladding. Industrial-grade terracotta systems designed to eliminate efflorescence and structural warpage in the Indian climate.'}
                             </motion.p>
 
                             <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">
@@ -75,26 +75,32 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                     className="btn-terracotta min-h-[48px] md:min-h-[56px]"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    aria-label="Scroll to enquiry form to specify products for your project"
+                                    aria-label="Request Specifier Kit"
                                 >
-                                    Specify for Your Project
+                                    Request Specifier Kit
                                 </motion.button>
+                                <button
+                                    onClick={() => document.getElementById('signature-collection')?.scrollIntoView({ behavior: 'smooth' })}
+                                    className="flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-[#2A1E16]/10 text-[#2A1E16] font-medium hover:bg-white/50 transition-colors"
+                                >
+                                    Explore System Logic
+                                </button>
                             </div>
 
                             <div className="mt-8 flex items-center gap-3 text-sm font-medium text-[#5d554f]">
                                 <span className="flex items-center gap-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
-                                    Low Efflorescence
+                                    Zero Efflorescence
                                 </span>
                                 <span className="text-gray-300">•</span>
                                 <span className="flex items-center gap-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
-                                    Batch Consistency
+                                    Standardized Tolerances
                                 </span>
                                 <span className="text-gray-300">•</span>
                                 <span className="flex items-center gap-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
-                                    Pan-India Delivery
+                                    Pan-India Scale
                                 </span>
                             </div>
                         </motion.div>

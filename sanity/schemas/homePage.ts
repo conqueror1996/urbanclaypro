@@ -54,6 +54,20 @@ export default defineType({
                     title: 'Alternative Text',
                 }
             ]
+        }),
+        defineField({
+            name: 'trustedFirms',
+            title: 'Trusted Architectural Firms',
+            type: 'array',
+            of: [
+                {
+                    type: 'object',
+                    fields: [
+                        { name: 'name', type: 'string', title: 'Firm Name' }
+                    ]
+                }
+            ],
+            description: 'List of firms to display in the Trust Bar'
         })
     ],
 })

@@ -3,26 +3,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Thermometer, Box, Zap } from 'lucide-react';
+import Link from 'next/link';
 
 const FEATURES = [
     {
-        title: 'Zero Warpage',
-        description: 'Computer-controlled firing ensures perfect dimensional stability for seamless, high-precision installation.',
+        id: 'zero-warpage',
+        title: '0.2mm Tolerance',
+        description: 'Computer-controlled firing ensures perfect dimensional stability and zero warpage for high-precision facade alignment.',
         icon: Box,
     },
     {
-        title: 'Architectural Grade',
-        description: 'Natural clay refined to industrial tolerances. Each piece is tested for density and load-bearing strength.',
+        id: 'architectural-grade',
+        title: 'DIN Standards',
+        description: 'Natural clay refined to industrial tolerances. Each piece is tested for density, frost resistance, and load-bearing strength.',
         icon: Shield,
     },
     {
-        title: 'Thermal Efficiency',
-        description: 'High thermal mass naturally regulates indoor temperatures, reducing cooling loads in Indian climates.',
+        id: 'thermal-efficiency',
+        title: 'Thermal Regulation',
+        description: 'Naturally regulates indoor temperatures, reducing HVAC cooling loads by up to 30% in Indian climates.',
         icon: Thermometer,
     },
     {
-        title: 'Efflorescence Control',
-        description: 'Proprietary de-airing and processing minimizes salt migration, ensuring your facade stays clean for decades.',
+        id: 'efflorescence-control',
+        title: 'Salt-Free Processing',
+        description: 'Proprietary de-airing and high-fire maturation (1150°C) eliminates salt migration, ensuring a permanent clean finish.',
         icon: Zap,
     }
 ];
@@ -37,11 +42,16 @@ export default function TechnicalEdge() {
                             The Technical Edge
                         </span>
                         <h2 className="text-4xl md:text-6xl font-serif leading-tight mb-8">
-                            High-Precision <br /> Clay Engineering.
+                            Engineering a <br /> Failure-Free Facade.
                         </h2>
-                        <p className="text-white/60 text-lg font-light leading-relaxed max-w-md mb-12">
-                            We bridge the gap between organic material and industrial precision, providing architects with the reliability they demand.
+                        <p className="text-white/60 text-lg font-light leading-relaxed max-w-md mb-8">
+                            We eliminate the risks architects hate most. UrbanClay systems are engineered to solve for salt migration, dimensional warpage, and maintenance failures typical of generic clay products.
                         </p>
+                        <div className="mb-12">
+                            <Link href="/resources/technical-data" className="text-[var(--terracotta)] text-sm font-bold uppercase tracking-widest border-b border-[var(--terracotta)] pb-1 hover:text-white hover:border-white transition-all">
+                                Download Technical Data →
+                            </Link>
+                        </div>
 
                         <div className="grid sm:grid-cols-2 gap-8">
                             {FEATURES.map((feature, idx) => (
@@ -74,7 +84,7 @@ export default function TechnicalEdge() {
                                 className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-1000 ease-in-out scale-105 hover:scale-100"
                             />
                         </div>
-                        {/* Floating Metric */}
+                        {/* Material Longevity Badge (Merging Sustainability here) */}
                         <motion.div
                             initial={{ x: 20, opacity: 0 }}
                             whileInView={{ x: 0, opacity: 1 }}
@@ -82,9 +92,9 @@ export default function TechnicalEdge() {
                             transition={{ delay: 0.5, duration: 0.8 }}
                             className="absolute -bottom-8 -right-8 md:-left-8 bg-[var(--terracotta)] p-8 rounded-2xl shadow-2xl z-20"
                         >
-                            <span className="block text-4xl md:text-5xl font-serif text-white mb-1 tracking-tight">1150°C</span>
+                            <span className="block text-4xl md:text-5xl font-serif text-white mb-1 tracking-tight">1000y+</span>
                             <span className="text-[10px] uppercase tracking-wider text-white/80 font-bold leading-tight">
-                                High-Fire Maturation<br />for Surface Density
+                                Material Longevity<br />100% Circular & Bio-Degradable
                             </span>
                         </motion.div>
                     </div>

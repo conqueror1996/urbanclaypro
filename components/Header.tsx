@@ -113,7 +113,7 @@ export default function Header() {
                         alt="UrbanClay Logo"
                         width={240}
                         height={120}
-                        className="h-12 md:h-20 lg:h-24 w-auto group-hover:opacity-80 transition-opacity duration-300"
+                        className="h-10 md:h-16 lg:h-20 w-auto group-hover:opacity-80 transition-opacity duration-300"
                         priority
                     />
                 </Link>

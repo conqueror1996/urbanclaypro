@@ -3,16 +3,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const LOGOS = [
-    { name: 'Morphogenesis', logo: '/logos/morphogenesis.svg' },
-    { name: 'Sanjay Puri', logo: '/logos/sanjay-puri.svg' },
-    { name: 'Studio Lotus', logo: '/logos/studio-lotus.svg' },
-    { name: 'Abin Design Studio', logo: '/logos/abin.svg' },
-    { name: 'Malik Architecture', logo: '/logos/malik.svg' },
-    // Repeat for continuous scroll if needed or use a set
+const DEFAULT_LOGOS = [
+    { name: 'Morphogenesis' },
+    { name: 'Sanjay Puri' },
+    { name: 'Studio Lotus' },
+    { name: 'Abin Design Studio' },
+    { name: 'Malik Architecture' },
 ];
 
-export default function TrustBar() {
+interface TrustBarProps {
+    firms?: { name: string }[];
+}
+
+export default function TrustBar({ firms }: TrustBarProps) {
+    const displayFirms = (firms && firms.length > 0) ? firms : DEFAULT_LOGOS;
+
     return (
         <section className="py-12 bg-white border-y border-[var(--line)] overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,9 +40,9 @@ export default function TrustBar() {
                         }}
                     >
                         {/* Double the logos for seamless loop */}
-                        {[...LOGOS, ...LOGOS].map((logo, idx) => (
-                            <div key={`${logo.name}-${idx}`} className="flex-shrink-0 grayscale opacity-40 hover:opacity-100 transition-opacity duration-500 cursor-default">
-                                <span className="text-2xl md:text-3xl font-serif italic text-[var(--ink)] tracking-tight">{logo.name}</span>
+                        {[...displayFirms, ...displayFirms].map((firm, idx) => (
+                            <div key={`${firm.name}-${idx}`} className="flex-shrink-0 grayscale opacity-40 hover:opacity-100 transition-opacity duration-500 cursor-default">
+                                <span className="text-2xl md:text-3xl font-serif italic text-[var(--ink)] tracking-tight">{firm.name}</span>
                             </div>
                         ))}
                     </motion.div>

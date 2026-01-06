@@ -26,35 +26,38 @@ interface DisplayProduct {
 const SIGNATURE_CATEGORIES = [
     {
         id: 'exposed-brick',
-        label: 'Exposed Brick',
-        subtitle: 'Masonry Construction',
-        description: 'Full-depth structural clay bricks for building authentic, timeless facades.',
-        // EXCLUDE 'tile' and 'cladding' to ensure no overlap
+        label: 'Facade Systems',
+        subtitle: 'Structural Masonry',
+        description: 'High-precision full-depth clay bricks engineered for load-bearing and self-supporting facades with zero efflorescence.',
         match: (p: Product) => {
             const isTile = p.category?.slug === 'brick-tile' || p.title.toLowerCase().includes('tile') || p.title.toLowerCase().includes('cladding');
             if (isTile) return false;
-
             return p.category?.slug === 'exposed-brick' || p.tag?.toLowerCase().includes('exposed') || p.title.toLowerCase().includes('exposed');
         }
     },
     {
         id: 'brick-tile',
-        label: 'Brick Tile',
-        subtitle: 'Surface Cladding',
-        description: 'Slim, lightweight cladding veneers to dress existing walls with brick aesthetics.',
-        // Explicitly include "tile", "cladding", "veneer" but EXCLUDE Floor/Roof
+        label: 'Cladding Systems',
+        subtitle: 'Surface Veneers',
+        description: 'Industrial-grade clay tiles for high-performance wall cladding, offering the aesthetic of brick with the efficiency of a tile.',
         match: (p: Product) => {
             const isFloorOrRoof = p.category?.slug === 'floor-tile' || p.tag?.toLowerCase().includes('floor') || p.tag?.toLowerCase().includes('roof');
             if (isFloorOrRoof) return false;
-
             return p.category?.slug === 'brick-tile' || p.tag?.toLowerCase().includes('cladding') || p.tag?.toLowerCase().includes('tile') || p.title.toLowerCase().includes('veneer');
         }
     },
     {
+        id: 'terracotta-jaali',
+        label: 'Ventilation Systems',
+        subtitle: 'Geometric Jaalis',
+        description: 'Modular terracotta jaali units designed for structural light-play, thermal regulation, and natural ventilation.',
+        match: (p: Product) => p.category?.slug === 'terracotta-jaali' || p.tag?.toLowerCase().includes('jaali') || p.title.toLowerCase().includes('jaali') || p.title.toLowerCase().includes('jali')
+    },
+    {
         id: 'floor-tile',
-        label: 'Floor Tile',
-        subtitle: 'Natural Grounding',
-        description: 'Durable and earthy terracotta floor tiles for warm, inviting spaces.',
+        label: 'Paving Systems',
+        subtitle: 'Natural Flooring',
+        description: 'High-density terracotta floor tiles engineered for slip-resistance and thermal comfort in heavy-traffic environments.',
         match: (p: Product) => p.category?.slug === 'floor-tile' || p.tag?.toLowerCase().includes('floor') || p.title.toLowerCase().includes('floor')
     }
 ];
@@ -196,7 +199,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                             Signature Series
                         </span>
                         <h2 className="text-4xl md:text-6xl font-serif text-[var(--ink)] leading-tight">
-                            Crafted from Earth
+                            High-Performance <br /> Clay Systems
                         </h2>
                     </motion.div>
 

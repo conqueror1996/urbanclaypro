@@ -103,8 +103,8 @@ export default function Projects({ projects = [], showLink = true, layoutMode = 
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
             >
-                <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Our Portfolio</span>
-                <h2 className="text-4xl md:text-5xl font-serif text-[#2A1E16]">Crafted Spaces</h2>
+                <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Execution Proof</span>
+                <h2 className="text-4xl md:text-5xl font-serif text-[#2A1E16]">Commercial & Premium <br className="hidden md:block" /> Residential Archive</h2>
             </motion.div>
 
             <div className={`

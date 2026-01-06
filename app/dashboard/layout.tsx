@@ -134,8 +134,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 { label: 'Campaigns', href: '/dashboard/campaigns', icon: PenTool },
                 { label: 'SEO Suite', href: '/dashboard/seo', icon: Globe },
                 { label: 'Journal Manager', href: '/dashboard/journal', icon: BookOpen },
+                { label: 'Web Content', href: '/dashboard/content', icon: LayoutTemplate },
                 { label: 'Customer Voice', href: '/dashboard/feedback', icon: MessageSquare },
-                { label: 'CMS Studio', href: '/studio', icon: LayoutTemplate },
+                { label: 'Sanity Direct', href: '/studio', icon: LayoutTemplate },
             ]
         }
     ];

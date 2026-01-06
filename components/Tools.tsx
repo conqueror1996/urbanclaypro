@@ -27,10 +27,10 @@ export default function Tools({ products = [] }: ToolsProps) {
         <section id="tools" className="bg-[var(--sand)] border-y border-[var(--line)]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
                 <div className="text-center mb-16">
-                    <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Planning Tools</span>
-                    <h2 className="text-3xl md:text-5xl font-serif text-[#2A1E16]">Plan Your Project</h2>
-                    <p className="mt-4 text-gray-500 max-w-2xl mx-auto">
-                        Visualize our collections in various bonds and grout configurations.
+                    <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Specifier Resources</span>
+                    <h2 className="text-3xl md:text-5xl font-serif text-[#2A1E16]">The Architect’s Toolkit</h2>
+                    <p className="mt-4 text-[#5d554f] max-w-2xl mx-auto font-light leading-relaxed">
+                        Visualize high-precision clay systems across various bonds and grout configurations.
                     </p>
                 </div>
 
