@@ -153,6 +153,26 @@ export default {
             of: [{ type: 'crmInteraction' }]
         },
         {
+            name: 'freightEstimate',
+            title: 'Estimated Freight Cost (₹)',
+            type: 'number'
+        },
+        {
+            name: 'productName',
+            title: 'Initial Product Choice',
+            type: 'string'
+        },
+        {
+            name: 'quantity',
+            title: 'Initial Quantity',
+            type: 'string'
+        },
+        {
+            name: 'totalWeightKg',
+            title: 'Total Project Weight (kg)',
+            type: 'number'
+        },
+        {
             name: 'notes',
             title: 'Internal Notes',
             type: 'text'

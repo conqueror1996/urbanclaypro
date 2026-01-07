@@ -147,8 +147,10 @@ export default function ProjectLab() {
             await createCRMLead({
                 clientName,
                 location,
-                company: `Project Lab: ${result.primarySolution.product}`,
-                requirements: `Area: ${area} sqft. ${result.primarySolution.product} using ${result.primarySolution.method}. ROI: ${result.financialForecasting.roiInsight}`,
+                company: `Project Lab Analysis`,
+                productName: result.primarySolution.product,
+                quantity: `${area} sqft`,
+                requirements: `Using ${result.primarySolution.method}. ROI: ${result.financialForecasting.roiInsight}`,
                 potentialValue: result.financialForecasting.materialInvestment + result.financialForecasting.ancillaryCosts + result.financialForecasting.wastageBuffer,
                 stage: 'new',
                 leadDate: new Date().toISOString().split('T')[0],

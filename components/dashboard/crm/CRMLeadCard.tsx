@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Clock, MapPin, TrendingUp, MoreHorizontal, User, Calendar } from 'lucide-react';
+import { MessageSquare, Clock, MapPin, TrendingUp, MoreHorizontal, User, Calendar, Truck, Box } from 'lucide-react';
 
 interface CRMLeadCardProps {
     lead: any;
@@ -65,10 +65,26 @@ export function CRMLeadCard({ lead, onClick, isOverdue, getDealHealth, stages }:
                 </div>
                 <div className="space-y-2">
                     <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-widest">Active Stage</p>
-                    <span className={`px-3 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-widest border inline-block ${stageInfo?.color}`}>
-                        {stageInfo?.label}
-                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-widest border inline-block ${stageInfo?.color}`}>
+                            {stageInfo?.label}
+                        </span>
+                        {lead.freightEstimate > 0 && (
+                            <div className="flex items-center gap-1.5 px-2 py-1 bg-orange-50 text-orange-600 rounded-lg border border-orange-100 text-[10px] font-bold" title="Est. Freight">
+                                <Truck className="w-3 h-3" />
+                                ₹{Math.round(lead.freightEstimate / 1000)}k
+                            </div>
+                        )}
+                    </div>
                 </div>
+                {(lead.productName || lead.quantity) && (
+                    <div className="col-span-2 mt-2 pt-2 border-t border-[#e9e2da]/40 flex items-center gap-3">
+                        <Box className="w-3 h-3 text-[#b45a3c]" />
+                        <span className="text-[10px] font-bold text-[#2a1e16] uppercase tracking-wider">
+                            {lead.productName || 'Unspecified Product'} {lead.quantity && `• ${lead.quantity}`}
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* Milestones & Actions */}

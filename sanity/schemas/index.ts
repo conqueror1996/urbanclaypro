@@ -34,6 +34,7 @@ import paymentLink from './paymentLink'
 import crmLead from './crm-lead'
 import crmInteraction from './crm-interaction'
 import crmContact from './crm-contact'
+import logisticsHub from './logistics-hub'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
     types: [
@@ -64,6 +65,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         paymentLink,
         crmLead,
         crmInteraction,
-        crmContact
+        crmContact,
+        logisticsHub
     ],
 }

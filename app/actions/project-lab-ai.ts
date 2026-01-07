@@ -1,10 +1,12 @@
 'use server';
 
 import { GoogleGenerativeAI, Part } from '@google/generative-ai';
+import OpenAI from "openai";
 import { getProducts, getProjects, getGuideData } from '@/lib/products';
 import { CITIES } from '@/lib/locations';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 interface ProjectParameters {
     area?: number;
@@ -28,18 +30,16 @@ function fileToGenerativePart(base64: string): Part {
 }
 
 export async function IdentifyAndAsk(params: ProjectParameters) {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
-    const products = await getProducts();
+    if (!genAI && !openai) {
+        return { success: false, error: "Please configure GEMINI_API_KEY or OPENAI_API_KEY to use AI analysis." };
+    }
 
-    // Inject logic to vary questions
+    const products = await getProducts();
     const cityContext = params.location && CITIES[params.location.toLowerCase()]
         ? `Site Location: ${params.location}. Weather Context: ${CITIES[params.location.toLowerCase()].weatherContext}.`
         : "Location not explicitly set.";
 
     const productList = products.map(p => `- ${p.title}: ${p.description.substring(0, 50)}...`).join('\n');
-
-    const imageParts = (params.images || []).map(fileToGenerativePart);
-
     const prompt = `
         You are a veteran Chief Consultant at Urban Clay. 
         A client has uploaded images.
@@ -53,7 +53,7 @@ export async function IdentifyAndAsk(params: ProjectParameters) {
            IMPORTANT: DO NOT be repetitive. Vary your focus based on what you see.
            If it's a facade, ask about wind loads. If it's interior, ask about lighting or furniture sync.
         
-        RESPONSE FORMAT (JSON):
+        RESPONSE FORMAT (JSON ONLY):
         {
             "identifiedProducts": ["string"],
             "visualContext": "string (Detailed observation of surface and scale)",
@@ -64,8 +64,32 @@ export async function IdentifyAndAsk(params: ProjectParameters) {
     `;
 
     try {
-        const result = await model.generateContent([prompt, ...imageParts]);
-        const text = result.response.text();
+        let text = "";
+        if (genAI) {
+            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+            const imageParts = (params.images || []).map(fileToGenerativePart);
+            const result = await model.generateContent([prompt, ...imageParts]);
+            text = result.response.text();
+        } else if (openai) {
+            const messages = [
+                {
+                    role: "user",
+                    content: [
+                        { type: "text", text: prompt },
+                        ...(params.images || []).map(img => ({
+                            type: "image_url",
+                            image_url: { url: img }
+                        }))
+                    ]
+                }
+            ];
+            const response = await (openai as any).chat.completions.create({
+                model: "gpt-4o",
+                messages: messages,
+            });
+            text = response.choices[0].message.content || "";
+        }
+
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         return { success: true, data: jsonMatch ? JSON.parse(jsonMatch[0]) : null };
     } catch (error) {
@@ -75,7 +99,9 @@ export async function IdentifyAndAsk(params: ProjectParameters) {
 }
 
 export async function AnalyzeProject(params: ProjectParameters) {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    if (!genAI && !openai) {
+        return { success: false, error: "Please configure GEMINI_API_KEY or OPENAI_API_KEY to use AI analysis." };
+    }
 
     const products = await getProducts();
     const projects = await getProjects();
@@ -83,12 +109,6 @@ export async function AnalyzeProject(params: ProjectParameters) {
 
     const city = params.location ? CITIES[params.location.toLowerCase()] : null;
     const climateAdvice = city ? `CLIMATE ADVICE for ${city.name}: ${city.climateAdvice}` : "";
-
-    const productSummary = products.map(p =>
-        `- ${p.title} (${p.category?.title}): ${p.description.substring(0, 50)}...`
-    ).join('\n');
-
-    const imageParts = (params.images || []).map(fileToGenerativePart);
 
     const prompt = `
         You are a 50-year-old veteran owner. 
@@ -106,48 +126,48 @@ export async function AnalyzeProject(params: ProjectParameters) {
         
         GOAL: Provide a "Definitive Solution" and a "Contrarian Alternative" (something radically different).
         
-        RESPONSE FORMAT (JSON):
+        RESPONSE FORMAT (JSON ONLY):
         {
-            "strategicVision": "string (A unique, persona-driven take. Mention a technical 'why' based on the images).",
-            "primarySolution": {
-                "product": "string",
-                "method": "string",
-                "reasoning": "string (Why this fits the specific site context seen in images)",
-                "quantity": "string"
-            },
-            "alternativeSolution": {
-                "product": "string",
-                "method": "string",
-                "reasoning": "string (A different philosophical approach to the same site)"
-            },
-            "engineeringMastery": {
-                "structuralLogic": "string (Specific technical instructions - mortar mix, clamp types, or grout width)",
-                "keyChallenges": ["string"],
-                "proTip": "string (A veteran secret for this specific application)"
-            },
-            "financialForecasting": {
-                "materialInvestment": "number",
-                "ancillaryCosts": "number",
-                "wastageBuffer": "number",
-                "roiInsight": "string (Explain performance over 10-20 years given the local climate)"
-            },
-            "stepByStepExecution": [
-                { "phase": "string", "whatToDo": "string", "whyItMatters": "string", "estimatedDays": "number" }
-            ],
-            "visualObservation": "string (What you measured/saw in the images)"
+            "strategicVision": "string",
+            "primarySolution": { "product": "string", "method": "string", "reasoning": "string", "quantity": "string" },
+            "alternativeSolution": { "product": "string", "method": "string", "reasoning": "string" },
+            "engineeringMastery": { "structuralLogic": "string", "keyChallenges": ["string"], "proTip": "string" },
+            "financialForecasting": { "materialInvestment": 0, "ancillaryCosts": 0, "wastageBuffer": 0, "roiInsight": "string" },
+            "stepByStepExecution": [ { "phase": "string", "whatToDo": "string", "whyItMatters": "string", "estimatedDays": 0 } ],
+            "visualObservation": "string"
         }
     `;
 
     try {
-        const result = await model.generateContent([prompt, ...imageParts]);
-        const text = result.response.text();
-        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        let text = "";
+        if (genAI) {
+            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+            const imageParts = (params.images || []).map(fileToGenerativePart);
+            const result = await model.generateContent([prompt, ...imageParts]);
+            text = result.response.text();
+        } else if (openai) {
+            const messages = [
+                {
+                    role: "user",
+                    content: [
+                        { type: "text", text: prompt },
+                        ...(params.images || []).map(img => ({
+                            type: "image_url",
+                            image_url: { url: img }
+                        }))
+                    ]
+                }
+            ];
+            const response = await (openai as any).chat.completions.create({
+                model: "gpt-4o",
+                messages: messages,
+            });
+            text = response.choices[0].message.content || "";
+        }
 
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-            return {
-                success: true,
-                data: JSON.parse(jsonMatch[0])
-            };
+            return { success: true, data: JSON.parse(jsonMatch[0]) };
         }
         throw new Error("Failed to parse AI response.");
     } catch (error) {

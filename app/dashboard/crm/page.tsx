@@ -67,7 +67,9 @@ function CRMContent() {
         potentialValue: '', stage: 'new', role: 'architect', requirements: '',
         location: '',
         leadDate: new Date().toISOString().split('T')[0],
-        leadTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+        leadTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
+        productName: '',
+        quantity: ''
     });
 
     // Quote States
@@ -425,6 +427,10 @@ function CRMContent() {
                                             <input type="date" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.leadDate} onChange={e => setNewDealForm({ ...newDealForm, leadDate: e.target.value })} />
                                             <input type="time" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.leadTime} onChange={e => setNewDealForm({ ...newDealForm, leadTime: e.target.value })} />
                                             <input type="number" placeholder="Est. Valuation (₹)" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.potentialValue} onChange={e => setNewDealForm({ ...newDealForm, potentialValue: e.target.value })} />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <input placeholder="Product Choice (e.g. Handmade)" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.productName} onChange={e => setNewDealForm({ ...newDealForm, productName: e.target.value })} />
+                                            <input placeholder="Est. Quantity (units/sqft)" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.quantity} onChange={e => setNewDealForm({ ...newDealForm, quantity: e.target.value })} />
                                         </div>
                                         <textarea placeholder="Technical Requirements & Aesthetic Specifications..." className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm h-32 resize-none" value={newDealForm.requirements} onChange={e => setNewDealForm({ ...newDealForm, requirements: e.target.value })} />
                                     </div>

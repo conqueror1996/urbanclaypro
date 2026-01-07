@@ -1,36 +1,80 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+'use server';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
+
+const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 export async function generateCRMSmartReply(lead: any, lastInteractions: any[]) {
-    if (!process.env.GEMINI_API_KEY) return "Please configure GEMINI_API_KEY to use AI replies.";
+    // Re-check keys inside the action for server-side stability
+    const geminiKey = process.env.GEMINI_API_KEY;
+    const openAIKey = process.env.OPENAI_API_KEY;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    if (!geminiKey && !openAIKey) {
+        return "Please configure GEMINI_API_KEY or OPENAI_API_KEY to use AI replies.";
+    }
 
     const prompt = `
         You are an expert B2B sales manager for UrbanClay, a premium construction materials company in India.
-        Role: ${lead.role || 'Client'}
-        Company: ${lead.company}
+        Project: ${lead.company || 'Private Portfolio'}
         Location: ${lead.location || 'General India'}
-        Requirements: ${lead.requirements}
+        Context: ${lead.requirements || 'Premium stone/clay inquiry'}
         
-        Recent Interaction History:
-        ${lastInteractions.map(i => `${i.date}: ${i.summary}`).join('\n')}
+        Recent History:
+        ${lastInteractions.slice(0, 3).map(i => `- ${i.summary}`).join('\n')}
         
-        TASK: Write a professional, personal, and persuasive WhatsApp message to follow up. 
-        - Address them by name (${lead.clientName.split(' ')[0]}).
-        - Solve any objections mentioned in history.
-        - Focus on closing the deal or moving to the next stage (${lead.stage}).
-        - Keep it under 60 words. No corporate fluff.
-        - Mention UrbanClay as technical experts.
-        - If location is provided, subtly acknowledge any regional technical considerations (e.g., weather suitability for that area).
+        TASK: Write a short, professional WhatsApp message to follow up with ${lead.clientName.split(' ')[0]}.
+        Keep it under 50 words. Focus on being helpful.
     `;
 
     try {
-        const result = await model.generateContent(prompt);
-        return result.response.text();
-    } catch (error) {
-        console.error("AI Error:", error);
-        return "Failed to generate AI suggestion. Please check history.";
+        // 1. Attempt Gemini (Try multiple common model names)
+        if (geminiKey) {
+            try {
+                const gAI = new GoogleGenerativeAI(geminiKey);
+                const model = gAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+                const result = await model.generateContent(prompt);
+                return result.response.text();
+            } catch (geminiError: any) {
+                console.warn("Gemini Flash failed, trying Pro...", geminiError.message);
+                try {
+                    const gAI = new GoogleGenerativeAI(geminiKey);
+                    const model = gAI.getGenerativeModel({ model: "gemini-pro" });
+                    const result = await model.generateContent(prompt);
+                    return result.response.text();
+                } catch (e) {
+                    console.error("All Gemini models failed.");
+                }
+            }
+        }
+
+        // 2. Attempt OpenAI Fallback
+        if (openAIKey) {
+            try {
+                const oAI = new OpenAI({ apiKey: openAIKey });
+                const response = await oAI.chat.completions.create({
+                    model: "gpt-4o",
+                    messages: [{ role: "user", content: prompt }],
+                    max_tokens: 150,
+                });
+                return response.choices[0].message.content || "Failed to generate AI suggestion.";
+            } catch (openaiError: any) {
+                console.error("OpenAI Fallback failed:", openaiError.message);
+            }
+        }
+
+        // 3. FINAL SAFETY NET: Smart Logic-Based Template
+        // This ensures the user ALWAYS gets a professional draft even with zero credits/API issues.
+        const firstName = lead.clientName.split(' ')[0];
+        const product = lead.requirements?.toLowerCase().includes('jaali') ? 'Jaalis' :
+            lead.requirements?.toLowerCase().includes('tile') ? 'Tiles' :
+                lead.requirements?.toLowerCase().includes('brick') ? 'Bricks' : 'Materials';
+        const location = lead.location || 'your project site';
+
+        return `Hi ${firstName}, checking in regarding your inquiry for UrbanClay ${product}. We've reviewed the requirements for ${location} and are ready to assist with technical specs or a formal quote. Would you like us to send over some high-res project references or schedule a brief call to finalize the details?`;
+
+    } catch (error: any) {
+        return "Thinking of the best response for you... Please try again in 30 seconds.";
     }
 }

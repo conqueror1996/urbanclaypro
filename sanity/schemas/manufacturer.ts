@@ -44,9 +44,31 @@ export default defineType({
         }),
         defineField({
             name: 'products',
-            title: 'Manufactured Products',
+            title: 'Manufactured Products & Costs',
             type: 'array',
-            of: [{ type: 'reference', to: [{ type: 'product' }] }],
+            of: [
+                {
+                    type: 'object',
+                    name: 'productWithCost',
+                    title: 'Product with Cost',
+                    fields: [
+                        { name: 'product', type: 'reference', to: [{ type: 'product' }], title: 'Product' },
+                        { name: 'purchaseCost', type: 'number', title: 'Purchase Cost (₹)', description: 'Cost price from this manufacturer' },
+                    ],
+                    preview: {
+                        select: {
+                            title: 'product.title',
+                            subtitle: 'purchaseCost',
+                        },
+                        prepare({ title, subtitle }) {
+                            return {
+                                title: title || 'Unnamed Product',
+                                subtitle: subtitle ? `₹${subtitle}` : 'No cost set',
+                            }
+                        },
+                    },
+                },
+            ],
         }),
         defineField({
             name: 'rating',

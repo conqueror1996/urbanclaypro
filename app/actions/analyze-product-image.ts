@@ -1,44 +1,24 @@
 'use server';
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from "openai";
 
-const apiKey = process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey || '');
+const geminiKey = process.env.GEMINI_API_KEY;
+const openaiKey = process.env.OPENAI_API_KEY;
+const genAI = geminiKey ? new GoogleGenerativeAI(geminiKey) : null;
+const openai = openaiKey ? new OpenAI({ apiKey: openaiKey }) : null;
 
 export async function analyzeProductImage(formData: FormData) {
-    if (!apiKey) {
-        console.warn("GEMINI_API_KEY is not set.");
-        return {
-            suggestedName: "Premium Variant",
-            dominantColor: "#8b4513",
-            tags: ["Architecture", "Terracotta"],
-            confidence: 0.1
-        };
-    }
-
     const file = formData.get('file') as File;
-    if (!file) {
-        throw new Error('No file uploaded');
-    }
+    if (!file) throw new Error('No file uploaded');
 
-    try {
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const base64Image = buffer.toString('base64');
-
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        const prompt = `
+    const prompt = `
         You are a creative director for a luxury architectural brand called "UrbanClay".
         Analyze this product image (likely a brick, tile, or cladding material).
         
         1. **Name**: specific, expensive-sounding, and visually matching the product. 
            - Examples: "Canyon Red", "Midnight Basalt", "Sahara Sand", "Venetian Terracotta".
-           - Avoid generic names like "Red Brick". Make it sound premium.
-           - Ensure it is SEO friendly (contains relevant keywords like 'Clay', 'Slab', 'Finish' if applicable, but keep it elegant).
-        
         2. **Tags**: 5 relevant visual tags (e.g., "Textured", "Matte", "Earthy", "Contemporary").
-        
         3. **Dominant Color**: A hex code that represents the dominant visual color.
 
         Output ONLY valid JSON:
@@ -47,33 +27,55 @@ export async function analyzeProductImage(formData: FormData) {
             "tags": ["string"],
             "dominantColor": "#hex"
         }
-        `;
+    `;
 
-        const result = await model.generateContent([
-            prompt,
-            {
-                inlineData: {
-                    data: base64Image,
-                    mimeType: file.type
-                }
-            }
-        ]);
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64Image = buffer.toString('base64');
+        let text = "";
 
-        const response = await result.response;
-        const text = response.text();
+        if (genAI) {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const result = await model.generateContent([
+                prompt,
+                { inlineData: { data: base64Image, mimeType: file.type } }
+            ]);
+            text = result.response.text();
+        } else if (openai) {
+            const response = await openai.chat.completions.create({
+                model: "gpt-4o",
+                messages: [
+                    {
+                        role: "user",
+                        content: [
+                            { type: "text", text: prompt },
+                            { type: "image_url", image_url: { url: `data:${file.type};base64,${base64Image}` } }
+                        ]
+                    }
+                ],
+                response_format: { type: "json_object" }
+            });
+            text = response.choices[0].message.content || "";
+        } else {
+            return {
+                suggestedName: "Artisan Clay",
+                dominantColor: "#8b4513",
+                tags: ["Natural", "Premium"],
+                confidence: 0.1
+            };
+        }
 
-        // Clean markdown if present
         const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
         const data = JSON.parse(jsonStr);
 
         return {
             ...data,
-            confidence: 0.95 // AI is confident
+            confidence: 0.95
         };
 
     } catch (error) {
         console.error("AI Analysis Failed:", error);
-        // Fallback
         return {
             suggestedName: "Artisan Clay",
             dominantColor: "#8b4513",

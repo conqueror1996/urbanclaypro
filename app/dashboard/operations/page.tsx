@@ -32,6 +32,10 @@ interface Entity {
         comments: string;
         siteImages: any[];
     };
+    products?: {
+        product: { title: string; _id: string };
+        purchaseCost: number;
+    }[];
 }
 
 export default function OperationsHub() {
@@ -53,12 +57,19 @@ export default function OperationsHub() {
     const [completionDate, setCompletionDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const [isCompleting, setIsCompleting] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+    const [globalProducts, setGlobalProducts] = useState<{ _id: string, title: string }[]>([]);
 
     const fetchAll = async () => {
         setLoading(true);
         try {
             const query = `{
-                "manufacturers": *[_type == "manufacturer"] | order(_createdAt desc) { _id, _type, name, location, rating, phone },
+                "manufacturers": *[_type == "manufacturer"] | order(_createdAt desc) { 
+                    _id, _type, name, location, rating, phone,
+                    products[] {
+                        "product": product->{ title, _id },
+                        purchaseCost
+                    }
+                },
                 "vendors": *[_type == "vendor"] | order(_createdAt desc) { _id, _type, name, companyName, category, status, phone },
                 "labours": *[_type == "labour"] | order(_createdAt desc) { _id, _type, name, trade, status, phone, dailyRate, experience, projectCost, documents },
                 "sites": *[_type == "site"] | order(_createdAt desc) { 
@@ -104,9 +115,22 @@ export default function OperationsHub() {
         setIsSubmitting(true);
         try {
             const url = formData._id ? '/api/operations/update' : '/api/operations/create';
+
+            // Clean and transform data
+            let submissionData = { ...formData };
+            if (modalType === 'manufacturer' && submissionData.products) {
+                submissionData.products = submissionData.products
+                    .filter((p: any) => p.product?._id)
+                    .map((p: any) => ({
+                        _key: p._key || Math.random().toString(36).substr(2, 9),
+                        product: { _type: 'reference', _ref: p.product._id },
+                        purchaseCost: p.purchaseCost
+                    }));
+            }
+
             const body = formData._id
-                ? { id: formData._id, data: { ...formData, _id: undefined, _type: undefined, _createdAt: undefined, _updatedAt: undefined, _rev: undefined } }
-                : { type: modalType, data: formData };
+                ? { id: formData._id, data: { ...submissionData, _id: undefined, _type: undefined, _createdAt: undefined, _updatedAt: undefined, _rev: undefined } }
+                : { type: modalType, data: submissionData };
 
             const res = await fetch(url, {
                 method: 'POST',
@@ -128,6 +152,11 @@ export default function OperationsHub() {
 
     useEffect(() => {
         fetchAll();
+        const fetchGlobalProducts = async () => {
+            const prod = await client.fetch(`*[_type == "product"] { _id, title }`);
+            setGlobalProducts(prod);
+        };
+        fetchGlobalProducts();
     }, []);
 
     const filtered = entities.filter(e => {
@@ -295,6 +324,20 @@ export default function OperationsHub() {
                                     </p>
                                 </div>
 
+                                {entity._type === 'manufacturer' && entity.products && entity.products.length > 0 && (
+                                    <div className="mt-4 space-y-2">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Manufacturer Product Catalog</p>
+                                        <div className="bg-indigo-50/30 rounded-2xl border border-indigo-100/50 overflow-hidden">
+                                            {entity.products.map((item, i) => (
+                                                <div key={i} className={`flex justify-between items-center p-3 ${i !== entity.products!.length - 1 ? 'border-b border-indigo-100/30' : ''}`}>
+                                                    <span className="text-[11px] font-bold text-gray-700 truncate max-w-[140px]">{item.product?.title}</span>
+                                                    <span className="text-[11px] font-black text-indigo-600">₹{item.purchaseCost?.toLocaleString()}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {entity._type === 'labour' && (
                                     <div className="mt-4 grid grid-cols-2 gap-4">
                                         <div className="bg-orange-50/50 p-2 rounded-xl">
@@ -352,6 +395,12 @@ export default function OperationsHub() {
                                     <div className="flex items-center gap-2">
                                         <div className="flex -space-x-1">
                                             {/* Dynamic small tags based on type */}
+                                            {entity._type === 'manufacturer' && entity.products && entity.products.length > 0 && (
+                                                <span className="text-[10px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                                                    {entity.products.length} SKUs
+                                                </span>
+                                            )}
                                             {entity._type === 'labour' && <span className="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">{entity.trade}</span>}
                                             {entity._type === 'vendor' && <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">{entity.category?.replace('_', ' ')}</span>}
                                             {entity._type === 'site' && (
@@ -462,6 +511,59 @@ export default function OperationsHub() {
                                             className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none"
                                         />
                                     </div>
+
+                                    {modalType === 'manufacturer' && (
+                                        <div className="space-y-4">
+                                            <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Product Catalog & Purchase Costs</label>
+                                            <div className="space-y-2">
+                                                {formData.products?.map((item: any, i: number) => (
+                                                    <div key={i} className="flex gap-2 items-center bg-gray-50 p-2 rounded-xl">
+                                                        <select
+                                                            value={item.product?._id || ''}
+                                                            onChange={e => {
+                                                                const newProducts = [...formData.products];
+                                                                const selected = globalProducts.find(p => p._id === e.target.value);
+                                                                newProducts[i] = { ...item, product: { _id: e.target.value, title: selected?.title } };
+                                                                setFormData({ ...formData, products: newProducts });
+                                                            }}
+                                                            className="flex-1 bg-white border-none rounded-lg p-2 text-xs outline-none"
+                                                        >
+                                                            <option value="">Select Product</option>
+                                                            {globalProducts.map(p => <option key={p._id} value={p._id}>{p.title}</option>)}
+                                                        </select>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Cost"
+                                                            value={item.purchaseCost || ''}
+                                                            onChange={e => {
+                                                                const newProducts = [...formData.products];
+                                                                newProducts[i] = { ...item, purchaseCost: parseFloat(e.target.value) };
+                                                                setFormData({ ...formData, products: newProducts });
+                                                            }}
+                                                            className="w-24 bg-white border-none rounded-lg p-2 text-xs outline-none"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newProducts = formData.products.filter((_: any, idx: number) => idx !== i);
+                                                                setFormData({ ...formData, products: newProducts });
+                                                            }}
+                                                            className="p-2 text-red-400 hover:text-red-600"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, products: [...(formData.products || []), { product: null, purchaseCost: 0 }] })}
+                                                    className="w-full py-2 bg-indigo-50 text-indigo-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-100 transition-colors"
+                                                >
+                                                    + Add Product to Portfolio
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {modalType === 'vendor' && (
                                         <>

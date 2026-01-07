@@ -21,6 +21,7 @@ export interface Product {
         compressiveStrength: string;
         firingTemperature: string;
         weight?: string;
+        unitWeightKg?: number;
         thickness?: string;
         efflorescence?: string;
     };

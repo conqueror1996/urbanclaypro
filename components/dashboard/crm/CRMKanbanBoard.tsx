@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, Truck } from 'lucide-react';
 import { CRMLeadCard } from './CRMLeadCard';
 
 interface CRMKanbanBoardProps {
@@ -83,11 +83,19 @@ export function CRMKanbanBoard({
                                                                         {lead.location && <span className="text-[#b45a3c] font-black"> &bull; {lead.location}</span>}
                                                                     </p>
                                                                 </div>
-                                                                {lead.potentialValue > 0 && (
-                                                                    <span className="text-[9px] font-bold text-[#2a1e16] bg-[#FAF9F6] px-1.5 py-0.5 rounded border border-[#e9e2da]">
-                                                                        ₹{(lead.potentialValue / 1000).toFixed(0)}k
-                                                                    </span>
-                                                                )}
+                                                                <div className="flex flex-col items-end gap-1">
+                                                                    {lead.potentialValue > 0 && (
+                                                                        <span className="text-[9px] font-bold text-[#2a1e16] bg-[#FAF9F6] px-1.5 py-0.5 rounded border border-[#e9e2da]">
+                                                                            ₹{(lead.potentialValue / 1000).toFixed(0)}k
+                                                                        </span>
+                                                                    )}
+                                                                    {lead.freightEstimate > 0 && (
+                                                                        <span className="text-[8px] font-bold text-orange-600 bg-orange-50 px-1 py-0.5 rounded flex items-center gap-1">
+                                                                            <Truck className="w-2 h-2" />
+                                                                            ₹{(lead.freightEstimate / 1000).toFixed(0)}k
+                                                                        </span>
+                                                                    )}
+                                                                </div>
                                                             </div>
 
                                                             <div className="flex items-center justify-between pl-2">
