@@ -44,11 +44,12 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         // ... (Existing Product Metadata Logic)
         const cmsKeywords = product.seo?.keywords || [];
         const variantKeywords = product.variants?.map((v: any) => v.name) || [];
-        const baseKeywords = [product.title, product.tag || 'Terracotta', 'UrbanClay', 'India'];
+        const baseKeywords = [product.title, product.category?.title || product.tag || 'Terracotta', 'UrbanClay', 'India'];
         const uniqueKeywords = Array.from(new Set([...cmsKeywords, ...variantKeywords, ...baseKeywords]));
 
-        let metaTitle = product.seo?.metaTitle || `${product.title} price in India | UrbanClay`;
-        let metaDescription = truncate(product.seo?.metaDescription || product.description, 155);
+        const categoryBrand = product.category?.title || product.tag || 'Terracotta';
+        let metaTitle = product.seo?.metaTitle || `${product.title} - ${categoryBrand} | UrbanClay India`;
+        let metaDescription = truncate(product.seo?.metaDescription || product.description || `Experience the elegance of ${product.title} ${categoryBrand}. High-quality architectural terracotta solutions by UrbanClay.`, 160);
 
         // Gather all possible images for a rich preview
         const productImages = [
@@ -68,11 +69,12 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         const selectedVariant = variantName ? product.variants?.find((v: any) => v.name === variantName) : null;
 
         if (selectedVariant) {
-            // Enhanced Title for Variant
-            metaTitle = `${selectedVariant.name} - ${product.title} | UrbanClay`;
+            // Highly specific variant titles
+            metaTitle = `${selectedVariant.name} ${product.title} | ${categoryBrand} Catalog`;
 
-            // Enhanced Description for Variant (keep it within limits)
-            metaDescription = truncate(`Buy ${selectedVariant.name} ${product.title}. ${metaDescription}`, 155);
+            // Unique variant description to avoid duplication with parent
+            const variantDescription = `Buy ${selectedVariant.name} ${product.title}. Premium ${categoryBrand.toLowerCase()} material for sustainable architecture.`;
+            metaDescription = truncate(`${variantDescription} ${product.description || ''}`, 160);
 
             // Prioritize Variant Image for OG
             if (selectedVariant.imageUrl) {

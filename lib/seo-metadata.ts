@@ -11,51 +11,69 @@ export const CATEGORY_METADATA: Record<string, {
 }> = {
     'exposed-bricks': {
         displayTitle: 'Exposed Bricks',
-        metaTitle: 'Premium Exposed Wirecut Bricks | Red, Grey & Beige Facade Bricks',
-        metaDescription: 'Buy India\'s finest range of wirecut and handmade exposed bricks. Perfect for sustainable, breathable, and timeless facades. Available in Bangalore, Mumbai, Delhi.',
+        metaTitle: 'Premium Exposed Wirecut Bricks | Authentic Red & Grey Masonry Bricks',
+        metaDescription: 'Discover India\'s most versatile range of exposed wirecut bricks. Perfect for load-bearing and partition walls with a natural, earthen aesthetic. High-compressive strength solutions.',
         keywords: ['exposed bricks', 'wirecut bricks', 'facing bricks', 'red clay bricks', 'facade bricks india']
     },
     'brick-wall-tiles': {
         displayTitle: 'Brick Wall Tiles',
-        metaTitle: 'Thin Brick Cladding Tiles & Interior Brick Venners | Urban Clay',
-        metaDescription: 'Transform your interiors and exteriors with thin brick cladding tiles. Get the authentic exposed brick look with easy installation and minimal weight.',
+        metaTitle: 'Thin Brick Cladding & Interior Brick Veneers | UrbanClay India',
+        metaDescription: 'Achieve the classic exposed brick look without the weight. Our thin brick wall tiles are ideal for interior feature walls and modern exterior cladding.',
         keywords: ['brick cladding tiles', 'exposed brick tiles', 'wall cladding', 'interior brick veneer', 'thin bricks']
     },
     'terracotta-jaali': {
         displayTitle: 'Terracotta Jali',
-        metaTitle: 'Terracotta Jaali Blocks & Ventilation Breeze Blocks | Urban Clay',
-        metaDescription: 'Natural terracotta ventilation blocks (Jaali) that reduce indoor temperature and add artistic shadow patterns to building facades. Sustainable cooling solutions.',
+        metaTitle: 'Artistic Terracotta Jali Blocks | Passive Cooling Screen Walls',
+        metaDescription: 'Handcrafted terracotta ventilation blocks (Jaali) designed for privacy, light play, and natural ventilation in tropical architecture. Explore unique geometric patterns.',
         keywords: ['terracotta jaali', 'jaali blocks', 'breeze blocks', 'ventilation blocks', 'clay jali', 'facade screens']
     },
     'floor-tiles': {
-        displayTitle: 'Floor Tiles',
-        metaTitle: 'Handmade Terracotta Floor Tiles & Paving Bricks | Urban Clay',
-        metaDescription: 'Handcrafted terracotta floor tiles for a rustic, earthen touch. Cool underfoot, durable, and naturally slip-resistant. Perfect for farmhouses and verandas.',
+        displayTitle: 'Terracotta Floor Tiles',
+        metaTitle: 'Rustic Handcrafted Floor Tiles | Naturally Slip-Resistant Flooring',
+        metaDescription: 'Earthen terracotta floor tiles for verandas, courtyards, and heritage homes. Durable, cool underfoot, and available in multiple sizes and finishes.',
         keywords: ['terracotta floor tiles', 'clay pavers', 'handmade tiles', 'rustic flooring', 'red floor tiles']
     },
     'roof-tiles': {
         displayTitle: 'Roof Tiles',
-        metaTitle: 'Premium Clay Roof Tiles for Indian Climate | Urban Clay',
-        metaDescription: 'Weather-proof clay roof tiles that offer superior thermal insulation. Authentic Mangalore and pot tiles for heritage and modern tropical roofs.',
+        metaTitle: 'Premium Clay Roofing Solutions | High Thermal Insulation Tiles',
+        metaDescription: 'Weather-proof clay roof tiles that keep interiors naturally cool. From traditional Mangalore designs to modern interlocking roofing tiles.',
         keywords: ['clay roof tiles', 'mangalore tiles', 'roofing tiles interior', 'cooling roof tiles', 'weather proof tiles']
     },
     'facades': {
         displayTitle: 'Clay Facade Panels',
-        metaTitle: 'Ventilated Clay Facade Systems & Louvers | Urban Clay',
-        metaDescription: 'Advanced ventilated facade systems for commercial and high-end residential projects. Energy-efficient, rain-screen cladding, and baguettes.',
+        metaTitle: 'Ventilated Clay Cladding Systems | Energy-Efficient Building Envelopes',
+        metaDescription: 'Modular terracotta facade panels for sustainable skyscrapers and residential projects. Advanced rain-screen technology with thermal benefits.',
         keywords: ['ventilated facade', 'clay facade panels', 'terracotta cladding', 'facade louvers', 'architectural facade']
     },
     'wirecut-bricks': {
         displayTitle: 'Wirecut Bricks',
-        metaTitle: 'Machine-Cut Wirecut Bricks | Uniform Facade Masonry',
-        metaDescription: 'Precision-made wirecut bricks for modern exposed brick facades. High strength, sharp edges, and consistent sizing.',
+        metaTitle: 'Precision-Cut Wirecut Bricks | Sharp Edges for Modern Masonry',
+        metaDescription: 'Machine-produced wirecut bricks for uniform masonry and modern industrial aesthetics. Low maintenance and high aesthetic appeal for urban projects.',
         keywords: ['wirecut bricks', 'machine bricks', 'exposed masonry', 'red wirecut', 'bangalore bricks']
     },
     'breeze-blocks': {
         displayTitle: 'Breeze Blocks',
-        metaTitle: 'Terracotta Breeze Blocks & Ventilation Jali | Urban Clay',
-        metaDescription: 'Sustainable terracotta breeze blocks for natural ventilation and shading. Perfect for tropical architecture and screening.',
+        metaTitle: 'Decorative Concrete & Clay Breeze Blocks | Visual Separation Screens',
+        metaDescription: 'Mid-century modern inspired breeze blocks for architectural screening. Create stunning light patterns and facilitate airflow in your design.',
         keywords: ['breeze blocks', 'ventilation blocks', 'hollow blocks', 'screen wall', 'terracotta jali']
+    },
+    'handmade-bricks': {
+        displayTitle: 'Handmade Bricks',
+        metaTitle: 'Artisanal Handmade Clay Bricks | Unique Textures & Earthen Tones',
+        metaDescription: 'Each brick is a piece of art. Our handmade clay bricks offer unmatched character and texture for signature architectural masterpieces.',
+        keywords: ['handmade bricks', 'artisanal bricks', 'reclaimed look bricks', 'textured clay bricks', 'custom bricks']
+    },
+    'cement-jaali': {
+        displayTitle: 'Cement Jali',
+        metaTitle: 'Geometric Cement Jaali Blocks | Minimalist Ventilation Screens',
+        metaDescription: 'Modern cement-based ventilation blocks for contemporary industrial and brutalist architecture. Durable, precision-cast jali designs for facade screening.',
+        keywords: ['cement jaali', 'concrete jali', 'rcc jaali', 'modern jali design', 'industrial ventilation']
+    },
+    'terracotta-louvers': {
+        displayTitle: 'Terracotta Louvers',
+        metaTitle: 'Clay Baguettes & Sun-Shading Louvers | Vertical Facade Finishes',
+        metaDescription: 'Sustainable sun-shading solutions using terracotta baguettes and louvers. Enhance building energy efficiency with natural clay architectural elements.',
+        keywords: ['terracotta louvers', 'clay baguettes', 'sun shading', 'vertical fins', 'facade louvers']
     }
 };
 
@@ -67,9 +85,14 @@ export const resolveCategoryKey = (slug: string): string | undefined => {
     if (normalize === 'exposed-brick') return 'exposed-bricks';
     if (normalize === 'brick-wall-tile') return 'brick-wall-tiles';
     if (normalize === 'floor-tile') return 'floor-tiles';
-    if (normalize === 'roof-tile') return 'roof-tiles';
+    if (normalize === 'roof-tile' || normalize === 'clay-tile') return 'roof-tiles';
     if (normalize === 'facade') return 'facades';
-    if (normalize === 'jaali' || normalize === 'jali' || normalize === 'cement-jaali') return 'terracotta-jaali';
+    if (normalize === 'jaali' || normalize === 'jali') return 'terracotta-jaali';
+    if (normalize === 'cement-jaali' || normalize === 'cement-jali') return 'cement-jaali';
+    if (normalize === 'handmade-brick') return 'handmade-bricks';
+    if (normalize === 'wirecut-brick') return 'wirecut-bricks';
+    if (normalize === 'breeze-block') return 'breeze-blocks';
+    if (normalize === 'terracotta-louver' || normalize === 'terracotta-louvers' || normalize === 'baguette') return 'terracotta-louvers';
 
     return undefined;
 };
