@@ -42,6 +42,12 @@ export interface Product {
         galleryRefs?: string[];
         badge?: string;
         color?: string;
+        seo?: {
+            metaTitle?: string;
+            metaDescription?: string;
+            keywords?: string[];
+            openGraphImage?: string;
+        };
     }[];
 
     resources?: {

@@ -216,6 +216,12 @@ export default defineType({
                                     { title: 'Hot', value: 'Hot' },
                                 ],
                             },
+                        },
+                        {
+                            name: 'seo',
+                            title: 'Variant Specific SEO',
+                            description: 'Override the default SEO for this specific color/finish',
+                            type: 'seo',
                         }
                     ],
                     preview: {

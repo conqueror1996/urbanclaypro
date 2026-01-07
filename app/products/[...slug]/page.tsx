@@ -69,19 +69,31 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         const selectedVariant = variantName ? product.variants?.find((v: any) => v.name === variantName) : null;
 
         if (selectedVariant) {
-            // Highly specific variant titles
-            metaTitle = `${selectedVariant.name} ${product.title} | ${categoryBrand} Catalog`;
+            // 1. Title: Manual Variant SEO > Dynamic Variant Title
+            metaTitle = selectedVariant.seo?.metaTitle || `${selectedVariant.name} ${product.title} | ${categoryBrand} Catalog`;
 
-            // Unique variant description to avoid duplication with parent
-            const variantDescription = `Buy ${selectedVariant.name} ${product.title}. Premium ${categoryBrand.toLowerCase()} material for sustainable architecture.`;
-            metaDescription = truncate(`${variantDescription} ${product.description || ''}`, 160);
+            // 2. Description: Manual Variant SEO > Rich Dynamic Description (emphasizing natural 'flaws' & character)
+            const variantContext = `The ${selectedVariant.name} variant of ${product.title} features unique earthen textures and natural variations.`;
+            const characterSnippet = `Authentic ${categoryBrand.toLowerCase()} with rustic character and beautiful natural flaws.`;
 
-            // Prioritize Variant Image for OG
-            if (selectedVariant.imageUrl) {
+            metaDescription = truncate(
+                selectedVariant.seo?.metaDescription ||
+                `${variantContext} ${characterSnippet} ${product.description || ''}`,
+                160
+            );
+
+            // 3. Keywords: Variant Keywords + Product Keywords
+            const variantSpecificKeywords = selectedVariant.seo?.keywords || [selectedVariant.name, `${selectedVariant.name} ${product.title}`];
+            uniqueKeywords.push(...variantSpecificKeywords);
+
+            // 4. Images: Manual Variant OG > Variant Image > Product Images
+            if (selectedVariant.seo?.openGraphImage) {
+                currentOgImages = [selectedVariant.seo.openGraphImage, ...uniqueOgImages.filter(img => img !== selectedVariant.seo?.openGraphImage)];
+            } else if (selectedVariant.imageUrl) {
                 currentOgImages = [selectedVariant.imageUrl, ...uniqueOgImages.filter(img => img !== selectedVariant.imageUrl)];
             }
 
-            // Update Canonical
+            // 5. Update Canonical
             canonicalUrl += `?variant=${encodeURIComponent(selectedVariant.name)}`;
         }
 
