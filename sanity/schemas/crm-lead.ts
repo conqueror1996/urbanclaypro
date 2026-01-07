@@ -45,6 +45,24 @@ export default {
             validation: (Rule: any) => Rule.required()
         },
         {
+            name: 'location',
+            title: 'Client Location',
+            type: 'string',
+            description: 'City or Region of the project/client'
+        },
+        {
+            name: 'leadDate',
+            title: 'Lead Date',
+            type: 'date',
+            description: 'The date the lead was received'
+        },
+        {
+            name: 'leadTime',
+            title: 'Lead Time',
+            type: 'string',
+            description: 'The time the lead was received'
+        },
+        {
             name: 'address',
             title: 'Site / Shipping Address',
             type: 'text'

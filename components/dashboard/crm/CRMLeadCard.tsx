@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Clock, MapPin, TrendingUp, MoreHorizontal, User } from 'lucide-react';
+import { MessageSquare, Clock, MapPin, TrendingUp, MoreHorizontal, User, Calendar } from 'lucide-react';
 
 interface CRMLeadCardProps {
     lead: any;
@@ -43,9 +43,15 @@ export function CRMLeadCard({ lead, onClick, isOverdue, getDealHealth, stages }:
                     <h3 className="font-serif text-lg text-[#2a1e16] font-medium truncate group-hover:text-[#b45a3c] transition-colors">
                         {lead.clientName}
                     </h3>
-                    <div className="flex items-center gap-2 text-[11px] text-[#8c7b70] font-bold uppercase tracking-wider">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#8c7b70] font-bold uppercase tracking-wider">
                         <span className="truncate">{lead.company || 'Direct Client'}</span>
                         <span className="text-gray-300">•</span>
+                        {lead.location && (
+                            <>
+                                <span className="flex items-center gap-1 text-[#b45a3c]"><MapPin className="w-3 h-3" /> {lead.location}</span>
+                                <span className="text-gray-300">•</span>
+                            </>
+                        )}
                         <span>{health.label}</span>
                     </div>
                 </div>
@@ -69,15 +75,21 @@ export function CRMLeadCard({ lead, onClick, isOverdue, getDealHealth, stages }:
             <div className="flex-1 flex items-center justify-between w-full md:w-auto md:pl-6 md:border-l border-t md:border-t-0 pt-6 md:pt-0 border-[#e9e2da]/40">
                 <div className="space-y-1">
                     <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-widest">Context Milestone</p>
-                    <div className="flex items-center gap-2 mt-1.5">
+                    <div className="flex flex-col gap-1.5 mt-1.5">
                         {lead.nextFollowUp ? (
-                            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase ${isOverdue && lead.stage !== 'won' ? 'bg-rose-100 text-rose-700' : 'bg-[#FAF9F6] text-[#2a1e16]'
+                            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase w-fit ${isOverdue && lead.stage !== 'won' ? 'bg-rose-100 text-rose-700' : 'bg-[#FAF9F6] text-[#2a1e16]'
                                 }`}>
                                 <Clock className="w-3 h-3" />
-                                {new Date(lead.nextFollowUp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                                Next: {new Date(lead.nextFollowUp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                             </div>
                         ) : (
                             <span className="text-[10px] text-gray-300 italic">No pending follow-ups</span>
+                        )}
+                        {lead.leadDate && (
+                            <div className="flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-bold uppercase bg-amber-50 text-amber-700 border border-amber-100 w-fit">
+                                <Calendar className="w-3 h-3" />
+                                {new Date(lead.leadDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} {lead.leadTime && `@ ${lead.leadTime}`}
+                            </div>
                         )}
                     </div>
                 </div>

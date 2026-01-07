@@ -64,7 +64,10 @@ function CRMContent() {
     const [feedbackForm, setFeedbackForm] = useState({ rating: 5, comment: '' });
     const [newDealForm, setNewDealForm] = useState({
         clientName: '', company: '', phone: '', email: '',
-        potentialValue: '', stage: 'new', role: 'architect', requirements: ''
+        potentialValue: '', stage: 'new', role: 'architect', requirements: '',
+        location: '',
+        leadDate: new Date().toISOString().split('T')[0],
+        leadTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
     });
 
     // Quote States
@@ -416,6 +419,11 @@ function CRMContent() {
                                         <input required placeholder="Client Context (Individual/Firm)" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.clientName} onChange={e => setNewDealForm({ ...newDealForm, clientName: e.target.value })} />
                                         <div className="grid grid-cols-2 gap-4">
                                             <input placeholder="Dial Signature" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.phone} onChange={e => setNewDealForm({ ...newDealForm, phone: e.target.value })} />
+                                            <input placeholder="Project Location (City)" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.location} onChange={e => setNewDealForm({ ...newDealForm, location: e.target.value })} />
+                                        </div>
+                                        <div className="grid grid-cols-3 gap-4">
+                                            <input type="date" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.leadDate} onChange={e => setNewDealForm({ ...newDealForm, leadDate: e.target.value })} />
+                                            <input type="time" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.leadTime} onChange={e => setNewDealForm({ ...newDealForm, leadTime: e.target.value })} />
                                             <input type="number" placeholder="Est. Valuation (₹)" className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm" value={newDealForm.potentialValue} onChange={e => setNewDealForm({ ...newDealForm, potentialValue: e.target.value })} />
                                         </div>
                                         <textarea placeholder="Technical Requirements & Aesthetic Specifications..." className="w-full bg-[#FAF9F6] border border-[#e9e2da]/50 p-4 rounded-2xl outline-none focus:border-[#b45a3c]/30 transition-all font-medium text-sm h-32 resize-none" value={newDealForm.requirements} onChange={e => setNewDealForm({ ...newDealForm, requirements: e.target.value })} />

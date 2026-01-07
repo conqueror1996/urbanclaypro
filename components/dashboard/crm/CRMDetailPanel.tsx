@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     X, Phone, MessageSquare, Calendar, AlertCircle, TrendingUp,
     ArrowRight, Star, HardHat, CheckCircle2, Loader2, FileText,
-    Send, Sparkles, Receipt, Pencil, Trash2, Save, Link2
+    Send, Sparkles, Receipt, Pencil, Trash2, Save, Link2, MapPin, Clock
 } from 'lucide-react';
 import { createPaymentLink } from '@/app/actions/payment-link';
 
@@ -80,7 +80,10 @@ export function CRMDetailPanel({
         company: '',
         phone: '',
         email: '',
-        potentialValue: 0
+        potentialValue: 0,
+        location: '',
+        leadDate: '',
+        leadTime: ''
     });
 
     React.useEffect(() => {
@@ -90,7 +93,10 @@ export function CRMDetailPanel({
                 company: lead.company || '',
                 phone: lead.phone || '',
                 email: lead.email || '',
-                potentialValue: lead.potentialValue || 0
+                potentialValue: lead.potentialValue || 0,
+                location: lead.location || '',
+                leadDate: lead.leadDate || '',
+                leadTime: lead.leadTime || ''
             });
         }
     }, [lead]);
@@ -155,6 +161,24 @@ export function CRMDetailPanel({
                                         className="text-xs font-bold uppercase tracking-widest bg-white border border-[#b45a3c]/30 rounded px-2 py-1 outline-none text-[#8c7b70]"
                                         placeholder="Phone"
                                     />
+                                    <input
+                                        value={editForm.location}
+                                        onChange={e => setEditForm({ ...editForm, location: e.target.value })}
+                                        className="text-xs font-bold uppercase tracking-widest bg-white border border-[#b45a3c]/30 rounded px-2 py-1 outline-none text-[#b45a3c]"
+                                        placeholder="Location"
+                                    />
+                                    <input
+                                        type="date"
+                                        value={editForm.leadDate}
+                                        onChange={e => setEditForm({ ...editForm, leadDate: e.target.value })}
+                                        className="text-xs font-bold uppercase tracking-widest bg-white border border-[#b45a3c]/30 rounded px-2 py-1 outline-none text-[#8c7b70]"
+                                    />
+                                    <input
+                                        type="time"
+                                        value={editForm.leadTime}
+                                        onChange={e => setEditForm({ ...editForm, leadTime: e.target.value })}
+                                        className="text-xs font-bold uppercase tracking-widest bg-white border border-[#b45a3c]/30 rounded px-2 py-1 outline-none text-[#8c7b70]"
+                                    />
                                 </div>
                             </div>
                         ) : (
@@ -162,9 +186,20 @@ export function CRMDetailPanel({
                                 <h2 className="text-3xl font-serif text-[#2a1e16] font-medium leading-none">{lead.clientName}</h2>
                                 <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-[#8c7b70] uppercase tracking-widest mt-2">
                                     <span className="text-[#b45a3c]">{lead.company || 'Private Portfolio'}</span>
-                                    <span className="opacity-20 hidden md:inline">|</span>
+                                    <span className="opacity-20">|</span>
+                                    {lead.location && (
+                                        <>
+                                            <span className="flex items-center gap-1 text-[#b45a3c]"><MapPin className="w-3 h-3" /> {lead.location}</span>
+                                            <span className="opacity-20">|</span>
+                                        </>
+                                    )}
                                     <span className="block md:inline w-full md:w-auto">{lead.phone}</span>
                                 </div>
+                                {lead.leadDate && (
+                                    <div className="flex items-center gap-2 mt-2 text-[9px] font-bold text-[#8c7b70] uppercase tracking-[0.2em] bg-[#FAF9F6] w-fit px-2 py-1 rounded">
+                                        <Calendar className="w-3 h-3 text-[#b45a3c]" /> Source Date: {new Date(lead.leadDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} {lead.leadTime && `@ ${lead.leadTime}`}
+                                    </div>
+                                )}
                             </>
                         )}
                     </div>

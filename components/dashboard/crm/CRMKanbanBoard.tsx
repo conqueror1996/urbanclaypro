@@ -78,7 +78,10 @@ export function CRMKanbanBoard({
                                                             <div className="flex items-start justify-between mb-3 pl-2">
                                                                 <div>
                                                                     <h4 className="font-serif text-[#2a1e16] text-sm leading-tight">{lead.clientName}</h4>
-                                                                    <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-wider mt-0.5">{lead.company || 'Direct'}</p>
+                                                                    <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-wider mt-0.5 flex items-center gap-1">
+                                                                        {lead.company || 'Direct'}
+                                                                        {lead.location && <span className="text-[#b45a3c] font-black"> &bull; {lead.location}</span>}
+                                                                    </p>
                                                                 </div>
                                                                 {lead.potentialValue > 0 && (
                                                                     <span className="text-[9px] font-bold text-[#2a1e16] bg-[#FAF9F6] px-1.5 py-0.5 rounded border border-[#e9e2da]">
@@ -93,9 +96,14 @@ export function CRMKanbanBoard({
                                                                         {lead.clientName?.charAt(0)}
                                                                     </div>
                                                                 </div>
-                                                                {isOverdue(lead.nextFollowUp) && lead.stage !== 'won' && (
-                                                                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" title="Action Pending" />
-                                                                )}
+                                                                <div className="flex items-center gap-2">
+                                                                    {lead.leadDate && (
+                                                                        <span className="text-[8px] font-bold text-gray-400">{new Date(lead.leadDate).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+                                                                    )}
+                                                                    {isOverdue(lead.nextFollowUp) && lead.stage !== 'won' && (
+                                                                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" title="Action Pending" />
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

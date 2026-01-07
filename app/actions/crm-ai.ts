@@ -11,6 +11,7 @@ export async function generateCRMSmartReply(lead: any, lastInteractions: any[]) 
         You are an expert B2B sales manager for UrbanClay, a premium construction materials company in India.
         Role: ${lead.role || 'Client'}
         Company: ${lead.company}
+        Location: ${lead.location || 'General India'}
         Requirements: ${lead.requirements}
         
         Recent Interaction History:
@@ -22,6 +23,7 @@ export async function generateCRMSmartReply(lead: any, lastInteractions: any[]) 
         - Focus on closing the deal or moving to the next stage (${lead.stage}).
         - Keep it under 60 words. No corporate fluff.
         - Mention UrbanClay as technical experts.
+        - If location is provided, subtly acknowledge any regional technical considerations (e.g., weather suitability for that area).
     `;
 
     try {
