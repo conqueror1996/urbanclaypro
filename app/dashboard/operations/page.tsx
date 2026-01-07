@@ -336,7 +336,7 @@ export default function OperationsHub() {
                                                     <span className="text-[11px] font-bold text-gray-700 truncate max-w-[140px]">
                                                         {item.product?.title || item.manualProductName || 'Unknown Product'}
                                                     </span>
-                                                    <span className="text-[11px] font-black text-indigo-600">₹{item.purchaseCost?.toLocaleString()}</span>
+                                                    <span className="text-[11px] font-black text-indigo-600">Rate: ₹{item.purchaseCost?.toLocaleString()}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -519,7 +519,7 @@ export default function OperationsHub() {
 
                                     {modalType === 'manufacturer' && (
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Product Catalog & Purchase Costs</label>
+                                            <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Product Catalog & Purchase Rates (₹)</label>
                                             <div className="space-y-2">
                                                 {formData.products?.map((item: any, i: number) => (
                                                     <div key={i} className="flex flex-col gap-2 bg-gray-50 p-3 rounded-xl">
@@ -545,14 +545,14 @@ export default function OperationsHub() {
                                                             </select>
                                                             <input
                                                                 type="number"
-                                                                placeholder="Cost"
+                                                                placeholder="Rate (₹)"
                                                                 value={item.purchaseCost || ''}
                                                                 onChange={e => {
                                                                     const newProducts = [...formData.products];
                                                                     newProducts[i] = { ...item, purchaseCost: parseFloat(e.target.value) };
                                                                     setFormData({ ...formData, products: newProducts });
                                                                 }}
-                                                                className="w-24 bg-white border-none rounded-lg p-2 text-xs outline-none"
+                                                                className="w-24 bg-white border-none rounded-lg p-2 text-xs outline-none font-bold text-indigo-600"
                                                             />
                                                             <button
                                                                 type="button"
