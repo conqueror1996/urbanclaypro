@@ -9,6 +9,7 @@ import { useSampleBox } from '@/context/SampleContext';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PremiumProductCard from '@/components/PremiumProductCard';
 
 interface ProductsPageAnimateProps {
     products: Product[];
@@ -456,50 +457,12 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                                 {/* VARIANTS GRID */}
                                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-12 gap-y-16">
                                                     {getFilteredVariants(product).map((variant: any, idx: number) => (
-                                                        <Link
+                                                        <PremiumProductCard
                                                             key={`${product._id}-${idx}`}
-                                                            href={`/products/${product.category?.slug || 'collection'}/${product.slug}${variant.name !== 'Standard' ? `?variant=${encodeURIComponent(variant.name)}` : ''}`}
-                                                            className="group flex flex-col"
-                                                        >
-                                                            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-4 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-colors shadow-lg">
-                                                                {variant.imageUrl ? (
-                                                                    <Image
-                                                                        src={variant.imageUrl}
-                                                                        alt={variant.altText || `${variant.name} ${product.title} - ${product.category?.title || 'Terracotta'} tile by UrbanClay`}
-                                                                        fill
-                                                                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-                                                                        className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                                                                        suppressHydrationWarning
-                                                                    />
-                                                                ) : (
-                                                                    <div className="absolute inset-0 flex items-center justify-center text-white/10 text-xs tracking-widest uppercase">
-                                                                        No Image
-                                                                    </div>
-                                                                )}
-                                                                {variant.badge && (
-                                                                    <div className={`absolute top-3 left-3 px-2 py-1 text-[9px] font-bold uppercase text-white rounded shadow-sm z-20 ${variant.badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
-                                                                        {variant.badge}
-                                                                    </div>
-                                                                )}
-
-                                                                {/* Small Cute Add to Sample Button - Hover Only */}
-                                                                <button
-                                                                    onClick={(e) => handleAddSample(product, variant, e)}
-                                                                    className="absolute top-3 right-3 z-20 w-6 h-6 rounded-full bg-black/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] hover:scale-110 active:scale-95 transition-all duration-300"
-                                                                    title="Add to Sample Box"
-                                                                >                                                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                                                    </svg>
-                                                                </button>
-
-                                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
-                                                            </div>
-
-                                                            <div className="text-center group-hover:-translate-y-1 transition-transform duration-300 px-2">
-                                                                <h4 className="text-sm font-bold text-white mb-1">{variant.name}</h4>
-                                                                <p className="text-[10px] text-[var(--terracotta)]/80 uppercase tracking-widest">{product.title}</p>
-                                                            </div>
-                                                        </Link>
+                                                            product={product}
+                                                            variant={variant}
+                                                            index={idx}
+                                                        />
                                                     ))}
                                                 </div>
                                             </div>
@@ -531,48 +494,12 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                                     {/* VARIANTS GRID */}
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-12 gap-y-16">
                                         {getFilteredVariants(product).map((variant: any, idx: number) => (
-                                            <Link
+                                            <PremiumProductCard
                                                 key={`${product._id}-${idx}`}
-                                                href={`/products/${product.category?.slug || 'collection'}/${product.slug}${variant.name !== 'Standard' ? `?variant=${encodeURIComponent(variant.name)}` : ''}`}
-                                                className="group flex flex-col"
-                                            >
-                                                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-4 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-colors shadow-lg">
-                                                    {variant.imageUrl ? (
-                                                        <Image
-                                                            src={variant.imageUrl}
-                                                            alt={variant.altText || `${variant.name} ${product.title} - ${product.category?.title || 'Terracotta'} tile by UrbanClay`}
-                                                            fill
-                                                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-                                                            className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                                                            suppressHydrationWarning
-                                                        />
-                                                    ) : (
-                                                        <div className="absolute inset-0 flex items-center justify-center text-white/10 text-xs tracking-widest uppercase">No Image</div>
-                                                    )}
-                                                    {variant.badge && (
-                                                        <div className={`absolute top-3 right-3 px-2 py-1 text-[9px] font-bold uppercase text-white rounded shadow-sm z-20 ${variant.badge === 'Hot' ? 'bg-red-600' : 'bg-[var(--terracotta)]'}`}>
-                                                            {variant.badge}
-                                                        </div>
-                                                    )}
-
-                                                    {/* Small Cute Add to Sample Button - Hover Only */}
-                                                    <button
-                                                        onClick={(e) => handleAddSample(product, variant, e)}
-                                                        className="absolute top-3 right-3 z-20 w-6 h-6 rounded-full bg-black/40 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] hover:scale-110 active:scale-95 transition-all duration-300"
-                                                        title="Add to Sample Box"
-                                                    >
-                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                                                        </svg>
-                                                    </button>
-
-                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
-                                                </div>
-                                                <div className="text-center group-hover:-translate-y-1 transition-transform duration-300 px-2">
-                                                    <h4 className="text-sm font-bold text-white mb-1">{variant.name}</h4>
-                                                    <p className="text-[10px] text-[var(--terracotta)]/80 uppercase tracking-widest">{product.title}</p>
-                                                </div>
-                                            </Link>
+                                                product={product}
+                                                variant={variant}
+                                                index={idx}
+                                            />
                                         ))}
                                     </div>
                                 </div>
@@ -602,6 +529,6 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
                 )}
             </AnimatePresence>
             <Footer />
-        </div>
+        </div >
     );
 }

@@ -12,6 +12,7 @@ import { getJournalPosts } from '@/lib/journal';
 
 // Components
 import ProductPageAnimate from '@/components/ProductPageAnimate';
+import PremiumProductCard from '@/components/PremiumProductCard';
 // import ProductHero from '@/components/product-page/ProductHero';
 // import CoverageCalculator from '@/components/product-page/CoverageCalculator';
 // import PatternVisualizer from '@/components/product-page/PatternVisualizer';
@@ -562,26 +563,12 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                                     {/* Variants Grid */}
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 md:gap-x-8 gap-y-12">
                                         {(product.variants || [{ name: 'Standard', imageUrl: product.imageUrl }]).map((variant: any, idx: number) => (
-                                            <Link
+                                            <PremiumProductCard
                                                 key={idx}
-                                                href={`/products/${product.category?.slug || 'collection'}/${product.slug}${variant.name !== 'Standard' ? `?variant=${encodeURIComponent(variant.name)}` : ''}`}
-                                                className="group"
-                                            >
-                                                <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-[#241e1a] mb-4 border border-white/5 group-hover:border-[var(--terracotta)]/50 transition-all">
-                                                    {variant.imageUrl && (
-                                                        <Image
-                                                            src={variant.imageUrl}
-                                                            alt={`${product.title} ${variant.name}`}
-                                                            fill
-                                                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                                        />
-                                                    )}
-                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-                                                </div>
-                                                <h4 className="text-sm font-bold text-white mb-1">{variant.name}</h4>
-                                                <p className="text-[10px] text-[var(--terracotta)] uppercase tracking-widest">{product.title}</p>
-                                            </Link>
+                                                product={product}
+                                                variant={variant}
+                                                index={idx}
+                                            />
                                         ))}
                                     </div>
                                 </div>
