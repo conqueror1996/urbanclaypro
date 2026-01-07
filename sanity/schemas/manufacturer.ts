@@ -52,7 +52,8 @@ export default defineType({
                     name: 'productWithCost',
                     title: 'Product with Cost',
                     fields: [
-                        { name: 'product', type: 'reference', to: [{ type: 'product' }], title: 'Product' },
+                        { name: 'product', type: 'reference', to: [{ type: 'product' }], title: 'Product', description: 'Select from existing catalog' },
+                        { name: 'manualProductName', type: 'string', title: 'Manual Product Name', description: 'Or enter name manually if not in catalog' },
                         { name: 'purchaseCost', type: 'number', title: 'Purchase Cost (₹)', description: 'Cost price from this manufacturer' },
                     ],
                     preview: {

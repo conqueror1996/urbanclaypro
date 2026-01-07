@@ -33,7 +33,8 @@ interface Entity {
         siteImages: any[];
     };
     products?: {
-        product: { title: string; _id: string };
+        product?: { title: string; _id: string };
+        manualProductName?: string;
         purchaseCost: number;
     }[];
 }
@@ -67,6 +68,7 @@ export default function OperationsHub() {
                     _id, _type, name, location, rating, phone,
                     products[] {
                         "product": product->{ title, _id },
+                        manualProductName,
                         purchaseCost
                     }
                 },
@@ -120,10 +122,11 @@ export default function OperationsHub() {
             let submissionData = { ...formData };
             if (modalType === 'manufacturer' && submissionData.products) {
                 submissionData.products = submissionData.products
-                    .filter((p: any) => p.product?._id)
+                    .filter((p: any) => p.product?._id || p.manualProductName)
                     .map((p: any) => ({
                         _key: p._key || Math.random().toString(36).substr(2, 9),
-                        product: { _type: 'reference', _ref: p.product._id },
+                        product: p.product?._id ? { _type: 'reference', _ref: p.product._id } : undefined,
+                        manualProductName: p.manualProductName || undefined,
                         purchaseCost: p.purchaseCost
                     }));
             }
@@ -330,7 +333,9 @@ export default function OperationsHub() {
                                         <div className="bg-indigo-50/30 rounded-2xl border border-indigo-100/50 overflow-hidden">
                                             {entity.products.map((item, i) => (
                                                 <div key={i} className={`flex justify-between items-center p-3 ${i !== entity.products!.length - 1 ? 'border-b border-indigo-100/30' : ''}`}>
-                                                    <span className="text-[11px] font-bold text-gray-700 truncate max-w-[140px]">{item.product?.title}</span>
+                                                    <span className="text-[11px] font-bold text-gray-700 truncate max-w-[140px]">
+                                                        {item.product?.title || item.manualProductName || 'Unknown Product'}
+                                                    </span>
                                                     <span className="text-[11px] font-black text-indigo-600">₹{item.purchaseCost?.toLocaleString()}</span>
                                                 </div>
                                             ))}
@@ -517,41 +522,62 @@ export default function OperationsHub() {
                                             <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Product Catalog & Purchase Costs</label>
                                             <div className="space-y-2">
                                                 {formData.products?.map((item: any, i: number) => (
-                                                    <div key={i} className="flex gap-2 items-center bg-gray-50 p-2 rounded-xl">
-                                                        <select
-                                                            value={item.product?._id || ''}
-                                                            onChange={e => {
-                                                                const newProducts = [...formData.products];
-                                                                const selected = globalProducts.find(p => p._id === e.target.value);
-                                                                newProducts[i] = { ...item, product: { _id: e.target.value, title: selected?.title } };
-                                                                setFormData({ ...formData, products: newProducts });
-                                                            }}
-                                                            className="flex-1 bg-white border-none rounded-lg p-2 text-xs outline-none"
-                                                        >
-                                                            <option value="">Select Product</option>
-                                                            {globalProducts.map(p => <option key={p._id} value={p._id}>{p.title}</option>)}
-                                                        </select>
-                                                        <input
-                                                            type="number"
-                                                            placeholder="Cost"
-                                                            value={item.purchaseCost || ''}
-                                                            onChange={e => {
-                                                                const newProducts = [...formData.products];
-                                                                newProducts[i] = { ...item, purchaseCost: parseFloat(e.target.value) };
-                                                                setFormData({ ...formData, products: newProducts });
-                                                            }}
-                                                            className="w-24 bg-white border-none rounded-lg p-2 text-xs outline-none"
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                const newProducts = formData.products.filter((_: any, idx: number) => idx !== i);
-                                                                setFormData({ ...formData, products: newProducts });
-                                                            }}
-                                                            className="p-2 text-red-400 hover:text-red-600"
-                                                        >
-                                                            ✕
-                                                        </button>
+                                                    <div key={i} className="flex flex-col gap-2 bg-gray-50 p-3 rounded-xl">
+                                                        <div className="flex gap-2 items-center">
+                                                            <select
+                                                                value={item.product?._id || (item.manualProductName ? 'manual' : '')}
+                                                                onChange={e => {
+                                                                    const newProducts = [...formData.products];
+                                                                    const val = e.target.value;
+                                                                    if (val === 'manual') {
+                                                                        newProducts[i] = { ...item, product: undefined, manualProductName: item.manualProductName || '' };
+                                                                    } else {
+                                                                        const selected = globalProducts.find(p => p._id === val);
+                                                                        newProducts[i] = { ...item, product: { _id: val, title: selected?.title || '' }, manualProductName: undefined };
+                                                                    }
+                                                                    setFormData({ ...formData, products: newProducts });
+                                                                }}
+                                                                className="flex-1 bg-white border-none rounded-lg p-2 text-xs outline-none"
+                                                            >
+                                                                <option value="">Select Product</option>
+                                                                {globalProducts.map(p => <option key={p._id} value={p._id}>{p.title}</option>)}
+                                                                <option value="manual">Enter Manually...</option>
+                                                            </select>
+                                                            <input
+                                                                type="number"
+                                                                placeholder="Cost"
+                                                                value={item.purchaseCost || ''}
+                                                                onChange={e => {
+                                                                    const newProducts = [...formData.products];
+                                                                    newProducts[i] = { ...item, purchaseCost: parseFloat(e.target.value) };
+                                                                    setFormData({ ...formData, products: newProducts });
+                                                                }}
+                                                                className="w-24 bg-white border-none rounded-lg p-2 text-xs outline-none"
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newProducts = formData.products.filter((_: any, idx: number) => idx !== i);
+                                                                    setFormData({ ...formData, products: newProducts });
+                                                                }}
+                                                                className="p-2 text-red-500 hover:text-red-700"
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        </div>
+                                                        {(item.manualProductName !== undefined || !item.product?._id) && (item.product?._id === undefined && item.manualProductName !== undefined) && (
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Enter Product Name Manually"
+                                                                value={item.manualProductName || ''}
+                                                                onChange={e => {
+                                                                    const newProducts = [...formData.products];
+                                                                    newProducts[i] = { ...item, manualProductName: e.target.value };
+                                                                    setFormData({ ...formData, products: newProducts });
+                                                                }}
+                                                                className="w-full bg-white border-none rounded-lg p-2 text-[10px] outline-none font-bold"
+                                                            />
+                                                        )}
                                                     </div>
                                                 ))}
                                                 <button
