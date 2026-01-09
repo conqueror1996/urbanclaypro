@@ -94,8 +94,8 @@ export default function Header() {
     return (
         <header
             className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isScrolled || mobileMenuOpen || activeDropdown || shouldShowWhiteHeader
-                ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] py-4'
-                : 'bg-transparent border-transparent py-6'
+                ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] pb-4' // Removed top padding, used pb-4
+                : 'bg-transparent border-transparent pb-6' // Removed top padding, used pb-6
                 }`}
             onMouseLeave={handleMouseLeave}
             onMouseEnter={() => {
@@ -105,7 +105,14 @@ export default function Header() {
                 }
             }}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
+            {/* TOP BAR PROMISE - The "David" Strategy */}
+            <div className={`w-full text-center py-2 transition-colors duration-300 ${isScrolled || shouldShowWhiteHeader || activeDropdown ? 'bg-[#2A1E16] text-white/90' : 'bg-transparent text-white/80'}`}>
+                <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest cursor-pointer hover:text-white transition-colors" onClick={() => setBoxOpen(true)}>
+                    ⚡ Architects: <span className="underline decoration-white/30 underline-offset-4 hover:decoration-white">48-Hour Sample Delivery</span> to your Studio
+                </p>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative pt-2">
                 <Link href="/" className="flex items-center group relative z-50">
                     <Image
                         src="/urbanclay-logo.png"

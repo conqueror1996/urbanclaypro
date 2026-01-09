@@ -1,5 +1,6 @@
 
 import { Metadata } from 'next';
+import { SEO_KEYWORDS } from '@/lib/constants';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
@@ -40,9 +41,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const title = data.metaTitle || `UrbanClay ${data.name} | Premium Terracotta Tiles & Facades`;
     const description = truncate(data.metaDescription || `Discover premium terracotta tiles, brick cladding, and jaali panels in ${data.name}. Pan-India delivery and architect-preferred quality.`, 155);
 
+    const cityKeywords = [
+        `Terracotta Tiles ${data.name}`,
+        `Wirecut Bricks ${data.name}`,
+        `Clay Facade ${data.name}`,
+        `Architectural Clay ${data.name}`
+    ];
+
     return {
         title: title,
         description: description,
+        keywords: [...cityKeywords, ...SEO_KEYWORDS],
         openGraph: {
             title: title,
             description: description,
