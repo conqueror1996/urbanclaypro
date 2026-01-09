@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import JournalLayout from '@/components/journal/JournalLayout';
 import { getJournalPosts } from '@/lib/journal';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'The Clay Journal | Architectural Insights by UrbanClay',
