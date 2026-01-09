@@ -37,8 +37,12 @@ export async function GET() {
         // Skip if price is invalid or 0 (Google rejects these)
         if (priceVal <= 0) return;
 
-        // Skip if no main image
-        if (!product.imageUrl) return;
+        // Check for Valid Image (Fallback to First Variant if Main Image is missing)
+        const mainImage = product.imageUrl
+            || (product.variants && product.variants.length > 0 ? product.variants[0].imageUrl : null);
+
+        // Skip if absolutely no image found
+        if (!mainImage) return;
 
         // Main Product
         const categorySlug = product.category?.slug || 'collection';
@@ -52,7 +56,7 @@ export async function GET() {
             categories: [product.category?.title || 'Terracotta', ...(product.tag ? [product.tag] : [])],
             date: new Date(), // Using current date as fallback if no updatedAt
             enclosure: {
-                url: product.imageUrl,
+                url: mainImage,
                 type: 'image/jpeg'
             },
             custom_elements: [
@@ -60,7 +64,7 @@ export async function GET() {
                 { 'g:availability': 'in stock' },
                 { 'g:condition': 'new' },
                 { 'g:brand': 'UrbanClay' },
-                { 'g:image_link': product.imageUrl },
+                { 'g:image_link': mainImage },
                 { 'g:shipping_weight': '1500 g' }, // Default weight for validation
                 { 'g:identifier_exists': 'no' }, // Since we don't have GTIN/MPN
             ]
