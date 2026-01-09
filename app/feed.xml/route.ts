@@ -15,6 +15,9 @@ export async function GET() {
         language: 'en-IN',
         pubDate: new Date(),
         copyright: `All rights reserved ${new Date().getFullYear()}, UrbanClay`,
+        custom_namespaces: {
+            'g': 'http://base.google.com/ns/1.0'
+        },
     });
 
     // 2. Add Products as Items
