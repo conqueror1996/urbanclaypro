@@ -556,6 +556,49 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         </div>
                     </div>
 
+                    {/* 2.5. Architect's Toolkit (Resources) */}
+                    {(product.resources?.technicalSheets?.length > 0 || product.resources?.bimModels?.length > 0 || product.texturePackage?.downloadFile) && (
+                        <div className="group">
+                            <div className="flex items-center gap-4 mb-4">
+                            </div>
+                            <div className="bg-[#2a2420] border border-white/5 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div>
+                                    <h3 className="text-2xl font-serif text-[#EBE5E0] mb-2">Architect's Toolkit</h3>
+                                    <p className="text-white/50 text-sm max-w-md">Download high-res textures, BIM objects, and technical specifications for your project documentation.</p>
+                                </div>
+                                <div className="flex flex-wrap gap-3">
+                                    {product.resources?.technicalSheets?.map((sheet: any, i: number) => (
+                                        <a key={i} href={`${sheet.fileUrl}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
+                                            <svg className="w-5 h-5 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                            <div className="text-left">
+                                                <span className="block text-xs font-bold text-white uppercase tracking-wider">Spec Sheet</span>
+                                                <span className="block text-[9px] text-white/40">PDF</span>
+                                            </div>
+                                        </a>
+                                    ))}
+                                    {product.resources?.bimModels?.map((model: any, i: number) => (
+                                        <a key={i} href={`${model.fileUrl}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
+                                            <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                                            <div className="text-left">
+                                                <span className="block text-xs font-bold text-white uppercase tracking-wider">Revit / BIM</span>
+                                                <span className="block text-[9px] text-white/40">RFA / IFC</span>
+                                            </div>
+                                        </a>
+                                    ))}
+                                    {product.texturePackage?.downloadFile && (
+                                        <a href={`${product.texturePackage.downloadFile}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
+                                            <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                            <div className="text-left">
+                                                <span className="block text-xs font-bold text-white uppercase tracking-wider">4K Texture</span>
+                                                <span className="block text-[9px] text-white/40">JPG / MAPS</span>
+                                            </div>
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* 3. Visualizer & Tools */}
                     <div className="group">
                         <div className="flex items-center gap-4 mb-8">
