@@ -48,9 +48,13 @@ export async function GET() {
         const categorySlug = product.category?.slug || 'collection';
         const productUrl = `${siteUrl}/products/${categorySlug}/${product.slug}`;
 
+        // Sanitize Strings for Google Limits
+        const safeTitle = (product.title || 'Clay Product').substring(0, 150);
+        const safeDescription = (product.description || `Buy ${product.title} from UrbanClay. ${product.subtitle || ''}`).substring(0, 5000);
+
         feed.item({
-            title: product.title,
-            description: product.description || `Buy ${product.title} from UrbanClay. ${product.subtitle || ''}`,
+            title: safeTitle,
+            description: safeDescription,
             url: productUrl,
             guid: product._id, // Unique ID for deduplication
             categories: [product.category?.title || 'Terracotta', ...(product.tag ? [product.tag] : [])],
@@ -79,9 +83,12 @@ export async function GET() {
                 const variantUrl = `${productUrl}?variant=${encodeURIComponent(variant.name)}`;
                 const variantId = `${product._id}-${variant.name.replace(/\s+/g, '-')}`;
 
+                const variantTitle = `${product.title} - ${variant.name}`.substring(0, 150);
+                const variantDescription = `Premium ${variant.name} variant of ${product.title}. ${product.description || ''}`.substring(0, 5000);
+
                 feed.item({
-                    title: `${product.title} - ${variant.name}`,
-                    description: `Premium ${variant.name} variant of ${product.title}. ${product.description || ''}`,
+                    title: variantTitle,
+                    description: variantDescription,
                     url: variantUrl,
                     guid: variantId,
                     categories: [product.category?.title || 'Terracotta', 'Architectural Clay'],
