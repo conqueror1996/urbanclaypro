@@ -254,7 +254,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                             <SocialShare
                                 url={`https://claytile.in/journal/${slug}`}
                                 title={post.title}
-                                description={post.excerpt}
+                                image={post.mainImage || 'https://claytile.in/og-default.jpg'}
                             />
                         </div>
                     </div>
