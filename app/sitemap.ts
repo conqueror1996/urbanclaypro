@@ -27,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/terms',
         '/terracotta-tiles-india',
         '/wiki',
+        '/journal/architects-guide-terracotta-cladding-bricks',
     ];
 
     const staticPages = staticRoutes.map((route) => ({
