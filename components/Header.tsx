@@ -66,6 +66,7 @@ export default function Header() {
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const { box, setBoxOpen } = useSampleBox();
     const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+    const [mounted, setMounted] = useState(false);
 
     const handleMouseEnter = (dropdown: string) => {
         if (closeTimeoutRef.current) {
@@ -80,8 +81,6 @@ export default function Header() {
             setActiveDropdown(null);
         }, 150); // 150ms delay to bridge gaps
     };
-
-    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
