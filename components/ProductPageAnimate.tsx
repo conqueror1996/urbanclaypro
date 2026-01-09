@@ -557,7 +557,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                     </div>
 
                     {/* 2.5. Architect's Toolkit (Resources) */}
-                    {(product.resources?.technicalSheets?.length > 0 || product.resources?.bimModels?.length > 0 || product.texturePackage?.downloadFile) && (
+                    {((product.resources?.technicalSheets?.length ?? 0) > 0 || (product.resources?.bimModels?.length ?? 0) > 0 || !!product.texturePackage?.downloadFile) && (
                         <div className="group">
                             <div className="flex items-center gap-4 mb-4">
                             </div>

@@ -61,6 +61,10 @@ export interface Product {
         bimModels?: { title: string; fileUrl: string }[];
         productCatalogues?: { title: string; fileUrl: string }[];
     };
+    texturePackage?: {
+        seamlessPreview?: string;
+        downloadFile?: string;
+    };
     relatedProjects?: {
         title: string;
         slug: string;
