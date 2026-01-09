@@ -1,5 +1,15 @@
 export const SEO_KEYWORDS = [
     // Core Product Keywords
+    "wirecut brick",
+    "exposed brick",
+    "clay bricks",
+    "clay tile",
+    "clay brick tile",
+    "thin brick",
+    "wall cladding brick",
+    "clay floor tile",
+    "clay facade tile",
+    "antique brick",
     "terracotta tiles India",
     "clay brick tiles",
     "facing bricks",
@@ -98,4 +108,67 @@ export const SEO_KEYWORDS = [
     "construction material wholesaler",
     "architectural specification",
     "turnkey facade solutions",
+
+    // --- COMPREHENSIVE KEYWORD EXPANSION ---
+    // Product Variations - Bricks & Tiles
+    "red wirecut bricks", "machine made bricks", "perforated clay bricks",
+    "solid clay bricks", "hollow clay bricks", "burnt clay bricks",
+    "facing brick tiles", "thin brick cladding", "brick veneer sheets",
+    "exposed brick wall design", "interior brick cladding", "exterior brick cladding",
+    "rustic brick tiles", "antique brick finish", "vintage brick tiles",
+    "handmade terracotta tiles", "terracotta floor pavers", "geometric terracotta tiles",
+    "clay roofing solutions", "terracotta roof tiles", "mangalore tiles",
+    "ceramic facade cladding", "terracotta rainscreen", "louvers facade",
+    "terracotta baguettes", "clay jali design", "terracotta screen blocks",
+    "decorative clay blocks", "ventilation blocks", "breeze blocks india",
+    "porotherm clay blocks", "thermal insulation bricks", "acoustic clay blocks",
+    "fire rated bricks", "acid resistant bricks", "refractory bricks",
+
+    // Usage & Application
+    "facade design for home", "modern exterior cladding", "building elevation ideas",
+    "compound wall cladding tiles", "gate pillar cladding", "living room wall texture",
+    "bedroom feature wall ideas", "kitchen backsplash tiles", "bathroom wall cladding",
+    "terracotta flooring for garden", "terracotta tiles for terrace", "balcony flooring ideas",
+    "swimming pool deck tiles", "walkway pavers", "driveway paving stones",
+    "restaurant interior design", "cafe decor ideas", "hotel lobby cladding",
+    "office reception wall", "commercial building facade", "hospital architecture design",
+    "school building materials", "resort architecture india", "eco friendly homes",
+    "sustainable architecture materials", "green building certification materials",
+
+    // Regional & Location Specific
+    "terracotta tiles price in kerala", "brick cladding cost in bangalore",
+    "clay tiles manufacturers in morbi", "terracotta tiles suppliers in mumbai",
+    "facing bricks dealers in delhi", "exposed brick wall cost india",
+    "terracotta jali price hyderabad", "clay roof tiles price chennai",
+    "brick veneer suppliers pune", "wirecut bricks price coimbatore",
+    "terracotta flooring cost kolkata", "clay cladding contractors ahmedabad",
+    "architecture firms in mumbai", "interior designers in bangalore",
+    "builders in gurgaon", "construction companies in noida",
+    "building material suppliers jaipur", "tiles showroom in chandigarh",
+    "clay products manufacturers karnataka", "terracotta industry gujarat",
+
+    // Technical & Long-tail
+    "low water absorption bricks", "high compressive strength bricks",
+    "salt resistant bricks", "efflorescence free tiles", "fungus resistant cladding",
+    "heat resistant roof tiles", "cool roof tiles india", "soundproof wall materials",
+    "maintenance free facade", "natural clay products benefits",
+    "difference between wirecut and handmade bricks", "clay vs fly ash bricks",
+    "terracotta cladding installation guide", "how to clean exposed brick wall",
+    "best exterior wall tiles in india", "top terracotta brands in india",
+    "custom terracotta design", "bespoke clay products", "large format terracotta panels",
+    "glazed terracotta tiles price", "engobe finish terracotta",
+    "natural red clay texture", "beige clay bricks", "grey terracotta cladding",
+    "black wirecut bricks", "white brick cladding", "multi color brick blend",
+    "sand blasted finish bricks", "smooth finish clay tiles", "textured wall tiles",
+
+    // Industry & Professional
+    "architectural specification for clay", "bim objects terracotta",
+    "leed certification points materials", "igbc green rating products",
+    "griha rating materials", "sustainable building materials list",
+    "vernacular architecture india", "contemporary indian architecture",
+    "brick architecture design", "terracotta in modern architecture",
+    "facade engineering consultants", "building facade contractors",
+    "turnkey cladding solutions", "wholesale building materials",
+    "export quality terracotta", "made in india tiles",
+    "clay tile manufacturing process", "terracotta firing temperature"
 ];

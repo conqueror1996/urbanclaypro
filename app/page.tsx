@@ -31,6 +31,8 @@ const TechnicalFAQ = dynamic(() => import('@/components/TechnicalFAQ'));
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
+import { SEO_KEYWORDS } from "@/lib/constants";
+
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
@@ -53,12 +55,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return {
     title: "UrbanClay® | Manufacturer of Premium Terracotta Tiles, Facing Bricks & Jaali | India",
     description: "India's #1 Manufacturer & Exporter of Clay Facade Cladding, Wirecut Bricks, and Terracotta Floor Tiles. Sustainable, scalable, and delivered pan-India. UrbanClay® - The Architect's Choice.",
-    keywords: [
-      "Terracotta Tiles", "Clay Brick Cladding", "Facing Bricks", "Terracotta Jaali",
-      "Wirecut Bricks", "Clay Pavers", "Roofing Tiles", "Weathering Tiles",
-      "Exposed Brick", "Architectural Terracotta", "UrbanClay", "India",
-      "Mumbai", "Bangalore", "Delhi", "Hyderabad"
-    ],
+    keywords: SEO_KEYWORDS,
     openGraph: {
       title: "UrbanClay® | Premium Terracotta Tiles, Cladding & Jaali | Manufacturer India",
       description: "Buy direct from India's leading manufacturer of architectural terracotta. Clay floor tiles, wall cladding & jaali panels. 100% Natural & Sustainable.",

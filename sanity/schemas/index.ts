@@ -36,6 +36,8 @@ import crmInteraction from './crm-interaction'
 import crmContact from './crm-contact'
 import logisticsHub from './logistics-hub'
 
+import architectsGuide from './architectsGuide'
+
 export const schema: { types: SchemaTypeDefinition[] } = {
     types: [
         collection,
@@ -45,6 +47,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         aboutPage,
         category,
         guide,
+        architectsGuide,
         lead,
         seo,
         resource,

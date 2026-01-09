@@ -4,22 +4,67 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SocialShare from '@/components/SocialShare';
+import JsonLd from '@/components/JsonLd';
+import { SEO_KEYWORDS } from '@/lib/constants';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: "The Architect's Guide to Terracotta Cladding & Wirecut Bricks | UrbanClay",
     description: "A comprehensive handbook for architects on specifying architectural clay products. Detailed comparisons of cladding systems, wirecut vs handmade bricks, and passive cooling with jaalis.",
-    keywords: ["Architectural Terracotta", "Clay Cladding Systems", "Wirecut Bricks India", "Terracotta Jaali Design", "Sustainable Facades"],
+    keywords: [
+        "Architectural Terracotta",
+        "Clay Cladding Systems",
+        "Wirecut Bricks India",
+        "Terracotta Jaali Design",
+        "Sustainable Facades",
+        ...SEO_KEYWORDS
+    ],
     openGraph: {
         title: "The Architect's Guide to Terracotta Cladding & Wirecut Bricks",
         description: "The definitive guide to specifying modern clay products for sustainable facades.",
-        images: ['https://claytile.in/og-guide.jpg']
+        images: ['https://claytile.in/og-guide.jpg'],
+        type: 'article',
+        authors: ['UrbanClay'],
+        publishedTime: '2024-01-15T00:00:00.000Z',
+        modifiedTime: new Date().toISOString(),
     }
+};
+
+const guideJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: "The Architect's Guide to Terracotta Cladding & Wirecut Bricks",
+    image: [
+        "https://claytile.in/images/architect-guide-hero.png",
+        "https://claytile.in/og-guide.jpg"
+    ],
+    author: {
+        '@type': 'Organization',
+        name: 'UrbanClay'
+    },
+    publisher: {
+        '@type': 'Organization',
+        name: 'UrbanClay',
+        logo: {
+            '@type': 'ImageObject',
+            url: 'https://claytile.in/urbanclay-logo.png'
+        }
+    },
+    datePublished: "2024-01-15T08:00:00+08:00",
+    dateModified: new Date().toISOString(),
+    description: "A comprehensive handbook for architects on specifying architectural clay products. Detailed comparisons of cladding systems, wall cladding bricks, wirecut vs handmade bricks.",
+    articleBody: "In an era dominated by glass and steel, clay is making a sophisticated comeback...",
+    about: [
+        { '@type': 'Thing', name: 'Terracotta Cladding' },
+        { '@type': 'Thing', name: 'Wirecut Bricks' },
+        { '@type': 'Thing', name: 'Sustainable Architecture' }
+    ]
 };
 
 export default function PillarPage() {
     return (
         <div className="bg-[#fcfbf9] min-h-screen text-[#2A1E16]">
+            <JsonLd data={guideJsonLd} />
             <Header />
 
             {/* 1. Hero Section */}
@@ -39,9 +84,9 @@ export default function PillarPage() {
 
             {/* 2. Featured Image */}
             <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 mb-24">
-                <div className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl shadow-2xl bg-gray-200">
+                <div className="relative aspect-[21/9] w-full overflow-hidden rounded-3xl shadow-2xl bg-[#EBE5E0]">
                     <Image
-                        src="/images/hero-home.jpg" // Placeholder - reliant on existing assets or generic fallback
+                        src="/images/architect-guide-hero.png"
                         alt="Architectural Terracotta Facade"
                         fill
                         className="object-cover"
@@ -115,9 +160,14 @@ export default function PillarPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-10 not-prose">
                             <div className="group relative rounded-2xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all">
-                                <div className="h-48 bg-gray-200 relative">
-                                    {/* Mockup Image for Dry Cladding */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">System Diagram</div>
+                                <div className="h-48 bg-gray-200 relative overflow-hidden">
+                                    <Image
+                                        src="/images/dry-cladding-detail.png"
+                                        alt="Ventilated Terracotta Facade Detail"
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
                                 </div>
                                 <div className="p-8">
                                     <h3 className="font-serif text-2xl mb-2">Ventilated Facades (Dry)</h3>
@@ -128,9 +178,14 @@ export default function PillarPage() {
                             </div>
 
                             <div className="group relative rounded-2xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all">
-                                <div className="h-48 bg-gray-200 relative">
-                                    {/* Mockup Image for Wet Cladding */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">System Diagram</div>
+                                <div className="h-48 bg-gray-200 relative overflow-hidden">
+                                    <Image
+                                        src="/images/wet-cladding-detail.png"
+                                        alt="Adhesive Brick Cladding Detail"
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
                                 </div>
                                 <div className="p-8">
                                     <h3 className="font-serif text-2xl mb-2">Adhesive Cladding (Wet)</h3>

@@ -62,7 +62,18 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
             'Handmade Bricks',
             'Roofing Tiles',
             'Decorative Wall Tiles',
-            'Exposed Brick Cladding'
+            'Exposed Brick Cladding',
+            // User Targeted Keywords
+            'wirecut brick',
+            'exposed brick',
+            'clay bricks',
+            'clay tile',
+            'clay brick tile',
+            'thin brick',
+            'wall cladding brick',
+            'clay floor tile',
+            'clay facade tile',
+            'antique brick'
         ];
         const uniqueKeywords = Array.from(new Set([...cmsKeywords, ...variantKeywords, ...baseKeywords]));
 
