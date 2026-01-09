@@ -2,6 +2,10 @@ export const SEO_KEYWORDS = [
     // Core Product Keywords
     "terracotta tiles India",
     "clay brick tiles",
+    "facing bricks",
+    "clay pavers",
+    "weathering tiles",
+    "roofing tiles",
     "jaali panels",
     "facade tiles",
     "exposed brick tiles",

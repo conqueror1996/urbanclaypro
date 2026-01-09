@@ -66,7 +66,7 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
                         >
                             <Image
                                 src={activeImage}
-                                alt={product.title + ' ' + (product.category?.title || 'Terracotta') + ' - UrbanClay'}
+                                alt={`${product.title} ${product.category?.title || 'Terracotta'} - Architectural Clay by UrbanClay`}
                                 fill
                                 sizes="(max-width: 768px) 50vw, 25vw"
                                 className="object-cover group-hover:scale-105 transition-transform duration-700"

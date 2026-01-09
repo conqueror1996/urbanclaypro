@@ -44,12 +44,31 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         // ... (Existing Product Metadata Logic)
         const cmsKeywords = product.seo?.keywords || [];
         const variantKeywords = product.variants?.map((v: any) => v.name) || [];
-        const baseKeywords = [product.title, product.category?.title || product.tag || 'Terracotta', 'UrbanClay', 'India'];
+        const baseKeywords = [
+            product.title,
+            product.category?.title || product.tag || 'Terracotta',
+            'UrbanClay',
+            'India',
+            // High-value ranking terms
+            'Architectural Terracotta',
+            'Clay Facade Cladding',
+            'Wirecut Bricks',
+            'Terracotta Jaali',
+            'Sustainable Facades',
+            // Competitor & Market Terms (Aggressive Expansion)
+            'Facing Bricks',
+            'Clay Pavers',
+            'Weathering Tiles',
+            'Handmade Bricks',
+            'Roofing Tiles',
+            'Decorative Wall Tiles',
+            'Exposed Brick Cladding'
+        ];
         const uniqueKeywords = Array.from(new Set([...cmsKeywords, ...variantKeywords, ...baseKeywords]));
 
         const categoryBrand = product.category?.title || product.tag || 'Terracotta';
         let metaTitle = product.seo?.metaTitle || `${product.title} - ${categoryBrand} | UrbanClay India`;
-        let metaDescription = truncate(product.seo?.metaDescription || product.description || `Experience the elegance of ${product.title} ${categoryBrand}. High-quality architectural terracotta solutions by UrbanClay.`, 160);
+        let metaDescription = truncate(product.seo?.metaDescription || product.description || `Buy premium ${product.title} ${categoryBrand}. Architectural terracotta, wirecut cladding & sustainable facades by UrbanClay India. Pan-India delivery.`, 160);
 
         // Gather all possible images for a rich preview
         const productImages = [
@@ -147,7 +166,20 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
         // Comprehensive Keywords
         const productTitles = categoryProducts.map(p => p.title);
         const productTags = categoryProducts.flatMap(p => p.tag ? [p.tag] : []);
-        const baseKeywords = [dynamicCollection.title, 'UrbanClay', 'India', 'Sustainable Architecture'];
+        const baseKeywords = [
+            dynamicCollection.title,
+            'UrbanClay',
+            'India',
+            'Sustainable Architecture',
+            'Clay Facade Systems',
+            'Wirecut Cladding',
+            'Exposed Brick',
+            // Broad Market Coverage
+            'Wall Cladding',
+            'Floor Tiles',
+            'Design-forward Brick Solutions',
+            'Natural Clay Products'
+        ];
         const uniqueKeywords = Array.from(new Set([
             ...(dynamicCollection.seo?.keywords || []),
             ...baseKeywords,

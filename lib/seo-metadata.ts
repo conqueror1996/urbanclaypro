@@ -11,69 +11,69 @@ export const CATEGORY_METADATA: Record<string, {
 }> = {
     'exposed-bricks': {
         displayTitle: 'Exposed Bricks',
-        metaTitle: 'Premium Exposed Wirecut Bricks | Authentic Red & Grey Masonry Bricks',
-        metaDescription: 'Discover India\'s most versatile range of exposed wirecut bricks. Perfect for load-bearing and partition walls with a natural, earthen aesthetic. High-compressive strength solutions.',
-        keywords: ['exposed bricks', 'wirecut bricks', 'facing bricks', 'red clay bricks', 'facade bricks india']
+        metaTitle: 'Premium Facing Bricks & Exposed Wirecut Bricks | UrbanClay India',
+        metaDescription: 'India\'s finest range of Exposed Wirecut Bricks and Facing Bricks. Low efflorescence, high compressive strength, and available in Red, Grey & Chocolate tones.',
+        keywords: ['exposed bricks', 'wirecut bricks', 'facing bricks', 'red clay bricks', 'facade bricks india', 'architectural bricks']
     },
     'brick-wall-tiles': {
         displayTitle: 'Brick Wall Tiles',
-        metaTitle: 'Thin Brick Cladding & Interior Brick Veneers | UrbanClay India',
-        metaDescription: 'Achieve the classic exposed brick look without the weight. Our thin brick wall tiles are ideal for interior feature walls and modern exterior cladding.',
-        keywords: ['brick cladding tiles', 'exposed brick tiles', 'wall cladding', 'interior brick veneer', 'thin bricks']
+        metaTitle: 'Thin Brick Cladding Tiles & Interior Veneers | Manufacturer India',
+        metaDescription: 'Real clay Brick Cladding tiles for interior and exterior walls. Achieve the exposed brick aesthetic with our lightweight, easy-to-install thin brick veneers.',
+        keywords: ['brick cladding tiles', 'exposed brick tiles', 'wall cladding', 'interior brick veneer', 'thin bricks', 'facade tiles']
     },
     'terracotta-jaali': {
         displayTitle: 'Terracotta Jali',
-        metaTitle: 'Artistic Terracotta Jali Blocks | Passive Cooling Screen Walls',
-        metaDescription: 'Handcrafted terracotta ventilation blocks (Jaali) designed for privacy, light play, and natural ventilation in tropical architecture. Explore unique geometric patterns.',
-        keywords: ['terracotta jaali', 'jaali blocks', 'breeze blocks', 'ventilation blocks', 'clay jali', 'facade screens']
+        metaTitle: 'Terracotta Jaali Blocks & Breeze Blocks | Ventilation Screens',
+        metaDescription: 'Sustainable Terracotta Jaali blocks for passive cooling and facade screening. Explore our range of geometric clay breeze blocks for modern Indian architecture.',
+        keywords: ['terracotta jaali', 'jaali blocks', 'breeze blocks', 'ventilation blocks', 'clay jali', 'facade screens', 'breeze bricks']
     },
     'floor-tiles': {
         displayTitle: 'Terracotta Floor Tiles',
-        metaTitle: 'Rustic Handcrafted Floor Tiles | Naturally Slip-Resistant Flooring',
-        metaDescription: 'Earthen terracotta floor tiles for verandas, courtyards, and heritage homes. Durable, cool underfoot, and available in multiple sizes and finishes.',
-        keywords: ['terracotta floor tiles', 'clay pavers', 'handmade tiles', 'rustic flooring', 'red floor tiles']
+        metaTitle: 'Terracotta Floor Tiles & Clay Pavers | Natural & Slip-Resistant',
+        metaDescription: 'Handcrafted Terracotta Floor Tiles and heavy-duty Clay Pavers. Cool underfoot, eco-friendly, and perfect for verandas, patios, and heritage restoration.',
+        keywords: ['terracotta floor tiles', 'clay pavers', 'handmade tiles', 'rustic flooring', 'red floor tiles', 'weathering tiles']
     },
     'roof-tiles': {
         displayTitle: 'Roof Tiles',
-        metaTitle: 'Premium Clay Roofing Solutions | High Thermal Insulation Tiles',
-        metaDescription: 'Weather-proof clay roof tiles that keep interiors naturally cool. From traditional Mangalore designs to modern interlocking roofing tiles.',
-        keywords: ['clay roof tiles', 'mangalore tiles', 'roofing tiles interior', 'cooling roof tiles', 'weather proof tiles']
+        metaTitle: 'Clay Roof Tiles & Mangalore Tiles | Heat Resistant Roofing',
+        metaDescription: 'Premium Clay Roof Tiles for superior thermal insulation. Authentic Mangalore tiles and modern interlocking flat roof tiles for Indian homes.',
+        keywords: ['clay roof tiles', 'mangalore tiles', 'roofing tiles interior', 'cooling roof tiles', 'weather proof tiles', 'kerala roof tiles']
     },
     'facades': {
         displayTitle: 'Clay Facade Panels',
-        metaTitle: 'Ventilated Clay Cladding Systems | Energy-Efficient Building Envelopes',
-        metaDescription: 'Modular terracotta facade panels for sustainable skyscrapers and residential projects. Advanced rain-screen technology with thermal benefits.',
-        keywords: ['ventilated facade', 'clay facade panels', 'terracotta cladding', 'facade louvers', 'architectural facade']
+        metaTitle: 'Ventilated Facade Systems & Cladding Panels | UrbanClay',
+        metaDescription: 'High-performance Terracotta Facade Panels and Louvers. Advanced dry-cladding systems for sustainable, energy-efficient commercial buildings.',
+        keywords: ['ventilated facade', 'clay facade panels', 'terracotta cladding', 'facade louvers', 'architectural facade', 'dry cladding']
     },
     'wirecut-bricks': {
         displayTitle: 'Wirecut Bricks',
-        metaTitle: 'Precision-Cut Wirecut Bricks | Sharp Edges for Modern Masonry',
-        metaDescription: 'Machine-produced wirecut bricks for uniform masonry and modern industrial aesthetics. Low maintenance and high aesthetic appeal for urban projects.',
-        keywords: ['wirecut bricks', 'machine bricks', 'exposed masonry', 'red wirecut', 'bangalore bricks']
+        metaTitle: 'Wirecut Bricks Manufacturer | Precision Exposed Masonry',
+        metaDescription: 'Machine-made Wirecut Bricks with sharp edges and uniform texture. The preferred choice for modern exposed brick architecture in India.',
+        keywords: ['wirecut bricks', 'machine bricks', 'exposed masonry', 'red wirecut', 'bangalore bricks', 'facing bricks']
     },
     'breeze-blocks': {
         displayTitle: 'Breeze Blocks',
-        metaTitle: 'Decorative Concrete & Clay Breeze Blocks | Visual Separation Screens',
-        metaDescription: 'Mid-century modern inspired breeze blocks for architectural screening. Create stunning light patterns and facilitate airflow in your design.',
-        keywords: ['breeze blocks', 'ventilation blocks', 'hollow blocks', 'screen wall', 'terracotta jali']
+        metaTitle: 'Clay Breeze Blocks & Decorative Jaali | Partition Screens',
+        metaDescription: 'Mid-century modern Clay Breeze Blocks for stylish ventilation. Create stunning light patterns and privacy screens with our natural terracotta range.',
+        keywords: ['breeze blocks', 'ventilation blocks', 'hollow blocks', 'screen wall', 'terracotta jali', 'claustra blocks']
     },
     'handmade-bricks': {
         displayTitle: 'Handmade Bricks',
-        metaTitle: 'Artisanal Handmade Clay Bricks | Unique Textures & Earthen Tones',
-        metaDescription: 'Each brick is a piece of art. Our handmade clay bricks offer unmatched character and texture for signature architectural masterpieces.',
-        keywords: ['handmade bricks', 'artisanal bricks', 'reclaimed look bricks', 'textured clay bricks', 'custom bricks']
+        metaTitle: 'Artisanal Handmade Bricks | Antique & Reclaimed Look',
+        metaDescription: 'Authentic Handmade Clay Bricks for a timeless, rustic aesthetic. Unique textures and varied tones for heritage and luxury residential projects.',
+        keywords: ['handmade bricks', 'artisanal bricks', 'reclaimed look bricks', 'textured clay bricks', 'custom bricks', 'soft mud bricks']
     },
     'cement-jaali': {
         displayTitle: 'Cement Jali',
-        metaTitle: 'Geometric Cement Jaali Blocks | Minimalist Ventilation Screens',
-        metaDescription: 'Modern cement-based ventilation blocks for contemporary industrial and brutalist architecture. Durable, precision-cast jali designs for facade screening.',
-        keywords: ['cement jaali', 'concrete jali', 'rcc jaali', 'modern jali design', 'industrial ventilation']
+        metaTitle: 'Concrete Jaali Blocks & Ventilation Grills | Modern Designs',
+        metaDescription: 'Durable Cement Jaali blocks for robust architectural screening. Minimalist, geometric designs for contemporary building facades and compound walls.',
+        keywords: ['cement jaali', 'concrete jali', 'rcc jaali', 'modern jali design', 'industrial ventilation', 'breeze blocks India']
     },
     'terracotta-louvers': {
         displayTitle: 'Terracotta Louvers',
-        metaTitle: 'Clay Baguettes & Sun-Shading Louvers | Vertical Facade Finishes',
-        metaDescription: 'Sustainable sun-shading solutions using terracotta baguettes and louvers. Enhance building energy efficiency with natural clay architectural elements.',
-        keywords: ['terracotta louvers', 'clay baguettes', 'sun shading', 'vertical fins', 'facade louvers']
+        metaTitle: 'Terracotta Baguettes & Louvers | Solar Shading Systems',
+        metaDescription: 'Architectural Terracotta Baguettes and Louvers for effective sun shading and linear facade aesthetics. Sustainable vertical screening solutions.',
+        keywords: ['terracotta louvers', 'clay baguettes', 'sun shading', 'vertical fins', 'facade louvers', 'solar shading']
     }
 };
 
