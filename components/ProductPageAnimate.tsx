@@ -14,6 +14,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import RelatedArticles from '@/components/RelatedArticles';
 import { RelatedArticle } from '@/components/RelatedArticles';
 import ProductShowcase from '@/components/ProductShowcase';
+import SocialShare from '@/components/SocialShare';
 
 const WallStyler = dynamic(() => import('./WallStyler'), {
     ssr: false,
@@ -239,6 +240,15 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     <span className="w-1.5 h-1.5 rounded-full bg-white/20"></span>
                                     Mumbai Studio
                                 </span>
+                            </div>
+
+                            {/* Social Share: Pinterest & WhatsApp */}
+                            <div className="mt-8">
+                                <SocialShare
+                                    url={`https://claytile.in${pathname}${selectedVariant ? `?variant=${encodeURIComponent(selectedVariant.name)}` : ''}`}
+                                    title={`Check out ${selectedVariant?.name || product.title} by UrbanClay`}
+                                    image={activeImage}
+                                />
                             </div>
 
                             {/* Price Showcase - Added Request */}
@@ -526,7 +536,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             {/* The Grid */}
                             <div className="p-6 md:p-10">
                                 <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
-                                    {generateLuxurySpecs(product).map((spec, i) => (
+                                    {generateLuxurySpecs(product, selectedVariant).map((spec, i) => (
                                         <div key={i} className="flex flex-col border-b border-white/5 pb-4 last:border-0 hover:bg-white/[0.02] transition-colors rounded-lg px-2 -mx-2">
                                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 block mb-2">
                                                 {spec.label}

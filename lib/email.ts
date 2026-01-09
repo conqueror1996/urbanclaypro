@@ -256,3 +256,52 @@ export async function sendSampleFollowUpEmail(lead: any) {
         return { success: false, error };
     }
 }
+
+export async function sendSampleRequestAlert(data: {
+    firmName?: string;
+    contact?: string;
+    phone: string;
+    city?: string;
+    address: string;
+}) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) return { success: false, error: 'Missing credentials' };
+
+    try {
+        const content = `
+            <div style="text-align: center; margin-bottom: 32px;">
+                <h2 style="color: #2A1E16; margin: 0; font-family: 'Playfair Display', serif; font-size: 24px;">New Sample Kit Request</h2>
+                <p style="color: #6b7280; font-size: 15px; margin-top: 8px;">Architect Campaign Conversion</p>
+            </div>
+
+            <div style="background-color: #fdfcfb; padding: 24px; border-radius: 16px; border: 1px solid #f5eeee; margin-top: 24px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Firm/Contact</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${data.firmName || data.contact}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Phone</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${data.phone}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Location</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${data.city || 'N/A'}</td></tr>
+                </table>
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee;">
+                    <p style="margin: 0 0 4px 0; font-size: 11px; font-weight: bold; color: #9ca3af; text-transform: uppercase;">Delivery Address</p>
+                    <p style="margin: 0; font-size: 14px; line-height: 1.5;">${data.address}</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 32px; text-align: center;">
+                <a href="https://claytile.in/dashboard" style="display: inline-block; padding: 14px 32px; background-color: #2A1E16; color: white; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 14px; letter-spacing: 1px;">OPEN DASHBOARD</a>
+            </div>
+        `;
+
+        const mailOptions = {
+            from: `"UrbanClay Auto-Bot" <${process.env.SMTP_USER}>`,
+            to: 'urbanclay@claytile.in',
+            subject: `📦 Sample Kit Request: ${data.firmName || data.contact}`,
+            html: wrapEmailTemplate(content)
+        };
+
+        await transporter.sendMail(mailOptions);
+        return { success: true };
+    } catch (error) {
+        console.error('❌ Error sending admin mail:', error);
+        return { success: false, error };
+    }
+}
+

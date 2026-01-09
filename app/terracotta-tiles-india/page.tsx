@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import FAQSchema from '@/components/FAQSchema';
 
 export const metadata: Metadata = {
     title: 'Terracotta Tiles India | Premium Clay Facade & Brick Cladding Manufacturer',
@@ -61,6 +62,7 @@ export default function TerracottaTilesIndia() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
+            <FAQSchema />
             <Header />
 
             <main className="pt-24">

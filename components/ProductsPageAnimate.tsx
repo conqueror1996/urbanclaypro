@@ -10,6 +10,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PremiumProductCard from '@/components/PremiumProductCard';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 interface ProductsPageAnimateProps {
     products: Product[];
@@ -177,6 +178,9 @@ export default function ProductsPageAnimate({ products }: ProductsPageAnimatePro
             <Header />
 
             <main className="max-w-[1800px] mx-auto min-h-screen pt-32 pb-20 px-0 md:px-6">
+                <div className="px-6 md:px-0 mb-8">
+                    <Breadcrumbs />
+                </div>
 
                 {/* --- CATALOG HEADER --- */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 px-6 md:px-0">

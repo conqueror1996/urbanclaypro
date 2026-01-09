@@ -17,6 +17,9 @@ export const SEO_KEYWORDS = [
     "wirecut bricks",
     "handmade bricks",
     "pressed bricks",
+    "clay products",
+    "clay building products",
+    "architectural clay",
     "low efflorescence tiles",
 
     // Expanded Product Variants

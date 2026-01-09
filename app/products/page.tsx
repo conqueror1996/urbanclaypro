@@ -33,28 +33,32 @@ export async function generateMetadata({ searchParams }: ProductsPageProps): Pro
         title: 'Terracotta Tiles & Clay Bricks Collection | UrbanClay India',
         description: 'Browse India\'s widest range of low-efflorescence terracotta tiles, exposed wirecut bricks, jaali panels, and facade cladding systems.',
         keywords: [
-            ' terracotta tiles',
+            'clay products',
+            'clay building materials',
+            'architectural clay products',
+            'terracotta tiles',
             'clay brick tile suppliers',
             'terracotta jaali price',
             'exposed brick wall cost',
             'facade cladding materials',
             'roof tiles manufacturers',
             'floor tiles india',
-            'urbanclay catalog'
+            'urbanclay catalog',
+            'sustainable construction materials'
         ],
         openGraph: {
-            title: 'Premium Terracotta Collection | UrbanClay',
-            description: 'Sustainable, handcrafted clay products for modern architecture.',
+            title: 'Clay Products & Terracotta Collection | UrbanClay',
+            description: 'Explore India\'s premium range of clay products: Facade panels, wirecut bricks, roof tiles, and floor pavers. Sustainable & durable.',
             url: 'https://claytile.in/products',
             siteName: 'UrbanClay',
             type: 'website',
             locale: 'en_IN',
             images: [
                 {
-                    url: 'https://claytile.in/images/premium-terracotta-facade.png',
+                    url: 'https://claytile.in/images/products/wirecut-texture.jpg',
                     width: 1200,
                     height: 630,
-                    alt: 'UrbanClay Premium Terracotta Collection'
+                    alt: 'UrbanClay Premium Clay Products Collection'
                 }
             ]
         },
@@ -66,10 +70,15 @@ export async function generateMetadata({ searchParams }: ProductsPageProps): Pro
 
 export const revalidate = 60;
 
+import FAQSchema from '@/components/FAQSchema';
+
 export default async function ProductsPage() {
     const products = await getProducts();
 
     return (
-        <ProductsPageAnimate products={products} />
+        <>
+            <FAQSchema />
+            <ProductsPageAnimate products={products} />
+        </>
     );
 }

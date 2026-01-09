@@ -222,6 +222,19 @@ export default defineType({
                             title: 'Variant Specific SEO',
                             description: 'Override the default SEO for this specific color/finish',
                             type: 'seo',
+                        },
+                        {
+                            name: 'variantSpecs',
+                            title: 'Variant Specifications',
+                            description: 'Specific dimensions/weight for this variant (overrides main product specs)',
+                            type: 'object',
+                            options: { collapsible: true, collapsed: true },
+                            fields: [
+                                { name: 'dimensions', title: 'Overall Dimensions', type: 'string', description: 'e.g. 9.80 x 4.41 x 3.15 inches' },
+                                { name: 'innerCurve', title: 'Inner Curve Dimension', type: 'string', description: 'e.g. 8.23 inches' },
+                                { name: 'thickness', title: 'Thickness', type: 'string', description: 'e.g. 0.55 inches' },
+                                { name: 'weight', title: 'Weight', type: 'string', description: 'e.g. 1.32 lbs' }
+                            ]
                         }
                     ],
                     preview: {

@@ -58,11 +58,21 @@ export async function SendCampaignEmail(recipientIds: string[], subject: string,
     const recipientsCheck = await client.fetch(`*[_id in $ids]{_id, email, firmName}`, { ids: recipientIds });
 
     // Batch processing to prevent spam flags (Rate Limiting)
-    // REDUCED BATCH SIZE for Safety
     const BATCH_SIZE = 3;
 
-    // Simple helper to strip HTML for text version (improves deliverability)
-    const textVersion = bodyHtml.replace(/<[^>]*>?/gm, ' ');
+    // Improved helper to create a clean text version
+    const createTextVersion = (html: string) => {
+        return html
+            .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "") // Remove styles
+            .replace(/<br\s*\/?>/gi, "\n")
+            .replace(/<\/p>/gi, "\n\n")
+            .replace(/<[^>]*>/g, "") // Strip remaining tags
+            .replace(/&nbsp;/g, " ")
+            .replace(/\s+/g, " ") // Collapse multiple spaces
+            .trim();
+    };
+
+    const textVersion = createTextVersion(bodyHtml);
 
     for (let i = 0; i < recipientsCheck.length; i += BATCH_SIZE) {
         const batch = recipientsCheck.slice(i, i + BATCH_SIZE);
@@ -82,14 +92,12 @@ export async function SendCampaignEmail(recipientIds: string[], subject: string,
                 await transporter.sendMail({
                     from: `"UrbanClay Studio" <${process.env.SMTP_USER}>`,
                     to: recipient.email,
-                    replyTo: 'urbanclay@claytile.in', // Direct replies to main inbox
+                    // replyTo: 'urbanclay@claytile.in', // REMOVED: Cross-domain Reply-To can trigger 'Relay: Bad' on Hostinger
                     subject: subject,
                     html: htmlWithPixel,
-                    text: textVersion, // Multipary/Alternative
+                    text: textVersion,
                     headers: {
-                        'List-Unsubscribe': `<mailto:urbanclay@claytile.in?subject=Unsubscribe>`,
-                        'Precedence': 'bulk', // Helps Gmail categorize as promo/bulk
-                        'X-Entity-Ref-ID': recipient._id // Internal tracking
+                        'X-Entity-Ref-ID': recipient._id
                     }
                 });
 
@@ -102,7 +110,6 @@ export async function SendCampaignEmail(recipientIds: string[], subject: string,
         }));
 
         // Wait Randomized Time (5s - 10s) between batches
-        // This "jitter" makes traffic look more organic/human to spam filters
         if (i + BATCH_SIZE < recipientsCheck.length) {
             const delay = Math.floor(Math.random() * (10000 - 5000 + 1) + 5000);
             await new Promise(resolve => setTimeout(resolve, delay));
@@ -111,3 +118,49 @@ export async function SendCampaignEmail(recipientIds: string[], subject: string,
 
     return { success: true, count: recipientIds.length };
 }
+
+export async function SendTestEmail(toEmail: string, subject: string, bodyHtml: string) {
+    if (!process.env.SMTP_USER) return { success: false, error: "SMTP Config Missing" };
+
+    // Create a temporary test lead so the "Request Kit" button actually works in the test email
+    const testLead = await writeClient.create({
+        _type: 'architectLead',
+        name: 'Test Architect',
+        firmName: 'Test Preview Studio',
+        email: toEmail,
+        city: 'Test City',
+        status: 'new'
+    });
+
+    try {
+        const textVersion = bodyHtml
+            .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+            .replace(/<br\s*\/?>/gi, "\n")
+            .replace(/<\/p>/gi, "\n\n")
+            .replace(/<[^>]*>/g, "")
+            .replace(/&nbsp;/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        // Inject the REAL test lead ID so the user can complete the full flow
+        let absoluteBodyHtml = bodyHtml.replace(/src="\/images\//g, 'src="https://claytile.in/images/');
+        absoluteBodyHtml = absoluteBodyHtml.replace('uid=TRACKING_ID', `uid=${testLead._id}`);
+
+        const trackingUrl = `https://claytile.in/api/static/icon?uid=${testLead._id}`;
+        const htmlWithPixel = `${absoluteBodyHtml}<img src="${trackingUrl}" width="1" height="1" style="display:none;" alt="" />`;
+
+        await transporter.sendMail({
+            from: `"UrbanClay Test" <${process.env.SMTP_USER}>`,
+            to: toEmail,
+            subject: `[TEST] ${subject}`,
+            html: htmlWithPixel,
+            text: textVersion
+        });
+
+        return { success: true };
+    } catch (error: any) {
+        console.error("Test Email Failed:", error);
+        return { success: false, error: error.message };
+    }
+}
+

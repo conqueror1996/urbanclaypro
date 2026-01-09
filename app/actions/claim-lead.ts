@@ -1,8 +1,10 @@
 'use server';
 
+
 import { writeClient } from '@/sanity/lib/write-client';
 import { client } from '@/sanity/lib/client';
 import { uuid } from '@sanity/uuid';
+import { sendSampleRequestAlert } from '@/lib/email';
 
 export async function ClaimStudioKit(leadId: string, address: string, phone: string) {
     if (!leadId) return { success: false, error: 'Lead ID missing' };
@@ -29,6 +31,9 @@ export async function ClaimStudioKit(leadId: string, address: string, phone: str
             notes: `Requested via Campaign Outreach. Original ArchitectLead Code: ${leadId}`
         });
 
+
+
+
         // 3. Update the architectLead status so it shows up in Analytics as 'converted'
         await writeClient.patch(leadId)
             .set({
@@ -37,6 +42,15 @@ export async function ClaimStudioKit(leadId: string, address: string, phone: str
                 convertedAt: new Date().toISOString()
             })
             .commit();
+
+        // 4. Send Admin Alert
+        await sendSampleRequestAlert({
+            firmName: architect.firmName,
+            contact: architect.name,
+            phone: phone,
+            city: architect.city,
+            address: address
+        });
 
         return { success: true };
     } catch (err: any) {

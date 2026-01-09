@@ -88,6 +88,9 @@ export const metadata: Metadata = {
   },
   verification: {
     google: 'M3QQNfOSKQ4nnCku83gLqX_Q35z6Lf8eGnjSa1q77fc',
+    other: {
+      'p:domain_verify': '8b9f75c2a32f30d64cb6e272756b6886',
+    },
   },
   appleWebApp: {
     capable: true,
@@ -114,8 +117,10 @@ import SmartExitPopup from "@/components/SmartExitPopup";
 
 // ... imports
 
+
 import FootprintTracker from "@/components/FootprintTracker";
 import FloatingSampleBadge from "@/components/FloatingSampleBadge";
+import { Toaster } from 'sonner';
 
 export default function RootLayout({
   children,
@@ -138,6 +143,7 @@ export default function RootLayout({
             <GlobalSampleModal />
             <SmartExitPopup />
             <FloatingSampleBadge />
+            <Toaster position="top-right" richColors />
           </SampleProvider>
         </SecurityProvider>
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />

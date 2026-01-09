@@ -48,6 +48,12 @@ export interface Product {
             keywords?: string[];
             openGraphImage?: string;
         };
+        variantSpecs?: {
+            dimensions?: string;
+            innerCurve?: string;
+            thickness?: string;
+            weight?: string;
+        };
     }[];
 
     resources?: {

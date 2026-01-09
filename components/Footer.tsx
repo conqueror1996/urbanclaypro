@@ -5,7 +5,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { usePathname } from 'next/navigation';
+
 export default function Footer() {
+    const pathname = usePathname();
+
+    const handleQuoteClick = (e: React.MouseEvent) => {
+        if (pathname === '/') {
+            e.preventDefault();
+            const element = document.getElementById('quote');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
+
     return (
         <footer id="contact" className="bg-[#2A1E16] text-white border-t border-white/10">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 md:py-20">
@@ -28,6 +42,7 @@ export default function Footer() {
                             <SocialLink href="https://www.instagram.com/urbanclay.in/" label="Instagram" icon="instagram" />
                             <SocialLink href="https://linkedin.com/company/urbanclay" label="LinkedIn" icon="linkedin" />
                             <SocialLink href="https://x.com/urbanclayindia" label="X (Twitter)" icon="twitter" />
+                            <SocialLink href="https://in.pinterest.com/urbanclayindia/" label="Pinterest" icon="pinterest" />
                         </div>
                     </div>
 
@@ -62,7 +77,7 @@ export default function Footer() {
                         <ul className="space-y-4 text-sm text-gray-400">
                             <li><FooterLink href="/our-story">Our Story</FooterLink></li>
                             <li><FooterLink href="/contact">Contact Us</FooterLink></li>
-                            <li><FooterLink href="/#quote"><span className="text-[#ea580c] font-medium">Request a Quote</span></FooterLink></li>
+                            <li><FooterLink href="/#quote" onClick={handleQuoteClick}><span className="text-[#ea580c] font-medium">Request a Quote</span></FooterLink></li>
                             <li className="pt-4 border-t border-white/5 mt-4">
                                 <p className="text-xs uppercase tracking-wider text-gray-500 mb-2">Sales & Support</p>
                                 <a href="tel:+918080081951" className="block text-white hover:text-[#d8b09a] transition-colors font-medium mb-1">+91 80800 81951</a>
@@ -140,9 +155,9 @@ function FooterSection({ title, children }: { title: string, children: React.Rea
     );
 }
 
-function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+function FooterLink({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: (e: React.MouseEvent) => void }) {
     return (
-        <Link href={href} className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+        <Link href={href} onClick={onClick} className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
             {children}
         </Link>
     );
@@ -165,6 +180,9 @@ function SocialLink({ href, label, icon }: { href: string; label: string; icon: 
             )}
             {icon === 'twitter' && (
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+            )}
+            {icon === 'pinterest' && (
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.399.165-1.487-.69-2.435-2.828-2.435-4.581 0-3.728 2.705-7.144 7.825-7.144 4.105 0 7.296 2.938 7.296 6.812 0 4.067-2.545 7.339-6.063 7.339-1.183 0-2.293-.616-2.673-1.336l-.728 2.768c-.266 1.026-.985 2.308-1.465 3.089C9.284 23.86 10.632 24 12.016 24c6.627 0 12-5.373 12-12 0-6.633-5.373-12-12-12z" /></svg>
             )}
         </a>
     );

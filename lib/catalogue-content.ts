@@ -6,12 +6,17 @@ interface PremiumSpec {
     detail: string;
 }
 
-export function generateLuxurySpecs(product: Product): PremiumSpec[] {
+type Variant = NonNullable<Product['variants']>[number];
+
+export function generateLuxurySpecs(product: Product, variant?: Variant | null): PremiumSpec[] {
     const title = product.title.toLowerCase();
     const specs: PremiumSpec[] = [];
 
-    // 1. MODULE SIZE (Prioritize CMS)
-    let dimensions = product.specs?.size;
+    // 0. VARIANT OVERRIDES (Highest Priority)
+    const vSpecs = variant?.variantSpecs;
+
+    // 1. MODULE SIZE (Prioritize Variant > CMS > Fallback)
+    let dimensions = vSpecs?.dimensions || product.specs?.size;
 
     if (!dimensions) {
         // Fallback Inference Logic
@@ -34,6 +39,8 @@ export function generateLuxurySpecs(product: Product): PremiumSpec[] {
         } else if (title.includes('brick')) {
             if (title.includes('linear')) {
                 dimensions = '230mm x 105mm x 55mm';
+            } else if (title.includes('arc')) {
+                dimensions = '9.80" x 4.41" x 3.15" (249mm x 112mm)';
             } else {
                 dimensions = '230mm x 105mm x 75mm';
             }
@@ -48,7 +55,46 @@ export function generateLuxurySpecs(product: Product): PremiumSpec[] {
         detail: 'Precision-fired dimensions optimized for standard masonry bonds and minimal mortar joints.'
     });
 
+    // 1.1 INNER CURVE (Variant Specific or Arc Brick Default)
+    if (vSpecs?.innerCurve) {
+        specs.push({
+            label: 'Inner Curve',
+            value: vSpecs.innerCurve,
+            detail: 'Precise internal radius for consistent curved masonry alignment.'
+        });
+    } else if (title.includes('arc') && title.includes('brick')) {
+        specs.push({
+            label: 'Inner Curve',
+            value: '8.23" (209mm)',
+            detail: 'Precise internal radius for consistent curved masonry alignment.'
+        });
+    }
+
+    // 1.2 THICKNESS (Variant Specific)
+    if (vSpecs?.thickness) {
+        specs.push({
+            label: 'Thickness',
+            value: vSpecs.thickness,
+            detail: 'Uniform thickness ensuring consistent wall depth and thermal mass.'
+        });
+    } else if (product.specs?.thickness) {
+        // Fallback to product thickness if not in variant
+        // Often implicit in size, but can be explicit
+    }
+
+    // 1.3 WEIGHT (Variant Specific)
+    if (vSpecs?.weight) {
+        specs.push({
+            label: 'Unit Weight',
+            value: vSpecs.weight,
+            detail: 'Optimized density balancing structural stability with ease of handling.'
+        });
+    }
+
     // 2. TECHNICAL PERFORMANCE (CMS Data)
+    // Only show if we haven't already filled up with variant specs to keep it clean, OR always show. 
+    // Let's always show key metrics unless overridden (which they aren't here).
+
     if (product.specs?.waterAbsorption) {
         specs.push({
             label: 'Water Absorption',
