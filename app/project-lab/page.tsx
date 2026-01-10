@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Check, Loader2, Sparkles, Building2, MapPin, Mail, User, Scan, Cpu, Layers, Palette } from 'lucide-react';
 import { submitProjectLab } from '@/app/actions/submit-project-lab';
 import { toast } from 'sonner';
+import { sendGAEvent } from '@next/third-parties/google';
 
 const STEPS = [
     { text: "Scanning geometry...", icon: Scan },
@@ -29,6 +30,9 @@ export default function ProjectLabPage() {
     const fullText = "Turn Sketches into Fabricated Reality.";
 
     useEffect(() => {
+        // Track Page View
+        sendGAEvent('event', 'project_lab_view', { value: 1 });
+
         let i = 0;
         const timer = setInterval(() => {
             setTypedText(fullText.slice(0, i));
@@ -64,6 +68,7 @@ export default function ProjectLabPage() {
         setDragging(false);
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             setFile(e.dataTransfer.files[0]);
+            sendGAEvent('event', 'project_lab_file_upload', { method: 'drop' });
         }
     };
 
@@ -85,9 +90,13 @@ export default function ProjectLabPage() {
         if (result.success) {
             setIsSuccess(true);
             toast.success("Project received! AI Analysis initiated.");
+            sendGAEvent('event', 'project_lab_submit_success', {
+                project_type: formData.get('projectType') as string
+            });
         } else {
             toast.error("Submission failed. Please try again.");
             setIsSubmitting(false);
+            sendGAEvent('event', 'project_lab_submit_error', { error: result.error });
         }
     };
 
@@ -247,7 +256,10 @@ export default function ProjectLabPage() {
                                             type="file"
                                             ref={fileInputRef}
                                             onChange={(e) => {
-                                                if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+                                                if (e.target.files && e.target.files[0]) {
+                                                    setFile(e.target.files[0]);
+                                                    sendGAEvent('event', 'project_lab_file_upload', { method: 'client' });
+                                                }
                                             }}
                                             className="hidden"
                                             accept="image/*,.pdf"
