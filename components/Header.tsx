@@ -66,7 +66,7 @@ export default function Header() {
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const { box, setBoxOpen } = useSampleBox();
     const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-    const [mounted, setMounted] = useState(false);
+
 
     const handleMouseEnter = (dropdown: string) => {
         if (closeTimeoutRef.current) {
@@ -83,7 +83,6 @@ export default function Header() {
     };
 
     useEffect(() => {
-        setMounted(true);
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -107,14 +106,7 @@ export default function Header() {
                 }
             }}
         >
-            {/* TOP BAR PROMISE - Client Only to prevent hydration mismatch */}
-            {mounted && (
-                <div className={`w-full text-center py-2 transition-colors duration-300 ${isScrolled || shouldShowWhiteHeader || activeDropdown ? 'bg-[#2A1E16] text-white/90' : 'bg-transparent text-white/80'}`}>
-                    <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest cursor-pointer hover:text-white transition-colors" onClick={() => setBoxOpen(true)}>
-                        ⚡ Architects: <span className="underline decoration-white/30 underline-offset-4 hover:decoration-white">48-Hour Sample Delivery</span> to your Studio
-                    </p>
-                </div>
-            )}
+
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative pt-2">
                 <Link href="/" className="flex items-center group relative z-50">
