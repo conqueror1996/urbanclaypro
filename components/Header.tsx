@@ -51,6 +51,7 @@ const PRODUCT_CATEGORIES = [
 
 const navLinks = [
     { href: '/products', label: 'Products', hasDropdown: true },
+    { href: '/project-lab', label: 'Project Lab AI', isSpecial: true },
     { href: '/projects', label: 'Projects' },
     { href: '/guide', label: 'Selection Guide' },
     { href: '/architects', label: 'For Architects' },
@@ -122,20 +123,22 @@ export default function Header() {
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center gap-10 h-full">
                     {navLinks.map((link) => {
+                        // @ts-ignore
+                        const isSpecial = link.isSpecial;
                         const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
                         return (
                             <div
                                 key={link.href}
                                 className="relative h-full flex items-center"
-
+                                // @ts-ignore
                                 onMouseEnter={() => link.hasDropdown ? handleMouseEnter('products') : handleMouseLeave()}
                             >
                                 <Link
                                     href={link.href}
-                                    className={`text-[13px] uppercase tracking-[0.05em] font-medium transition-colors duration-300 py-4 ${isActive || activeDropdown === 'products' && link.hasDropdown
-                                        ? 'text-[var(--terracotta)]'
-                                        : 'text-[#5d554f] hover:text-[#2A1E16]'
-                                        }`}
+                                    className={`text-[13px] uppercase tracking-[0.05em] font-medium transition-colors duration-300 py-4 ${isActive || (activeDropdown === 'products' && link.hasDropdown)
+                                            ? 'text-[var(--terracotta)]'
+                                            : 'text-[#5d554f] hover:text-[#2A1E16]'
+                                        } ${isSpecial ? 'bg-gradient-to-r from-[var(--terracotta)] to-blue-600 bg-clip-text text-transparent font-bold' : ''}`}
                                 >
                                     {link.label}
                                 </Link>
