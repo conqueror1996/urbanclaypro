@@ -71,7 +71,7 @@ export async function getTrafficData(): Promise<TrafficReport> {
 
         // Filter out known/fixed errors from the display log (e.g. Hydration #418 which is now patched)
         const rawErrors = result.errors?.map((e: any) => e.errors) || [];
-        const recentErrors = rawErrors.filter((e: string) => !e.includes('Minified React error #418') && !e.includes('Minified React error #310'));
+        const recentErrors = rawErrors.filter((e: string) => !e.includes('Minified React error #418') && !e.includes('Minified React error #310') && !e.includes('Rendered more hooks'));
         const filteredErrorCount = recentErrors.length;
 
         // Health Score Algo (100 = Perfect)
