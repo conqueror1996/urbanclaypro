@@ -16,10 +16,10 @@ import { RelatedArticle } from '@/components/RelatedArticles';
 import ProductShowcase from '@/components/ProductShowcase';
 import SocialShare from '@/components/SocialShare';
 
-const WallStyler = dynamic(() => import('./WallStyler'), {
-    ssr: false,
-    loading: () => <div className="w-full h-full bg-[#1a1512] animate-pulse rounded-3xl" />
-});
+// const WallStyler = dynamic(() => import('./WallStyler'), {
+//     ssr: false,
+//     loading: () => <div className="w-full h-full bg-[#1a1512] animate-pulse rounded-3xl" />
+// });
 import { generateLuxurySpecs } from '@/lib/catalogue-content';
 import QuoteModal from '@/components/QuoteModal'; // Assuming this exists or used by QuoteUrl logic
 
@@ -609,10 +609,10 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                         <div className="grid gap-8">
                             <div className="h-[500px] md:h-[600px] w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl relative">
-                                <WallStyler
+                                {/* <WallStyler
                                     initialColor="#b45a3c"
                                     variantImages={[product.imageUrl, ...(product.variants?.map(v => v.imageUrl) || [])].filter(Boolean) as string[]}
-                                />
+                                /> */}
                             </div>
 
                             <div className="bg-[#EBE5E0] text-[#1a1512] rounded-[2rem] p-8 md:p-12 relative overflow-hidden">

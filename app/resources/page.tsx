@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Metadata } from 'next';
 import JsonLd from '@/components/JsonLd';
-import ArchitectsCorner from '@/components/ArchitectsCorner';
+// import ArchitectsCorner from '@/components/ArchitectsCorner';
 import ScrollReveal from '@/components/ScrollReveal';
 import MaterialCalculator from '@/components/resources/MaterialCalculator';
 import TextureLibrary from '@/components/resources/TextureLibrary';
@@ -144,7 +144,7 @@ export default async function ResourcesPage() {
 
             {/* SECTION 3: ARCHITECTS SECTION */}
             <div className="border-y border-white/5">
-                <ArchitectsCorner />
+                {/* <ArchitectsCorner /> */}
             </div>
 
             {/* FAQ SECTION */}
