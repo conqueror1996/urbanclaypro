@@ -14,7 +14,9 @@ export async function trackFootprint(path: string, extraData?: { vitals?: any, e
         const botSignatures = ['bot', 'spider', 'crawl', 'python', 'curl', 'wget', 'http', 'lighthouse', 'vercel'];
 
         // Return immediately if it matches any bot signature
-        if (botSignatures.some(sig => lowerUA.includes(sig))) return;
+        // if (botSignatures.some(sig => lowerUA.includes(sig))) return;
+
+        console.log('📝 Tracking Footprint:', path, extraData?.vitals ? 'with Vitals' : '', extraData?.errors ? 'with Errors' : '');
 
         // Simple Device/Browser parsing (can be enhanced with a library like ua-parser-js if needed)
         const isMobile = /mobile/i.test(userAgent);

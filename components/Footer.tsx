@@ -26,7 +26,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
                     {/* Column 1: Brand (Always Visible) */}
                     <div className="space-y-6">
-                        <Link href="/" className="block">
+                        <Link href="/" className="block" aria-label="UrbanClay Home">
                             <Image
                                 src="/urbanclay-logo.png"
                                 alt="UrbanClay"
@@ -35,6 +35,7 @@ export default function Footer() {
                                 className="h-10 md:h-12 lg:h-14 w-auto opacity-90 brightness-0 invert"
                             />
                         </Link>
+
                         <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
                             India's premier manufacturer of sustainable terracotta tiles, brick cladding, and architectural facades.
                         </p>

@@ -31,10 +31,10 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
                         >
+
                             {injectedKeyword && (
                                 <div
                                     data-testid="keyword-badge"
@@ -64,7 +64,8 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 className="mt-6 md:mt-8 text-base md:text-xl text-[#5d554f] font-light leading-relaxed max-w-lg"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.6 }}
+                                transition={{ delay: 0.1, duration: 0.6 }}
+
                             >
                                 {data?.heroSubheading || 'Beyond decorative cladding. Industrial-grade terracotta systems designed to eliminate efflorescence and structural warpage in the Indian climate.'}
                             </motion.p>

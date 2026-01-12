@@ -51,10 +51,10 @@ export default function MetadataHealthWidget() {
                     if (!p.seoDesc) {
                         // Fallback check: is there a main description used as fallback?
                         if (!p.description) productIssues.push('Missing Meta Description');
-                        else productIssues.push('Using Auto-Generated Description (Not Optimized)');
-                    } else if (p.seoDesc.length < 50) {
+                        // Accepted fallback - no penalty
+                    } else if (p.seoDesc && p.seoDesc.length < 50) {
                         productIssues.push('Meta Description too short (<50 chars)');
-                    } else if (p.seoDesc.length > 160) {
+                    } else if (p.seoDesc && p.seoDesc.length > 160) {
                         productIssues.push('Meta Description too long (>160 chars)');
                     }
 

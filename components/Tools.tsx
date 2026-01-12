@@ -1,13 +1,10 @@
 'use client';
 
 import React from 'react';
-import dynamic from 'next/dynamic';
+
 import { Product } from '@/lib/products';
 
-const WallStyler = dynamic(() => import('./WallStyler'), {
-    ssr: false,
-    loading: () => <div className="w-full h-full bg-[#1a1512] animate-pulse rounded-3xl" />
-});
+
 
 interface ToolsProps {
     products?: Product[];
@@ -34,11 +31,14 @@ export default function Tools({ products = [] }: ToolsProps) {
                     </p>
                 </div>
 
-                <div className="h-[600px] w-full max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden border border-white/20">
-                    <WallStyler
-                        initialColor="#b45a3c"
-                        variantImages={variantImages}
-                    />
+                <div className="h-[400px] w-full max-w-5xl mx-auto shadow-sm rounded-3xl overflow-hidden border border-[var(--line)] bg-[#EBE5D9] flex items-center justify-center flex-col p-8 text-center">
+                    <div className="w-16 h-16 bg-[var(--ink)]/5 text-[var(--ink)] rounded-full flex items-center justify-center mb-6">
+                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                    </div>
+                    <h3 className="text-2xl font-serif text-[var(--ink)] mb-2">Visualizer v2.0 Upgrading</h3>
+                    <p className="text-[var(--ink)]/60 max-w-md">
+                        We are currently upgrading our specificer tools. In the meantime, visit our <a href="/project-lab" className="underline hover:text-[var(--terracotta)]">Project Lab AI</a> for a feasibility report.
+                    </p>
                 </div>
             </div>
         </section>

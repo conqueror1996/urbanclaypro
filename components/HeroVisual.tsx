@@ -54,7 +54,7 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true }); // Optimized context
         if (!ctx) return;
 
         let animationFrameId: number;
@@ -70,14 +70,14 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
                 x: Math.random() * canvas.width,
                 y: canvas.height + Math.random() * 20,
                 size: Math.random() * 2 + 0.5,
-                speedY: Math.random() * 1 + 0.2,
+                speedY: Math.random() * 1 + 0.2, // Reduced speed
                 opacity: Math.random() * 0.5 + 0.2
             };
         };
 
         const initParticles = () => {
             particles = [];
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 15; i++) { // Reduced count from 30 to 15
                 particles.push(createParticle());
             }
         };
@@ -95,23 +95,28 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 100, 50, ${p.opacity})`; // Orange/Ember color
+                ctx.fillStyle = `rgba(255, 100, 50, ${p.opacity})`;
                 ctx.fill();
             });
 
             animationFrameId = requestAnimationFrame(animate);
         };
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-        initParticles();
-        animate();
+        // Defer particle start to avoid blocking hydration
+        const timer = setTimeout(() => {
+            resizeCanvas();
+            initParticles();
+            animate();
+            window.addEventListener('resize', resizeCanvas);
+        }, 1000);
 
         return () => {
+            clearTimeout(timer);
             window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
         };
     }, [prefersReducedMotion]);
+
 
     return (
         <div className="w-full h-full" style={{ perspective: 1000 }}> {/* Perspective container for 3D effect */}

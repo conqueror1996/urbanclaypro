@@ -46,7 +46,7 @@ function CRMContent() {
 
     // UI State
     const [loading, setLoading] = useState(true);
-    const [viewMode, setViewMode] = useState<'pipeline' | 'kanban' | 'contacts' | 'dormant'>('kanban');
+    const [viewMode, setViewMode] = useState<'pipeline' | 'kanban' | 'contacts' | 'dormant' | 'priority'>('kanban');
     const [activeTab, setActiveTab] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedLead, setSelectedLead] = useState<any | null>(null);
@@ -232,10 +232,13 @@ function CRMContent() {
 
 
     const filteredLeads = leads.filter(lead => {
-        const matchesSearch = (lead.clientName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || (lead.company?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+        const terms = searchTerm.toLowerCase().split(' ').filter(t => t.length > 0);
+        const searchableText = `${lead.clientName || ''} ${lead.company || ''} ${lead.phone || ''} ${lead.email || ''} ${lead.requirements || ''}`.toLowerCase();
+        const matchesSearch = terms.length === 0 || terms.every(term => searchableText.includes(term));
         const dormant = isDormant(lead);
         if (viewMode === 'dormant') return matchesSearch && dormant;
         if (viewMode === 'kanban') return matchesSearch && !dormant;
+        if (viewMode === 'priority') return matchesSearch && !dormant && isOverdue(lead.nextFollowUp);
         const matchesTab = activeTab === 'all' ? true : lead.stage === activeTab;
         return matchesSearch && matchesTab && !dormant;
     });
@@ -255,28 +258,21 @@ function CRMContent() {
     const overdueCount = leads.filter(l => isOverdue(l.nextFollowUp) && !['won', 'lost'].includes(l.stage)).length;
 
     return (
-        <div className="min-h-screen bg-[#FAF9F6] p-6 md:p-10 font-sans selection:bg-[#b45a3c]/10 selection:text-[#b45a3c]">
-            <div className="max-w-7xl mx-auto space-y-12">
+        <div className="min-h-screen bg-white p-6 md:p-12 font-sans selection:bg-[#2a1e16] selection:text-white">
+            <div className="max-w-[1400px] mx-auto space-y-12">
 
                 {/* Executive Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-[#e9e2da]/40 pb-10">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 bg-[#2a1e16] rounded-[1.5rem] flex items-center justify-center shadow-2xl shadow-[#2a1e16]/20">
-                                <TrendingUp className="w-6 h-6 text-white" />
-                            </div>
-                            <div>
-                                <h1 className="text-5xl font-serif text-[#2a1e16] font-medium tracking-tight">Project Hub</h1>
-                                <p className="text-[#8c7b70] font-bold text-[10px] uppercase tracking-[0.3em] mt-1">Urban Clay &bull; Pipeline Intelligence v2.1</p>
-                            </div>
-                        </div>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pt-4">
+                    <div>
+                        <h1 className="text-3xl font-serif text-[#2a1e16] tracking-tight">Projects</h1>
+                        <p className="text-[#8c7b70] text-sm mt-1 font-medium">Manage your pipeline and client relationships</p>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div>
                         <button
                             onClick={() => setShowNewDealModal(true)}
-                            className="bg-[#b45a3c] text-white px-8 py-4 rounded-2xl flex items-center gap-3 hover:bg-[#96472d] transition-all font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-[#b45a3c]/20"
+                            className="bg-[#2a1e16] text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-[#4a3e36] transition-all font-bold text-xs uppercase tracking-wider"
                         >
-                            <Plus className="w-4 h-4" /> Initialize Opportunity
+                            <Plus className="w-4 h-4" /> New Opportunity
                         </button>
                     </div>
                 </div>
@@ -288,7 +284,7 @@ function CRMContent() {
                             <AlertCircle className="w-5 h-5 text-rose-500" />
                             <span className="text-[11px] font-black uppercase text-rose-700 tracking-wider font-sans">{overdueCount} Immediate follow-ups required to prevent deal death</span>
                         </div>
-                        <button onClick={() => setViewMode('pipeline')} className="text-[10px] font-black text-rose-600 underline uppercase">View Priority →</button>
+                        <button onClick={() => setViewMode('priority')} className="text-[10px] font-black text-rose-600 underline uppercase">View Priority →</button>
                     </motion.div>
                 )}
 
@@ -331,7 +327,7 @@ function CRMContent() {
                             isOverdue={l => isOverdue(l)}
                             getDealHealth={getDealHealth}
                         />
-                    ) : (viewMode === 'pipeline' || viewMode === 'dormant') ? (
+                    ) : (viewMode === 'pipeline' || viewMode === 'dormant' || viewMode === 'priority') ? (
                         <div className="grid grid-cols-1 gap-4">
                             <AnimatePresence mode="popLayout">
                                 {filteredLeads.length > 0 ? filteredLeads.map(lead => (
@@ -344,16 +340,21 @@ function CRMContent() {
                                         stages={STAGES}
                                     />
                                 )) : (
-                                    <div className="bg-white/50 border-2 border-dashed border-[#e9e2da] rounded-[2.5rem] py-40 text-center">
-                                        <h3 className="text-2xl font-serif text-[#2a1e16] opacity-30">Archive Blank</h3>
-                                        <p className="text-[10px] font-bold text-[#8c7b70] uppercase tracking-widest mt-2">No active opportunities match current filtration</p>
+                                    <div className="py-24 text-center">
+                                        <h3 className="text-xl font-serif text-[#2a1e16] mb-2">No active opportunities</h3>
+                                        <p className="text-sm text-[#8c7b70]">There are no deals in this stage matching your criteria.</p>
                                     </div>
                                 )}
                             </AnimatePresence>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {contacts.filter(c => c.name?.toLowerCase().includes(searchTerm.toLowerCase())).map((contact, i) => (
+                            {contacts.filter(c => {
+                                if (!searchTerm) return true;
+                                const terms = searchTerm.toLowerCase().split(' ').filter(t => t.length > 0);
+                                const searchableText = `${c.name || ''} ${c.phone || ''} ${c.email || ''}`.toLowerCase();
+                                return terms.every(term => searchableText.includes(term));
+                            }).map((contact, i) => (
                                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} key={contact._id} className="bg-white p-7 rounded-[2rem] border border-[#e9e2da]/60 hover:shadow-2xl transition-all group flex flex-col justify-between">
                                     <div>
                                         <div className="w-12 h-12 bg-[#2a1e16] rounded-xl flex items-center justify-center text-white font-serif text-lg mb-6">{contact.name.charAt(0)}</div>

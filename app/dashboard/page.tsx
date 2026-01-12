@@ -7,7 +7,9 @@ import { Plus, Link as LinkIcon, PenTool, Activity, RefreshCw } from 'lucide-rea
 import TrafficPulse from '@/components/TrafficPulse';
 import MetadataHealthWidget from '@/components/dashboard/MetadataHealthWidget';
 
+// Dashboard Overview - Real-time business intelligence v2
 export default function DashboardPage() {
+
     const [stats, setStats] = useState({
         total: 0,
         serious: 0,

@@ -25,6 +25,10 @@ export async function deleteLead(leadId: string) {
         return { success: true }
     } catch (error) {
         console.error('Error deleting lead:', error)
+        // Check if token exists
+        if (!process.env.SANITY_API_TOKEN) {
+            console.error('CRITICAL: SANITY_API_TOKEN is missing in server environment!')
+        }
         return { success: false, error: 'Failed to delete lead' }
     }
 }

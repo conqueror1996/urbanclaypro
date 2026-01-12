@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Clock, MapPin, TrendingUp, MoreHorizontal, User, Calendar, Truck, Box } from 'lucide-react';
+import { MessageSquare, Clock, MapPin, TrendingUp, MoreHorizontal, User, Calendar, Truck, Box, Mail } from 'lucide-react';
 
 interface CRMLeadCardProps {
     lead: any;
@@ -19,111 +19,80 @@ export function CRMLeadCard({ lead, onClick, isOverdue, getDealHealth, stages }:
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.98 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
             onClick={onClick}
-            className={`group bg-white rounded-3xl p-6 border transition-all hover:shadow-2xl hover:shadow-black/[0.03] cursor-pointer relative overflow-hidden flex flex-col md:flex-row items-center gap-8 ${isOverdue && lead.stage !== 'won' ? 'border-rose-100 bg-rose-50/10' : 'border-[#e9e2da]/60'
+            className={`group bg-white rounded-xl p-5 border-b border-[#e9e2da] last:border-0 hover:bg-[#FAF9F6] cursor-pointer transition-all flex flex-col md:flex-row items-center gap-6 ${isOverdue && lead.stage !== 'won' ? 'bg-rose-50/30' : ''
                 }`}
         >
-            {/* Status Indicator Strip */}
-            <div className={`absolute top-0 left-0 bottom-0 w-1 ${stageInfo?.color.split(' ')[0] || 'bg-gray-100'}`} />
-
-            {/* Avatar & Health */}
-            <div className="flex items-center gap-5 w-full md:w-1/3">
-                <div className="relative shrink-0">
-                    <div className="w-14 h-14 bg-[#2a1e16] rounded-2xl flex items-center justify-center text-white font-serif text-xl shadow-lg ring-4 ring-white transition-transform group-hover:scale-105">
-                        {lead.clientName?.charAt(0)}
-                    </div>
-                    <div className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-lg border-2 border-white shadow-sm flex items-center justify-center ${health.bg}`}>
-                        <div className={`w-1.5 h-1.5 rounded-full ${health.color.replace('text-', 'bg-')}`} />
-                    </div>
+            {/* Avatar & Info */}
+            <div className="flex items-center gap-4 w-full md:w-1/3">
+                <div className="w-10 h-10 bg-[#2a1e16] rounded-full flex items-center justify-center text-white font-serif text-sm">
+                    {lead.clientName?.charAt(0)}
                 </div>
                 <div className="min-w-0">
-                    <h3 className="font-serif text-lg text-[#2a1e16] font-medium truncate group-hover:text-[#b45a3c] transition-colors">
+                    <h3 className="font-serif text-base text-[#2a1e16] font-medium truncate">
                         {lead.clientName}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#8c7b70] font-bold uppercase tracking-wider">
-                        <span className="truncate">{lead.company || 'Direct Client'}</span>
-                        <span className="text-gray-300">•</span>
-                        {lead.location && (
-                            <>
-                                <span className="flex items-center gap-1 text-[#b45a3c]"><MapPin className="w-3 h-3" /> {lead.location}</span>
-                                <span className="text-gray-300">•</span>
-                            </>
-                        )}
-                        <span>{health.label}</span>
-                    </div>
+                    <p className="text-xs text-[#8c7b70] truncate">
+                        {lead.company || 'Private Client'} {lead.location && `• ${lead.location}`}
+                    </p>
                 </div>
             </div>
 
-            {/* Financials & Progress */}
-            <div className="flex-1 grid grid-cols-2 gap-10 w-full md:w-auto md:px-6 md:border-l border-t md:border-t-0 pt-6 md:pt-0 border-[#e9e2da]/40">
-                <div className="space-y-1">
-                    <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-widest">Est. Valuation</p>
-                    <p className="font-serif text-lg text-[#2a1e16] font-medium">₹{lead.potentialValue?.toLocaleString('en-IN') || 'TBD'}</p>
-                </div>
-                <div className="space-y-2">
-                    <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-widest">Active Stage</p>
-                    <div className="flex items-center gap-2">
-                        <span className={`px-3 py-1 rounded-lg text-[9px] font-extrabold uppercase tracking-widest border inline-block ${stageInfo?.color}`}>
-                            {stageInfo?.label}
-                        </span>
-                        {lead.freightEstimate > 0 && (
-                            <div className="flex items-center gap-1.5 px-2 py-1 bg-orange-50 text-orange-600 rounded-lg border border-orange-100 text-[10px] font-bold" title="Est. Freight">
-                                <Truck className="w-3 h-3" />
-                                ₹{Math.round(lead.freightEstimate / 1000)}k
-                            </div>
-                        )}
-                    </div>
-                </div>
-                {(lead.productName || lead.quantity) && (
-                    <div className="col-span-2 mt-2 pt-2 border-t border-[#e9e2da]/40 flex items-center gap-3">
-                        <Box className="w-3 h-3 text-[#b45a3c]" />
-                        <span className="text-[10px] font-bold text-[#2a1e16] uppercase tracking-wider">
-                            {lead.productName || 'Unspecified Product'} {lead.quantity && `• ${lead.quantity}`}
-                        </span>
-                    </div>
+            {/* Stage Badge */}
+            <div className="w-full md:w-auto">
+                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${stageInfo?.color}`}>
+                    {stageInfo?.label}
+                </span>
+            </div>
+
+            {/* Financials - Minimal */}
+            <div className="flex-1 text-right md:text-left">
+                {lead.potentialValue > 0 ? (
+                    <span className="font-mono text-sm text-[#2a1e16]">₹{lead.potentialValue.toLocaleString('en-IN')}</span>
+                ) : (
+                    <span className="text-xs text-gray-400 italic">No Value</span>
                 )}
             </div>
 
-            {/* Milestones & Actions */}
-            <div className="flex-1 flex items-center justify-between w-full md:w-auto md:pl-6 md:border-l border-t md:border-t-0 pt-6 md:pt-0 border-[#e9e2da]/40">
-                <div className="space-y-1">
-                    <p className="text-[9px] font-bold text-[#8c7b70] uppercase tracking-widest">Context Milestone</p>
-                    <div className="flex flex-col gap-1.5 mt-1.5">
-                        {lead.nextFollowUp ? (
-                            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase w-fit ${isOverdue && lead.stage !== 'won' ? 'bg-rose-100 text-rose-700' : 'bg-[#FAF9F6] text-[#2a1e16]'
-                                }`}>
-                                <Clock className="w-3 h-3" />
-                                Next: {new Date(lead.nextFollowUp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
-                            </div>
-                        ) : (
-                            <span className="text-[10px] text-gray-300 italic">No pending follow-ups</span>
-                        )}
-                        {lead.leadDate && (
-                            <div className="flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-bold uppercase bg-amber-50 text-amber-700 border border-amber-100 w-fit">
-                                <Calendar className="w-3 h-3" />
-                                {new Date(lead.leadDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} {lead.leadTime && `@ ${lead.leadTime}`}
-                            </div>
-                        )}
-                    </div>
+            {/* Action / Date */}
+            <div className="w-full md:w-auto flex justify-end items-center gap-2">
+                <div className="text-right mr-2">
+                    {lead.nextFollowUp ? (
+                        <p className={`text-xs font-medium flex items-center justify-end gap-2 ${isOverdue && lead.stage !== 'won' ? 'text-rose-600' : 'text-[#8c7b70]'}`}>
+                            {new Date(lead.nextFollowUp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                            {isOverdue && lead.stage !== 'won' && <Clock className="w-3 h-3" />}
+                        </p>
+                    ) : (
+                        <span className="text-xs text-gray-300">-</span>
+                    )}
                 </div>
 
-                <div className="flex gap-2">
+                {lead.email && (
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
-                            window.open(`https://wa.me/${lead.phone?.replace(/[^0-9]/g, '')}`, '_blank');
+                            window.location.href = `mailto:${lead.email}`;
                         }}
-                        className="w-10 h-10 bg-[#FAF9F6] hover:bg-[#b45a3c] hover:text-white text-[#2a1e16] rounded-xl flex items-center justify-center transition-all border border-[#e9e2da]/40"
+                        className="w-8 h-8 rounded-full bg-white border border-[#e9e2da] hover:border-[#2a1e16] hover:bg-[#2a1e16] hover:text-white flex items-center justify-center transition-all text-[#8c7b70]"
+                        title="Send Email"
                     >
-                        <MessageSquare className="w-4 h-4" />
+                        <Mail className="w-3.5 h-3.5" />
                     </button>
-                    <button className="w-10 h-10 bg-[#FAF9F6] text-[#8c7b70] rounded-xl flex items-center justify-center hover:bg-[#2a1e16] hover:text-white transition-all border border-[#e9e2da]/40">
-                        <MoreHorizontal className="w-4 h-4" />
-                    </button>
-                </div>
+                )}
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`https://wa.me/${lead.phone?.replace(/[^0-9]/g, '')}`, '_blank');
+                    }}
+                    className="w-8 h-8 rounded-full bg-white border border-[#e9e2da] hover:border-[#25D366] hover:bg-[#25D366] hover:text-white flex items-center justify-center transition-all text-[#2a1e16]"
+                    title="Open WhatsApp"
+                >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                </button>
             </div>
         </motion.div>
     );

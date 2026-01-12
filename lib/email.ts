@@ -76,7 +76,7 @@ export async function sendLeadAlertEmail(lead: any) {
 
         const mailOptions = {
             from: `"UrbanClay CRM" <${process.env.SMTP_USER}>`,
-            to: 'urbanclay@claytile.in',
+            to: process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'urbanclay@claytile.in',
             subject: `${isSerious ? '🔥 Serious' : '📩 New'} Lead: ${lead.role} | ${lead.city}`,
             html: wrapEmailTemplate(content)
         };
@@ -292,7 +292,7 @@ export async function sendSampleRequestAlert(data: {
 
         const mailOptions = {
             from: `"UrbanClay Auto-Bot" <${process.env.SMTP_USER}>`,
-            to: 'urbanclay@claytile.in',
+            to: process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'urbanclay@claytile.in',
             subject: `📦 Sample Kit Request: ${data.firmName || data.contact}`,
             html: wrapEmailTemplate(content)
         };

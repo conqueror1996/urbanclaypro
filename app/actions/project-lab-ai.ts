@@ -108,33 +108,65 @@ export async function AnalyzeProject(params: ProjectParameters) {
     const guideData = await getGuideData();
 
     const city = params.location ? CITIES[params.location.toLowerCase()] : null;
-    const climateAdvice = city ? `CLIMATE ADVICE for ${city.name}: ${city.climateAdvice}` : "";
+    const climateAdvice = city ? `\nCLIMATE INTELLIGENCE for ${city.name}: ${city.climateAdvice}` : "";
+
+    // 1. Contextualize the Product Catalog (Deep Draft)
+    const deepCatalog = products.map(p => `
+        PRODUCT: ${p.title} (${p.category?.title})
+        - SKU: ${p.sku || 'N/A'}
+        - Specs: ${p.specs || 'Standard sizing available'}
+        - Variants: ${p.variants?.map(v => v.name).join(', ') || 'Standard colors'}
+        - Best Application: ${p.description.substring(0, 100)}...
+    `).join('\n');
 
     const prompt = `
-        You are a 50-year-old veteran owner. 
-        TO ENSURE DYNAMIC AND UNIQUE SOLUTIONS, CHOOSE ONE OF THESE PERSONAS FOR THIS REPORT:
-        A) "The Technical Purist" (Focus on structural integrity and longevity)
-        B) "The Aesthetic Master" (Focus on patterns, light play, and luxury status)
-        C) "The Eco-Logical Consultant" (Focus on thermal mass, breathability, and energy ROI)
+        ACT AS: The "Chief Facade Consultant" for UrbanClay (a premium terracotta manufacturer). 
+        Your tone is: Highly Technical, Architectural, yet Elegant. You calculate loads, thermal stress, and aesthetic rhythm simultaneously.
         
+        CONTEXT:
         ${climateAdvice}
-        
-        PROJECT:
-        - Area: ${params.area} sq.ft.
-        - User Context: ${JSON.stringify(params.userAnswers)}
+        - User Area: ${params.area} sq.ft.
+        - User Constraints: ${JSON.stringify(params.userAnswers)}
         ${params.location ? ` - City: ${params.location}` : ''}
         
-        GOAL: Provide a "Definitive Solution" and a "Contrarian Alternative" (something radically different).
+        AVAILABLE URBANCLAY CATALOG (Use ONLY these exact product names):
+        ${deepCatalog}
+        
+        YOUR MISSION:
+        Generate a "Facade Intelligence Report" with two distinct paths:
+        
+        PATH A: The "Architect's Intent" (Aligns with the visual style/user answers perfectly).
+        PATH B: The "Consultant's Pivot" (A technically superior or aesthetically bolder alternative they hadn't considered).
         
         RESPONSE FORMAT (JSON ONLY):
         {
-            "strategicVision": "string",
-            "primarySolution": { "product": "string", "method": "string", "reasoning": "string", "quantity": "string" },
-            "alternativeSolution": { "product": "string", "method": "string", "reasoning": "string" },
-            "engineeringMastery": { "structuralLogic": "string", "keyChallenges": ["string"], "proTip": "string" },
-            "financialForecasting": { "materialInvestment": 0, "ancillaryCosts": 0, "wastageBuffer": 0, "roiInsight": "string" },
-            "stepByStepExecution": [ { "phase": "string", "whatToDo": "string", "whyItMatters": "string", "estimatedDays": 0 } ],
-            "visualObservation": "string"
+            "strategicVision": "One powerful sentence defining the architectural identity of this proposal.",
+            "primarySolution": { 
+                "product": "EXACT PRODUCT NAME FROM CATALOG", 
+                "method": "Installation System (e.g., Vertical Rainscreen on aluminum subframe)", 
+                "reasoning": "Technical & Aesthetic justification (mention specific specs)", 
+                "quantity": "Estimated quantity including 10% wastage" 
+            },
+            "alternativeSolution": { 
+                "product": "EXACT PRODUCT NAME FROM CATALOG", 
+                "method": "Installation System", 
+                "reasoning": "Why this bold alternative solves a hidden problem (heat gain, wind load, etc.)" 
+            },
+            "engineeringMastery": { 
+                "structuralLogic": "Comment on dead load, wind load, or subframing requirements.", 
+                "keyChallenges": ["Specific challenge 1", "Specific challenge 2"], 
+                "proTip": "A secret industry insight regarding this specific material application." 
+            },
+            "financialForecasting": { 
+                "materialInvestment": "Estimated Cost Range (INR)", 
+                "ancillaryCosts": "Estimated % for Subframing/Install (usually 40-60%)", 
+                "wastageBuffer": 10, 
+                "roiInsight": "Comment on durability/maintenance savings over 20 years." 
+            },
+            "stepByStepExecution": [ 
+                { "phase": "Phase 1: Analysis", "whatToDo": "Wind load simulation", "whyItMatters": "Prevent fatigue failure", "estimatedDays": 5 } 
+            ],
+            "visualObservation": "A brief critique of the uploaded facade's current geometry."
         }
     `;
 

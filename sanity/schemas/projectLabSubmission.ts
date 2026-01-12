@@ -41,6 +41,14 @@ export default {
             }
         },
         {
+            name: 'submissionDocument',
+            title: 'Submission Document (PDF/CAD/Other)',
+            type: 'file',
+            options: {
+                storeOriginalFilename: true
+            }
+        },
+        {
             name: 'description',
             title: 'Project Description',
             type: 'text',

@@ -592,7 +592,7 @@ export default function LeadsDashboard() {
                                     <div className="flex items-center gap-2">
                                         <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Current Status</label>
                                         <select
-                                            value={selectedLead.status}
+                                            value={selectedLead.status || ''}
                                             onChange={(e) => handleStatusChange(selectedLead._id, e.target.value)}
                                             className={`px-3 py-1.5 rounded-lg text-sm font-medium outline-none border border-transparent hover:border-gray-300 focus:border-[var(--terracotta)] ${getStatusColor(selectedLead.status)}`}
                                         >

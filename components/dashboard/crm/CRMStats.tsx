@@ -16,76 +16,64 @@ interface CRMStatsProps {
 
 export function CRMStats({ stats, onViewDormant }: CRMStatsProps) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-[#e9e2da]/40">
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-6 rounded-2xl border border-[#e9e2da]/50 shadow-sm group hover:border-[#b45a3c]/30 transition-all"
+                className="space-y-1"
             >
-                <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600 group-hover:scale-110 transition-transform">
-                        <DollarSign className="w-5 h-5" />
-                    </div>
-                    <p className="text-[10px] font-bold text-[#8c7b70] uppercase tracking-widest">Pipeline Value</p>
+                <div className="flex items-center gap-2 text-[#8c7b70] mb-2">
+                    <DollarSign className="w-4 h-4" />
+                    <span className="text-[11px] font-bold uppercase tracking-widest">Pipeline Value</span>
                 </div>
-                <h3 className="text-3xl font-serif text-[#2a1e16]">₹{stats.totalValue.toLocaleString('en-IN')}</h3>
-                <div className="mt-2 flex items-center gap-1 text-[10px] text-emerald-600 font-bold uppercase">
-                    <TrendingUp className="w-3 h-3" />
-                    Live Valuation
-                </div>
+                <h3 className="text-4xl font-serif text-[#2a1e16] tracking-tight">₹{stats.totalValue.toLocaleString('en-IN', { notation: 'compact', maximumFractionDigits: 1 })}</h3>
+                <p className="text-xs text-emerald-600 font-medium flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" /> Live Valuation
+                </p>
             </motion.div>
 
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-[#2a1e16] p-6 rounded-2xl shadow-xl shadow-black/10 group relative overflow-hidden"
+                className="space-y-1"
             >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-12 -mt-12 group-hover:scale-125 transition-transform duration-700" />
-                <div className="relative">
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="p-3 bg-white/10 rounded-xl text-orange-400 group-hover:rotate-12 transition-transform">
-                            <Target className="w-5 h-5" />
-                        </div>
-                        <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest">High Velocity</p>
-                    </div>
-                    <h3 className="text-3xl font-serif text-white">{stats.hotLeads}</h3>
-                    <p className="mt-2 text-[10px] text-white/40 font-bold uppercase tracking-wider">Serious Opportunities</p>
+                <div className="flex items-center gap-2 text-[#8c7b70] mb-2">
+                    <Target className="w-4 h-4" />
+                    <span className="text-[11px] font-bold uppercase tracking-widest">Active Deals</span>
                 </div>
+                <h3 className="text-4xl font-serif text-[#2a1e16] tracking-tight">{stats.hotLeads}</h3>
+                <p className="text-xs text-[#8c7b70] font-medium">Serious Opportunities</p>
             </motion.div>
 
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white p-6 rounded-2xl border border-[#e9e2da]/50 shadow-sm group hover:border-[#b45a3c]/30 transition-all"
+                className="space-y-1"
             >
-                <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-sky-50 rounded-xl text-sky-600 group-hover:scale-110 transition-transform">
-                        <Clock className="w-5 h-5" />
-                    </div>
-                    <p className="text-[10px] font-bold text-[#8c7b70] uppercase tracking-widest">Agenda: Today</p>
+                <div className="flex items-center gap-2 text-[#8c7b70] mb-2">
+                    <Clock className="w-4 h-4" />
+                    <span className="text-[11px] font-bold uppercase tracking-widest">Action Required</span>
                 </div>
-                <h3 className="text-3xl font-serif text-[#2a1e16]">{stats.actionToday}</h3>
-                <p className="mt-2 text-[10px] text-sky-600 font-bold uppercase tracking-wider">Follow-ups Pending</p>
+                <h3 className="text-4xl font-serif text-[#2a1e16] tracking-tight">{stats.actionToday}</h3>
+                <p className="text-xs text-sky-600 font-medium">Pending Follow-ups</p>
             </motion.div>
 
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
                 onClick={onViewDormant}
-                className="bg-white p-6 rounded-2xl border border-[#e9e2da]/50 shadow-sm group hover:border-amber-400/50 cursor-pointer hover:shadow-lg transition-all"
+                className="space-y-1 cursor-pointer group"
             >
-                <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-amber-50 rounded-xl text-amber-600 group-hover:animate-pulse">
-                        <AlertCircle className="w-5 h-5" />
-                    </div>
-                    <p className="text-[10px] font-bold text-[#8c7b70] uppercase tracking-widest">Dormant Assets</p>
+                <div className="flex items-center gap-2 text-[#8c7b70] mb-2 group-hover:text-amber-600 transition-colors">
+                    <AlertCircle className="w-4 h-4" />
+                    <span className="text-[11px] font-bold uppercase tracking-widest">Dormant</span>
                 </div>
-                <h3 className="text-3xl font-serif text-[#2a1e16]">{stats.dormantCount}</h3>
-                <p className="mt-2 text-[10px] text-amber-600 font-bold uppercase tracking-wider underline flex items-center gap-2">
-                    Revival Needed <ArrowRight className="w-3 h-3" />
+                <h3 className="text-4xl font-serif text-[#2a1e16] group-hover:text-amber-600 transition-colors tracking-tight">{stats.dormantCount}</h3>
+                <p className="text-xs text-[#8c7b70] group-hover:text-amber-600/70 font-medium flex items-center gap-1">
+                    Needs Revival <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </p>
             </motion.div>
         </div>

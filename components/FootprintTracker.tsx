@@ -43,7 +43,7 @@ export default function FootprintTracker() {
                 // ideally we would update the previous record, but insert is safer for fire-and-forget
                 trackFootprint(pathname, { vitals: vitals.current, referrer: document.referrer });
             }
-        }, 3500);
+        }, 1000);
 
         // 3. Error Listener (Global)
         const handleError = (event: ErrorEvent) => {

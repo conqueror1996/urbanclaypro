@@ -9,6 +9,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getProduct, getRelatedProducts, getCollectionBySlug, getProducts } from '@/lib/products';
 import { getJournalPosts } from '@/lib/journal';
+import { generateProductSchema, generateBreadcrumbSchema } from '@/lib/schema';
+
 
 // Components
 import ProductPageAnimate from '@/components/ProductPageAnimate';
@@ -290,61 +292,25 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             }))
         };
 
-        const jsonLd = {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            name: selectedVariant ? `${selectedVariant.name} - ${product.title}` : product.title,
-            image: selectedVariant?.imageUrl || product.imageUrl,
-            description: selectedVariant ? `Buy ${selectedVariant.name} ${product.title}. ${product.description || ''}` : product.description,
-            brand: { '@type': 'Brand', name: 'UrbanClay' },
-            sku: product.sku || product._id,
-            aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: '4.9',
-                reviewCount: '86',
-                bestRating: '5',
-                worstRating: '1'
-            },
-            ...(priceInfo ? {
-                offers: priceInfo.type === 'AggregateOffer' ? {
-                    '@type': 'AggregateOffer',
-                    priceCurrency: 'INR',
-                    lowPrice: priceInfo.min,
-                    highPrice: priceInfo.max,
-                    availability: 'https://schema.org/InStock',
-                    offerCount: '1'
-                } : {
-                    '@type': 'Offer',
-                    url: `https://claytile.in/products/${categoryIdentifier}/${product.slug}${selectedVariant ? `?variant=${encodeURIComponent(selectedVariant.name)}` : ''}`,
-                    priceCurrency: 'INR',
-                    price: priceInfo.price,
-                    availability: 'https://schema.org/InStock'
-                }
-            } : {})
-        };
+        const canonicalUrl = `https://claytile.in/products/${categoryIdentifier}/${product.slug}${selectedVariant ? `?variant=${encodeURIComponent(selectedVariant.name)}` : ''}`;
 
-        // Ensure we always have an offer to satisfy GSC requirements
-        if (!priceInfo) {
-            (jsonLd as any).offers = {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "INR",
-                "availability": "https://schema.org/InStock",
-                "url": `https://claytile.in/products/${categoryIdentifier}/${product.slug}`,
-                "description": "Price available upon request. Contact UrbanClay for a custom quote."
-            };
+        // Use Centralized Advanced Schema Generator
+        const jsonLd = generateProductSchema(product, canonicalUrl);
+
+        // Override specific fields if variant is selected (Schema Generator is generic)
+        if (selectedVariant) {
+            jsonLd.name = `${selectedVariant.name} - ${product.title}`;
+            jsonLd.image = [selectedVariant.imageUrl || product.imageUrl];
+            jsonLd.description = `Buy ${selectedVariant.name} ${product.title}. ${product.description || ''}`;
         }
 
-        const breadcrumbJsonLd = {
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-                { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://claytile.in' },
-                { '@type': 'ListItem', 'position': 2, 'name': 'Products', 'item': 'https://claytile.in/products' },
-                { '@type': 'ListItem', 'position': 3, 'name': product.category?.title || 'Collection', 'item': `https://claytile.in/products/${categoryIdentifier}` },
-                { '@type': 'ListItem', 'position': 4, 'name': product.title, 'item': `https://claytile.in/products/${categoryIdentifier}/${product.slug}` }
-            ]
-        };
+        const breadcrumbJsonLd = generateBreadcrumbSchema([
+            { name: 'Home', item: '' },
+            { name: 'Products', item: '/products' },
+            { name: product.category?.title || 'Collection', item: `/products/${categoryIdentifier}` },
+            { name: product.title, item: `/products/${categoryIdentifier}/${product.slug}` }
+        ]);
+
 
         return (
             <div className="bg-[#1a1512] min-h-screen">

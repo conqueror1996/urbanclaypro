@@ -121,6 +121,9 @@ import SmartExitPopup from "@/components/SmartExitPopup";
 import FootprintTracker from "@/components/FootprintTracker";
 import FloatingSampleBadge from "@/components/FloatingSampleBadge";
 import { Toaster } from 'sonner';
+import JsonLd from "@/components/JsonLd";
+import { generateOrganizationSchema } from "@/lib/schema";
+
 
 export default function RootLayout({
   children,
@@ -137,6 +140,7 @@ export default function RootLayout({
           <SampleProvider>
             <SmoothScroll />
             <SplashLoader />
+            <JsonLd data={generateOrganizationSchema()} />
             <PageTransition>{children}</PageTransition>
             <FootprintTracker />
             <WebVitalsReporter />

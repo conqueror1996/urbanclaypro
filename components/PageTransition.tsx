@@ -15,7 +15,7 @@ export default function PageTransition({
             key={pathname}
             initial={{ opacity: 0.4 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.15, ease: 'easeOut' }}
             className="min-h-screen bg-[var(--sand)]"
         >
             {children}

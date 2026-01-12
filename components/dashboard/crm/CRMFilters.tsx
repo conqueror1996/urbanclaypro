@@ -4,8 +4,8 @@ import React from 'react';
 import { Search, TrendingUp, Clock, UserPlus, Filter, X } from 'lucide-react';
 
 interface CRMFiltersProps {
-    viewMode: 'pipeline' | 'kanban' | 'contacts' | 'dormant';
-    setViewMode: (mode: 'pipeline' | 'kanban' | 'contacts' | 'dormant') => void;
+    viewMode: 'pipeline' | 'kanban' | 'contacts' | 'dormant' | 'priority';
+    setViewMode: (mode: 'pipeline' | 'kanban' | 'contacts' | 'dormant' | 'priority') => void;
     activeTab: string;
     setActiveTab: (tab: string) => void;
     searchTerm: string;
@@ -26,43 +26,46 @@ export function CRMFilters({
 }: CRMFiltersProps) {
     return (
         <div className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                {/* View Switcher - More Professional Pills */}
-                <div className="flex bg-white p-1 rounded-2xl border border-[#e9e2da]/50 shadow-sm w-full md:w-auto">
+            <div className="flex flex-col md:flex-row gap-6 items-end justify-between">
+                {/* View Switcher - Text Tabs */}
+                <div className="flex items-center gap-6 border-b border-[#e9e2da] w-full md:w-auto pb-px">
                     {[
-                        { id: 'kanban', label: 'Board View', icon: Filter },
-                        { id: 'pipeline', label: 'List View', icon: TrendingUp },
-                        { id: 'dormant', label: 'The Graveyard', icon: Clock },
-                        { id: 'contacts', label: 'Global Contacts', icon: UserPlus },
+                        { id: 'kanban', label: 'Board', icon: Filter },
+                        { id: 'pipeline', label: 'List', icon: TrendingUp },
+                        { id: 'contacts', label: 'Contacts', icon: UserPlus },
+                        { id: 'dormant', label: 'Archive', icon: Clock },
                     ].map((mode) => (
                         <button
                             key={mode.id}
                             onClick={() => setViewMode(mode.id as any)}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all flex-1 md:flex-none ${viewMode === mode.id
-                                ? 'bg-[#2a1e16] text-white shadow-lg'
-                                : 'text-[#8c7b70] hover:text-[#2a1e16] hover:bg-[#FAF9F6]'
+                            className={`flex items-center gap-2 pb-3 px-1 text-xs font-bold uppercase tracking-wider transition-all relative ${viewMode === mode.id
+                                ? 'text-[#2a1e16]'
+                                : 'text-[#8c7b70] hover:text-[#2a1e16]'
                                 }`}
                         >
                             <mode.icon className="w-3.5 h-3.5" />
                             {mode.label}
+                            {viewMode === mode.id && (
+                                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#b45a3c]" />
+                            )}
                         </button>
                     ))}
                 </div>
 
-                {/* Search Bar */}
-                <div className="relative group w-full md:w-96 shadow-sm">
-                    <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#8c7b70] group-focus-within:text-[#b45a3c] transition-colors" />
+                {/* Search Bar - Minimalist */}
+                <div className="relative group w-full md:w-80">
+                    <Search className="w-4 h-4 absolute left-0 top-1/2 -translate-y-1/2 text-[#8c7b70] group-focus-within:text-[#2a1e16] transition-colors" />
                     <input
                         type="text"
-                        placeholder="Search leads, companies or files..."
+                        placeholder="Search workspace..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-11 pr-12 py-3.5 bg-white border border-[#e9e2da]/50 rounded-2xl outline-none focus:border-[#b45a3c]/30 focus:ring-4 focus:ring-[#b45a3c]/5 transition-all text-sm font-medium"
+                        className="w-full pl-8 pr-8 py-2 bg-transparent border-b border-[#e9e2da] outline-none focus:border-[#2a1e16] transition-all text-sm font-medium placeholder-[#8c7b70]/50"
                     />
                     {searchTerm && (
                         <button
                             onClick={() => setSearchTerm('')}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
                         >
                             <X className="w-3 h-3 text-gray-400" />
                         </button>
@@ -70,33 +73,32 @@ export function CRMFilters({
                 </div>
             </div>
 
-            {/* Stage Tabs - Only for Pipeline/Dormant */}
+            {/* Stage Tabs - Clean Pills */}
             {(viewMode === 'pipeline' || viewMode === 'dormant') && (
-                <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                <div className="flex flex-wrap items-center gap-2">
                     <button
                         onClick={() => setActiveTab('all')}
-                        className={`px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${activeTab === 'all'
-                            ? 'bg-white border-[#2a1e16] text-[#2a1e16] shadow-sm'
-                            : 'bg-transparent border-transparent text-[#8c7b70] hover:bg-white/50'
+                        className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${activeTab === 'all'
+                            ? 'bg-[#2a1e16] text-white border-[#2a1e16]'
+                            : 'bg-transparent border-[#e9e2da] text-[#8c7b70] hover:border-[#8c7b70]'
                             }`}
                     >
-                        Global Pool
-                        <span className="ml-2 opacity-50">({leads.length})</span>
+                        All Leads
                     </button>
 
-                    <div className="w-px h-6 bg-[#e9e2da] mx-2 hidden md:block" />
+                    <div className="w-px h-4 bg-[#e9e2da] mx-2" />
 
                     {stages.map(stage => (
                         <button
                             key={stage.value}
                             onClick={() => setActiveTab(stage.value)}
-                            className={`px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all border ${activeTab === stage.value
-                                ? 'bg-white border-[#2a1e16] text-[#2a1e16] shadow-sm'
-                                : 'bg-transparent border-transparent text-[#8c7b70] hover:bg-white/50'
+                            className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${activeTab === stage.value
+                                ? 'bg-[#2a1e16] text-white border-[#2a1e16]'
+                                : 'bg-transparent border-[#e9e2da] text-[#8c7b70] hover:border-[#8c7b70]'
                                 }`}
                         >
                             {stage.label}
-                            <span className="ml-2 font-mono opacity-50">
+                            <span className={`ml-2 font-mono opacity-60 ${activeTab === stage.value ? 'text-white' : ''}`}>
                                 {leads.filter(l => l.stage === stage.value).length}
                             </span>
                         </button>

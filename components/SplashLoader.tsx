@@ -15,8 +15,9 @@ export default function SplashLoader() {
             const timer = setTimeout(() => {
                 setIsLoading(false);
                 sessionStorage.setItem('hasSeenSplash', 'true');
-            }, 1000); // Show for 1s
+            }, 100); // Super fast 100ms flash
             return () => clearTimeout(timer);
+
         }
     }, []);
 
@@ -27,18 +28,18 @@ export default function SplashLoader() {
                     className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--sand)]"
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }} // Faster exit
                 >
                     <div className="flex flex-col items-center gap-4">
                         <motion.div
                             className="w-16 h-16 border-4 border-[var(--terracotta)] border-t-transparent rounded-full"
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                            transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                         />
                         <motion.h1
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
+                            // No delay
                             className="text-2xl font-bold text-[var(--ink)] tracking-wider"
                         >
                             URBANCLAY
