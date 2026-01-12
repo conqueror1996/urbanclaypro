@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import WallStyler from '../WallStyler'; // Assuming this is in components/WallStyler.tsx
+// import WallStyler from '../WallStyler'; // Assuming this is in components/WallStyler.tsx
 
 interface PatternVisualizerProps {
     title: string;
@@ -9,21 +9,13 @@ interface PatternVisualizerProps {
 }
 
 export default function PatternVisualizer({ title, variantImages }: PatternVisualizerProps) {
-    // Determine brick color based on title (Basic heuristic)
-    const getBrickColor = () => {
-        const t = title.toLowerCase();
-        if (t.includes('grey') || t.includes('silver')) return '#6b7280';
-        if (t.includes('chocolate') || t.includes('brown')) return '#3f2e27';
-        if (t.includes('beige') || t.includes('cream')) return '#d6cbb8';
-        if (t.includes('charcoal') || t.includes('black')) return '#1f2937';
-        if (t.includes('white')) return '#f3f4f6';
-        return '#b45a3c'; // Default Terracotta
-    };
-
     return (
-        <div className="w-full h-full min-h-[500px] rounded-xl overflow-hidden relative shadow-inner bg-black/20">
+        <div className="w-full h-full min-h-[500px] rounded-xl overflow-hidden relative shadow-inner bg-black/20 flex items-center justify-center text-white/50">
             {/* The WallStyler itself should just take up the space */}
-            <WallStyler initialColor={getBrickColor()} variantImages={variantImages} />
+            {/* <WallStyler initialColor={getBrickColor()} variantImages={variantImages} /> */}
+            <p>Visualizer upgrading...</p>
+
+            {/* Optional Overlay if WallStyler doesn't provide controls context */}
 
             {/* Optional Overlay if WallStyler doesn't provide controls context */}
             <div className="absolute top-4 right-4 pointer-events-none">
