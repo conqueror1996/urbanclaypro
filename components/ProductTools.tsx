@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import WallStyler from './WallStyler';
+// import WallStyler from './WallStyler';
 
 interface ProductToolsProps {
     category: string;
@@ -105,14 +105,14 @@ export default function ProductTools({ category, productTitle, productImageUrl, 
                 </div>
 
                 {/* WALL STYLER - Replaces Grout Advisor */}
-                {showWallStyler && (
+                {/* {showWallStyler && (
                     <div className="h-full min-h-[500px]">
                         <WallStyler
                             initialColor={getBrickColor()}
                             variantImages={variantImages}
                         />
                     </div>
-                )}
+                )} */}
             </div>
         </section>
     );
