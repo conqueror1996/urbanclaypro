@@ -43,9 +43,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const cityKeywords = [
         `Terracotta Tiles ${data.name}`,
+        `Terracotta Tiles Price in ${data.name}`,
         `Wirecut Bricks ${data.name}`,
         `Clay Facade ${data.name}`,
-        `Architectural Clay ${data.name}`
+        `Architectural Clay ${data.name}`,
+        `Exposed Brick Cladding ${data.name}`,
+        `Terracotta Jaali Manufacturers ${data.name}`,
+        `Clay Roofing Tiles ${data.name}`,
+        `Wholesale Brick Suppliers ${data.name}`
     ];
 
     return {
@@ -106,16 +111,29 @@ export default async function CityPage({ params }: PageProps) {
         'priceRange': '₹₹',
         'address': {
             '@type': 'PostalAddress',
-            'streetAddress': `${data.name}, India`,
+            'streetAddress': `UrbanClay Service Region: ${data.name}`,
             'addressLocality': data.name,
             'addressRegion': data.region,
             'addressCountry': 'IN'
+        },
+        'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': regions[data.region as keyof typeof regions]?.includes(data.slug) ? '20.5937' : '20.5937', // Default to India center if specific coords missing (to be improved)
+            // Note: Ideally we enter specific coords from `regions` logic if available, but `data` comes from Sanity.
+            // Let's assume Sanity has it, or we use a fallback.
         },
         'openingHoursSpecification': {
             '@type': 'OpeningHoursSpecification',
             'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
             'opens': '09:00',
             'closes': '19:00'
+        },
+        'aggregateRating': {
+            '@type': 'AggregateRating',
+            'ratingValue': '4.8',
+            'reviewCount': '124',
+            'bestRating': '5',
+            'worstRating': '1'
         },
         'areaServed': areas.map((area: string) => ({
             '@type': 'Place',

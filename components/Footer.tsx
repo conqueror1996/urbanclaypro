@@ -77,6 +77,7 @@ export default function Footer() {
                     <FooterSection title="Company">
                         <ul className="space-y-4 text-sm text-gray-400">
                             <li><FooterLink href="/our-story">Our Story</FooterLink></li>
+                            <li><FooterLink href="/terracotta-tiles-india">Pan-India Presence</FooterLink></li>
                             <li><FooterLink href="/contact">Contact Us</FooterLink></li>
                             <li><FooterLink href="/#quote" onClick={handleQuoteClick}><span className="text-[#ea580c] font-medium">Request a Quote</span></FooterLink></li>
                             <li className="pt-4 border-t border-white/5 mt-4">

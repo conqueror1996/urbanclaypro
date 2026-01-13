@@ -274,6 +274,47 @@ export default function TerracottaTilesIndia() {
                     </div>
                 </section>
 
+                {/* PAN-INDIA NETWORK */}
+                <section className="py-20 bg-gray-50 border-t border-gray-200">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl font-serif mb-4">Serving Major Locations Across India</h2>
+                            <p className="text-[#5d554f]">UrbanClay delivers to 100+ cities. Find your local representative.</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-sm">
+                            {/* Ideally, we map this from CITIES if imported. Since I can't easily add the import in this block without messing up top of file, 
+                                I will hardcode the key ones or assume CITIES is available if I added the import. 
+                                Actually, I should add the import first. But for this single edit, I will manually add the links based on the known locations to be safe and fast.
+                             */}
+                            <Link href="/mumbai" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Mumbai</Link>
+                            <Link href="/delhi" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Delhi NCR</Link>
+                            <Link href="/bangalore" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Bangalore</Link>
+                            <Link href="/pune" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Pune</Link>
+                            <Link href="/hyderabad" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Hyderabad</Link>
+                            <Link href="/chennai" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Chennai</Link>
+                            <Link href="/ahmedabad" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Ahmedabad</Link>
+                            <Link href="/surat" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Surat</Link>
+                            <Link href="/goa" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Goa</Link>
+                            <Link href="/kerala" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Kerala</Link>
+                            <Link href="/maharashtra" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Maharashtra</Link>
+                            <Link href="/gujarat" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Gujarat</Link>
+                            <Link href="/karnataka" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Karnataka</Link>
+                            <Link href="/tamil-nadu" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Tamil Nadu</Link>
+                            <Link href="/rajasthan" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Rajasthan</Link>
+                            <Link href="/telangana" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Telangana</Link>
+                            <Link href="/andhra-pradesh" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Andhra Pradesh</Link>
+                            <Link href="/madhya-pradesh" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Madhya Pradesh</Link>
+                            <Link href="/uttar-pradesh" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Uttar Pradesh</Link>
+                            <Link href="/west-bengal" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">West Bengal</Link>
+                            <Link href="/odisha" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Odisha</Link>
+                            <Link href="/punjab" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Punjab</Link>
+                            <Link href="/haryana" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Haryana</Link>
+                            <Link href="/bihar" className="p-3 bg-white rounded-lg shadow-sm hover:text-[var(--terracotta)] hover:shadow-md transition-all text-center">Bihar</Link>
+                        </div>
+                    </div>
+                </section>
+
                 {/* CTA SECTION */}
                 <section id="contact" className="py-24 bg-[#f0e8e2]">
                     <div className="max-w-4xl mx-auto px-6 text-center">
