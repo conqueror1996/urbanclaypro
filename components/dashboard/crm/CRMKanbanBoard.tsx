@@ -81,7 +81,7 @@ export function CRMKanbanBoard({
 
                                                             <div className="flex items-center justify-between">
                                                                 <p className="text-[11px] text-[#8c7b70] truncate max-w-[150px]">
-                                                                    {lead.company || 'Private Client'}
+                                                                    {lead.company || 'Private Client'} {lead.location && `• ${lead.location}`}
                                                                 </p>
                                                                 {isOverdue(lead.nextFollowUp) && lead.stage !== 'won' && (
                                                                     <div className="w-2 h-2 rounded-full bg-rose-500" title="Action Pending" />

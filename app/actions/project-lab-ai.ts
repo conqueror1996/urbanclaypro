@@ -67,7 +67,7 @@ export async function IdentifyAndAsk(params: ProjectParameters) {
     try {
         let text = "";
         if (genAI) {
-            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-001' });
             const imageParts = (params.images || []).map(fileToGenerativePart);
             const result = await model.generateContent([prompt, ...imageParts]);
             text = result.response.text();
@@ -93,21 +93,18 @@ export async function IdentifyAndAsk(params: ProjectParameters) {
 
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         return { success: true, data: jsonMatch ? JSON.parse(jsonMatch[0]) : null };
-    } catch (error) {
+    } catch (error: any) {
         console.error("Discovery Error:", error);
-        return { success: false, error: "Identification failed" };
+        return { success: false, error: `Identification failed: ${error.message}` };
     }
 }
 
 export async function AnalyzeProject(params: ProjectParameters) {
     if (!genAI && !openai) {
-        return { success: false, error: "Please configure GEMINI_API_KEY or OPENAI_API_KEY to use AI analysis." };
+        return { success: false, error: "Configuration Error: Missing API Keys." };
     }
 
     const products = await getProducts();
-    const projects = await getProjects();
-    const guideData = await getGuideData();
-
     const city = params.location ? CITIES[params.location.toLowerCase()] : null;
     const climateAdvice = city ? `\nCLIMATE INTELLIGENCE for ${city.name}: ${city.climateAdvice}` : "";
 
@@ -178,7 +175,7 @@ export async function AnalyzeProject(params: ProjectParameters) {
     try {
         let text = "";
         if (genAI) {
-            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
             const imageParts = (params.images || []).map(fileToGenerativePart);
             const result = await model.generateContent([prompt, ...imageParts]);
             text = result.response.text();
@@ -207,8 +204,8 @@ export async function AnalyzeProject(params: ProjectParameters) {
             return { success: true, data: JSON.parse(jsonMatch[0]) };
         }
         throw new Error("Failed to parse AI response.");
-    } catch (error) {
+    } catch (error: any) {
         console.error("Project Lab AI Error:", error);
-        return { success: false, error: "AI Analysis Failed." };
+        return { success: false, error: `Analysis Failed: ${error.message}` };
     }
 }

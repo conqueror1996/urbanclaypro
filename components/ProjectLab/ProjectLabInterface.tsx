@@ -1,10 +1,8 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { IdentifyAndAsk, AnalyzeProject } from '@/app/actions/project-lab-ai';
-import { Camera, Upload, ArrowRight, Activity, Cpu, Layers, Maximize2, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
-import Image from 'next/image';
+import { FounderEngine_Identify, FounderEngine_Prescribe } from '@/app/actions/founder-engine';
 
 interface Question {
     id: string;
@@ -26,24 +24,45 @@ export default function ProjectLabInterface() {
     const [location, setLocation] = useState('');
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const bottomRef = useRef<HTMLDivElement>(null);
-
-    // Auto-scroll to bottom on step change
-    useEffect(() => {
-        if (bottomRef.current) {
-            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [step, questions, report]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (files && files.length > 0) {
             const file = files[0];
             const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64 = reader.result as string;
-                setImages([base64]);
-                startVisualAnalysis(base64);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const MAX_WIDTH = 1200; // Increased slightly for better detail
+                    const MAX_HEIGHT = 1200;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx?.drawImage(img, 0, 0, width, height);
+
+                    // Compress to JPEG at 80% quality
+                    const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+
+                    setImages([optimizedBase64]);
+                    startVisualAnalysis(optimizedBase64);
+                };
+                img.src = event.target?.result as string;
             };
             reader.readAsDataURL(file);
         }
@@ -54,21 +73,20 @@ export default function ProjectLabInterface() {
         setError('');
 
         try {
-            const result = await IdentifyAndAsk({
+            const result = await FounderEngine_Identify({
                 images: [base64Image],
-                location: location || 'Mumbai', // Default context if empty
             });
 
             if (result.success && result.data) {
                 setVisualContext(result.data.visualContext);
                 setQuestions(result.data.discoveryQuestions || []);
-                setTimeout(() => setStep('discovery'), 1500); // Artificial delay for "processing" feel
+                setStep('discovery');
             } else {
                 setError(result.error || "Failed to analyze image.");
                 setStep('upload');
             }
         } catch (err) {
-            setError("Connection failed. Please check your network.");
+            setError("Connection failed. Please try again.");
             setStep('upload');
         }
     };
@@ -78,324 +96,293 @@ export default function ProjectLabInterface() {
         setError('');
 
         try {
-            const result = await AnalyzeProject({
+            const result = await FounderEngine_Prescribe({
                 images: images,
                 location: location,
                 area: Number(area) || 1000,
                 userAnswers: answers,
-                complexity: 'medium'
             });
 
             if (result.success && result.data) {
                 setReport(result.data);
-                setTimeout(() => setStep('report'), 2000);
+                setStep('report');
             } else {
-                setError(result.error || "Failed to generate directive.");
+                setError(result.error || "Failed to generate report.");
                 setStep('discovery');
             }
         } catch (err) {
-            setError("Analysis Protocol Failed.");
+            setError("Final analysis failed.");
             setStep('discovery');
         }
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto bg-[#0c0a09] text-[#EBE5E0] rounded-[2rem] shadow-2xl overflow-hidden border border-white/10 relative min-h-[800px] flex flex-col font-sans selection:bg-[#b45a3c] selection:text-white">
+        <div className="w-full max-w-5xl mx-auto rounded-[2rem] overflow-hidden min-h-[700px] border border-white/10 relative shadow-2xl bg-[#0F0B09]">
 
-            {/* --- TOP BAR: Command Center Status --- */}
-            <div className="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#1a1512]">
-                <div className="flex items-center gap-3">
-                    <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50" />
-                    </div>
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-white/30 ml-2">sys.architect_ai_v2.0</span>
-                </div>
-                <div className="flex items-center gap-4">
-                    <span className={`text-[10px] uppercase tracking-wider font-bold ${error ? 'text-red-500' : 'text-emerald-500/80'}`}>
-                        {error ? '⚠ SYSTEM ERROR' : '● ONLINE'}
-                    </span>
-                </div>
+            {/* Background Texture/Gradient */}
+            <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--terracotta)]/5 rounded-full blur-[100px] pointer-events-none" />
+
+            {/* Progress Indicator (Minimal) */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-white/5 z-20">
+                <motion.div
+                    className="h-full bg-[var(--terracotta)]"
+                    initial={{ width: '0%' }}
+                    animate={{ width: step === 'upload' ? '10%' : step === 'analyzing_visual' ? '40%' : step === 'discovery' ? '60%' : '100%' }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                />
             </div>
 
-            {/* --- MAIN CONTENT AREA --- */}
-            <div className="flex-1 relative overflow-y-auto px-6 py-8 md:px-12 md:py-12 custom-scrollbar">
+            <div className="p-8 md:p-12 h-full flex flex-col relative z-10 text-white/90 font-light">
 
-                {/* Intro / Header */}
-                <div className="mb-12">
-                    <h2 className="text-4xl md:text-5xl font-serif text-white mb-4 tracking-tight">
-                        Project Lab <span className="text-[#b45a3c]">.AI</span>
-                    </h2>
-                    <p className="text-white/60 text-lg font-light max-w-2xl leading-relaxed">
-                        Feasibility analysis and architectural direction. Upload your site context to receive a principal-level directive.
-                    </p>
+                {/* HEADER */}
+                <div className="mb-12 text-center max-w-2xl mx-auto">
+                    <motion.div
+                        key={step}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <span className="text-[var(--terracotta)] text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
+                            {step === 'upload' && "Phase I: Reconnaissance"}
+                            {step === 'analyzing_visual' && "Phase II: Analysis"}
+                            {step === 'discovery' && "Phase III: Strategic Alignment"}
+                            {step === 'analyzing_final' && "Phase IV: Synthesis"}
+                            {step === 'report' && "Phase V: Directives"}
+                        </span>
+                        <h2 className="text-3xl md:text-5xl font-serif text-[#EBE5D9] mb-4 leading-tight">
+                            {step === 'upload' && "Define The Context"}
+                            {step === 'analyzing_visual' && "Scanning Architecture..."}
+                            {step === 'discovery' && "Sharpen The Vision"}
+                            {step === 'analyzing_final' && "Formulating Strategy..."}
+                            {step === 'report' && "The Principal's Directive"}
+                        </h2>
+                        <p className="text-[#B0A8A2] font-light text-sm md:text-base leading-relaxed">
+                            {step === 'upload' && "Upload a site photo. Our AI Principal will analyze the geometry, light, and potential."}
+                            {step === 'analyzing_visual' && "Identifying structural constraints, lighting conditions, and architectural character."}
+                            {step === 'discovery' && "The Principal has a few questions before prescribing a solution."}
+                            {step === 'report' && "A definitive guide to elevating this project beyond the ordinary."}
+                        </p>
+                    </motion.div>
                 </div>
 
-                <AnimatePresence mode='wait'>
-
-                    {/* STEP 1: UPLOAD & INITIAL CONTEXT */}
-                    {step === 'upload' && (
+                {/* ERROR MESSAGE */}
+                <AnimatePresence>
+                    {error && (
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-                            className="space-y-8"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="bg-red-900/20 border border-red-500/30 text-red-200 p-4 rounded-lg mb-8 text-center text-sm"
                         >
-                            <div className="grid md:grid-cols-3 gap-8">
-                                {/* Location Input */}
-                                <div className="space-y-2">
-                                    <label className="text-[10px] uppercase tracking-[0.2em] text-[#b45a3c] font-bold">01. Project Coordinates</label>
-                                    <input
-                                        type="text"
-                                        placeholder="City / Context (e.g. Goa, Coastal)"
-                                        value={location}
-                                        onChange={e => setLocation(e.target.value)}
-                                        className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-[#b45a3c] transition-colors font-mono text-sm placeholder:text-white/20"
-                                    />
-                                </div>
-
-                                {/* Upload Zone */}
-                                <div className="md:col-span-2 space-y-2">
-                                    <label className="text-[10px] uppercase tracking-[0.2em] text-[#b45a3c] font-bold">02. Site Visual Data</label>
-                                    <div
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="w-full aspect-[3/1] md:aspect-[4/1] bg-white/[0.02] border border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-white/[0.05] hover:border-[#b45a3c]/50 transition-all group relative overflow-hidden"
-                                    >
-                                        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%)] bg-[length:20px_20px]" />
-                                        <div className="z-10 flex flex-col items-center gap-3">
-                                            <div className="p-3 bg-white/5 rounded-full group-hover:scale-110 transition-transform duration-500 border border-white/10">
-                                                <Upload className="w-5 h-5 text-[#b45a3c]" />
-                                            </div>
-                                            <p className="text-xs uppercase tracking-widest text-white/40 group-hover:text-white/80 transition-colors">
-                                                Upload Site Image
-                                            </p>
-                                        </div>
-                                        <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
-                                    </div>
-                                </div>
-                            </div>
+                            {error} <button onClick={() => setError('')} className="underline ml-2 hover:text-white">Dismiss</button>
                         </motion.div>
                     )}
+                </AnimatePresence>
 
-                    {/* LOADING: VISUAL SCAN */}
-                    {step === 'analyzing_visual' && (
+                {/* CONTENT AREA */}
+                <div className="flex-1 flex flex-col items-center justify-center w-full">
+
+                    {/* STEP 1: UPLOAD */}
+                    {step === 'upload' && (
                         <motion.div
-                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                            className="flex flex-col items-center justify-center py-20"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="w-full max-w-lg space-y-8"
                         >
-                            <div className="relative w-32 h-32 mb-8">
-                                <div className="absolute inset-0 border-t-2 border-[#b45a3c] rounded-full animate-spin" />
-                                <div className="absolute inset-2 border-r-2 border-white/20 rounded-full animate-spin [animation-direction:reverse]" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <Cpu className="w-8 h-8 text-[#b45a3c] animate-pulse" />
-                                </div>
+                            <div className="space-y-3">
+                                <label className="text-xs font-bold uppercase tracking-widest text-[#B0A8A2]">Project Location</label>
+                                <input
+                                    type="text"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    placeholder="e.g. Hyderabad, Banjara Hills"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[var(--terracotta)]/50 focus:bg-white/10 transition-all font-light"
+                                />
                             </div>
-                            <div className="font-mono text-xs text-[#b45a3c] tracking-[0.2em] mb-2">PROCESSING VISUAL DATA</div>
-                            <div className="h-1 w-48 bg-white/10 rounded-full overflow-hidden">
-                                <motion.div
-                                    className="h-full bg-[#b45a3c]"
-                                    initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 2, repeat: Infinity }}
+
+                            <div
+                                onClick={() => fileInputRef.current?.click()}
+                                className="group relative border border-dashed border-white/20 rounded-2xl p-12 text-center cursor-pointer hover:bg-white/5 hover:border-[var(--terracotta)] transition-all duration-300"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--terracotta)]/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
+
+                                <div className="relative z-10">
+                                    <div className="w-20 h-20 bg-gradient-to-tr from-[var(--terracotta)] to-[#8A422C] text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-900/30 group-hover:scale-110 transition-transform duration-300">
+                                        <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    </div>
+                                    <h3 className="text-xl font-serif text-[#EBE5D9]">Upload Site Context</h3>
+                                    <p className="text-white/40 text-sm mt-2 font-light">Drop your image here or click to browse</p>
+                                </div>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleFileChange}
                                 />
                             </div>
                         </motion.div>
                     )}
 
-                    {/* STEP 2: DISCOVERY (The Interface) */}
+                    {/* LOADING STATE */}
+                    {(step === 'analyzing_visual' || step === 'analyzing_final') && (
+                        <div className="flex flex-col items-center justify-center h-full">
+                            <div className="relative w-24 h-24 mb-8">
+                                <div className="absolute inset-0 border-t-2 border-[var(--terracotta)] rounded-full animate-spin" />
+                                <div className="absolute inset-2 border-r-2 border-white/20 rounded-full animate-spin direction-reverse duration-500" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <span className="text-2xl">🧠</span>
+                                </div>
+                            </div>
+                            <p className="text-white/60 text-sm tracking-widest uppercase animate-pulse">Running Neural Analysis</p>
+                        </div>
+                    )}
+
+                    {/* STEP 2: DISCOVERY FORM */}
                     {step === 'discovery' && (
                         <motion.div
-                            initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-                            className="space-y-12"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="w-full max-w-3xl space-y-8"
                         >
-                            {/* Analysis Result */}
-                            <div className="flex gap-6 items-start p-6 bg-[#b45a3c]/10 border border-[#b45a3c]/20 rounded-2xl relative overflow-hidden">
-                                <div className="absolute top-0 right-0 p-4 opacity-10">
-                                    <Layers className="w-24 h-24 text-[#b45a3c]" />
-                                </div>
-                                <div className="min-w-[48px] h-12 bg-[#b45a3c]/20 rounded-lg flex items-center justify-center border border-[#b45a3c]/30">
-                                    <Activity className="w-6 h-6 text-[#b45a3c]" />
+                            {/* Visual Context Found */}
+                            <div className="bg-white/5 backdrop-blur-md p-6 rounded-xl border border-white/10 flex items-start gap-4">
+                                <div className="p-3 bg-white/5 rounded-full shrink-0">
+                                    <svg className="w-5 h-5 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                 </div>
                                 <div>
-                                    <h4 className="text-[#b45a3c] font-bold uppercase tracking-widest text-xs mb-2">Initial Site Scan</h4>
-                                    <p className="text-white/80 font-serif text-lg leading-relaxed">"{visualContext}"</p>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--terracotta)] block mb-2">Visual Reconnaissance</span>
+                                    <p className="text-white/80 font-serif leading-relaxed italic">"{visualContext}"</p>
                                 </div>
                             </div>
 
-                            <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); submitDiscovery(); }}>
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold ml-1">Total Plot/Facade Area</label>
-                                        <div className="relative group">
-                                            <input
-                                                type="number"
-                                                value={area}
-                                                onChange={e => setArea(e.target.value)}
-                                                placeholder="1000"
-                                                className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-[#b45a3c] transition-colors font-mono text-lg"
-                                            />
-                                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-white/30 font-mono">SQ.FT</span>
-                                        </div>
-                                    </div>
-
-                                    {questions.map((q, i) => (
-                                        <div key={q.id} className="space-y-2">
-                                            <label className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold ml-1">Recon 0{i + 1}: {q.question}</label>
-                                            <input
-                                                type="text"
-                                                value={answers[q.id] || ''}
-                                                onChange={e => setAnswers({ ...answers, [q.id]: e.target.value })}
-                                                placeholder={q.placeholder}
-                                                className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-white outline-none focus:border-[#b45a3c] transition-colors font-serif text-base placeholder:text-white/10 placeholder:font-sans"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="pt-4 flex justify-end">
-                                    <button
-                                        type="submit"
-                                        className="bg-white text-black px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#b45a3c] hover:text-white transition-all flex items-center gap-4 group"
-                                    >
-                                        Generate Directive <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                </div>
-                            </form>
-                        </motion.div>
-                    )}
-
-                    {/* LOADING: FINAL COMPUTE */}
-                    {step === 'analyzing_final' && (
-                        <motion.div
-                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                            className="flex flex-col items-center justify-center py-20"
-                        >
-                            <div className="grid grid-cols-3 gap-1 mb-8">
-                                {[...Array(9)].map((_, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="w-3 h-3 bg-white/10"
-                                        animate={{ backgroundColor: ['rgba(255,255,255,0.1)', '#b45a3c', 'rgba(255,255,255,0.1)'] }}
-                                        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-bold uppercase tracking-widest text-white/40">Total Area (Sq.ft)</label>
+                                    <input
+                                        type="number"
+                                        value={area}
+                                        onChange={(e) => setArea(e.target.value)}
+                                        placeholder="1000"
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[var(--terracotta)]/50 focus:bg-white/10 transition-all font-light"
                                     />
+                                </div>
+                                {questions.map((q) => (
+                                    <div key={q.id} className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/40">{q.question}</label>
+                                        <input
+                                            type="text"
+                                            value={answers[q.id] || ''}
+                                            onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+                                            placeholder={q.placeholder}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder:text-white/20 focus:outline-none focus:border-[var(--terracotta)]/50 focus:bg-white/10 transition-all font-light"
+                                        />
+                                    </div>
                                 ))}
                             </div>
-                            <div className="font-mono text-xs text-white/60 tracking-widest mb-1">COMPILING FEASIBILITY REPORT</div>
-                            <div className="text-[#b45a3c] text-xs font-mono">CALCULATING LOADS...</div>
+
+                            <div className="flex justify-center pt-6">
+                                <button
+                                    onClick={submitDiscovery}
+                                    className="px-10 py-4 bg-[var(--terracotta)] text-white rounded-full font-bold hover:bg-[#a85638] transition-all shadow-lg hover:shadow-[var(--terracotta)]/20 active:scale-95 text-sm tracking-widest uppercase"
+                                >
+                                    Proceed to Strategy
+                                </button>
+                            </div>
                         </motion.div>
                     )}
 
-                    {/* STEP 3: THE DIRECTIVE (Report) */}
+                    {/* STEP 3: REPORT */}
                     {step === 'report' && report && (
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                            className="space-y-12"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="w-full bg-[#EBE5D9] text-[#1a1512] rounded-2xl overflow-hidden shadow-2xl max-h-[600px] overflow-y-auto custom-scrollbar"
                         >
-                            {/* Header Statement */}
-                            <div className="border-l-4 border-[#b45a3c] pl-8 py-2">
-                                <span className="text-[10px] uppercase tracking-[0.3em] text-[#b45a3c] block mb-4 font-bold">Principal's Vision</span>
-                                <h3 className="text-2xl md:text-3xl font-serif text-white leading-tight">
+                            {/* Report Header */}
+                            <div className="bg-[#1a1512] text-[#EBE5D9] p-8 text-center border-b border-white/10">
+                                <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-[var(--terracotta)] mb-4">Strategic Vision</h3>
+                                <p className="text-xl md:text-3xl font-serif leading-relaxed max-w-3xl mx-auto">
                                     "{report.strategicVision}"
-                                </h3>
+                                </p>
                             </div>
 
-                            {/* The Two Paths */}
-                            <div className="grid md:grid-cols-2 gap-8">
-                                {/* Path A: Visionary */}
-                                <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 hover:bg-white/[0.05] transition-colors group">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div className="px-3 py-1 bg-white/10 rounded text-[10px] uppercase tracking-widest font-bold text-white/60 group-hover:bg-[#b45a3c] group-hover:text-white transition-colors">Visionary Path</div>
-                                        <CheckCircle2 className="w-5 h-5 text-white/20 group-hover:text-[#b45a3c]" />
-                                    </div>
-                                    <h4 className="text-3xl font-serif text-white mb-2">{report.primarySolution?.product}</h4>
-                                    <p className="text-white/60 text-sm leading-relaxed mb-6 border-b border-white/10 pb-6">
-                                        {report.primarySolution?.reasoning}
-                                    </p>
-                                    <div className="space-y-3 font-mono text-xs text-white/40">
-                                        <div className="flex justify-between">
-                                            <span>Method</span>
-                                            <span className="text-white">{report.primarySolution?.method}</span>
+                            <div className="p-8 md:p-12 space-y-12">
+
+                                {/* Solutions Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Primary */}
+                                    <div className="p-8 border border-[var(--ink)]/10 rounded-xl bg-white shadow-sm relative overflow-hidden group">
+                                        <div className="absolute top-0 left-0 w-1 h-full bg-[var(--terracotta)]" />
+                                        <h4 className="font-bold text-xs uppercase tracking-widest text-gray-400 mb-6">The Architect's Choice</h4>
+                                        <h3 className="text-2xl font-serif text-[var(--ink)] mb-3 group-hover:text-[var(--terracotta)] transition-colors">{report.primarySolution?.product}</h3>
+                                        <p className="text-sm text-gray-600 mb-6 font-light leading-relaxed">{report.primarySolution?.reasoning}</p>
+                                        <div className="flex items-center gap-3 text-xs font-mono bg-gray-50 p-3 rounded border border-gray-100 table-cell">
+                                            <span className="text-gray-400">SYS:</span> {report.primarySolution?.method}
                                         </div>
-                                        <div className="flex justify-between">
-                                            <span>Quantity</span>
-                                            <span className="text-white">{report.primarySolution?.quantity} (Est.)</span>
+                                    </div>
+
+                                    {/* Alternative */}
+                                    <div className="p-8 border border-[var(--ink)]/80 rounded-xl bg-[var(--ink)] text-[#EBE5D9] relative overflow-hidden shadow-2xl">
+                                        <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+                                        <h4 className="font-bold text-xs uppercase tracking-widest text-[#EBE5D9]/40 mb-6">The Principal's Directive</h4>
+                                        <h3 className="text-2xl font-serif text-white mb-3">{report.alternativeSolution?.product}</h3>
+                                        <p className="text-sm text-white/70 mb-6 font-light leading-relaxed">{report.alternativeSolution?.reasoning}</p>
+                                        <div className="inline-block px-3 py-1 border border-white/20 rounded text-[10px] uppercase tracking-widest">
+                                            Premium Upgrade
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Path B: Boss Directive */}
-                                <div className="bg-[#b45a3c] rounded-2xl p-8 relative overflow-hidden shadow-2xl group">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-black/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-
-                                    <div className="flex justify-between items-start mb-6 relative z-10">
-                                        <div className="px-3 py-1 bg-black/20 rounded text-[10px] uppercase tracking-widest font-bold text-white/90">Principal's Directive</div>
-                                        <Maximize2 className="w-5 h-5 text-white/50" />
-                                    </div>
-                                    <h4 className="text-3xl font-serif text-white mb-2 relative z-10">{report.alternativeSolution?.product}</h4>
-                                    <p className="text-white/80 text-sm leading-relaxed mb-6 border-b border-white/20 pb-6 relative z-10">
-                                        {report.alternativeSolution?.reasoning}
-                                    </p>
-                                    <div className="space-y-3 font-mono text-xs text-white/60 relative z-10">
-                                        <div className="flex justify-between">
-                                            <span>Method</span>
-                                            <span className="text-white">{report.alternativeSolution?.method}</span>
+                                {/* Engineering & Finance split */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8 border-t border-[var(--ink)]/10">
+                                    <div>
+                                        <h4 className="font-serif text-xl border-b border-[var(--ink)]/10 pb-4 mb-6">Technical Directives</h4>
+                                        <ul className="space-y-4">
+                                            {report.engineeringMastery?.keyChallenges?.map((c: string, i: number) => (
+                                                <li key={i} className="flex gap-3 text-sm text-[var(--ink)] font-light">
+                                                    <span className="text-[var(--terracotta)] font-serif italic">{i + 1}.</span>
+                                                    {c}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <div className="mt-6 p-4 bg-[#F5F2EC] rounded border-l-2 border-[var(--terracotta)]">
+                                            <p className="text-xs font-serif italic text-[var(--ink)]">
+                                                <span className="font-bold not-italic text-[var(--terracotta)] uppercase text-[10px] tracking-wider block mb-1">Founder's Note:</span>
+                                                "{report.engineeringMastery?.proTip}"
+                                            </p>
                                         </div>
-                                        <div className="p-3 bg-black/20 rounded mt-4 text-white italic">
-                                            "This isn't just a solution. It's a statement."
+                                    </div>
+
+                                    <div>
+                                        <h4 className="font-serif text-xl border-b border-[var(--ink)]/10 pb-4 mb-6">Financial Forecasting</h4>
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-2">
+                                                <span className="text-sm text-gray-500">Material Investment</span>
+                                                <span className="font-mono font-bold text-lg">{report.financialForecasting?.materialInvestment || 'N/A'}</span>
+                                            </div>
+                                            <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-2">
+                                                <span className="text-sm text-gray-500">Wastage Buffer</span>
+                                                <span className="font-mono text-gray-400">{report.financialForecasting?.wastageBuffer || '0'}%</span>
+                                            </div>
+                                            <p className="mt-6 text-sm font-light text-gray-500 italic">
+                                                "{report.financialForecasting?.roiInsight}"
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
+
+                                <button
+                                    onClick={() => window.print()}
+                                    className="w-full py-5 border border-[var(--ink)] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-white transition-all duration-300 uppercase tracking-[0.2em] text-xs font-bold"
+                                >
+                                    Export Official Directive
+                                </button>
                             </div>
-
-                            {/* Tech & Finance */}
-                            <div className="grid md:grid-cols-2 gap-12 border-t border-white/10 pt-12">
-                                <div>
-                                    <h4 className="text-[12px] uppercase tracking-widest text-white/40 mb-6 font-bold flex items-center gap-2">
-                                        <Cpu className="w-4 h-4" /> Engineering Notes
-                                    </h4>
-                                    <ul className="space-y-4">
-                                        {report.engineeringMastery?.keyChallenges?.map((c: string, i: number) => (
-                                            <li key={i} className="flex gap-4 text-sm text-white/70">
-                                                <span className="text-[#b45a3c] font-mono">0{i + 1}</span>
-                                                {c}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <div className="mt-8 p-4 border border-[#b45a3c]/30 rounded-lg bg-[#b45a3c]/5">
-                                        <p className="text-xs text-[#b45a3c] font-mono uppercase tracking-widest mb-2">Pro Tip</p>
-                                        <p className="text-sm text-white/80 italic">"{report.engineeringMastery?.proTip}"</p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h4 className="text-[12px] uppercase tracking-widest text-white/40 mb-6 font-bold flex items-center gap-2">
-                                        <FileText className="w-4 h-4" /> Investment
-                                    </h4>
-                                    <div className="space-y-4 font-mono text-sm">
-                                        <div className="flex justify-between py-3 border-b border-white/5">
-                                            <span className="text-white/50">Material Cost</span>
-                                            <span className="text-white text-lg">{report.financialForecasting?.materialInvestment}</span>
-                                        </div>
-                                        <div className="flex justify-between py-3 border-b border-white/5">
-                                            <span className="text-white/50">Wastage Buffer</span>
-                                            <span className="text-emerald-400">{report.financialForecasting?.wastageBuffer}%</span>
-                                        </div>
-                                        <p className="pt-4 text-xs text-white/40 leading-relaxed">
-                                            {report.financialForecasting?.roiInsight}
-                                        </p>
-                                    </div>
-
-                                    <button
-                                        onClick={() => window.print()}
-                                        className="w-full mt-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-xs transition-colors border border-white/10"
-                                    >
-                                        Download Official Directive (PDF)
-                                    </button>
-                                </div>
-                            </div>
-
                         </motion.div>
                     )}
-                </AnimatePresence>
-
-                <div ref={bottomRef} />
+                </div>
             </div>
         </div>
     );
