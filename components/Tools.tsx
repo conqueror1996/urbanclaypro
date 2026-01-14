@@ -37,7 +37,7 @@ export default function Tools({ products = [] }: ToolsProps) {
                     </div>
                     <h3 className="text-2xl font-serif text-[var(--ink)] mb-2">Visualizer v2.0 Upgrading</h3>
                     <p className="text-[var(--ink)]/60 max-w-md">
-                        We are currently upgrading our specificer tools. In the meantime, visit our <a href="/project-lab" className="underline hover:text-[var(--terracotta)]">Project Lab AI</a> for a feasibility report.
+                        We are currently upgrading our specifier tools. Please check back later for updates.
                     </p>
                 </div>
             </div>

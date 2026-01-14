@@ -35,9 +35,9 @@ export default function TechnicalFAQ() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (
-        <section className="py-24 bg-[#1a1512] text-white">
-            <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-                <div className="grid lg:grid-cols-12 gap-16">
+        <section className="py-20 md:py-32 bg-[#1a1512] text-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
 
                     {/* Sticky Side Content */}
                     <div className="lg:col-span-4 lg:sticky lg:top-32 h-fit">

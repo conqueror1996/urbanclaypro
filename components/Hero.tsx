@@ -27,18 +27,19 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                 {/* Animated Background - Kiln Glow (Removed KilnDistort) */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[var(--sand)] to-white opacity-50 pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 md:pt-40 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 md:pt-40 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
+                            className="flex flex-col justify-center"
                         >
 
                             {injectedKeyword && (
                                 <div
                                     data-testid="keyword-badge"
-                                    className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-sm font-medium border border-[var(--terracotta)]/20 backdrop-blur-sm animate-fade-in"
+                                    className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-sm font-medium border border-[var(--terracotta)]/20 backdrop-blur-sm animate-fade-in self-start"
                                 >
                                     <span className="relative flex h-2 w-2">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--terracotta)] opacity-75"></span>
@@ -56,12 +57,12 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 <TextReveal
                                     text={data?.heroHeading || 'The Engineered Clay Facade.'}
                                     highlightWords={['Engineered']}
-                                    className="text-3xl sm:text-5xl lg:text-[64px] font-serif font-medium leading-[1.05] text-[#2A1E16] tracking-tight"
+                                    className="text-4xl md:text-5xl lg:text-[64px] font-serif font-medium leading-[1.1] text-[#2A1E16] tracking-tight"
                                 />
                             </div>
 
                             <motion.p
-                                className="mt-6 md:mt-8 text-base md:text-xl text-[#5d554f] font-light leading-relaxed max-w-lg"
+                                className="mt-4 md:mt-8 text-base md:text-xl text-[#5d554f] font-light leading-relaxed max-w-lg"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1, duration: 0.6 }}
@@ -108,7 +109,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
 
                         {/* Right Column: Visual with Heat Haze & Embers */}
                         <div
-                            className="relative h-full min-h-[400px] lg:min-h-[600px] w-full"
+                            className="relative h-full min-h-[300px] md:min-h-[400px] lg:min-h-[600px] w-full"
                         >
                             <HeroVisual
                                 imageUrl={data?.heroImageUrl}

@@ -70,7 +70,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
         // Tools
         { id: 'tool-seo', label: 'SEO Suite', icon: Globe, href: '/dashboard/seo', group: 'Tools', keywords: ['seo', 'meta', 'search'] },
         { id: 'tool-journal', label: 'Journal Manager', icon: BookOpen, href: '/dashboard/journal', group: 'Tools', keywords: ['journal', 'blog', 'content'] },
-        { id: 'tool-lab', label: 'Project Lab AI', icon: Cpu, href: '/dashboard/project-lab', group: 'Tools', keywords: ['ai', 'lab', 'estimate'] },
+
     ];
 
     const filteredCommands = COMMANDS.filter(item =>

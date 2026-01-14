@@ -146,6 +146,15 @@ export default function OrdersHistoryPage() {
                                                     >
                                                         👁️
                                                     </Link>
+
+                                                    <a
+                                                        href={`/api/challan/${link.orderId}/pdf`}
+                                                        target="_blank"
+                                                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-400 hover:text-orange-600 transition-all"
+                                                        title="Delivery Challan"
+                                                    >
+                                                        🚚
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>

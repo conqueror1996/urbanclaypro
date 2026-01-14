@@ -34,7 +34,7 @@ const FEATURES = [
 
 export default function TechnicalEdge() {
     return (
-        <section className="py-24 md:py-32 bg-[var(--ink)] text-white overflow-hidden">
+        <section className="py-20 md:py-32 bg-[var(--ink)] text-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid lg:grid-cols-2 gap-16 md:gap-24 items-center">
                     <div>

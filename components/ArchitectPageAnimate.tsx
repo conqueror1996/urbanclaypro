@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import AccessModal from '@/components/AccessModal';
 import SampleModal from '@/components/SampleModal';
+import ArchitectsToolkit from '@/components/ArchitectsToolkit';
 
 export default function ArchitectPageAnimate() {
     const { scrollY } = useScroll();
@@ -170,6 +171,9 @@ export default function ArchitectPageAnimate() {
                     </div>
                 </div>
             </section>
+
+            {/* --- TOOLKIT: INTERACTIVE VISUALIZER --- */}
+            <ArchitectsToolkit />
 
 
             {/* --- STUDIO SERVICES / WHY SPECIFY --- */}

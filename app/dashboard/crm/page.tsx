@@ -349,21 +349,107 @@ function CRMContent() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {contacts.filter(c => {
-                                if (!searchTerm) return true;
-                                const terms = searchTerm.toLowerCase().split(' ').filter(t => t.length > 0);
-                                const searchableText = `${c.name || ''} ${c.phone || ''} ${c.email || ''}`.toLowerCase();
-                                return terms.every(term => searchableText.includes(term));
-                            }).map((contact, i) => (
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} key={contact._id} className="bg-white p-7 rounded-[2rem] border border-[#e9e2da]/60 hover:shadow-2xl transition-all group flex flex-col justify-between">
-                                    <div>
-                                        <div className="w-12 h-12 bg-[#2a1e16] rounded-xl flex items-center justify-center text-white font-serif text-lg mb-6">{contact.name.charAt(0)}</div>
-                                        <h4 className="font-serif text-xl text-[#2a1e16]">{contact.name}</h4>
-                                        <p className="text-[11px] font-bold text-[#8c7b70] uppercase mt-1">{contact.phone || 'No direct dial'}</p>
-                                    </div>
-                                    <button onClick={() => { setNewDealForm({ ...newDealForm, clientName: contact.name, phone: contact.phone || '' }); setShowNewDealModal(true); }} className="mt-8 bg-[#FAF9F6] text-[#2a1e16] text-[10px] font-black uppercase py-4 rounded-xl border border-[#e9e2da] hover:bg-[#2a1e16] hover:text-white transition-all tracking-widest">Initialize Transition</button>
-                                </motion.div>
-                            ))}
+                            {(() => {
+                                // 1. Merge Contacts, Leads & Sites
+                                const combinedContacts = [
+                                    ...contacts.map(c => ({ ...c, type: 'contact' })),
+                                    ...leads.map(l => ({
+                                        _id: l._id,
+                                        name: l.clientName,
+                                        phone: l.phone,
+                                        email: l.email,
+                                        company: l.company,
+                                        type: 'lead',
+                                        original: l
+                                    })),
+                                    ...sites.map(s => ({
+                                        _id: s._id,
+                                        name: s.client || 'Unknown Client',
+                                        phone: s.clientPhone,
+                                        email: s.clientEmail,
+                                        company: s.name, // Project Name as company
+                                        type: 'site',
+                                        original: s
+                                    }))
+                                ];
+
+                                // 2. Filter
+                                const displayContacts = combinedContacts.filter(c => {
+                                    if (!searchTerm) return true;
+                                    const terms = searchTerm.toLowerCase().split(' ').filter(t => t.length > 0);
+                                    const searchableText = `${c.name || ''} ${c.phone || ''} ${c.email || ''} ${c.company || ''}`.toLowerCase();
+                                    return terms.every(term => searchableText.includes(term));
+                                });
+
+                                if (displayContacts.length === 0) {
+                                    return (
+                                        <div className="col-span-full py-12 text-center text-[#8c7b70] bg-[#FAF9F6] rounded-[2rem] border border-[#e9e2da] border-dashed">
+                                            <p className="font-bold mb-1">No contacts found matching "{searchTerm}"</p>
+                                            <p className="text-xs opacity-60">
+                                                Searched across {contacts.length} Contacts, {leads.length} Leads, and {sites.length} Active Sites.
+                                            </p>
+                                        </div>
+                                    );
+                                }
+
+                                return displayContacts.map((contact, i) => (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.05 }}
+                                        key={`${contact.type}-${contact._id}`}
+                                        className="bg-white p-7 rounded-[2rem] border border-[#e9e2da]/60 hover:shadow-2xl transition-all group flex flex-col justify-between"
+                                    >
+                                        <div onClick={() => contact.type === 'lead' && setSelectedLead(contact.original)} className={contact.type === 'lead' ? 'cursor-pointer' : ''}>
+                                            <div className="flex justify-between items-start mb-6">
+                                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-serif text-lg ${contact.type === 'lead' ? 'bg-[#b45a3c]' :
+                                                        contact.type === 'site' ? 'bg-blue-600' : 'bg-[#2a1e16]'
+                                                    }`}>
+                                                    {contact.name?.charAt(0) || '?'}
+                                                </div>
+                                                {contact.type === 'lead' && (
+                                                    <span className="bg-[#b45a3c]/10 text-[#b45a3c] text-[10px] font-black uppercase px-2 py-1 rounded-md">
+                                                        Active Deal
+                                                    </span>
+                                                )}
+                                                {contact.type === 'site' && (
+                                                    <span className="bg-blue-50 text-blue-600 text-[10px] font-black uppercase px-2 py-1 rounded-md">
+                                                        Ongoing Site
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h4 className="font-serif text-xl text-[#2a1e16]">{contact.name}</h4>
+                                            {contact.company && <p className="text-xs font-medium text-[#8c7b70] mt-1">{contact.company}</p>}
+                                            <p className="text-[11px] font-bold text-[#8c7b70] uppercase mt-2 opacity-60 tracking-wider text-ellipsis overflow-hidden">
+                                                {contact.phone || contact.email || 'No contact info'}
+                                            </p>
+                                        </div>
+
+                                        {contact.type === 'contact' ? (
+                                            <button
+                                                onClick={() => { setNewDealForm({ ...newDealForm, clientName: contact.name, phone: contact.phone || '' }); setShowNewDealModal(true); }}
+                                                className="mt-8 bg-[#FAF9F6] text-[#2a1e16] text-[10px] font-black uppercase py-4 rounded-xl border border-[#e9e2da] hover:bg-[#2a1e16] hover:text-white transition-all tracking-widest"
+                                            >
+                                                Initialize Transition
+                                            </button>
+                                        ) : contact.type === 'lead' ? (
+                                            <button
+                                                onClick={() => setSelectedLead(contact.original)}
+                                                className="mt-8 bg-white text-[#b45a3c] text-[10px] font-black uppercase py-4 rounded-xl border border-[#b45a3c]/20 hover:bg-[#b45a3c] hover:text-white transition-all tracking-widest"
+                                            >
+                                                View Deal Details
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => router.push('/dashboard/operations?filter=site')}
+                                                className="mt-8 bg-white text-blue-600 text-[10px] font-black uppercase py-4 rounded-xl border border-blue-100 hover:bg-blue-50 transition-all tracking-widest"
+                                            >
+                                                Go to Operations
+                                            </button>
+                                        )}
+                                    </motion.div>
+                                ));
+                            })()}
                         </div>
                     )}
                 </div>

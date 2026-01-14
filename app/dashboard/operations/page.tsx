@@ -190,8 +190,127 @@ export default function OperationsHub() {
         }
     };
 
+    // Warranty Flow State
+    const [warrantyModalOpen, setWarrantyModalOpen] = useState(false);
+    const [warrantyData, setWarrantyData] = useState({
+        recipient: '',
+        years: '25',
+        signatory: 'Sanjay Takale',
+        includeSig: true,
+        message: 'Thank you for choosing UrbanClay. Your space is now a testament to timeless beauty and sustainable living. We promise that our creations will stand by you, ageing gracefully through the seasons.'
+    });
+
+    const handleOpenWarranty = (site: Entity) => {
+        setSelectedSiteId(site._id);
+        setWarrantyData(prev => ({
+            ...prev,
+            recipient: (site as any).client || site.name,
+        }));
+        setWarrantyModalOpen(true);
+    };
+
     return (
         <div className="space-y-8 relative">
+            {/* Warranty Modal */}
+            <AnimatePresence>
+                {warrantyModalOpen && (
+                    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setWarrantyModalOpen(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            className="relative w-full max-w-2xl bg-white rounded-[2rem] p-8 shadow-2xl overflow-hidden"
+                        >
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600">Premium After-Sales</span>
+                                    <h3 className="text-3xl font-serif text-[var(--ink)]">Issue Warranty Certificate</h3>
+                                </div>
+                                <button onClick={() => setWarrantyModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full">✕</button>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div className="space-y-4">
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Issued To (Client Name)</label>
+                                        <input
+                                            type="text"
+                                            value={warrantyData.recipient}
+                                            onChange={e => setWarrantyData({ ...warrantyData, recipient: e.target.value })}
+                                            className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm font-bold text-[var(--ink)]"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Warranty Period (Years)</label>
+                                        <input
+                                            type="number"
+                                            value={warrantyData.years}
+                                            onChange={e => setWarrantyData({ ...warrantyData, years: e.target.value })}
+                                            className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm text-[var(--ink)]"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Authorized Signatory</label>
+                                        <input
+                                            type="text"
+                                            value={warrantyData.signatory}
+                                            onChange={e => setWarrantyData({ ...warrantyData, signatory: e.target.value })}
+                                            className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-sm text-[var(--ink)]"
+                                        />
+                                    </div>
+                                    <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl">
+                                        <input
+                                            type="checkbox"
+                                            id="sigCheck"
+                                            checked={warrantyData.includeSig}
+                                            onChange={e => setWarrantyData({ ...warrantyData, includeSig: e.target.checked })}
+                                            className="w-4 h-4 accent-[var(--terracotta)]"
+                                        />
+                                        <label htmlFor="sigCheck" className="text-sm text-gray-600 font-medium cursor-pointer">Include Digital Signature</label>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Context / Note</label>
+                                    <textarea
+                                        value={warrantyData.message}
+                                        onChange={e => setWarrantyData({ ...warrantyData, message: e.target.value })}
+                                        className="w-full h-full min-h-[220px] bg-amber-50/50 border border-amber-100 rounded-xl p-4 text-sm leading-relaxed text-amber-900 font-serif resize-none focus:ring-2 focus:ring-amber-200 outline-none"
+                                        placeholder="Enter the emotion caring message..."
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4 pt-4 border-t border-gray-100">
+                                <button
+                                    onClick={() => {
+                                        const query = new URLSearchParams({
+                                            message: warrantyData.message,
+                                            signatory: warrantyData.signatory,
+                                            years: warrantyData.years,
+                                            includeSig: String(warrantyData.includeSig)
+                                        }).toString();
+                                        window.open(`/api/warranty/${selectedSiteId}/pdf?${query}`, '_blank');
+                                    }}
+                                    className="flex-1 bg-[var(--ink)] text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg flex items-center justify-center gap-2"
+                                >
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    Preview & Download
+                                </button>
+                                {/* Future: Email Button */}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
             {/* Toast Notification */}
             <AnimatePresence>
                 {toast && (
@@ -460,6 +579,16 @@ export default function OperationsHub() {
                                         >
                                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                         </button>
+
+                                        {entity._type === 'site' && entity.status === 'completed' && (
+                                            <button
+                                                onClick={() => handleOpenWarranty(entity)}
+                                                className="p-2 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded-xl transition-all"
+                                                title="Issue Warranty"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>
@@ -474,7 +603,8 @@ export default function OperationsHub() {
                         </div>
                     )}
                 </div>
-            )}
+            )
+            }
 
             {/* Quick Add Modal */}
             <AnimatePresence>
@@ -888,6 +1018,17 @@ export default function OperationsHub() {
                                     />
                                 </div>
 
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Send Feedback Request To</label>
+                                    <input
+                                        type="email"
+                                        placeholder="Client Email..."
+                                        value={selectedSiteEmail || ''}
+                                        onChange={(e) => setSelectedSiteEmail(e.target.value)}
+                                        className="w-full bg-gray-50 border-none rounded-2xl px-6 py-4 text-sm focus:ring-2 focus:ring-green-500/20 transition-all outline-none"
+                                    />
+                                </div>
+
                                 <button
                                     onClick={async () => {
                                         if (!selectedSiteId) return;
@@ -933,6 +1074,6 @@ export default function OperationsHub() {
                     </div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }

@@ -1,16 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import { submitLead } from '@/app/actions/submit-lead';
-
-// Force rebuild
-
+import Image from 'next/image';
 
 export default function QuoteForm() {
     const searchParams = useSearchParams();
     const [currentStep, setCurrentStep] = useState(1);
+    const [productDropdownOpen, setProductDropdownOpen] = useState(false);
 
     const [formData, setFormData] = useState({
         role: 'Architect',
@@ -25,6 +24,7 @@ export default function QuoteForm() {
         notes: ''
     });
 
+    // Auto-fill from URL
     useEffect(() => {
         const productParam = searchParams.get('product');
         const variantParam = searchParams.get('variant');
@@ -32,114 +32,73 @@ export default function QuoteForm() {
         if (productParam) {
             setFormData(prev => ({
                 ...prev,
-                product: productParam, // We will allow custom values, but might need to add to select options
+                product: productParam,
                 notes: variantParam ? `Interested in variant: ${variantParam}` : ''
             }));
         }
     }, [searchParams]);
 
-    const [errors, setErrors] = useState({
-        city: '',
-        quantity: '',
-        contact: '',
-        email: ''
-    });
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const nextStep = () => {
-        if (currentStep === 2) {
-            // Validate step 2
-            let isValid = true;
-            const newErrors = { ...errors };
-
-            if (!formData.city.trim()) {
-                newErrors.city = 'City is required';
-                isValid = false;
-            }
-            if (!formData.quantity.trim()) {
-                newErrors.quantity = 'Quantity is required';
-                isValid = false;
-            }
-
-            setErrors(newErrors);
-            if (!isValid) return;
-        }
-        setCurrentStep(prev => Math.min(prev + 1, 3));
-    };
-
-    const prevStep = () => {
-        setCurrentStep(prev => Math.max(prev - 1, 1));
-    };
-
-    const validate = () => {
+    // Validation Logic
+    const validateStep = (step: number) => {
+        const newErrors: Record<string, string> = {};
         let isValid = true;
-        const newErrors: any = { city: '', quantity: '', contact: '', email: '' };
 
-        if (!formData.city.trim()) {
-            newErrors.city = 'City is required';
-            isValid = false;
+        if (step === 2) {
+            if (!formData.city.trim()) { newErrors.city = 'Required'; isValid = false; }
+            if (!formData.quantity.trim()) { newErrors.quantity = 'Required'; isValid = false; }
         }
 
-        if (!formData.quantity.trim()) {
-            newErrors.quantity = 'Quantity is required';
-            isValid = false;
-        }
-
-        if (!formData.contact.trim()) {
-            newErrors.contact = 'Contact number is required';
-            isValid = false;
-        } else if (formData.contact.length < 10) {
-            newErrors.contact = 'Please enter a valid phone number';
-            isValid = false;
-        }
-
-        if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.email = 'Please enter a valid email address';
-            isValid = false;
+        if (step === 3) {
+            if (!formData.contact.trim()) { newErrors.contact = 'Required'; isValid = false; }
+            else if (formData.contact.length < 10) { newErrors.contact = 'Invalid number'; isValid = false; }
         }
 
         setErrors(newErrors);
         return isValid;
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-
-        // Clear error
-        if (errors[name as keyof typeof errors]) {
-            setErrors({ ...errors, [name]: '' });
+    const nextStep = () => {
+        if (validateStep(currentStep)) {
+            setCurrentStep(prev => Math.min(prev + 1, 3));
         }
     };
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const prevStep = () => {
+        setCurrentStep(prev => Math.max(prev - 1, 1));
+    };
+
+    const handleChange = (field: string, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        if (errors[field]) {
+            setErrors(prev => ({ ...prev, [field]: '' }));
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!validate()) return;
-        if (isSubmitted) return; // Prevent double submit
+        if (!validateStep(3)) return;
+        if (isSubmitted) return;
 
         setIsSubmitting(true);
 
         try {
-            // Save to CMS first
-            const result = await submitLead(formData);
-            if (result.success && result.isSerious) {
-
-            }
+            await submitLead(formData);
         } catch (error) {
-            console.error('Failed to save lead:', error);
-            // We continue to WhatsApp even if CMS save fails so we don't block the user
+            console.error('Lead submission error:', error);
         }
 
         setIsSubmitting(false);
-        setIsSubmitted(true); // Mark as complete
+        setIsSubmitted(true);
 
+        // WhatsApp Redirect
         const message = `*New Quote Request*
 ----------------
 *Role:* ${formData.role}
-*Firm Name:* ${formData.firmName || 'N/A'}
+*Firm:* ${formData.firmName || 'N/A'}
 *Product:* ${formData.product}
 *City:* ${formData.city}
 *Quantity:* ${formData.quantity}
@@ -147,310 +106,350 @@ export default function QuoteForm() {
 *Contact:* ${formData.contact}
 *Notes:* ${formData.notes}
 ----------------
-Sent from UrbanClay Website`;
+Sent from UrbanClay`;
 
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/918080081951?text=${encodedMessage}`;
-
+        const whatsappUrl = `https://wa.me/918080081951?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     };
 
     return (
-        <section id="quote" className="bg-[var(--sand)] border-t border-[var(--line)] py-12 md:py-32">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-white rounded-3xl shadow-xl border border-[var(--line)] overflow-hidden">
-                    <div className="p-8 md:p-12">
-                        <div className="text-center mb-10">
-                            <h2 className="text-3xl md:text-4xl font-serif text-[#2A1E16] mb-4">Request a Quote</h2>
-                            <p className="text-[#5d554f]">Tell us about your project, and we'll get back to you with a personalized estimate.</p>
+        <section id="quote" className="py-20 md:py-32 bg-[#Fbf9f7] border-t border-[var(--line)]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                <div className="grid lg:grid-cols-12 gap-8 lg:gap-0 bg-white rounded-[2.5rem] shadow-2xl border border-[var(--line)]">
+
+                    {/* LEFT: VISUAL CONTEXT (Premium Side Panel) */}
+                    <div className="lg:col-span-5 relative bg-[#1a1512] text-[#EBE5E0] p-10 md:p-16 flex flex-col justify-between min-h-[250px] lg:min-h-[400px] rounded-t-[2.5rem] lg:rounded-l-[2.5rem] lg:rounded-tr-none overflow-hidden">
+                        {/* Background Texture/Image */}
+                        <div className="absolute inset-0 opacity-40 mix-blend-overlay">
+                            <Image
+                                src="/images/architect-hero-confidence.png" // Reusing an existing asset for vibe
+                                alt="Texture"
+                                fill
+                                className="object-cover grayscale"
+                            />
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1512]/80 to-[#1a1512]" />
+
+                        <div className="relative z-10">
+                            <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-4 block">
+                                The Technical Desk
+                            </span>
+                            <h2 className="text-4xl md:text-5xl font-serif leading-tight text-white mb-6">
+                                Let's Build <br /> <span className="italic text-white/50">Details.</span>
+                            </h2>
+                            <p className="text-white/60 leading-relaxed font-light">
+                                Get a precise estimate, technical consultation, or sample box for your next facade project.
+                            </p>
                         </div>
 
-                        {/* Progress Steps */}
-                        <div className="flex justify-center mb-8">
-                            <div className="flex items-center gap-2">
-                                {[1, 2, 3].map((step) => (
-                                    <div key={step} className="flex items-center">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${currentStep >= step ? 'bg-[var(--terracotta)] text-white' : 'bg-gray-100 text-gray-400'
-                                            }`}>
-                                            {step}
-                                        </div>
-                                        {step < 3 && (
-                                            <div className={`w-12 h-0.5 mx-2 transition-colors ${currentStep > step ? 'bg-[var(--terracotta)]' : 'bg-gray-200'
-                                                }`} />
-                                        )}
-                                    </div>
+                        {/* Trust Indicators */}
+                        <div className="relative z-10 mt-12 space-y-6">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[var(--terracotta)]">
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-white">2-Hour Response</h4>
+                                    <p className="text-xs text-white/40">During business hours (Mon-Sat)</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[var(--terracotta)]">
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-white">Direct Factory Pricing</h4>
+                                    <p className="text-xs text-white/40">No middlemen, straight from kiln.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT: INTERACTIVE FORM */}
+                    <div className="lg:col-span-7 p-6 md:p-16 bg-white relative rounded-b-[2.5rem] lg:rounded-r-[2.5rem] lg:rounded-bl-none">
+
+                        {/* Progress Header */}
+                        <div className="flex items-center justify-between mb-10">
+                            <span className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Step {currentStep} of 3</span>
+                            <div className="flex gap-1">
+                                {[1, 2, 3].map(step => (
+                                    <div
+                                        key={step}
+                                        className={`h-1.5 rounded-full transition-all duration-500 ${step <= currentStep ? 'w-8 bg-[var(--terracotta)]' : 'w-2 bg-gray-100'}`}
+                                    />
                                 ))}
                             </div>
                         </div>
 
-                        <form onSubmit={handleSubmit}>
-                            {currentStep === 1 && (
-                                <motion.div
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }}
-                                    className="space-y-6"
-                                >
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">I am a...</label>
-                                        <select
-                                            name="role"
-                                            value={formData.role}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16]"
-                                        >
-                                            <option value="Architect">Architect</option>
-                                            <option value="Builder">Builder</option>
-                                            <option value="Homeowner">Homeowner</option>
-                                            <option value="Contractor">Contractor</option>
-                                        </select>
-                                    </div>
+                        <form onSubmit={handleSubmit} className="min-h-[400px] flex flex-col justify-between">
+                            <AnimatePresence mode='wait'>
 
-                                    {/* Conditional Firm Name Input */}
-                                    {['Architect', 'Builder', 'Contractor'].includes(formData.role) && (
-                                        <div className="space-y-1">
-                                            <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Firm Name</label>
-                                            <input
-                                                name="firmName"
-                                                value={formData.firmName}
-                                                onChange={handleChange}
-                                                placeholder="Enter firm name"
-                                                className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16]"
-                                            />
-                                        </div>
-                                    )}
-
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Interested in...</label>
-                                        <select
-                                            name="product"
-                                            value={formData.product}
-                                            onChange={handleChange}
-                                            className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16]"
-                                        >
-                                            <option value="Exposed Brick Tiles">Exposed Brick Tiles</option>
-                                            <option value="Linear Tiles">Linear Tiles</option>
-                                            <option value="Terracotta Jaali">Terracotta Jaali</option>
-                                            <option value="Clay Floor Tiles">Clay Floor Tiles</option>
-                                            <option value="Clay Ceiling Tiles">Clay Ceiling Tiles</option>
-                                            {/* Dynamically add option if it comes from URL and isn't in the list */}
-                                            {![
-                                                'Exposed Brick Tiles',
-                                                'Linear Tiles',
-                                                'Terracotta Jaali',
-                                                'Clay Floor Tiles',
-                                                'Clay Ceiling Tiles'
-                                            ].includes(formData.product) && (
-                                                    <option value={formData.product}>{formData.product}</option>
-                                                )}
-                                        </select>
-                                    </div>
-
-                                    {/* SuperBuild Inline Nudge */}
-                                    <div
-                                        className="w-full bg-white border border-gray-100 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-4"
-                                        data-partner="superbuild"
-                                        data-placement="quote-inline"
+                                {/* STEP 1: IDENTITY & CONTEXT */}
+                                {currentStep === 1 && (
+                                    <motion.div
+                                        key="step1"
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        className="space-y-8"
                                     >
-                                        <div className="flex-shrink-0 text-gray-400">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                            </svg>
+                                        <div className="space-y-4">
+                                            <h3 className="text-2xl font-serif text-[var(--ink)]">What is your role?</h3>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {['Architect', 'Builder', 'Homeowner', 'Contractor'].map(role => (
+                                                    <button
+                                                        key={role}
+                                                        type="button"
+                                                        onClick={() => handleChange('role', role)}
+                                                        className={`p-4 rounded-xl border-2 text-left transition-all ${formData.role === role
+                                                            ? 'border-[var(--terracotta)] bg-[var(--terracotta)]/5 text-[var(--terracotta)] shadow-sm'
+                                                            : 'border-gray-100 text-[var(--ink)] hover:border-gray-200'
+                                                            }`}
+                                                    >
+                                                        <span className="font-bold text-sm block">{role}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
-                                        <div className="flex-grow text-sm text-gray-700 leading-snug">
-                                            Need help executing your project? Meet our execution partner, <span className="font-medium">SuperBuild</span>.
-                                        </div>
-                                        <a
-                                            href="https://superbuildindia.com"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-sm font-medium text-[#2A1E16] hover:text-[#B14A2A] transition-colors whitespace-nowrap flex items-center gap-1 self-end sm:self-auto"
-                                        >
-                                            Explore Now <span>→</span>
-                                        </a>
-                                    </div>
 
+                                        {(formData.role === 'Architect' || formData.role === 'Builder' || formData.role === 'Contractor') && (
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Firm Name</label>
+                                                <input
+                                                    value={formData.firmName}
+                                                    onChange={e => handleChange('firmName', e.target.value)}
+                                                    className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-4 text-base text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none"
+                                                    placeholder="Studio / Company Name"
+                                                    autoFocus
+                                                />
+                                            </div>
+                                        )}
+
+                                        <div className="space-y-4 pt-4 relative">
+                                            <h3 className="text-2xl font-serif text-[var(--ink)]">Interested Product?</h3>
+
+                                            {/* Custom Premium Dropdown */}
+                                            <div className="relative z-50">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setProductDropdownOpen(!productDropdownOpen)}
+                                                    className="w-full bg-[#f8f8f8] rounded-xl px-5 py-4 text-left flex items-center justify-between group hover:ring-2 hover:ring-gray-100 transition-all border border-transparent focus:border-[var(--terracotta)]/30"
+                                                >
+                                                    <span className="font-medium text-[var(--ink)] text-lg">
+                                                        {formData.product}
+                                                    </span>
+                                                    <svg
+                                                        className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${productDropdownOpen ? 'rotate-180' : ''}`}
+                                                        fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                    >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </button>
+
+                                                <AnimatePresence>
+                                                    {productDropdownOpen && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                                                            transition={{ duration: 0.2 }}
+                                                            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden py-2 max-h-[300px] overflow-y-auto z-50"
+                                                        >
+                                                            {[
+                                                                'Exposed Wirecut Bricks',
+                                                                'Brick Cladding Tiles',
+                                                                'Terracotta Jaali Panels',
+                                                                'Clay Facade Systems',
+                                                                'Terracotta Floor Tiles'
+                                                            ].map((option) => (
+                                                                <button
+                                                                    key={option}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        handleChange('product', option);
+                                                                        setProductDropdownOpen(false);
+                                                                    }}
+                                                                    className={`w-full text-left px-5 py-4 transition-colors flex items-center justify-between group ${formData.product === option
+                                                                        ? 'bg-[var(--terracotta)]/5 text-[var(--terracotta)] font-bold'
+                                                                        : 'text-[var(--ink)] hover:bg-gray-50'
+                                                                        }`}
+                                                                >
+                                                                    <span>{option}</span>
+                                                                    {formData.product === option && (
+                                                                        <svg className="w-5 h-5 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                                        </svg>
+                                                                    )}
+                                                                </button>
+                                                            ))}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {/* STEP 2: PROJECT LOGISTICS */}
+                                {currentStep === 2 && (
+                                    <motion.div
+                                        key="step2"
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        className="space-y-8"
+                                    >
+                                        <div className="space-y-6">
+                                            <h3 className="text-2xl font-serif text-[var(--ink)]">Project Logistics</h3>
+
+                                            <div className="grid grid-cols-2 gap-6">
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Project City <span className="text-[var(--terracotta)]">*</span></label>
+                                                    <input
+                                                        value={formData.city}
+                                                        onChange={e => handleChange('city', e.target.value)}
+                                                        className={`w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-4 text-base text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${errors.city ? 'ring-2 ring-red-500/20 bg-red-50' : ''}`}
+                                                        placeholder="Site Location"
+                                                        autoFocus
+                                                    />
+                                                    {errors.city && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider">{errors.city}</p>}
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Est. Quantity <span className="text-[var(--terracotta)]">*</span></label>
+                                                    <input
+                                                        value={formData.quantity}
+                                                        onChange={e => handleChange('quantity', e.target.value)}
+                                                        className={`w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-4 text-base text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${errors.quantity ? 'ring-2 ring-red-500/20 bg-red-50' : ''}`}
+                                                        placeholder="Sq. Ft."
+                                                    />
+                                                    {errors.quantity && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider">{errors.quantity}</p>}
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Timeline Requirement</label>
+                                                <div className="flex gap-3">
+                                                    {['Immediate', '1-2 Months', 'Planning Phase'].map(time => (
+                                                        <button
+                                                            key={time}
+                                                            type="button"
+                                                            onClick={() => handleChange('timeline', time)}
+                                                            className={`px-4 py-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all ${formData.timeline === time
+                                                                ? 'border-[var(--terracotta)] bg-[var(--terracotta)] text-white'
+                                                                : 'border-gray-200 text-gray-400 hover:border-gray-300'
+                                                                }`}
+                                                        >
+                                                            {time}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* High Volume Nudge */}
+                                            {parseInt(formData.quantity) > 2000 && (
+                                                <div className="bg-[var(--terracotta)]/5 p-4 rounded-xl flex items-start gap-3">
+                                                    <span className="text-xl">🏭</span>
+                                                    <p className="text-xs text-[var(--ink)]/60 leading-relaxed">
+                                                        <strong className="text-[var(--terracotta)] block mb-1">High Volume Detected</strong>
+                                                        Your volume qualifies for direct-from-kiln pricing. We will assign a senior project manager to this account.
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {/* STEP 3: CONTACT & SUBMIT */}
+                                {currentStep === 3 && (
+                                    <motion.div
+                                        key="step3"
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        className="space-y-6"
+                                    >
+                                        <h3 className="text-2xl font-serif text-[var(--ink)]">Where should we send the estimate?</h3>
+
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Your Name</label>
+                                                    <input
+                                                        value={formData.name}
+                                                        onChange={e => handleChange('name', e.target.value)}
+                                                        className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-4 text-base text-[var(--ink)] font-medium outline-none"
+                                                        placeholder="Full Name"
+                                                        autoFocus
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Mobile <span className="text-[var(--terracotta)]">*</span></label>
+                                                    <input
+                                                        value={formData.contact}
+                                                        onChange={e => handleChange('contact', e.target.value)}
+                                                        className={`w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-4 text-base text-[var(--ink)] font-medium outline-none ${errors.contact ? 'ring-2 ring-red-500/20 bg-red-50' : ''}`}
+                                                        placeholder="+91 WhatsApp"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Email (Optional)</label>
+                                                <input
+                                                    value={formData.email}
+                                                    onChange={e => handleChange('email', e.target.value)}
+                                                    className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-4 text-base text-[var(--ink)] font-medium outline-none"
+                                                    placeholder="architect@studio.com"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Additional Notes</label>
+                                                <textarea
+                                                    value={formData.notes}
+                                                    onChange={e => handleChange('notes', e.target.value)}
+                                                    className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-4 text-base text-[var(--ink)] font-medium outline-none h-24 resize-none"
+                                                    placeholder="Specify any custom requirements..."
+                                                />
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            {/* NAVIGATION ACTIONS */}
+                            <div className="grid grid-cols-12 gap-4 mt-8 pt-8 border-t border-gray-100">
+                                {currentStep > 1 && (
                                     <button
                                         type="button"
-                                        onClick={nextStep}
-                                        className="w-full py-4 rounded-full bg-[var(--ink)] text-white font-medium hover:opacity-90 transition-opacity mt-4"
+                                        onClick={prevStep}
+                                        className="col-span-3 py-4 rounded-xl text-[var(--ink)] font-bold text-sm uppercase tracking-widest hover:bg-gray-50 transition-colors"
                                     >
-                                        Next Step
+                                        Back
                                     </button>
-                                </motion.div>
-                            )}
+                                )}
 
-                            {currentStep === 2 && (
-                                <motion.div
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }}
-                                    className="space-y-6"
+                                <button
+                                    type={currentStep === 3 ? 'submit' : 'button'}
+                                    onClick={currentStep < 3 ? nextStep : undefined}
+                                    disabled={isSubmitting || isSubmitted}
+                                    className={`
+                                        ${currentStep === 1 ? 'col-span-12' : currentStep === 2 ? 'col-span-9' : 'col-span-9'}
+                                        py-4 rounded-xl font-bold uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center justify-center gap-3
+                                        ${isSubmitted ? 'bg-green-600 text-white cursor-default' : 'bg-[var(--ink)] text-white hover:bg-[var(--terracotta)]'}
+                                        disabled:opacity-70 disabled:cursor-not-allowed
+                                    `}
                                 >
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">City</label>
-                                        <input
-                                            name="city"
-                                            value={formData.city}
-                                            onChange={handleChange}
-                                            placeholder="e.g. Mumbai"
-                                            className={`w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] ${errors.city ? 'border-red-500 bg-red-50' : ''}`}
-                                        />
-                                        {errors.city && <p className="text-red-500 text-xs ml-1">{errors.city}</p>}
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Quantity</label>
-                                        <input
-                                            name="quantity"
-                                            value={formData.quantity}
-                                            onChange={handleChange}
-                                            placeholder="e.g. 500 sq.ft"
-                                            className={`w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] ${errors.quantity ? 'border-red-500 bg-red-50' : ''}`}
-                                        />
-                                        {errors.quantity && <p className="text-red-500 text-xs ml-1">{errors.quantity}</p>}
-
-                                        {/* Bulk Volume Intelligence */}
-                                        {parseInt(formData.quantity.replace(/[^0-9]/g, '') || '0') > 2000 && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                className="mt-2 text-xs bg-[var(--terracotta)]/10 border border-[var(--terracotta)]/20 text-[var(--terracotta)] p-3 rounded-lg flex items-start gap-2"
-                                            >
-                                                <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                                                <div>
-                                                    <span className="font-bold block mb-0.5">High Volume Project</span>
-                                                    Your request qualifies for <span className="font-bold underline">direct trade pricing</span>. A dedicated Project Manager will be assigned to your account.
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Timeline</label>
-                                        <input
-                                            name="timeline"
-                                            value={formData.timeline}
-                                            onChange={handleChange}
-                                            placeholder="e.g. Immediate / 2 months"
-                                            className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16]"
-                                        />
-                                    </div>
-
-                                    <div className="flex flex-col-reverse sm:flex-row gap-3 mt-4">
-                                        <button
-                                            type="button"
-                                            onClick={prevStep}
-                                            className="w-full sm:flex-1 py-4 rounded-full border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
-                                        >
-                                            Back
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={nextStep}
-                                            className="w-full sm:flex-[2] py-4 rounded-full bg-[var(--ink)] text-white font-medium hover:opacity-90 transition-opacity"
-                                        >
-                                            Next Step
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
-
-                            {currentStep === 3 && (
-                                <motion.div
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }}
-                                    className="space-y-6"
-                                >
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Full Name</label>
-                                        <input
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            placeholder="Your name or Project Manager's name"
-                                            className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16]"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Email <span className="text-gray-400 font-normal lowercase">(Optional for quote PDF)</span></label>
-                                        <input
-                                            name="email"
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            placeholder="project@firm.com"
-                                            className={`w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] ${errors.email ? 'border-red-500 bg-red-50' : ''}`}
-                                        />
-                                        {errors.email && <p className="text-red-500 text-xs ml-1">{errors.email}</p>}
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Contact Number <span className="text-red-500">*</span></label>
-                                        <input
-                                            name="contact"
-                                            value={formData.contact}
-                                            onChange={handleChange}
-                                            placeholder="+91 98765 43210 (WhatsApp)"
-                                            className={`w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] ${errors.contact ? 'border-red-500 bg-red-50' : ''}`}
-                                        />
-                                        {errors.contact && <p className="text-red-500 text-xs ml-1">{errors.contact}</p>}
-                                    </div>
-
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-semibold uppercase tracking-wider text-[#7a6f66] ml-1">Additional Notes</label>
-                                        <textarea
-                                            name="notes"
-                                            value={formData.notes}
-                                            onChange={handleChange}
-                                            placeholder="Any specific requirements or questions?"
-                                            className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[#2A1E16] resize-none"
-                                            rows={4}
-                                        ></textarea>
-                                    </div>
-
-                                    <div className="flex flex-col-reverse sm:flex-row gap-3 mt-4">
-                                        <button
-                                            type="button"
-                                            onClick={prevStep}
-                                            disabled={isSubmitted}
-                                            className="w-full sm:flex-1 py-4 rounded-full border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
-                                        >
-                                            Back
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            disabled={isSubmitting || isSubmitted}
-                                            className={`w-full sm:flex-[2] py-4 rounded-full text-white font-medium transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed ${isSubmitted ? 'bg-green-600' : 'bg-[var(--terracotta)] hover:bg-[#a85638]'
-                                                }`}
-                                        >
-                                            {isSubmitting ? (
-                                                <span>Processing...</span>
-                                            ) : isSubmitted ? (
-                                                <>
-                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                                                    Quote Requested
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg>
-                                                    Get Quote via WhatsApp
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                    {isSubmitted && (
-                                        <div className="text-center font-medium text-green-600 bg-green-50 p-3 rounded-lg border border-green-200 animate-in fade-in slide-in-from-bottom-2">
-                                            ✓ Enquiry sent successfully! Check your WhatsApp.
-                                        </div>
+                                    {isSubmitting ? (
+                                        'Processing...'
+                                    ) : isSubmitted ? (
+                                        <><span>✓</span> Request Sent</>
+                                    ) : currentStep === 3 ? (
+                                        <>Get Estimate <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg></>
+                                    ) : (
+                                        'Next Step'
                                     )}
-                                    {!isSubmitted && (
-                                        <p className="text-center text-xs text-gray-400 mt-4">We typically respond within 2 hours.</p>
-                                    )}
-                                </motion.div>
-                            )}
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -458,3 +457,4 @@ Sent from UrbanClay Website`;
         </section>
     );
 }
+

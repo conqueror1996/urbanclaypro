@@ -121,7 +121,7 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
     return (
         <div className="w-full h-full" style={{ perspective: 1000 }}> {/* Perspective container for 3D effect */}
             <motion.div
-                className="relative w-full h-full min-h-[400px] md:min-h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-[#e6d5c9]"
+                className="relative w-full h-full min-h-[300px] md:min-h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-[#e6d5c9]"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={{

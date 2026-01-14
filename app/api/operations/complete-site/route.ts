@@ -32,7 +32,10 @@ export async function POST(request: Request) {
         let emailError = null;
 
         try {
-            if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+            if (!clientEmail) {
+                console.log('[EMAIL] No client email provided. Skipping feedback request.');
+                emailError = "No client email on record";
+            } else if (process.env.SMTP_HOST && process.env.SMTP_USER) {
                 const nodemailer = require('nodemailer');
                 const port = parseInt(process.env.SMTP_PORT || '587');
 

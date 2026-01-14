@@ -59,7 +59,7 @@ type NavLink = {
 
 const navLinks: NavLink[] = [
     { href: '/products', label: 'Products', hasDropdown: true },
-    { href: '/project-lab', label: 'Project Lab AI', isSpecial: true },
+
     { href: '/projects', label: 'Projects' },
     { href: '/guide', label: 'Selection Guide' },
     { href: '/architects', label: 'For Architects' },

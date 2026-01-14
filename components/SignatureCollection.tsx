@@ -203,39 +203,48 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                         </h2>
                     </motion.div>
 
-                    {/* TABS NAVIGATION - Centered Floating Pill */}
-                    <motion.div
+                    {/* TABS NAVIGATION - Premium Typography / Editorial Style */}
+                    <motion.nav
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="inline-flex bg-white p-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[var(--line)] overflow-x-auto max-w-full scrollbar-hide"
+                        className="flex flex-wrap justify-center items-baseline gap-x-8 gap-y-4 mb-2 md:mb-8"
                     >
-                        {categoryData.map((cat) => (
-                            <button
-                                key={cat.id}
-                                onClick={() => setActiveTab(cat.id)}
-                                className={`
-                                    relative px-6 py-3 rounded-full text-xs md:text-sm font-bold tracking-wider uppercase transition-all duration-300 whitespace-nowrap z-10
-                                    ${activeTab === cat.id ? 'text-white' : 'text-[var(--ink)]/60 hover:text-[var(--ink)] hover:bg-gray-50'}
-                                `}
-                            >
-                                {activeTab === cat.id && (
-                                    <motion.div
-                                        layoutId="tab-pill"
-                                        className="absolute inset-0 bg-[var(--ink)] rounded-full -z-10"
-                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                    />
+                        {categoryData.map((cat, i) => (
+                            <React.Fragment key={cat.id}>
+                                {/* Divider - Subtle Dot */}
+                                {i > 0 && (
+                                    <span className="hidden md:block text-[var(--ink)]/10 text-xs">•</span>
                                 )}
-                                {cat.label}
-                            </button>
+                                <button
+                                    onClick={() => setActiveTab(cat.id)}
+                                    className={`
+                                        relative transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group
+                                        ${activeTab === cat.id
+                                            ? 'text-2xl md:text-3xl font-serif text-[var(--ink)] italic'
+                                            : 'text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-[var(--ink)]/40 hover:text-[var(--ink)]/80'}
+                                    `}
+                                >
+                                    <span className="relative z-10">{cat.label}</span>
+
+                                    {/* Active Underline - Elegant & Thin */}
+                                    {activeTab === cat.id && (
+                                        <motion.div
+                                            layoutId="active-tab-line"
+                                            className="absolute -bottom-4 left-0 right-0 h-[1px] bg-[var(--terracotta)]"
+                                            transition={{ duration: 0.5, ease: "circOut" }}
+                                        />
+                                    )}
+                                </button>
+                            </React.Fragment>
                         ))}
-                    </motion.div>
+                    </motion.nav>
                 </div>
 
                 {/* CONTENT AREA */}
                 <div className="min-h-[400px]">
-                    <AnimatePresence>
+                    <AnimatePresence mode='wait'>
                         <motion.div
                             key={activeTab}
                             initial={{ opacity: 0, scale: 0.98 }}

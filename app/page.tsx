@@ -14,7 +14,7 @@ const SignatureCollection = dynamic(() => import('@/components/SignatureCollecti
 const Architects = dynamic(() => import('@/components/Architects'));
 const Projects = dynamic(() => import('@/components/Projects'));
 const ProjectAtlas = dynamic(() => import('@/components/ProjectAtlas'));
-const Tools = dynamic(() => import('@/components/Tools'));
+
 const QuoteForm = dynamic(() => import('@/components/QuoteForm'));
 const Footer = dynamic(() => import('@/components/Footer'));
 const OurStoryTeaser = dynamic(() => import('@/components/OurStoryTeaser'));
@@ -277,10 +277,7 @@ export default async function Home({ searchParams }: Props) {
         <Projects projects={recentProjects} />
       </ScrollReveal>
 
-      {/* 6. THE SPECIFIER TOOLKIT - BIM, CAD & Design Utilities */}
-      <ScrollReveal className="bg-[var(--sand)]">
-        <Tools products={products} />
-      </ScrollReveal>
+
 
       {/* 7. THE TECHNICAL DESK - Project-Specific Consultation */}
       <ScrollReveal className="bg-white" id="quote">
@@ -289,9 +286,11 @@ export default async function Home({ searchParams }: Props) {
         </Suspense>
       </ScrollReveal>
 
+      {/* 7.5 KILN EXPERIENCE - Immersive Scroll */}
+      <KilnPreview />
+
       {/* FOOTER & LOGISTICS BADGE */}
       <ScrollReveal className="bg-white">
-        <KilnPreview />
         <Footer />
       </ScrollReveal>
     </div>

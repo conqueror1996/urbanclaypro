@@ -124,40 +124,20 @@ export default function KilnAnimation() {
     const clickStartTime = useRef(0);
 
     const handlePointerDown = (e: React.PointerEvent) => {
+        if (!hammerMode) return;
+
         isDragging.current = true;
         setIsInteracting(true);
         startPos.current = { x: e.clientX, y: e.clientY };
         clickStartTime.current = Date.now();
         (e.target as Element).setPointerCapture(e.pointerId);
 
-        if (!hammerMode) {
-            gsap.to(interactionGroupRef.current, { scale: 1.05, duration: 0.3, ease: "back.out(1.7)" });
-            gsap.to(shadowRef.current, { scale: 0.9, opacity: 0.2, duration: 0.3 });
-        } else {
-            gsap.to(interactionGroupRef.current, { scale: 0.98, duration: 0.1, ease: "power1.out" });
-        }
+        gsap.to(interactionGroupRef.current, { scale: 0.98, duration: 0.1, ease: "power1.out" });
     };
 
     const handlePointerMove = (e: React.PointerEvent) => {
-        if (!isDragging.current || !interactionGroupRef.current) return;
-
-        if (!hammerMode) {
-            const deltaX = e.clientX - startPos.current.x;
-            const deltaY = e.clientY - startPos.current.y;
-
-            const rotY = deltaX * 0.3;
-            const rotX = -deltaY * 0.3;
-
-            const clampedRotY = Math.max(-30, Math.min(30, rotY));
-            const clampedRotX = Math.max(-30, Math.min(30, rotX));
-
-            gsap.to(interactionGroupRef.current, {
-                rotationY: clampedRotY,
-                rotationX: clampedRotX,
-                duration: 0.1,
-                overwrite: 'auto'
-            });
-        }
+        if (!isDragging.current || !interactionGroupRef.current || !hammerMode) return;
+        // Hammer interaction logic (if any dragging is needed in hammer mode, typically not, but keeping it safe)
     };
 
     const handlePointerUp = (e: React.PointerEvent) => {
@@ -427,7 +407,7 @@ export default function KilnAnimation() {
     return (
         <section
             ref={containerRef}
-            className="relative h-screen w-full overflow-hidden bg-[#f5f0eb] flex items-center justify-center perspective-1000"
+            className="relative h-screen supports-[height:100dvh]:h-[100dvh] w-full overflow-hidden bg-transparent flex items-center justify-center perspective-1000"
             style={{ cursor: hammerMode ? hammerCursorBase64 : 'default' }}
         >
             <svg className="absolute w-0 h-0">
@@ -468,7 +448,7 @@ export default function KilnAnimation() {
                     width="100%"
                     height="100%"
                     viewBox="0 0 600 400"
-                    className={`drop-shadow-2xl overflow-visible transition-all duration-200 ${isInteracting ? (hammerMode ? 'scale-95' : 'scale-105') : ''} ${!hammerMode ? 'cursor-grab active:cursor-grabbing' : ''}`}
+                    className={`drop-shadow-2xl overflow-visible transition-all duration-200 ${isInteracting ? (hammerMode ? 'scale-95' : 'scale-105') : ''}`}
                     preserveAspectRatio="xMidYMid meet"
                     onPointerDown={handlePointerDown}
                     onPointerMove={handlePointerMove}

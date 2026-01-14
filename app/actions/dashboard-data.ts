@@ -12,6 +12,7 @@ export async function getDashboardData() {
             "labourCount": count(*[_type == "labour"]),
             "stockCount": count(*[_type == "stock"]),
             "disputeCount": count(*[_type == "dispute" && status == "open"]),
+            "siteCount": count(*[_type == "site" && status != "completed"]),
             "feedback": *[_type == "feedback"] { workmanshipRating, materialRating, serviceRating }
         }`;
 
@@ -28,6 +29,7 @@ export async function getDashboardData() {
             labours: data.labourCount || 0,
             stocks: data.stockCount || 0,
             disputes: data.disputeCount || 0,
+            sites: data.siteCount || 0,
             avgRating: data.feedback?.length
                 ? (data.feedback.reduce((acc: number, curr: any) => acc + ((curr.workmanshipRating + curr.materialRating + curr.serviceRating) / 3), 0) / data.feedback.length).toFixed(1)
                 : '0.0'
