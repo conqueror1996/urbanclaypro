@@ -250,7 +250,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     const event = new CustomEvent('openCheckout', { detail: { type: 'regular' } });
                                                     window.dispatchEvent(event);
                                                 }}
-                                                className={`relative p-5 rounded-2xl border-2 text-left group transition-all duration-300 flex flex-col h-full ${box.length > 0
+                                                className={`relative p-4 rounded-2xl border-2 text-left group transition-all duration-300 flex flex-col h-full ${box.length > 0
                                                     ? 'border-[var(--terracotta)] bg-white shadow-lg hover:shadow-xl hover:scale-[1.02]'
                                                     : 'border-gray-200 border-dashed bg-gray-50 opacity-60'
                                                     }`}
@@ -261,15 +261,15 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     </div>
                                                 )}
 
-                                                <div className="mb-4">
-                                                    <h4 className="font-serif text-xl text-[#2A1E16] font-bold">Your Selection</h4>
-                                                    <div className="flex items-baseline gap-1 mt-1">
-                                                        <span className="text-2xl font-bold text-[var(--terracotta)]">₹999</span>
+                                                <div className="mb-2">
+                                                    <h4 className="font-serif text-lg md:text-xl text-[#2A1E16] font-bold">Your Selection</h4>
+                                                    <div className="flex items-baseline gap-1 mt-0.5">
+                                                        <span className="text-xl md:text-2xl font-bold text-[var(--terracotta)]">₹999</span>
                                                         <span className="text-xs text-gray-400 line-through">₹1,500</span>
                                                     </div>
                                                 </div>
 
-                                                <ul className="space-y-2 mb-6 flex-grow">
+                                                <ul className="space-y-1.5 mb-3 flex-grow">
                                                     <li className="flex items-start gap-2 text-xs text-gray-600">
                                                         <svg className="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                                         <span><strong>{box.length > 0 ? box.length : '5'} Premium Samples</strong> (Your Choice)</span>
@@ -299,21 +299,21 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     const event = new CustomEvent('openCheckout', { detail: { type: 'curated' } });
                                                     window.dispatchEvent(event);
                                                 }}
-                                                className="relative p-5 rounded-2xl border-2 border-[#2A1E16]/10 bg-white text-left group transition-all duration-300 hover:border-[#2A1E16] hover:shadow-xl hover:scale-[1.02] flex flex-col h-full"
+                                                className="relative p-4 rounded-2xl border-2 border-[#2A1E16]/10 bg-white text-left group transition-all duration-300 hover:border-[#2A1E16] hover:shadow-xl hover:scale-[1.02] flex flex-col h-full"
                                             >
                                                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#2A1E16] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm whitespace-nowrap">
                                                     RECOMMENDED
                                                 </div>
 
-                                                <div className="mb-4">
-                                                    <h4 className="font-serif text-xl text-[#2A1E16] font-bold">Curated Set</h4>
-                                                    <div className="flex items-baseline gap-1 mt-1">
-                                                        <span className="text-2xl font-bold text-[#2A1E16]">₹2,000</span>
+                                                <div className="mb-2">
+                                                    <h4 className="font-serif text-lg md:text-xl text-[#2A1E16] font-bold">Curated Set</h4>
+                                                    <div className="flex items-baseline gap-1 mt-0.5">
+                                                        <span className="text-xl md:text-2xl font-bold text-[#2A1E16]">₹2,000</span>
                                                         <span className="text-xs text-gray-400 line-through">₹3,500</span>
                                                     </div>
                                                 </div>
 
-                                                <ul className="space-y-2 mb-6 flex-grow">
+                                                <ul className="space-y-1.5 mb-3 flex-grow">
                                                     <li className="flex items-start gap-2 text-xs text-gray-600">
                                                         <svg className="w-4 h-4 text-[#2A1E16] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                                         <span><strong>8 Expert-Selected</strong> Samples</span>
