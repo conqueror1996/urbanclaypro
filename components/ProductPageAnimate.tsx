@@ -509,7 +509,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             Distinctive Character
                         </h2>
                         <div className="prose prose-invert prose-lg md:prose-xl max-w-none text-white/60 font-light leading-loose">
-                            <p>{product.description || `Crafted with precision and fired to perfection, ${product.title} represents the pinnacle of terracotta engineering.`}</p>
+                            <p>{product.distinctiveCharacter || product.category?.description || product.description || `Crafted with precision and fired to perfection, ${product.title} represents the pinnacle of terracotta engineering.`}</p>
                         </div>
                     </div>
 
@@ -599,36 +599,10 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         </div>
                     )}
 
-                    {/* 3. Visualizer & Tools */}
+                    {/* 3. Frequently Asked Questions (LLM Optimization) */}
                     <div className="group">
                         <div className="flex items-center gap-4 mb-8">
                             <span className="text-[var(--terracotta)] text-3xl font-serif">03</span>
-                            <div className="h-px w-16 bg-white/10" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Visualizer</span>
-                        </div>
-
-                        <div className="grid gap-8">
-                            <div className="h-[500px] md:h-[600px] w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl relative">
-                                {/* <WallStyler
-                                    initialColor="#b45a3c"
-                                    variantImages={[product.imageUrl, ...(product.variants?.map(v => v.imageUrl) || [])].filter(Boolean) as string[]}
-                                /> */}
-                            </div>
-
-                            <div className="bg-[#EBE5E0] text-[#1a1512] rounded-[2rem] p-8 md:p-12 relative overflow-hidden">
-                                <div className="relative z-10">
-                                    <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-[10px] mb-4 block">Calculator</span>
-                                    <h3 className="text-3xl font-serif mb-8">Quantity Estimator</h3>
-                                    <CoverageCalculator productDimensions={product.specs?.size} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 4. Frequently Asked Questions (LLM Optimization) */}
-                    <div className="group">
-                        <div className="flex items-center gap-4 mb-8">
-                            <span className="text-[var(--terracotta)] text-3xl font-serif">04</span>
                             <div className="h-px w-16 bg-white/10" />
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Expert Inputs</span>
                         </div>

@@ -8,14 +8,38 @@ import ProductsPageAnimate from '@/components/ProductsPageAnimate';
 import { Metadata } from 'next';
 
 import { getCategoryMetadata } from '@/lib/seo-metadata';
+import { capitalizeWords } from '@/lib/utils'; // Helper or inline
 
 interface ProductsPageProps {
-    searchParams: Promise<{ category?: string }>;
+    searchParams: Promise<{ category?: string; search?: string }>;
 }
 
 export async function generateMetadata({ searchParams }: ProductsPageProps): Promise<Metadata> {
-    const { category } = await searchParams;
+    const { category, search } = await searchParams;
 
+    // 1. Dynamic Search Handling (Highest Priority for Long-Tail SEO)
+    if (search) {
+        // Beautify the search term for the title
+        const cleanTerm = search.replace(/[-_]/g, ' ').replace(/\+/g, ' ');
+        const titleTerm = cleanTerm.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+        return {
+            title: `${titleTerm} | Premium Quality - UrbanClay India`,
+            description: `Looking for ${titleTerm}? Explore UrbanClay's premium range of terracotta and clay products. Sustainable, durable, and delivered pan-India. Get a quote today.`,
+            keywords: [cleanTerm, `${cleanTerm} price`, `${cleanTerm} suppliers`, 'urbanclay', 'terracotta tiles'],
+            openGraph: {
+                title: `Premium ${titleTerm} from UrbanClay`,
+                description: `India's trusted manufacturer for ${cleanTerm}. High-quality, low-efflorescence clay products.`,
+                url: `https://claytile.in/products?search=${encodeURIComponent(search)}`,
+                images: [{ url: 'https://claytile.in/images/products/wirecut-texture.jpg' }]
+            },
+            alternates: {
+                canonical: `https://claytile.in/products?search=${encodeURIComponent(search)}`
+            }
+        };
+    }
+
+    // 2. Category Handling
     if (category) {
         const categoryMetadata = await getCategoryMetadata(category);
         if (categoryMetadata) {
@@ -28,7 +52,7 @@ export async function generateMetadata({ searchParams }: ProductsPageProps): Pro
         }
     }
 
-    // Default Metadata for /products
+    // 3. Default Metadata
     return {
         title: 'Terracotta Tiles & Clay Bricks Collection | UrbanClay India',
         description: 'Browse India\'s widest range of low-efflorescence terracotta tiles, exposed wirecut bricks, jaali panels, and facade cladding systems.',
@@ -72,13 +96,18 @@ export const revalidate = 60;
 
 import FAQSchema from '@/components/FAQSchema';
 
-export default async function ProductsPage() {
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
     const products = await getProducts();
+    const resolvedParams = await searchParams;
 
     return (
         <>
             <FAQSchema />
-            <ProductsPageAnimate products={products} />
+            <ProductsPageAnimate
+                products={products}
+                initialCategory={resolvedParams.category}
+                initialSearch={resolvedParams.search}
+            />
         </>
     );
 }

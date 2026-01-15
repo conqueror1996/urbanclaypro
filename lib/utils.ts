@@ -48,3 +48,8 @@ export function formatCurrency(amount: number): string {
 export function toSlug(text: string | null | undefined): string {
     return (text || '').toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
 }
+
+export function capitalizeWords(str: string): string {
+    if (!str) return '';
+    return str.replace(/\b\w/g, l => l.toUpperCase());
+}

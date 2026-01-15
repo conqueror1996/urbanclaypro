@@ -103,6 +103,8 @@ export const truncate = (text: string | undefined, length: number): string => {
     return text.substring(0, length).trim() + '...';
 };
 
+const DEFAULT_OG_IMAGE = 'https://claytile.in/api/og?title=UrbanClay&subtitle=Premium%20Terracotta%20Products';
+
 export async function getCategoryMetadata(categorySlug: string): Promise<Metadata | null> {
     // 1. Try Dynamic Collection from CMS
     const dynamicCollection = await getCollectionBySlug(categorySlug);
@@ -123,7 +125,11 @@ export async function getCategoryMetadata(categorySlug: string): Promise<Metadat
         const productImages = categoryProducts.map(p => p.imageUrl).filter(Boolean).slice(0, 4);
         const seoImages = dynamicCollection.seo?.openGraphImages || [];
         const combinedImages = [...(dynamicCollection.seo?.openGraphImage ? [dynamicCollection.seo.openGraphImage] : []), ...seoImages, ...productImages];
-        const uniqueImages = Array.from(new Set(combinedImages)).filter((img): img is string => !!img).slice(0, 5);
+        let uniqueImages = Array.from(new Set(combinedImages)).filter((img): img is string => !!img).slice(0, 5);
+
+        if (uniqueImages.length === 0) {
+            uniqueImages = [DEFAULT_OG_IMAGE];
+        }
 
         const metaTitle = dynamicCollection.seo?.metaTitle || `${dynamicCollection.title} Collection | Premium Terracotta | UrbanClay`;
         const metaDescription = truncate(dynamicCollection.seo?.metaDescription || dynamicCollection.description || `Explore our exclusive ${dynamicCollection.title} collection. Sustainable, handcrafted terracotta solutions for modern architecture.`, 155);
@@ -172,7 +178,8 @@ export async function getCategoryMetadata(categorySlug: string): Promise<Metadat
             if (hero?.imageUrl) {
                 images = [hero.imageUrl];
             } else {
-                images = [`https://claytile.in/api/og?slug=${categorySlug}&type=category`];
+                // Use default instead of potentially broken specific slug OG
+                images = [DEFAULT_OG_IMAGE];
             }
         }
 

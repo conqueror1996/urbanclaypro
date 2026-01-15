@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { usePathname } from 'next/navigation';
 
+import KeywordFooter from './KeywordFooter';
+
 export default function Footer() {
     const pathname = usePathname();
 
@@ -22,6 +24,9 @@ export default function Footer() {
 
     return (
         <footer id="contact" className="bg-[#2A1E16] text-white border-t border-white/10">
+            {/* SEO Keywords Cloud */}
+            <KeywordFooter />
+
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 md:py-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
                     {/* Column 1: Brand (Always Visible) */}

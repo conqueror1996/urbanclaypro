@@ -108,6 +108,14 @@ export default defineType({
             rows: 5,
         }),
         defineField({
+            name: 'distinctiveCharacter',
+            title: 'Distinctive Character',
+            description: 'A unique narrative describing the character of this product (appears in the "Distinctive Character" section).',
+            type: 'text',
+            group: 'editorial',
+            rows: 5,
+        }),
+        defineField({
             name: 'seo',
             title: 'SEO Settings',
             type: 'seo',

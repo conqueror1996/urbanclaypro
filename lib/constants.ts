@@ -172,3 +172,29 @@ export const SEO_KEYWORDS = [
     "export quality terracotta", "made in india tiles",
     "clay tile manufacturing process", "terracotta firing temperature"
 ];
+
+// --- PROGRAMMATIC SEO DATA ---
+export const SEO_CITIES = [
+    "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata", "Ahmedabad", "Gurgaon", "Noida",
+    "Jaipur", "Surat", "Chandigarh", "Lucknow", "Indore", "Thane", "Bhopal", "Visakhapatnam", "Vadodara", "Ghaziabad",
+    "Ludhiana", "Agra", "Nashik", "Faridabad", "Meerut", "Rajkot", "Varanasi", "Srinagar", "Aurangabad", "Dhanbad",
+    "Amritsar", "Navi Mumbai", "Allahabad", "Ranchi", "Howrah", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Jodhpur"
+];
+
+export const SEO_PRODUCTS = [
+    "Terracotta Tiles", "Clay Bricks", "Wirecut Bricks", "Exposed Bricks", "Exterior Cladding", "Facade Tiles",
+    "Jaali Panels", "Roof Tiles", "Floor Tiles", "Paving Stones", "Hollow Blocks", "Breeze Blocks",
+    "Wall Veneers", "Facing Bricks", "Ceramic Cladding"
+];
+
+export const SEO_ADJECTIVES = [
+    "Red", "Grey", "Antique", "Handmade", "Machine-made", "Perforated", "Hollow", "Glazed", "Premium",
+    "Sustainable", "Eco-friendly", "Decorative", "Exterior", "Interior", "Rustic", "Vintage", "Modern",
+    "Textured", "Smooth", "Weather-resistant", "Fire-resistant", "Acid-resistant", "Natural", "Porous"
+];
+
+export const SEO_APPLICATIONS = [
+    "Wall", "Floor", "Roof", "Facade", "Home", "Office", "Kitchen", "Bathroom", "Garden", "Exterior",
+    "Interior", "Elevation", "Gate", "Compound Wall", "Bedroom", "Living Room", "Balcony", "Terrace",
+    "Walkway", "Driveway", "Restaurant", "Cafe", "Hotel", "Resort", "School", "Hospital"
+];

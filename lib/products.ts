@@ -35,6 +35,7 @@ const productsQuery = groq`*[_type == "product"] {
   priceRange,
   priceTier,
   description,
+  distinctiveCharacter,
   "imageUrl": images[0].asset->url,
   "variants": variants[]{ _key, name, family, color, "slug": slug.current, "imageUrl": image.asset->url, "imageRef": image.asset._ref, "altText": image.alt, "gallery": gallery[].asset->url, "galleryRefs": gallery[].asset._ref, badge, variantSpecs, "seo": { "metaTitle": seo.metaTitle, "metaDescription": seo.metaDescription, "keywords": seo.keywords, "openGraphImage": seo.openGraphImage.asset->url } },
 

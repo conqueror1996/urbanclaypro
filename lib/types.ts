@@ -28,6 +28,7 @@ export interface Product {
     priceRange: string;
     priceTier?: string;
     description: string;
+    distinctiveCharacter?: string;
     images?: any[];
     imageUrl?: string;
     variants?: {

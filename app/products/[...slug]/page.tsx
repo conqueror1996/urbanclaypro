@@ -34,6 +34,9 @@ interface PageProps {
 }
 
 // Generate Metadata for BOTH Products and Categories
+const DEFAULT_OG_IMAGE = 'https://claytile.in/api/og?title=UrbanClay&subtitle=Premium%20Terracotta%20Products';
+
+// Generate Metadata for BOTH Products and Categories
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
     const { slug } = await params;
     const { variant } = await searchParams;
@@ -129,6 +132,11 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
             canonicalUrl += `?variant=${encodeURIComponent(selectedVariant.name)}`;
         }
 
+        // Safety Fallback for Product Images
+        if (currentOgImages.length === 0) {
+            currentOgImages = [DEFAULT_OG_IMAGE];
+        }
+
         return {
             title: metaTitle,
             description: metaDescription,
@@ -158,6 +166,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     if (dynamicCollection) {
         // Fetch products in this collection to extract images and keywords if SEO is sparse
         const allProducts = await getProducts();
+
+        // Improved Matching Logic: Case-insensitive and slug-aware
         const tagsToMatch = dynamicCollection.filterTags || [dynamicCollection.title, pathSlug];
         const categoryProducts = allProducts.filter((p: any) =>
             tagsToMatch.some((tag: string) =>
@@ -165,16 +175,31 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
                     p.category?.title === tag ||
                     p.tag === tag ||
                     p.category?.slug === tag ||
-                    p.category?.slug === tag?.toLowerCase().replace(/ /g, '-')
+                    p.category?.slug === tag?.toLowerCase().replace(/ /g, '-') ||
+                    // Add direct slug match just in case
+                    tag.toLowerCase() === (p.category?.title || '').toLowerCase()
                 )
             )
         );
 
         // Extract multiple images from products for a rich card
         const productImages = categoryProducts.map(p => p.imageUrl).filter(Boolean).slice(0, 4);
+        const collectionImage = dynamicCollection.imageUrl || dynamicCollection.seo?.openGraphImage;
         const seoImages = dynamicCollection.seo?.openGraphImages || [];
-        const combinedImages = [...(dynamicCollection.seo?.openGraphImage ? [dynamicCollection.seo.openGraphImage] : []), ...seoImages, ...productImages];
-        const uniqueImages = Array.from(new Set(combinedImages)).filter((img): img is string => !!img).slice(0, 5);
+
+        const combinedImages = [
+            ...(collectionImage ? [collectionImage] : []),
+            ...seoImages,
+            ...productImages
+        ];
+
+        let uniqueImages = Array.from(new Set(combinedImages)).filter((img): img is string => !!img).slice(0, 5);
+
+        // Safety Fallback for Collection Images (Fixes "Floor Tile" issue if empty)
+        if (uniqueImages.length === 0) {
+            console.warn(`No images found for collection: ${pathSlug}, using default.`);
+            uniqueImages = [DEFAULT_OG_IMAGE];
+        }
 
         // Comprehensive Keywords
         const productTitles = categoryProducts.map(p => p.title);
