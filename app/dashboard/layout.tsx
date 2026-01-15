@@ -8,11 +8,12 @@ import {
     ChevronLeft, ChevronRight, LayoutDashboard, Target, Users,
     Receipt, Package, ShoppingBag, RotateCcw, Activity,
     Truck, Cpu, PenTool, Globe, BookOpen, MessageSquare,
-    LayoutTemplate, LogOut, Search
+    LayoutTemplate, LogOut, Search, Briefcase
 } from 'lucide-react';
 import CommandPalette from '@/components/dashboard/CommandPalette';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+    // ... existing state code ...
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -131,6 +132,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {
             title: "Content & Growth",
             items: [
+                { label: 'Projects', href: '/dashboard/projects', icon: Briefcase },
                 { label: 'Campaigns', href: '/dashboard/campaigns', icon: PenTool },
                 { label: 'SEO Suite', href: '/dashboard/seo', icon: Globe },
                 { label: 'Journal Manager', href: '/dashboard/journal', icon: BookOpen },
