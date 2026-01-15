@@ -9,5 +9,9 @@ const KilnAnimation = dynamic(() => import('./KilnAnimation'), {
 });
 
 export default function KilnAnimationWrapper(props: any) {
-    return <KilnAnimation {...props} />;
+    return (
+        <div className="hidden md:block">
+            <KilnAnimation {...props} />
+        </div>
+    );
 }

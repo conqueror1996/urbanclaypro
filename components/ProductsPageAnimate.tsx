@@ -189,7 +189,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
     };
 
     return (
-        <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0]">
+        <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0] overflow-x-hidden">
             <Header />
 
             <main className="max-w-[1800px] mx-auto min-h-screen pt-32 pb-20 px-0 md:px-6">
