@@ -131,7 +131,7 @@ export async function generateInvoicePDF(order: any) {
             didDrawPage: (data: any) => {
                 doc.setFontSize(8);
                 doc.setTextColor(150, 150, 150);
-                doc.text("UrbanClay Architecture Pvt Ltd", 15, doc.internal.pageSize.height - 10);
+                doc.text("urbanclay", 15, doc.internal.pageSize.height - 10);
             }
         });
 

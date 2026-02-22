@@ -146,6 +146,12 @@ export default defineType({
             readOnly: true
         }),
         defineField({
+            name: 'zohoCustomerId',
+            title: 'Zoho Customer ID',
+            type: 'string',
+            readOnly: true
+        }),
+        defineField({
             name: 'paidAt',
             title: 'Paid At',
             type: 'datetime',

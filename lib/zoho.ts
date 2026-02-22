@@ -285,7 +285,7 @@ export async function createZohoInvoice(orderData: any) {
             shipping_charge: orderData.shippingCharges || 0,
             adjustment: orderData.adjustment || 0,
             notes: orderData.customerNotes || orderData.terms,
-            allow_partial_payments: false
+            allow_partial_payments: true
         };
 
         const invoiceResponse = await fetch(`https://${booksDomain}/api/v3/invoices?organization_id=${orgId}`, {

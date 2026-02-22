@@ -56,14 +56,25 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
             <main className="flex-1 w-full max-w-4xl mx-auto p-4 md:p-8">
                 <div className="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
 
-                    {/* Official Banner */}
-                    <div className="bg-white p-10 pb-0 text-center relative overflow-hidden text-[#2A1E16]">
-                        <p className="text-[var(--terracotta)] font-bold uppercase tracking-[0.3em] text-[10px] mb-3">Secure Payment Portal</p>
-                        <h1 className="text-4xl font-serif font-bold">Tax Invoice & Settlement</h1>
-                        <p className="text-gray-400 text-[10px] mt-2 font-mono tracking-widest uppercase">REF: {order.orderId}</p>
+                    <div className="p-8 md:p-14 pb-0">
+                        {/* Company & Header Info */}
+                        <div className="flex flex-col md:flex-row justify-between items-start mb-12 border-b border-gray-50 pb-8 gap-8">
+                            <div className="md:w-1/2">
+                                <h2 className="text-2xl font-serif font-bold text-[#2A1E16] mb-2">urbanclay</h2>
+                                <div className="text-sm text-gray-500 space-y-1 font-sans">
+                                    <p>203 Anurag Business Center<br />Chembur<br />Mumbai, Maharashtra 400071<br />India</p>
+                                    <p className="pt-2 font-mono text-[11px] text-[#2A1E16] font-bold tracking-widest">GSTIN 27CTNPP3943D1Z</p>
+                                </div>
+                            </div>
+                            <div className="md:text-right md:w-1/2">
+                                <p className="text-[var(--terracotta)] font-bold uppercase tracking-[0.3em] text-[10px] mb-2">Secure Payment Portal</p>
+                                <h1 className="text-3xl font-serif font-bold text-[#2A1E16]">Tax Invoice & Settlement</h1>
+                                <p className="text-gray-400 text-[10px] mt-2 font-mono tracking-widest uppercase">REF: {order.orderId}</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="p-8 md:p-14">
+                    <div className="px-8 md:px-14 pb-8 md:pb-14">
 
                         {/* Status Alert for Expired */}
                         {order.status === 'expired' && (

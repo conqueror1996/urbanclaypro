@@ -50,16 +50,17 @@ export async function GET(
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
         doc.setTextColor(...colorText);
-        doc.text("Urbanclay Earthy Elements", pageWidth - margin, 18, { align: 'right' });
+        doc.text("urbanclay", pageWidth - margin, 18, { align: 'right' });
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(...colorSubText);
         const companyAddr = [
-            "#610, 80 Feet Rd, 4th Block",
-            "Koramangala, Bengaluru, Karnataka 560034",
+            "203 Anurag Business Center",
+            "Chembur",
+            "Mumbai, Maharashtra 400071",
             "India",
-            "GSTIN: 29AAICU5657L1Z9"
+            "GSTIN: 27CTNPP3943D1Z"
         ];
         let addrY = 23;
         companyAddr.forEach(line => {
@@ -250,7 +251,7 @@ export async function GET(
         // Authorised Sig
         doc.line(pageWidth - margin - 60, sigY, pageWidth - margin, sigY);
         doc.text("Authorised Signatory", pageWidth - margin - 60, sigY + 5);
-        doc.text("For Urbanclay Earthy Elements", pageWidth - margin - 60, sigY - 15);
+        doc.text("For urbanclay", pageWidth - margin - 60, sigY - 15);
 
 
         const pdfBuffer = doc.output('arraybuffer');

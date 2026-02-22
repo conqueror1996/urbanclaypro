@@ -107,12 +107,28 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string, 
         const totalPaidSoFar = (order.paidAmount || 0) + actualPaid;
         const newStatus = totalPaidSoFar < order.amount ? 'partially_paid' : 'paid';
 
-        // 1. Create ACTUAL Zoho Invoice (Books API)
+        // 1. Check if we need to create the Zoho Invoice
         const { createZohoInvoice, recordZohoPayment } = await import('@/lib/zoho');
-        const zohoRes = await createZohoInvoice({
-            ...order,
-            paymentId
-        });
+
+        let invoiceId = order.zohoInvoiceId;
+        let invoiceNumber = order.zohoInvoiceNumber;
+        let customerId = order.zohoCustomerId;
+        let invoiceCreationSuccess = true;
+
+        if (!invoiceId) {
+            const zohoRes = await createZohoInvoice({
+                ...order,
+                paymentId
+            });
+            if (zohoRes.success) {
+                invoiceId = zohoRes.invoiceId;
+                invoiceNumber = zohoRes.invoiceNumber;
+                customerId = zohoRes.customerId;
+            } else {
+                invoiceCreationSuccess = false;
+                console.error("Zoho Invoice Creation Failed:", zohoRes.error);
+            }
+        }
 
         // Update Sanity with Zoho Details
         await writeClient.patch(order._id).set({
@@ -120,20 +136,21 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string, 
             paidAt: new Date().toISOString(),
             paymentId: paymentId,
             paidAmount: totalPaidSoFar,
-            zohoInvoiceId: zohoRes.invoiceId,
-            zohoInvoiceNumber: zohoRes.invoiceNumber
+            zohoInvoiceId: invoiceId,
+            zohoInvoiceNumber: invoiceNumber,
+            zohoCustomerId: customerId
         }).commit();
 
-        console.log(`✅ Order ${orderId} marked as ${newStatus}. Zoho Invoice: ${zohoRes.invoiceNumber}`);
+        console.log(`✅ Order ${orderId} marked as ${newStatus}. Zoho Invoice: ${invoiceNumber}`);
 
         // 1b. Record Payment and Fetch PDF
         let invoicePdf = null;
-        if (zohoRes.success && zohoRes.invoiceId && zohoRes.customerId) {
+        if (invoiceCreationSuccess && invoiceId && customerId) {
             try {
                 // Record Payment in Zoho (keep this for accounting)
                 await recordZohoPayment({
-                    customerId: zohoRes.customerId,
-                    invoiceId: zohoRes.invoiceId,
+                    customerId: customerId,
+                    invoiceId: invoiceId,
                     amount: actualPaid,
                     paymentId: paymentId
                 });
@@ -143,7 +160,7 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string, 
                 // Ensure order object has the latest invoice numbers
                 const invoiceOrder = {
                     ...order,
-                    zohoInvoiceNumber: zohoRes.invoiceNumber,
+                    zohoInvoiceNumber: invoiceNumber,
                     status: newStatus
                 };
                 invoicePdf = await generateInvoicePDF(invoiceOrder);
@@ -162,11 +179,12 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string, 
                 quantity: `₹${order.amount.toLocaleString('en-IN')}`,
                 city: 'Online Order',
                 lineItems: order.lineItems,
+                timeline: order.deliveryTimeline || 'Immediate',
                 address: order.billingAddress || 'Digital Invoice',
-                notes: `Zoho Invoice: ${zohoRes.invoiceNumber || 'Processing'}\nOrder ID: ${orderId}\nPayment ID: ${paymentId}`,
+                notes: `Zoho Invoice: ${invoiceNumber || 'Processing'}\nOrder ID: ${orderId}\nPayment ID: ${paymentId}`,
                 attachments: invoicePdf ? [
                     {
-                        filename: `Invoice_${zohoRes.invoiceNumber || orderId}.pdf`,
+                        filename: `Invoice_${invoiceNumber || orderId}.pdf`,
                         content: invoicePdf
                     }
                 ] : []
@@ -178,10 +196,10 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string, 
                 console.error("❌ Email sending failed:", emailRes.error);
             }
         } catch (emailError) {
-            console.error("❌ Critical error in email dispatch:", emailError);
+            console.error("⚠️ Failed to send Confirmation Email:", emailError);
         }
 
-        return { success: true, zohoInvoiceId: zohoRes.invoiceId, invoiceNumber: zohoRes.invoiceNumber };
+        return { success: true, zohoInvoiceId: invoiceId, invoiceNumber: invoiceNumber };
     } catch (error) {
         console.error("Error updating payment status", error);
         return { success: false, error: "Update failed" };

@@ -1027,9 +1027,9 @@ export default function CreateOrderPage() {
                                                 </div>
                                             </div>
                                             <div className="text-right text-[10px] text-gray-400 space-y-2">
-                                                <p className="font-bold text-[#1a1c1e] text-xs">UrbanClay Architecture Pvt. Ltd.</p>
-                                                <p>#610, 80 Feet Rd, 4th Block, Koramangala<br />Bengaluru, Karnataka 560034</p>
-                                                <p>GSTIN: 29AAICU5657L1Z9 | CIN: U26931KA2019PTC123456</p>
+                                                <p className="font-bold text-[#1a1c1e] text-xs">urbanclay</p>
+                                                <p>203 Anurag Business Center<br />Chembur<br />Mumbai, Maharashtra 400071<br />India</p>
+                                                <p>GSTIN 27CTNPP3943D1Z</p>
                                                 <p className="pt-4 text-xs italic">System Generated Proforma Invoice</p>
                                             </div>
                                         </div>
