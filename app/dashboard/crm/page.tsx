@@ -267,7 +267,33 @@ function CRMContent() {
                         <h1 className="text-3xl font-serif text-[#2a1e16] tracking-tight">Projects</h1>
                         <p className="text-[#8c7b70] text-sm mt-1 font-medium">Manage your pipeline and client relationships</p>
                     </div>
-                    <div>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={async () => {
+                                const btn = document.getElementById('sync-indiamart-btn');
+                                if (btn) btn.innerHTML = '<span class="animate-spin text-lg">↻</span> Syncing...';
+                                try {
+                                    // Use an environment variable for your external fetching backend
+                                    const backendUrl = process.env.NEXT_PUBLIC_INDIAMART_SYNC_URL || 'http://localhost:5000';
+                                    const res = await fetch(`${backendUrl}/api/sync-indiamart`, { method: 'POST' });
+                                    const data = await res.json();
+
+                                    if (res.ok) {
+                                        alert(data.message || 'Sync Complete');
+                                        fetchInitialData();
+                                    } else {
+                                        alert('Failed to sync. Please ensure the external backed is running.');
+                                    }
+                                } catch (e) {
+                                    alert('Failed to reach external backend server');
+                                }
+                                if (btn) btn.innerHTML = '<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l5.67-1.99"/></svg> Sync IndiaMART';
+                            }}
+                            id="sync-indiamart-btn"
+                            className="bg-white text-[#2a1e16] border border-[#2a1e16]/20 px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-[#FAF9F6] transition-all font-bold text-xs uppercase tracking-wider"
+                        >
+                            <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l5.67-1.99" /></svg> Sync IndiaMART
+                        </button>
                         <button
                             onClick={() => setShowNewDealModal(true)}
                             className="bg-[#2a1e16] text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-[#4a3e36] transition-all font-bold text-xs uppercase tracking-wider"
@@ -403,7 +429,7 @@ function CRMContent() {
                                         <div onClick={() => contact.type === 'lead' && setSelectedLead(contact.original)} className={contact.type === 'lead' ? 'cursor-pointer' : ''}>
                                             <div className="flex justify-between items-start mb-6">
                                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-serif text-lg ${contact.type === 'lead' ? 'bg-[#b45a3c]' :
-                                                        contact.type === 'site' ? 'bg-blue-600' : 'bg-[#2a1e16]'
+                                                    contact.type === 'site' ? 'bg-blue-600' : 'bg-[#2a1e16]'
                                                     }`}>
                                                     {contact.name?.charAt(0) || '?'}
                                                 </div>
