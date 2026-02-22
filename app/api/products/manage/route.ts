@@ -13,6 +13,20 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const intent = searchParams.get('intent');
 
+    if (intent === 'cities') {
+        const cities = await client.fetch(`*[_type == "cityPage"] | order(name asc) { 
+            _id, 
+            name,
+            "slug": slug.current,
+            region, 
+            metaTitle, 
+            metaDescription, 
+            richContent,
+            areasServed
+         }`);
+        return NextResponse.json(cities);
+    }
+
     if (intent === 'categories') {
         const categories = await client.fetch(`*[_type == "category"] | order(title asc) { title }`);
         return NextResponse.json(categories.map((c: any) => c.title));
@@ -24,6 +38,7 @@ export async function GET(req: NextRequest) {
             title, 
             description, 
             displayOrder,
+            bottomContent,
             "imageUrl": image.asset->url 
         }`);
         return NextResponse.json(categories);
@@ -48,7 +63,7 @@ export async function POST(req: NextRequest) {
         // ==========================================
 
         if (action === 'create_category') {
-            const { title, description, displayOrder, imageAssetId } = data;
+            const { title, description, displayOrder, imageAssetId, bottomContent } = data;
             const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 96);
 
             const doc: any = {
@@ -56,7 +71,8 @@ export async function POST(req: NextRequest) {
                 title,
                 slug: { current: slug, _type: 'slug' },
                 description: description || '',
-                displayOrder: displayOrder || 0
+                displayOrder: displayOrder || 0,
+                bottomContent: bottomContent || ''
             };
 
             if (imageAssetId) {
@@ -68,9 +84,9 @@ export async function POST(req: NextRequest) {
         }
 
         if (action === 'update_category') {
-            const { _id, title, description, displayOrder, imageAssetId } = data;
+            const { _id, title, description, displayOrder, imageAssetId, bottomContent } = data;
 
-            const patch: any = { title, description, displayOrder };
+            const patch: any = { title, description, displayOrder, bottomContent };
             if (imageAssetId) {
                 patch.image = { _type: 'image', asset: { _type: 'reference', _ref: imageAssetId } };
             }
@@ -350,6 +366,17 @@ export async function POST(req: NextRequest) {
             await client.delete(id);
             revalidatePath('/dashboard/products');
             revalidatePath('/products');
+            return NextResponse.json({ success: true });
+        }
+
+        if (action === 'update_city') {
+            const { _id, ...fields } = data;
+            // Clean up undefined fields
+            Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key]);
+
+            await client.patch(_id).set(fields).commit();
+            revalidatePath('/dashboard/seo/city-manager');
+            // Revalidate the specific city page (we don't know the slug here easily without fetch, but we can try generic)
             return NextResponse.json({ success: true });
         }
 

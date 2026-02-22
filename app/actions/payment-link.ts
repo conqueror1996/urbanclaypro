@@ -95,13 +95,17 @@ export async function verifyGST(gstin: string) {
     }
 }
 
-export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) {
+export async function markPaymentLinkAsPaid(orderId: string, paymentId: string, amountPaid?: number) {
     try {
         const query = `*[_type == "paymentLink" && orderId == $orderId][0]`;
         const order = await writeClient.fetch(query, { orderId });
 
         if (!order) return { success: false, error: "Order not found" };
         if (order.status === 'paid') return { success: true, zohoInvoiceId: order.zohoInvoiceId };
+
+        const actualPaid = amountPaid || order.amount;
+        const totalPaidSoFar = (order.paidAmount || 0) + actualPaid;
+        const newStatus = totalPaidSoFar < order.amount ? 'partially_paid' : 'paid';
 
         // 1. Create ACTUAL Zoho Invoice (Books API)
         const { createZohoInvoice, recordZohoPayment } = await import('@/lib/zoho');
@@ -112,14 +116,15 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
 
         // Update Sanity with Zoho Details
         await writeClient.patch(order._id).set({
-            status: 'paid',
+            status: newStatus,
             paidAt: new Date().toISOString(),
             paymentId: paymentId,
+            paidAmount: totalPaidSoFar,
             zohoInvoiceId: zohoRes.invoiceId,
             zohoInvoiceNumber: zohoRes.invoiceNumber
         }).commit();
 
-        console.log(`✅ Order ${orderId} marked as paid. Zoho Invoice: ${zohoRes.invoiceNumber}`);
+        console.log(`✅ Order ${orderId} marked as ${newStatus}. Zoho Invoice: ${zohoRes.invoiceNumber}`);
 
         // 1b. Record Payment and Fetch PDF
         let invoicePdf = null;
@@ -129,7 +134,7 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
                 await recordZohoPayment({
                     customerId: zohoRes.customerId,
                     invoiceId: zohoRes.invoiceId,
-                    amount: order.amount,
+                    amount: actualPaid,
                     paymentId: paymentId
                 });
 
@@ -139,7 +144,7 @@ export async function markPaymentLinkAsPaid(orderId: string, paymentId: string) 
                 const invoiceOrder = {
                     ...order,
                     zohoInvoiceNumber: zohoRes.invoiceNumber,
-                    status: 'paid' // Force paid status for correct PDF rendering
+                    status: newStatus
                 };
                 invoicePdf = await generateInvoicePDF(invoiceOrder);
             } catch (zohoError) {

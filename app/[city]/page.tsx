@@ -79,6 +79,7 @@ export default async function CityPage({ params }: PageProps) {
         region,
         heroTitle,
         heroSubtitle,
+        richContent,
         climateAdvice,
         weatherContext,
         deliveryTime,
@@ -221,6 +222,12 @@ export default async function CityPage({ params }: PageProps) {
                         </div>
                     </div>
                 </section>
+                {/* SEO Rich Content (Power Text) */}
+                {data.richContent && (
+                    <section className="max-w-4xl mx-auto px-6 mb-20 prose prose-lg prose-headings:font-serif prose-headings:text-[#2A1E16] prose-p:text-gray-600 prose-a:text-[var(--terracotta)]">
+                        <div dangerouslySetInnerHTML={{ __html: data.richContent.replace(/\n/g, '<br/>') }} />
+                    </section>
+                )}
 
                 {/* Local Project Gallery (New Feature) */}
                 {data.localImages && data.localImages.length > 0 && (

@@ -488,6 +488,16 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                             </div>
                         )}
                     </div>
+
+                    {/* SEO Power Text (Bottom Content) */}
+                    {collection.bottomContent && (
+                        <div className="mt-32 pt-20 border-t border-white/10 max-w-4xl mx-auto">
+                            <div className="prose prose-invert prose-lg text-white/50 leading-loose whitespace-pre-wrap font-light">
+                                <h2 className="text-2xl font-serif text-[#EBE5E0] mb-8">More about {title}</h2>
+                                {collection.bottomContent}
+                            </div>
+                        </div>
+                    )}
                 </main>
                 <Footer />
             </div>

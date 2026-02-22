@@ -105,7 +105,7 @@ export default function Header() {
 
     return (
         <header
-            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isScrolled || mobileMenuOpen || activeDropdown || shouldShowWhiteHeader
+            className={`fixed top-0 left-0 right-0 z-[100] flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isScrolled || mobileMenuOpen || activeDropdown || shouldShowWhiteHeader
                 ? 'bg-white border-b border-[#e9e2da]/50 shadow-[0_4px_30px_-5px_rgba(0,0,0,0.03)] pb-4' // Removed top padding, used pb-4
                 : 'bg-transparent border-transparent pb-6' // Removed top padding, used pb-6
                 }`}
@@ -117,7 +117,31 @@ export default function Header() {
                 }
             }}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative pt-2">
+            {/* ANNOUNCEMENT BANNER */}
+            <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
+                className="w-full"
+            >
+                <Link href="/flexible-brick-tile" className="group relative w-full block bg-[#1a1512] hover:bg-[var(--terracotta)] transition-colors duration-500 z-50 overflow-hidden mb-2 shadow-md">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-2.5 flex items-center justify-center relative z-10">
+                        <span className="text-white text-[9px] sm:text-[10px] md:text-xs font-medium tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-center flex items-center justify-center gap-1 sm:gap-1.5 uppercase">
+                            <span className="animate-pulse origin-bottom group-hover:animate-bounce">🚀</span>
+                            <span className="opacity-90 font-bold ml-1 text-[var(--terracotta)] group-hover:text-white transition-colors hidden sm:inline">NOW TESTING:</span>
+                            <span className="font-semibold tracking-[0.2em] ml-1">Flexible Brick Tile</span>
+                            <span className="opacity-70 hidden md:inline ml-1 font-normal">– Ultra Thin 3mm Clay System</span>
+                            <span className="ml-1 transform -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 hidden sm:inline">→</span>
+                        </span>
+                    </div>
+                    {/* Light sweep effect */}
+                    <div className="absolute inset-0 z-0 opacity-20 group-hover:opacity-40 transition-opacity duration-500">
+                        <div className="absolute inset-0 w-[200%] h-full animate-slide-shimmer bg-gradient-to-r from-transparent via-white to-transparent skew-x-12" />
+                    </div>
+                </Link>
+            </motion.div>
+
+            <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative pt-1 md:pt-2">
                 <Link href="/" className="flex items-center group relative z-50">
                     <Image
                         src="/urbanclay-logo.png"

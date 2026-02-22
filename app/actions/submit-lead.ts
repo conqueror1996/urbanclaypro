@@ -3,6 +3,7 @@
 import { writeClient } from '@/sanity/lib/write-client'
 import { sendLeadAlertEmail, sendUserConfirmationEmail } from '@/lib/email'
 import { createZohoLead } from '@/lib/zoho'
+import { headers } from 'next/headers'
 
 export async function submitLead(formData: any) {
     try {
@@ -12,6 +13,11 @@ export async function submitLead(formData: any) {
 
         // Extract numbers from quantity (e.g., "500 sqft" -> 500)
         const quantityNum = parseInt(formData.quantity?.replace(/[^0-9]/g, '') || '0')
+
+        // Capture IP for Footprint Linking
+        const headersList = await headers()
+        const ip = headersList.get('x-forwarded-for') || 'unknown'
+
         const highValueRoles = ['Architect', 'Builder', 'Contractor']
 
         // Logic: High Value Role OR High Quantity (>1000) OR Detailed Notes
@@ -51,6 +57,7 @@ export async function submitLead(formData: any) {
             sampleItems: formData.sampleItems,
             fulfillmentStatus: formData.fulfillmentStatus || (formData.isSampleRequest ? 'pending' : undefined),
             shippingInfo: formData.shippingInfo,
+            ip,
         }
 
         const result = await writeClient.create(doc)

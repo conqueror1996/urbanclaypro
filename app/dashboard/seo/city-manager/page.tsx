@@ -2,19 +2,30 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import { authenticatedFetch } from '@/lib/auth-utils';
+import CityEditor from '@/components/admin/CityEditor';
 import Link from 'next/link';
 
 export default function CityManagerPage() {
     const [cities, setCities] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [editingCity, setEditingCity] = useState<any | null>(null);
+
+    const fetchCities = async () => {
+        setLoading(true);
+        try {
+            const res = await authenticatedFetch('/api/products/manage?intent=cities');
+            const data = await res.json();
+            if (Array.isArray(data)) setCities(data);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        // Fetch all city pages from Sanity (sorted by name)
-        client.fetch(`*[_type == "cityPage"] | order(name asc)`).then(data => {
-            setCities(data);
-            setLoading(false);
-        });
+        fetchCities();
     }, []);
 
     if (loading) return <div className="p-8">Loading Local SEO Data...</div>;
@@ -61,12 +72,27 @@ export default function CityManagerPage() {
                         </div>
 
                         <div className="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <a href={`/${city.slug.current}`} target="_blank" className="text-gray-400 hover:text-black text-sm font-medium">View Live →</a>
-                            <Link href={`/studio/structure/cityPage;${city._id}`} target="_blank" className="text-[var(--terracotta)] font-bold text-sm hover:underline">Edit Content</Link>
+                            <a href={`/${city.slug}`} target="_blank" className="text-gray-400 hover:text-black text-sm font-medium">View Live →</a>
+                            <button
+                                onClick={() => setEditingCity(city)}
+                                className="text-[var(--terracotta)] font-bold text-sm hover:underline bg-orange-50 px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-colors"
+                            >
+                                Edit Power Text
+                            </button>
                         </div>
                     </div>
                 ))}
             </div>
+            {editingCity && (
+                <CityEditor
+                    city={editingCity}
+                    onClose={() => setEditingCity(null)}
+                    onSave={() => {
+                        setEditingCity(null);
+                        fetchCities();
+                    }}
+                />
+            )}
         </div>
     );
 }

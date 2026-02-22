@@ -20,13 +20,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/architects',
         '/our-story',
         '/journal',
-        '/catalogue',
         '/resources',
         '/contact',
         '/privacy-policy',
         '/terms',
         '/terracotta-tiles-india',
         '/wiki',
+        '/commercial',
+        '/export',
         '/journal/architects-guide-terracotta-cladding-bricks',
     ];
 

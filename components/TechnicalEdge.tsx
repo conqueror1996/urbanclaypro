@@ -47,7 +47,10 @@ export default function TechnicalEdge() {
                         <p className="text-white/60 text-lg font-light leading-relaxed max-w-md mb-8">
                             We eliminate the risks architects hate most. UrbanClay systems are engineered to solve for salt migration, dimensional warpage, and maintenance failures typical of generic clay products.
                         </p>
-                        <div className="mb-12">
+                        <div className="mb-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                            <Link href="/comparison" className="inline-flex items-center justify-center px-6 py-3 bg-[var(--terracotta)] hover:bg-[#c25e3b] text-white text-sm font-bold uppercase tracking-widest rounded-lg transition-all">
+                                Review Comparison
+                            </Link>
                             <Link href="/resources/technical-data" className="text-[var(--terracotta)] text-sm font-bold uppercase tracking-widest border-b border-[var(--terracotta)] pb-1 hover:text-white hover:border-white transition-all">
                                 Download Technical Data →
                             </Link>

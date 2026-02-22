@@ -8,6 +8,7 @@ interface Lead {
     quantity: string;
     timeline: string;
     notes: string;
+    history?: { path: string, timestamp: string }[];
 }
 
 export async function generateSalesEmail(lead: Lead) {
@@ -59,6 +60,27 @@ export async function generateSalesEmail(lead: Lead) {
     if (lead.notes && lead.notes.length > 5) {
         body += `\n**Regarding your note:** "${lead.notes}"\n`;
         body += `> We have noted this specific requirement and will ensure our proposal addresses it fully.\n\n`;
+    }
+
+    // ---------------------------------------------------------
+    // 3. BROWSING HISTORY INSIGHTS (The "Magic")
+    // ---------------------------------------------------------
+    if (lead.history && lead.history.length > 0) {
+        // Filter out the main product page to find *other* interests
+        const interestingVisits = lead.history
+            .map(h => h.path)
+            .filter(path =>
+                !path.includes('dashboard') &&
+                !path.includes('admin') &&
+                path !== '/' &&
+                path !== '/products'
+            )
+            .slice(0, 3); // Top 3 unique interactions
+
+        if (interestingVisits.length > 0) {
+            body += `\n**Personalized Suggestion:**\n`;
+            body += `We also noticed you explored some of our other collections. If you are interested, we can include samples for those as well in the same shipment to save on logistics.\n`;
+        }
     }
 
     // ---------------------------------------------------------

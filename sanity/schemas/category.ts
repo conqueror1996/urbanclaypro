@@ -47,6 +47,12 @@ export default defineType({
             description: 'Order in which to display this category (lower numbers first)',
         }),
         defineField({
+            name: 'bottomContent',
+            title: 'SEO Power Text (Bottom)',
+            type: 'text',
+            description: 'Rich text content for SEO to be displayed at the bottom of the category page.',
+        }),
+        defineField({
             name: 'seo',
             title: 'SEO Settings',
             type: 'seo',

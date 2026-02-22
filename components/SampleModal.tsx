@@ -164,7 +164,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.96, y: 20 }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="relative bg-white rounded-3xl p-8 md:p-12 max-w-2xl w-full shadow-2xl max-h-[92vh] overflow-y-auto scrollbar-hide"
+                        className="relative bg-white rounded-3xl p-5 md:p-12 max-w-2xl w-full shadow-2xl max-h-[95vh] overflow-y-auto scrollbar-hide"
                         data-lenis-prevent
                     >
                         <button onClick={onClose} className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all z-10">
@@ -191,10 +191,10 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                 Premium Samples
                                             </span>
                                             <h2 className="text-4xl md:text-5xl font-serif font-light text-[#2A1E16] mb-3">
-                                                Sample Collection
+                                                Experience Our Premium Materials
                                             </h2>
                                             <p className="text-gray-600 text-sm max-w-md mx-auto">
-                                                Experience our materials firsthand with curated samples delivered to your doorstep
+                                                Choose how you'd like to explore our collection
                                             </p>
                                         </div>
 
@@ -280,6 +280,10 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     </li>
                                                     <li className="flex items-start gap-2 text-xs text-gray-600">
                                                         <svg className="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                                        <span><strong>Spec Sheets</strong> Included</span>
+                                                    </li>
+                                                    <li className="flex items-start gap-2 text-xs text-gray-600">
+                                                        <svg className="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                                         <span>Delivered in <strong>3-5 Days</strong></span>
                                                     </li>
                                                     <li className="flex items-start gap-2 text-xs text-[#2A1E16] bg-[#2A1E16]/5 p-1.5 rounded">
@@ -326,6 +330,10 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                         <svg className="w-4 h-4 text-[#2A1E16] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                                         <span>Free Design Consultation</span>
                                                     </li>
+                                                    <li className="flex items-start gap-2 text-xs text-gray-600">
+                                                        <svg className="w-4 h-4 text-[#2A1E16] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                                        <span><strong>Priority Support</strong> Included</span>
+                                                    </li>
                                                     <li className="flex items-start gap-2 text-xs text-[#2A1E16] bg-[#2A1E16]/5 p-1.5 rounded">
                                                         <svg className="w-4 h-4 text-[#2A1E16] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                                         <span className="font-bold">100% Refundable on Order*</span>
@@ -359,23 +367,23 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                 {/* CONSULT MODE: FORM */}
                                 {viewMode === 'consult' && (
                                     <div className="bg-white">
-                                        <div className="text-center mb-10">
-                                            <div className="w-14 h-14 bg-[#2A1E16]/5 rounded-full flex items-center justify-center mx-auto mb-5 text-[var(--terracotta)] ring-1 ring-[#2A1E16]/5">
-                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                                        <div className="text-center mb-6">
+                                            <div className="w-12 h-12 bg-[#2A1E16]/5 rounded-full flex items-center justify-center mx-auto mb-3 text-[var(--terracotta)] ring-1 ring-[#2A1E16]/5">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
                                             </div>
-                                            <h2 className="text-3xl md:text-4xl font-serif text-[#2A1E16] mb-3">Free Expert Consultation</h2>
-                                            <p className="text-gray-500 text-sm max-w-sm mx-auto leading-relaxed">Fill in your details and our architectural team will guide you on the best materials for your specific project.</p>
+                                            <h2 className="text-2xl md:text-3xl font-serif text-[#2A1E16] mb-2">Free Expert Consultation</h2>
+                                            <p className="text-gray-500 text-xs md:text-sm max-w-sm mx-auto leading-relaxed">Fill in your details and our architectural team will guide you on the best materials for your specific project.</p>
                                         </div>
 
-                                        <form onSubmit={handleSubmit} className="space-y-6">
+                                        <form onSubmit={handleSubmit} className="space-y-4">
                                             {/* ROLE SELECTOR */}
-                                            <div className="bg-[#faf9f8] p-1.5 rounded-xl flex gap-1 mb-2">
+                                            <div className="bg-[#faf9f8] p-1 rounded-xl flex gap-1 mb-2">
                                                 {['Architect', 'Home Owner', 'Builder'].map((r) => (
                                                     <button
                                                         key={r}
                                                         type="button"
                                                         onClick={() => setFormData(p => ({ ...p, role: r }))}
-                                                        className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${formData.role === r
+                                                        className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${formData.role === r
                                                             ? 'bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)] text-[#b45a3c]'
                                                             : 'text-gray-400 hover:text-gray-600'
                                                             }`}
@@ -385,36 +393,36 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                 ))}
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                                <div className="space-y-1.5 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-focus-within:text-[#b45a3c] transition-colors">Name</label>
-                                                    <input name="name" value={formData.name} onChange={handleChange} className="w-full py-4 px-5 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Full Name" required />
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-1 group">
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Name</label>
+                                                    <input name="name" value={formData.name} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Full Name" required />
                                                 </div>
-                                                <div className="space-y-1.5 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-focus-within:text-[#b45a3c] transition-colors">Firm / Project Name</label>
-                                                    <input name="firm" value={formData.firm} onChange={handleChange} className="w-full py-4 px-5 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder={formData.role === 'Home Owner' ? 'Project Name (Optional)' : 'Firm Name'} required={formData.role !== 'Home Owner'} />
-                                                </div>
-                                            </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                                <div className="space-y-1.5 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-focus-within:text-[#b45a3c] transition-colors">Phone</label>
-                                                    <input name="phone" value={formData.phone} onChange={handleChange} className="w-full py-4 px-5 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Contact Number" required />
-                                                </div>
-                                                <div className="space-y-1.5 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-focus-within:text-[#b45a3c] transition-colors">Email</label>
-                                                    <input name="email" value={formData.email} onChange={handleChange} className="w-full py-4 px-5 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Email Address" required />
+                                                <div className="space-y-1 group">
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Firm / Project Name</label>
+                                                    <input name="firm" value={formData.firm} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder={formData.role === 'Home Owner' ? 'Project Name (Optional)' : 'Firm Name'} required={formData.role !== 'Home Owner'} />
                                                 </div>
                                             </div>
-                                            <div className="space-y-1.5 group">
-                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-focus-within:text-[#b45a3c] transition-colors">Project Location</label>
-                                                <textarea name="address" value={formData.address} onChange={handleChange} rows={2} className="w-full py-4 px-5 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all resize-none placeholder-gray-400" placeholder="City / Site Address" required />
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-1 group">
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Phone</label>
+                                                    <input name="phone" value={formData.phone} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Contact Number" required />
+                                                </div>
+                                                <div className="space-y-1 group">
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Email</label>
+                                                    <input name="email" value={formData.email} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Email Address" required />
+                                                </div>
                                             </div>
-                                            <div className="space-y-1.5 group">
-                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-focus-within:text-[#b45a3c] transition-colors">Project Requirements</label>
-                                                <textarea name="requirements" value={formData.requirements} onChange={handleChange} rows={2} className="w-full py-4 px-5 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all resize-none placeholder-gray-400" placeholder="Briefly describe your project needs..." />
+                                            <div className="space-y-1 group">
+                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Project Location</label>
+                                                <textarea name="address" value={formData.address} onChange={handleChange} rows={2} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all resize-none placeholder-gray-400" placeholder="City / Site Address" required />
+                                            </div>
+                                            <div className="space-y-1 group">
+                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Project Requirements</label>
+                                                <textarea name="requirements" value={formData.requirements} onChange={handleChange} rows={2} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all resize-none placeholder-gray-400" placeholder="Briefly describe your project needs..." />
                                             </div>
 
-                                            <button type="submit" className="w-full py-4 bg-[#2A1E16] text-white rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#4a3525] transition-all shadow-[0_10px_30px_-10px_rgba(42,30,22,0.4)] hover:shadow-[0_15px_35px_-10px_rgba(42,30,22,0.5)] active:scale-[0.98] mt-6 flex items-center justify-center gap-2 group">
+                                            <button type="submit" className="w-full py-3.5 bg-[#2A1E16] text-white rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#4a3525] transition-all shadow-[0_10px_30px_-10px_rgba(42,30,22,0.4)] hover:shadow-[0_15px_35px_-10px_rgba(42,30,22,0.5)] active:scale-[0.98] mt-4 flex items-center justify-center gap-2 group">
                                                 <span>Request Free Guidance</span>
                                                 <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                                             </button>

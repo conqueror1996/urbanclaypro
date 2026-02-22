@@ -144,6 +144,13 @@ export default defineType({
       ],
       hidden: ({ document }) => !document?.isSampleRequest,
     }),
+    defineField({
+      name: 'ip',
+      title: 'IP Address',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+    }),
   ],
   preview: {
     select: {

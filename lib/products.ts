@@ -166,6 +166,7 @@ export async function getCollectionBySlug(collectionSlug: string): Promise<any |
             "_type": _type,
             title,
             description,
+            bottomContent,
             filterTags,
             "displayOrder": displayOrder,
             "seo": {

@@ -9,9 +9,11 @@ export default function PaymentPageClient({ order }: { order: any }) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    const [amountToPay, setAmountToPay] = useState(order.amount);
+
     useEffect(() => {
         // Load Razorpay Script proactively
-        if (!order.status || order.status === 'pending') {
+        if (!order.status || order.status === 'pending' || order.status === 'partially_paid') {
             const script = document.createElement('script');
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
             script.async = true;
@@ -20,11 +22,20 @@ export default function PaymentPageClient({ order }: { order: any }) {
     }, [order.status]);
 
     const handlePayment = async () => {
+        if (!amountToPay || amountToPay < 1) {
+            alert('Amount must be greater than zero.');
+            return;
+        }
+        if (amountToPay > order.amount) {
+            alert('Amount cannot be greater than the total order amount.');
+            return;
+        }
+
         setLoading(true);
         try {
             // 1. Create Order
             const receiptId = `rcpt_${order.orderId}`;
-            const orderRes = await createRazorpayOrder(order.amount, receiptId);
+            const orderRes = await createRazorpayOrder(amountToPay, receiptId);
 
             if (!orderRes.success || !orderRes.orderId) {
                 alert(`Gateway Error: ${orderRes.error || 'Please try again.'}`);
@@ -41,7 +52,7 @@ export default function PaymentPageClient({ order }: { order: any }) {
                 image: 'https://claytile.in/urbanclay-logo.png',
                 order_id: orderRes.orderId,
                 handler: async function (response: any) {
-                    await handleVerification(response, orderRes.orderId);
+                    await handleVerification(response, orderRes.orderId, amountToPay);
                 },
                 prefill: {
                     name: order.clientName,
@@ -66,12 +77,12 @@ export default function PaymentPageClient({ order }: { order: any }) {
         }
     };
 
-    const handleVerification = async (response: any, rzpOrderId: string) => {
+    const handleVerification = async (response: any, rzpOrderId: string, amountPaid: number) => {
         const verify = await verifyRazorpayPayment(rzpOrderId, response.razorpay_payment_id, response.razorpay_signature);
 
         if (verify.success) {
             // Update Backend
-            const updateRes = await markPaymentLinkAsPaid(order.orderId, response.razorpay_payment_id);
+            const updateRes = await markPaymentLinkAsPaid(order.orderId, response.razorpay_payment_id, amountPaid);
 
             if (updateRes.success) {
                 // Reload to show paid state
@@ -86,7 +97,7 @@ export default function PaymentPageClient({ order }: { order: any }) {
         }
     };
 
-    if (order.status === 'paid') {
+    if (order.status === 'paid' || (order.status === 'partially_paid' && order.paidAmount >= order.amount)) {
         return (
             <div className="relative bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden p-8 md:p-12 print:p-0 print:shadow-none print:border-none">
                 {/* PAID Watermark */}
@@ -113,12 +124,12 @@ export default function PaymentPageClient({ order }: { order: any }) {
                     </div>
                     <div className="flex justify-between text-sm py-2 border-b border-gray-50">
                         <span className="text-gray-400">Payment Date</span>
-                        <span className="text-gray-900">{new Date().toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
+                        <span className="text-gray-900">{new Date(order.paidAt || new Date()).toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
                     </div>
                     <div className="pt-4 mt-4 border-t-2 border-gray-100">
                         <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
                             <span className="text-lg font-bold text-gray-900">Total Paid</span>
-                            <span className="text-2xl font-serif font-bold text-[#b45a3c]">₹{order.amount.toLocaleString('en-IN')}</span>
+                            <span className="text-2xl font-serif font-bold text-[#b45a3c]">₹{(order.paidAmount || order.amount).toLocaleString('en-IN')}</span>
                         </div>
                     </div>
                 </div>
@@ -159,19 +170,71 @@ export default function PaymentPageClient({ order }: { order: any }) {
     }
 
     return (
-        <button
-            onClick={handlePayment}
-            disabled={loading}
-            className="w-full py-5 bg-[#b45a3c] text-white text-lg font-bold rounded-xl shadow-lg hover:bg-[#8e452e] hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
-        >
-            {loading ? (
-                <>
-                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Processing...
-                </>
-            ) : (
-                <>Pay ₹{order.amount.toLocaleString('en-IN')}</>
+        <div className="space-y-6">
+            {order.status === 'partially_paid' && order.paidAmount > 0 && (
+                <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl text-center">
+                    <p className="text-emerald-800 font-bold mb-1">Partially Paid</p>
+                    <p className="text-sm text-emerald-700">₹{order.paidAmount.toLocaleString('en-IN')} has already been paid.</p>
+                    <p className="text-xs text-emerald-600 mt-2 font-medium">Pending Balance: ₹{(order.amount - order.paidAmount).toLocaleString('en-IN')}</p>
+                </div>
             )}
-        </button>
+
+            <div className="bg-orange-50/50 p-6 border border-orange-100 hover:border-orange-300 transition-colors rounded-3xl flex flex-col gap-3 group relative overflow-hidden">
+                <div className="flex justify-between items-center mb-1">
+                    <label className="text-xs uppercase font-bold text-orange-800 tracking-widest leading-none">Enter Amount to Pay (₹)</label>
+                    <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-1 rounded-md font-bold uppercase tracking-widest">Flexible Payment</span>
+                </div>
+
+                <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-serif text-orange-400 font-bold pointer-events-none">₹</span>
+                    <input
+                        type="number"
+                        value={amountToPay === 0 ? '' : amountToPay}
+                        onChange={(e) => setAmountToPay(Number(e.target.value))}
+                        min={1}
+                        max={order.status === 'partially_paid' ? order.amount - order.paidAmount : order.amount}
+                        className="w-full bg-white text-4xl font-serif font-bold text-[#b45a3c] border-2 border-orange-200 rounded-2xl p-5 pl-12 focus:ring-0 focus:border-[#b45a3c] transition-all no-spinner shadow-inner placeholder-orange-200"
+                        placeholder="0"
+                    />
+                </div>
+
+                <div className="flex justify-between items-center text-xs text-orange-700/70 font-medium px-2 mt-2">
+                    <span className="flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity"><svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg> You can pay an advance/partial amount.</span>
+                    <span className="bg-white px-3 py-1.5 rounded-lg border border-orange-100 tabular-nums">Total Pending: ₹{(order.status === 'partially_paid' ? order.amount - order.paidAmount : order.amount).toLocaleString('en-IN')}</span>
+                </div>
+            </div>
+
+            <button
+                onClick={handlePayment}
+                disabled={loading || !amountToPay || amountToPay < 1}
+                className="w-full py-5 bg-[#b45a3c] text-white text-lg font-bold rounded-2xl shadow-lg hover:bg-[#8e452e] hover:shadow-xl hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3 relative overflow-hidden group"
+            >
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                {loading ? (
+                    <>
+                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Processing Securely...
+                    </>
+                ) : (
+                    <>Authorize Payment of ₹{amountToPay.toLocaleString('en-IN')}</>
+                )}
+            </button>
+
+            <style jsx global>{`
+                .no-spinner::-webkit-inner-spin-button, 
+                .no-spinner::-webkit-outer-spin-button { 
+                   -webkit-appearance: none; 
+                   margin: 0; 
+                }
+                .no-spinner { 
+                   -moz-appearance: textfield; 
+                }
+                @keyframes shimmer {
+                    100% {
+                        transform: translateX(100%);
+                    }
+                }
+            `}</style>
+        </div>
     );
 }

@@ -458,12 +458,12 @@ export default function CreateOrderPage() {
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr className="text-[10px] text-gray-400 uppercase tracking-widest border-b border-gray-50 text-left bg-gray-50/30">
-                                            <th className="px-8 py-3 w-[45%] pl-8">Details</th>
-                                            <th className="px-4 py-3 w-[15%] text-center">Qty</th>
+                                            <th className="px-4 lg:px-8 py-3 lg:w-[45%] lg:pl-8">Item Details</th>
+                                            <th className="px-4 py-3 w-[15%] text-center hidden lg:table-cell">Qty</th>
                                             <th className="px-4 py-3 w-[15%] text-right hidden lg:table-cell">Rate (₹)</th>
-                                            <th className="px-4 py-3 w-[10%] text-right font-light">Tax %</th>
-                                            <th className="px-8 py-3 w-[15%] text-right pr-8">Total</th>
-                                            <th className="w-[5%]"></th>
+                                            <th className="px-4 py-3 w-[10%] text-right font-light hidden lg:table-cell">Tax %</th>
+                                            <th className="px-8 py-3 w-[15%] text-right pr-8 hidden lg:table-cell">Total</th>
+                                            <th className="w-[5%] hidden lg:table-cell"></th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -476,7 +476,7 @@ export default function CreateOrderPage() {
 
                                             return (
                                                 <tr key={idx} className="group hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 even:bg-gray-50/30">
-                                                    <td className="px-8 py-6 align-top pl-8 relative">
+                                                    <td className="px-4 lg:px-8 py-6 align-top lg:pl-8 relative">
                                                         <div className="flex gap-4">
                                                             {/* Product Image Thumbnail */}
                                                             {item.imageUrl && (
@@ -557,19 +557,58 @@ export default function CreateOrderPage() {
                                                             </div>
                                                         </div>
 
-                                                        {/* Mobile Rate Input */}
-                                                        <div className="lg:hidden mt-4 flex items-center gap-3">
-                                                            <span className="text-xs text-gray-400">Rate:</span>
-                                                            <input
-                                                                type="number"
-                                                                value={item.rate}
-                                                                onChange={(e) => updateLineItem(idx, 'rate', Number(e.target.value))}
-                                                                className="w-24 text-sm bg-gray-50 rounded-lg px-3 py-2 border-none font-bold text-gray-700"
-                                                                placeholder="0.00"
-                                                            />
+                                                        {/* Mobile Compact View (Hidden on larger screens) */}
+                                                        <div className="lg:hidden mt-4 bg-gray-50 p-4 rounded-xl border border-gray-100 relative group-hover:border-[var(--terracotta)]/20 transition-colors">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => removeLineItem(idx)}
+                                                                className="absolute top-3 right-3 text-gray-300 hover:text-red-500 p-1"
+                                                            >
+                                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                            </button>
+
+                                                            <div className="flex flex-wrap gap-4 items-end pr-8">
+                                                                {/* Qty & Unit */}
+                                                                <div className="flex flex-col gap-1 w-[100px]">
+                                                                    <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Qty</label>
+                                                                    <div className="flex items-center justify-center bg-white border border-gray-200 rounded-lg overflow-hidden h-9 w-full shadow-sm">
+                                                                        <input type="number" value={item.quantity} onChange={(e) => updateLineItem(idx, 'quantity', Number(e.target.value))} className="w-full h-full text-center border-none p-0 focus:ring-0 text-xs font-bold" min="0" />
+                                                                        <div className="h-full border-l border-gray-100 bg-gray-50/50 px-1 flex items-center">
+                                                                            <select value={item.unit} onChange={(e) => updateLineItem(idx, 'unit', e.target.value)} className="bg-transparent border-none text-[10px] uppercase font-bold text-gray-600 focus:ring-0 p-0 cursor-pointer appearance-none px-1">
+                                                                                <option value="pcs">Pcs</option><option value="sqft">Sq</option><option value="box">Box</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Rate */}
+                                                                <div className="flex flex-col gap-1 flex-1 min-w-[100px]">
+                                                                    <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Rate (₹)</label>
+                                                                    <input type="number" value={item.rate} onChange={(e) => updateLineItem(idx, 'rate', Number(e.target.value))} className="w-full bg-transparent border-b-2 border-gray-300 p-0 text-sm font-bold text-gray-800 focus:ring-0 focus:border-[#b45a3c]" placeholder="0.00" min="0" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-200">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="flex flex-col">
+                                                                        <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Disc %</label>
+                                                                        <input type="number" value={item.discount} onChange={(e) => updateLineItem(idx, 'discount', Number(e.target.value))} className="w-14 text-xs font-bold text-orange-600 bg-white border border-gray-200 rounded-md p-1 focus:ring-0 focus:border-[#b45a3c]" max="100" min="0" />
+                                                                    </div>
+                                                                    <div className="flex flex-col">
+                                                                        <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Tax</label>
+                                                                        <select value={item.taxRate} onChange={(e) => updateLineItem(idx, 'taxRate', Number(e.target.value))} className="text-xs font-bold text-gray-600 bg-white border border-gray-200 rounded-md py-1 pr-6 pl-2 focus:ring-0 cursor-pointer appearance-none">
+                                                                            {[0, 5, 12, 18, 28].map(r => <option key={r} value={r}>{r}%</option>)}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <div className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Net Total</div>
+                                                                    <div className="text-lg font-bold text-[#b45a3c]">₹{((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-4 py-6 align-top">
+                                                    <td className="px-4 py-6 align-top hidden lg:table-cell">
                                                         <div className="flex items-center justify-center bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:border-black transition-colors h-10 w-24 mx-auto">
                                                             <input
                                                                 type="number"
@@ -617,7 +656,7 @@ export default function CreateOrderPage() {
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-4 py-6 align-top text-right">
+                                                    <td className="px-4 py-6 align-top text-right hidden lg:table-cell">
                                                         <div className="mt-1">
                                                             <select
                                                                 value={item.taxRate}
@@ -628,12 +667,12 @@ export default function CreateOrderPage() {
                                                             </select>
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-6 align-top text-right pr-8">
+                                                    <td className="px-8 py-6 align-top text-right pr-8 hidden lg:table-cell">
                                                         <div className="font-bold text-[#2a1e16] text-lg mt-0.5">
                                                             ₹{((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                         </div>
                                                     </td>
-                                                    <td className="px-2 py-6 align-top text-center">
+                                                    <td className="px-2 py-6 align-top text-center hidden lg:table-cell">
                                                         <button
                                                             type="button"
                                                             onClick={() => removeLineItem(idx)}
@@ -646,7 +685,6 @@ export default function CreateOrderPage() {
                                                 </tr>
                                             )
                                         })}
-
                                         {/* Minimal Add Button */}
                                         <tr>
                                             <td colSpan={6} className="px-8 py-4 bg-gray-50/20 border-t border-dashed border-gray-100">

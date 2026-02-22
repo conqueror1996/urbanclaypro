@@ -36,6 +36,7 @@ interface Lead {
         author: string;
     }>;
     productImage?: string; // Resolved client-side
+    ip?: string;
 }
 
 export default function LeadsDashboard() {
@@ -44,8 +45,11 @@ export default function LeadsDashboard() {
     const [sortBy, setSortBy] = useState<'date' | 'seriousness'>('date');
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
     const [newNote, setNewNote] = useState('');
+
     const [isSavingNote, setIsSavingNote] = useState(false);
     const [isGeneratingDraft, setIsGeneratingDraft] = useState(false);
+    const [leadHistory, setLeadHistory] = useState<any[]>([]);
+
 
     // Quote Calculator State
     const [showQuoteCalc, setShowQuoteCalc] = useState(false);
@@ -65,6 +69,26 @@ export default function LeadsDashboard() {
         if (status) setStatusFilter(status);
     }, []);
 
+    // Fetch Browsing History when lead matches
+    useEffect(() => {
+        if (selectedLead?.ip) {
+            const fetchHistory = async () => {
+                try {
+                    // Fetch last 10 visited pages
+                    const q = `*[_type == "footprint" && ip == $ip && !defined(errors)] | order(timestamp desc) [0...10] { path, timestamp }`;
+                    const history = await client.fetch(q, { ip: selectedLead.ip });
+                    setLeadHistory(history);
+                } catch (e) {
+                    console.error("Failed to fetch history", e);
+                }
+            };
+            fetchHistory();
+        } else {
+            setLeadHistory([]);
+        }
+    }, [selectedLead]);
+
+
     const itemsPerPage = 8; // Showing 8 items per page
 
     const fetchLeads = async () => {
@@ -76,8 +100,9 @@ export default function LeadsDashboard() {
                     _id, role, firmName, product, city, quantity, timeline,
                     contact, email, address, notes, requirement,
                     isSerious, status, submittedAt,
+
                     isSampleRequest, sampleItems, fulfillmentStatus, shippingInfo,
-                    adminNotes
+                    adminNotes, ip
                 },
                 "products": *[_type == "product"]{title, "imageUrl": images[0].asset->url},
                 "footprintsCount": count(*[_type == "footprint"])
@@ -290,7 +315,7 @@ export default function LeadsDashboard() {
         setIsGeneratingDraft(true);
         try {
             // @ts-ignore
-            const res = await generateSalesEmail(selectedLead);
+            const res = await generateSalesEmail({ ...selectedLead, history: leadHistory });
             if (res.success) {
                 setNewNote(res.draft);
             }
@@ -757,6 +782,32 @@ export default function LeadsDashboard() {
                                                 <label className="text-xs font-bold uppercase tracking-wider text-orange-400 mb-1 block">Client Message</label>
                                                 <p className="text-[var(--ink)] text-sm whitespace-pre-wrap">{selectedLead.notes || "No message provided."}</p>
                                             </div>
+
+                                            {/* BROWSING HISTORY */}
+                                            {leadHistory.length > 0 && (
+                                                <div className="bg-white rounded-xl p-4 border border-blue-50">
+                                                    <label className="text-xs font-bold uppercase tracking-wider text-blue-400 mb-3 block flex items-center gap-2">
+                                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                        Recent Activity (Same IP)
+                                                    </label>
+                                                    <div className="space-y-2">
+                                                        {leadHistory.map((h: any, i: number) => (
+                                                            <div key={i} className="flex gap-2 text-xs border-b border-gray-50 last:border-0 pb-1.5 last:pb-0">
+                                                                <span className="text-gray-400 font-mono shrink-0">
+                                                                    {new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                </span>
+                                                                <a
+                                                                    href={h.path}
+                                                                    target="_blank"
+                                                                    className="text-gray-600 truncate hover:text-[var(--terracotta)] hover:underline"
+                                                                >
+                                                                    {h.path}
+                                                                </a>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Right Col: Admin Log */}

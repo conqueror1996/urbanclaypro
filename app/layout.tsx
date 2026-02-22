@@ -120,6 +120,7 @@ import SmartExitPopup from "@/components/SmartExitPopup";
 
 import FootprintTracker from "@/components/FootprintTracker";
 import FloatingSampleBadge from "@/components/FloatingSampleBadge";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { Toaster } from 'sonner';
 import JsonLd from "@/components/JsonLd";
 import { generateOrganizationSchema } from "@/lib/schema";
@@ -147,6 +148,7 @@ export default function RootLayout({
             <GlobalSampleModal />
             <SmartExitPopup />
             <FloatingSampleBadge />
+            <WhatsAppFloat />
             <Toaster position="top-right" richColors />
           </SampleProvider>
         </SecurityProvider>

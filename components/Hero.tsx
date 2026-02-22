@@ -68,7 +68,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 transition={{ delay: 0.1, duration: 0.6 }}
 
                             >
-                                {data?.heroSubheading || 'Beyond decorative cladding. Industrial-grade terracotta systems designed to eliminate efflorescence and structural warpage in the Indian climate.'}
+                                {data?.heroSubheading || 'Industrial-grade terracotta systems engineered to eliminate efflorescence, warpage, and site failures in Indian climates.'}
                             </motion.p>
 
                             <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">

@@ -12,6 +12,7 @@ interface Category {
     _id: string;
     title: string;
     description?: string;
+    bottomContent?: string;
     slug?: { current: string };
     imageUrl?: string;
     displayOrder?: number;
@@ -25,20 +26,22 @@ interface CategoryManagerProps {
 export default function CategoryManager({ categories, onRefresh }: CategoryManagerProps) {
     const [isCreating, setIsCreating] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
-    const [form, setForm] = useState<{ title: string; description: string; displayOrder: number; imageFile?: ProcessedFile }>({
+    const [form, setForm] = useState<{ title: string; description: string; bottomContent: string; displayOrder: number; imageFile?: ProcessedFile }>({
         title: '',
         description: '',
+        bottomContent: '',
         displayOrder: 0
     });
     const [isSaving, setIsSaving] = useState(false);
 
-    const resetForm = () => setForm({ title: '', description: '', displayOrder: 0, imageFile: undefined });
+    const resetForm = () => setForm({ title: '', description: '', bottomContent: '', displayOrder: 0, imageFile: undefined });
 
     const handleEdit = (cat: Category) => {
         setEditingId(cat._id);
         setForm({
             title: cat.title,
             description: cat.description || '',
+            bottomContent: cat.bottomContent || '',
             displayOrder: cat.displayOrder || 0
         });
         setIsCreating(true);
@@ -67,6 +70,7 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
                     _id: editingId,
                     title: form.title,
                     description: form.description,
+                    bottomContent: form.bottomContent,
                     displayOrder: Number(form.displayOrder),
                     ...(assetId && { imageAssetId: assetId })
                 }
@@ -181,6 +185,16 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
                                     className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 outline-none focus:border-[var(--terracotta)]"
                                     rows={3}
                                     placeholder="Brief description for the website..."
+                                />
+                            </div>
+                            <div className="col-span-2">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">SEO Power Text (Bottom Content)</label>
+                                <textarea
+                                    value={form.bottomContent}
+                                    onChange={e => setForm({ ...form, bottomContent: e.target.value })}
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 outline-none focus:border-[var(--terracotta)] font-mono text-sm"
+                                    rows={8}
+                                    placeholder="Long-form SEO content. Supports basic spacing. Will be rendered at the bottom of the category page."
                                 />
                             </div>
                             <div>

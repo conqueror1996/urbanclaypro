@@ -23,9 +23,46 @@ export default async function JournalPage() {
     // Fetch all posts, sorted by date (newest first)
     const allPosts = await getJournalPosts();
 
+    // Static Technical Articles (Manual Pillars)
+    const staticPosts = [
+        {
+            _id: 'static-1',
+            title: 'Why Bricks Fail in The Indian Monsoon',
+            slug: 'why-bricks-fail-indian-monsoon',
+            excerpt: 'An investigative report on why standard wirecut and handmade bricks suffer from efflorescence and algae during Indian monsoons.',
+            mainImage: '/images/monsoon-damage-hero.jpg',
+            publishedAt: new Date().toISOString(),
+            date: 'Technical Report',
+            readTime: '6 min read',
+            category: 'Technical',
+            author: 'UrbanClay'
+        },
+        {
+            _id: 'static-2',
+            title: 'Extruded vs. Handmade Bricks: The Comparison',
+            slug: 'extruded-vs-wirecut-bricks',
+            excerpt: 'The definitive guide to specifying modern clay products. Understand density, water absorption, and cost implications.',
+            mainImage: '/images/brick-types-hero.jpg',
+            publishedAt: new Date().toISOString(),
+            date: 'Specification Guide',
+            readTime: '8 min read',
+            category: 'Comparison',
+            author: 'UrbanClay'
+        }
+    ];
+
+    // Combine Static + Dynamic
+    const combinedPosts = [...staticPosts, ...allPosts];
+
     // Split into Featured (1st) and Grid (Rest)
-    const featured = allPosts.length > 0 ? allPosts[0] : null;
-    const gridPosts = allPosts.length > 0 ? allPosts.slice(1) : [];
+    // We keep the "Architect's Guide" as the hardcoded hero, so we use list for grid
+    const featured = combinedPosts.length > 0 ? combinedPosts[0] : null; // This might duplicate the hero if we aren't careful, but the Hero is hardcoded above.
+
+    // Actually, the Hero is HARDCODED in the JSX below (The Architect's Guide). 
+    // So 'featured' prop in JournalLayout probably drives a secondary highlight or top of grid.
+
+    // Let's passed the static ones as part of the grid.
+    const gridPosts = [...staticPosts, ...allPosts];
 
     return (
         <div className="bg-[#FAF7F3] min-h-screen flex flex-col">

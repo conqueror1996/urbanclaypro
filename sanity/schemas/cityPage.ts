@@ -102,6 +102,14 @@ export default defineType({
             description: 'Specific product keywords for this city.'
         }),
 
+        defineField({
+            name: 'richContent',
+            title: 'SEO Power Text (Bottom Content)',
+            type: 'text',
+            rows: 10,
+            description: 'Long-form rich content for SEO ranking. Hidden if empty.'
+        }),
+
         // RICH CONTENT (The "Hyper-Local" Booster)
         defineField({
             name: 'faq',
