@@ -273,19 +273,18 @@ function CRMContent() {
                                 const btn = document.getElementById('sync-indiamart-btn');
                                 if (btn) btn.innerHTML = '<span class="animate-spin text-lg">↻</span> Syncing...';
                                 try {
-                                    // Use an environment variable for your external fetching backend
-                                    const backendUrl = process.env.NEXT_PUBLIC_INDIAMART_SYNC_URL || 'http://localhost:5000';
-                                    const res = await fetch(`${backendUrl}/api/sync-indiamart`, { method: 'POST' });
+                                    // Hit our internal Next.js/Vercel API endpoint
+                                    const res = await fetch('/api/leads/indiamart', { method: 'POST' });
                                     const data = await res.json();
 
                                     if (res.ok) {
                                         alert(data.message || 'Sync Complete');
                                         fetchInitialData();
                                     } else {
-                                        alert('Failed to sync. Please ensure the external backed is running.');
+                                        alert(data.error || 'Failed to sync IndiaMART leads.');
                                     }
                                 } catch (e) {
-                                    alert('Failed to reach external backend server');
+                                    alert('Failed to reach server');
                                 }
                                 if (btn) btn.innerHTML = '<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l5.67-1.99"/></svg> Sync IndiaMART';
                             }}
