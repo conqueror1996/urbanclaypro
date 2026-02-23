@@ -80,11 +80,11 @@ export default function TechnicalEdge() {
                     </div>
 
                     <div className="relative">
-                        <div className="aspect-[4/5] rounded-[2rem] overflow-hidden">
+                        <div className="aspect-[4/5] rounded-[2rem] overflow-hidden bg-white flex items-center justify-center">
                             <img
                                 src="/images/technical-detail.png"
                                 alt="Technical clay drafting and precision alignment"
-                                className="w-full h-full object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-1000 ease-in-out scale-105 hover:scale-100"
+                                className="w-full h-full object-contain transition-all duration-1000 ease-in-out scale-105 hover:scale-100"
                             />
                         </div>
                         {/* Material Longevity Badge (Merging Sustainability here) */}

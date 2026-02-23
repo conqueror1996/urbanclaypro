@@ -47,7 +47,7 @@ export default function ProjectAtlasMap({ projects = [] }: ProjectAtlasMapProps)
     // Dynamic Location Generation
     const projectLocations = useMemo(() => {
         const mapped: any[] = [];
-        projects.forEach(project => {
+        projects.forEach((project, idx) => {
             if (!project.location) return;
             const locationLower = project.location.toLowerCase();
             const cityKey = Object.keys(CITY_COORDINATES).find(city => locationLower.includes(city));
@@ -56,7 +56,7 @@ export default function ProjectAtlasMap({ projects = [] }: ProjectAtlasMapProps)
                 const jitterX = (getDeterministicRandom(project.slug + 'x') - 0.5) * 3;
                 const jitterY = (getDeterministicRandom(project.slug + 'y') - 0.5) * 3;
                 mapped.push({
-                    id: project.slug,
+                    id: `${project.slug}-${idx}`,
                     city: project.location.split(',')[0],
                     x: CITY_COORDINATES[cityKey].x + jitterX,
                     y: CITY_COORDINATES[cityKey].y + jitterY,
