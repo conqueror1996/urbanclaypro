@@ -100,7 +100,7 @@ export default function Header() {
     }, []);
 
     // Pages that should have white header when not scrolled
-    const whiteHeaderPages = ['/architects', '/projects', '/guide', '/journal'];
+    const whiteHeaderPages = ['/architects', '/projects', '/guide', '/journal', '/products'];
     const shouldShowWhiteHeader = whiteHeaderPages.some(page => pathname.startsWith(page));
 
     return (

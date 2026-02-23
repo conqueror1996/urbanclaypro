@@ -427,7 +427,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
             <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0] overflow-x-hidden">
                 <JsonLd data={[jsonLdCat, faqJsonLd, breadcrumbJsonLd]} />
                 <Header />
-                <main className="pt-32 pb-20 px-4 md:px-6 max-w-[1800px] mx-auto min-h-screen">
+                <main className="pt-36 lg:pt-48 pb-20 px-4 md:px-6 max-w-[1800px] mx-auto min-h-screen">
                     {/* Category Hero */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 border-b border-white/10 pb-12">
                         <div>

@@ -45,8 +45,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const cityPages = allCitySlugs.map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: new Date(), // Ideally use _updatedAt from Sanity if available
-        changeFrequency: 'weekly' as const,
-        priority: 0.85,
+        changeFrequency: 'daily' as const, // Ramp up to daily for local SEO saturation
+        priority: 0.9,
     }));
 
     // 4. CATEGORY & COLLECTION PAGES (Dynamic from Sanity)
@@ -54,8 +54,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const categoryPages = categoryDocs.map((doc: any) => ({
         url: `${baseUrl}/products/${doc.slug}`,
         lastModified: doc._updatedAt ? new Date(doc._updatedAt) : new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.9,
+        changeFrequency: 'daily' as const, // Pillar pages should be scanned daily
+        priority: 1.0, // Categories are high-converting
     }));
 
     // 5. PRODUCT PAGES
@@ -63,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${baseUrl}/products/${product.category?.slug || 'collection'}/${product.slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly' as const,
-        priority: 0.9,
+        priority: 0.95, // Individual products are the core revenue drivers
     }));
 
     // 6. PROJECT PAGES

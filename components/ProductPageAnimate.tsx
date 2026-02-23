@@ -182,7 +182,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
         <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-0 lg:pb-0 overflow-x-hidden w-full relative">
 
             {/* --- HERO SECTION: Swiss Hierarchy --- */}
-            <section className="relative min-h-[90vh] flex flex-col pt-28 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto overflow-hidden">
+            <section className="relative min-h-[90vh] flex flex-col pt-36 lg:pt-48 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto overflow-hidden">
 
                 {/* Background Text - Large decorative text */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">

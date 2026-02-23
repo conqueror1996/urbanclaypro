@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
 export default function WhatsAppFloat() {
     const [isVisible, setIsVisible] = useState(false);
     const [hasInteracted, setHasInteracted] = useState(false);
+    const pathname = usePathname();
 
     // Show after a delay (e.g., 5 seconds)
     useEffect(() => {
@@ -23,7 +25,7 @@ export default function WhatsAppFloat() {
         window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(defaultMessage)}`, '_blank');
     };
 
-    if (!isVisible) return null;
+    if (!isVisible || pathname !== '/') return null;
 
     return (
         <AnimatePresence>

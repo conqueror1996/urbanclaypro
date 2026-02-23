@@ -227,7 +227,7 @@ export default function ArchitectsToolkit() {
                                             }}
                                         />
                                         <div className="absolute bottom-4 left-4 bg-[#1a1512] text-white text-[10px] px-2 py-1 rounded">
-                                            Scale: 1:10 (Approx) | Brick: 230x75mm
+                                            Scale: 1:10 (Approx) | Brick: 9in x 3in
                                         </div>
                                     </motion.div>
                                 )}
@@ -263,7 +263,7 @@ function BrickWall({ tone, bond, groutSize, brickColor }: { tone: BrickTone, bon
     // Actually, for patterns like Flemish/English which vary per row, 
     // we might need row-based rendering.
 
-    const rows = 12; // Number of rows to render
+    const rows = 25; // Number of rows to render
 
     // Grout spacing in pixels (scaled)
     // 5mm real world ~= 2px on screen? 
@@ -272,10 +272,10 @@ function BrickWall({ tone, bond, groutSize, brickColor }: { tone: BrickTone, bon
     const gap = groutSize * 0.4;
 
     // Brick Height
-    const h = 32; // px
+    const h = 30; // px
 
     return (
-        <div className="w-full h-full flex flex-col justify-center overflow-hidden" style={{ gap: `${gap}px`, padding: '20px' }}>
+        <div className="w-full h-full flex flex-col justify-center overflow-hidden" style={{ gap: `${gap}px`, padding: '0px' }}>
             {Array.from({ length: rows }).map((_, r) => (
                 <Row
                     key={r}
@@ -296,20 +296,20 @@ function Row({ rowIdx, bond, brickColor, gap, height, tone }: any) {
     let bricks: ('stretcher' | 'header')[] = [];
 
     if (bond === 'stack') {
-        bricks = Array(10).fill('stretcher');
+        bricks = Array(15).fill('stretcher');
     } else if (bond === 'stretcher') {
         // Offset every other row
-        bricks = Array(10).fill('stretcher');
+        bricks = Array(15).fill('stretcher');
     } else if (bond === 'flemish') {
         // Alternating Header/Stretcher
         // Row 1: S H S H...
         // Row 2: Might be offset? Usually Flemish is same pattern per row but offset to center header over stretcher.
         // Simplified Flemish: S H S H...
-        bricks = Array(8).fill(null).flatMap(() => ['stretcher', 'header']);
+        bricks = Array(12).fill(null).flatMap(() => ['stretcher', 'header']);
     } else if (bond === 'english') {
         // Row 1: S S S...
         // Row 2: H H H...
-        bricks = rowIdx % 2 === 0 ? Array(10).fill('stretcher') : Array(15).fill('header');
+        bricks = rowIdx % 2 === 0 ? Array(15).fill('stretcher') : Array(25).fill('header');
     }
 
     // Offset logic for Stretcher/Flemish
@@ -327,14 +327,15 @@ function Row({ rowIdx, bond, brickColor, gap, height, tone }: any) {
             style={{
                 gap: `${gap}px`,
                 height: `${height}px`,
-                transform: isOffset && bond === 'stretcher' ? 'translateX(-50px)' :
-                    isOffset && bond === 'flemish' ? 'translateX(-30px)' : 'none'
+                transform: isOffset && bond === 'stretcher' ? 'translateX(-45px)' :
+                    isOffset && bond === 'flemish' ? 'translateX(-33.75px)' : 'none'
             }}
         >
             {bricks.map((type, i) => {
-                // Random subtle variation
-                const randomLight = Math.random() > 0.5 ? 'brightness-105' : 'brightness-95';
-                const width = type === 'stretcher' ? '100px' : '45px'; // 230 vs 110 approx ratio
+                // Deterministic subtle variation to prevent hydration mismatch
+                const pseudoRandom = (rowIdx * 17 + i * 31) % 100;
+                const randomLight = pseudoRandom > 50 ? 'brightness-105' : 'brightness-95';
+                const width = type === 'stretcher' ? '90px' : '45px'; // 9 inch vs 4.5 inch approx ratio
 
                 return (
                     <div
@@ -344,7 +345,7 @@ function Row({ rowIdx, bond, brickColor, gap, height, tone }: any) {
                             width: width,
                             flexShrink: 0,
                             // Add a subtle texture overlay
-                            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.2\'/%3E%3C/svg%3E")'
+                            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.05\'/%3E%3C/svg%3E")'
                         }}
                     >
                         {/* Optional inner shadow for depth */}

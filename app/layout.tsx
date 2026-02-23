@@ -41,9 +41,16 @@ export const metadata: Metadata = {
   },
   description: "India's finest terracotta tiles, brick cladding & jaali. Sustainable, high-precision clay products for architects. Request free samples today!",
   keywords: SEO_KEYWORDS,
-  authors: [{ name: "UrbanClay" }],
+  authors: [{ name: "UrbanClay", url: "https://claytile.in" }],
   creator: "UrbanClay",
   publisher: "UrbanClay",
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-IN': '/',
+      'en-US': '/en-US',
+    },
+  },
   formatDetection: {
     email: false,
     address: false,

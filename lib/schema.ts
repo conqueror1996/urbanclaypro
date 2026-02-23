@@ -2,33 +2,69 @@
 import { Product, Project } from "./types";
 
 export function generateOrganizationSchema() {
-    return {
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        '@id': 'https://claytile.in/#organization',
-        name: 'UrbanClay',
-        url: 'https://claytile.in',
-        logo: {
-            '@type': 'ImageObject',
-            url: 'https://claytile.in/urbanclay-logo.png',
-            width: 112,
-            height: 112
+    return [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            '@id': 'https://claytile.in/#organization',
+            name: 'UrbanClay',
+            url: 'https://claytile.in',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://claytile.in/urbanclay-logo.png',
+                width: 112,
+                height: 112
+            },
+            sameAs: [
+                'https://www.instagram.com/urbanclay.in',
+                'https://www.linkedin.com/company/urbanclay',
+                'https://www.facebook.com/urbanclay.in',
+                'https://in.pinterest.com/urbanclay_in',
+                'https://www.youtube.com/@urbanclay'
+            ],
+            contactPoint: {
+                '@type': 'ContactPoint',
+                telephone: '+91-8080081951',
+                contactType: 'sales',
+                areaServed: 'IN',
+                availableLanguage: ['en', 'hi']
+            }
         },
-        sameAs: [
-            'https://www.instagram.com/urbanclay.in',
-            'https://www.linkedin.com/company/urbanclay',
-            'https://www.facebook.com/urbanclay.in',
-            'https://in.pinterest.com/urbanclay_in',
-            'https://www.youtube.com/@urbanclay'
-        ],
-        contactPoint: {
-            '@type': 'ContactPoint',
+        {
+            '@context': 'https://schema.org',
+            '@type': 'LocalBusiness',
+            '@id': 'https://claytile.in/#localbusiness',
+            name: 'UrbanClay Manufacturer India',
+            image: 'https://claytile.in/urbanclay-logo.png',
             telephone: '+91-8080081951',
-            contactType: 'sales',
-            areaServed: 'IN',
-            availableLanguage: ['en', 'hi']
+            url: 'https://claytile.in',
+            address: {
+                '@type': 'PostalAddress',
+                addressLocality: 'Mumbai',
+                addressRegion: 'Maharashtra',
+                addressCountry: 'IN'
+            },
+            geo: {
+                '@type': 'GeoCoordinates',
+                latitude: '19.1130',
+                longitude: '72.8279'
+            },
+            aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: '4.9',
+                reviewCount: '156'
+            },
+            priceRange: '₹₹',
+            openingHoursSpecification: [
+                {
+                    '@type': 'OpeningHoursSpecification',
+                    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                    opens: '09:00',
+                    closes: '19:00'
+                }
+            ]
         }
-    };
+    ];
 }
 
 export function generateProductSchema(product: Product, canonicalUrl: string) {
