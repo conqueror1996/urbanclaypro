@@ -27,7 +27,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                 {/* Animated Background - Kiln Glow (Removed KilnDistort) */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[var(--sand)] to-white opacity-50 pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 md:pt-40 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-8 md:pt-48 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
