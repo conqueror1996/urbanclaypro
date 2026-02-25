@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { createBlogDraft } from '@/app/actions/generate-blog';
 import { publishBlog } from '@/app/actions/publish-blog';
 import { getHomePageData } from '@/lib/products';
-import { updateHomePageFirms } from '@/app/actions/manage-home';
+import { updateHomePageFirms, updateTechnicalEdgeImage } from '@/app/actions/manage-home';
+import { authenticatedFetch } from '@/lib/auth-utils';
 import { Plus, Trash2, Save, Sparkles, Home } from 'lucide-react';
 
 export default function ContentEnginePage() {
@@ -14,8 +15,12 @@ export default function ContentEnginePage() {
     const [isPublishing, setIsPublishing] = useState(false);
 
     // Homepage Management State
+    // Homepage Management State
     const [firms, setFirms] = useState<{ name: string }[]>([]);
     const [isSavingHome, setIsSavingHome] = useState(false);
+    const [technicalEdgeImage, setTechnicalEdgeImage] = useState<string | null>(null);
+    const [technicalEdgeImageFile, setTechnicalEdgeImageFile] = useState<{ file: File; preview: string } | null>(null);
+    const [isSavingImage, setIsSavingImage] = useState(false);
 
     // Draft Result State
     const [draftRequest, setDraftRequest] = useState<{
@@ -40,6 +45,9 @@ export default function ContentEnginePage() {
             const data = await getHomePageData();
             if (data?.trustedFirms) {
                 setFirms(data.trustedFirms);
+            }
+            if (data?.technicalEdgeImageUrl) {
+                setTechnicalEdgeImage(data.technicalEdgeImageUrl);
             }
         };
         loadHomeData();
@@ -92,6 +100,34 @@ export default function ContentEnginePage() {
             alert('Error updating firms');
         } finally {
             setIsSavingHome(false);
+        }
+    };
+
+    const handleSaveImage = async () => {
+        if (!technicalEdgeImageFile) return;
+        setIsSavingImage(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', technicalEdgeImageFile.file);
+            const uploadRes = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
+            const uploadJson = await uploadRes.json();
+
+            if (uploadJson.success && uploadJson.asset._id) {
+                const res = await updateTechnicalEdgeImage(uploadJson.asset._id);
+                if (res.success) {
+                    alert('Technical Edge Image updated successfully!');
+                    setTechnicalEdgeImage(technicalEdgeImageFile.preview);
+                    setTechnicalEdgeImageFile(null);
+                } else {
+                    alert('Failed to update image reference in Sanity');
+                }
+            } else {
+                alert('Image upload failed');
+            }
+        } catch (err) {
+            alert('Error uploading image');
+        } finally {
+            setIsSavingImage(false);
         }
     };
 
@@ -321,6 +357,54 @@ export default function ContentEnginePage() {
                                 <button onClick={addFirm} className="mt-2 text-[var(--terracotta)] font-bold text-xs uppercase tracking-widest">Add First Firm</button>
                             </div>
                         )}
+                    </div>
+
+                    {/* Image Section */}
+                    <div className="pt-8 border-t border-gray-100 mb-8">
+                        <div className="mb-6">
+                            <h2 className="text-xl font-serif text-[#2A1E16]">Technical Edge Background</h2>
+                            <p className="text-sm text-gray-500 mt-1">The image shown in the "Failure-Free Facade" section on the homepage.</p>
+                        </div>
+
+                        <div className="flex gap-6 items-start">
+                            <div className="w-1/2 aspect-[4/5] max-w-[300px] bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 relative overflow-hidden flex items-center justify-center">
+                                {technicalEdgeImageFile ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={technicalEdgeImageFile.preview} alt="Preview" className="w-full h-full object-contain bg-white" />
+                                ) : technicalEdgeImage ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={technicalEdgeImage} alt="Existing" className="w-full h-full object-contain bg-white" />
+                                ) : (
+                                    <div className="text-center text-gray-400 p-4">
+                                        <p className="text-xs uppercase font-bold">No Image Set</p>
+                                    </div>
+                                )}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) setTechnicalEdgeImageFile({ file, preview: URL.createObjectURL(file) });
+                                    }}
+                                />
+                            </div>
+
+                            <div className="flex-1 space-y-4">
+                                <p className="text-sm text-gray-600">
+                                    Click the frame on the left to select a new image. Best format: <strong>Transparent PNG</strong> or WEBP, vertical ratio (4:5).
+                                </p>
+                                {technicalEdgeImageFile && (
+                                    <button
+                                        onClick={handleSaveImage}
+                                        disabled={isSavingImage}
+                                        className="px-6 py-3 bg-[var(--terracotta)] text-white rounded-xl font-bold uppercase tracking-widest shadow-lg hover:bg-[#a85638] transition-all disabled:opacity-50 text-xs w-full sm:w-auto"
+                                    >
+                                        {isSavingImage ? 'Uploading...' : 'Upload & Save Image'}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                     </div>
 
                     <div className="pt-8 border-t border-gray-100 flex justify-end">

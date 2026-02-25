@@ -276,7 +276,7 @@ export default async function Home({ searchParams }: Props) {
             {/* 2. THE FAILURE PROTOCOL - Eliminating Architectural Pain Points */}
             {/* Strategic placement: Solving for Efflorescence/Warpage before browsing collection */}
             <ScrollReveal>
-                <TechnicalEdge />
+                <TechnicalEdge imageUrl={homePageData?.technicalEdgeImageUrl} />
             </ScrollReveal>
 
             {/* 3. PEER VALIDATION - National Scale & Trusted Partnerships */}

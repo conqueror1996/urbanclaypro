@@ -314,6 +314,7 @@ export interface HomePageData {
     heroHeading?: string;
     heroSubheading?: string;
     ourStoryImageUrl?: string;
+    technicalEdgeImageUrl?: string;
     trustedFirms?: { name: string }[];
 }
 
@@ -322,6 +323,7 @@ const homePageQuery = groq`*[_type == "homePage"][0] {
   heroHeading,
   heroSubheading,
   "ourStoryImageUrl": ourStoryImage.asset->url,
+  "technicalEdgeImageUrl": technicalEdgeImage.asset->url,
   trustedFirms
 }`;
 

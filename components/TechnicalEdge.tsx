@@ -32,7 +32,11 @@ const FEATURES = [
     }
 ];
 
-export default function TechnicalEdge() {
+interface TechnicalEdgeProps {
+    imageUrl?: string;
+}
+
+export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
     return (
         <section className="py-20 md:py-32 bg-[var(--ink)] text-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,7 +86,7 @@ export default function TechnicalEdge() {
                     <div className="relative">
                         <div className="aspect-[4/5] rounded-[2rem] overflow-hidden bg-white flex items-center justify-center">
                             <img
-                                src="/images/technical-detail.png"
+                                src={imageUrl || "/images/technical-detail.png"}
                                 alt="Technical clay drafting and precision alignment"
                                 className="w-full h-full object-contain transition-all duration-1000 ease-in-out scale-105 hover:scale-100"
                             />

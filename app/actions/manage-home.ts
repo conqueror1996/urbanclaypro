@@ -25,3 +25,30 @@ export async function updateHomePageFirms(firms: { name: string }[]) {
         return { success: false, error: 'Failed to update firms' };
     }
 }
+
+export async function updateTechnicalEdgeImage(assetId: string) {
+    try {
+        const homePage = await writeClient.fetch(`*[_type == "homePage"][0] { _id }`);
+
+        if (!homePage?._id) {
+            return { success: false, error: 'Home Page document not found' };
+        }
+
+        await writeClient
+            .patch(homePage._id)
+            .set({
+                technicalEdgeImage: {
+                    _type: 'image',
+                    asset: { _type: 'reference', _ref: assetId }
+                }
+            })
+            .commit();
+
+        revalidatePath('/');
+        revalidatePath('/dashboard/content');
+        return { success: true };
+    } catch (error) {
+        console.error('Error updating Technical Edge image:', error);
+        return { success: false, error: 'Failed to update image' };
+    }
+}

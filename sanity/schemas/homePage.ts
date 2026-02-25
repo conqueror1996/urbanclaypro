@@ -44,16 +44,16 @@ export default defineType({
             title: 'Our Story Section Image',
             type: 'image',
             description: 'Image displayed in the "Our Story" section on the homepage',
-            options: {
-                hotspot: true,
-            },
-            fields: [
-                {
-                    name: 'alt',
-                    type: 'string',
-                    title: 'Alternative Text',
-                }
-            ]
+            options: { hotspot: true },
+            fields: [{ name: 'alt', type: 'string', title: 'Alternative Text' }]
+        }),
+        defineField({
+            name: 'technicalEdgeImage',
+            title: 'Technical Edge Section Image',
+            type: 'image',
+            description: 'Image displayed in the "Failure-Free Facade" section',
+            options: { hotspot: true },
+            fields: [{ name: 'alt', type: 'string', title: 'Alternative Text' }]
         }),
         defineField({
             name: 'trustedFirms',
