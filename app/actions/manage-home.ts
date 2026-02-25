@@ -5,50 +5,69 @@ import { revalidatePath } from 'next/cache'
 
 export async function updateHomePageFirms(firms: { name: string }[]) {
     try {
-        // Fetch the home page document ID first (usually there's only one)
-        const homePage = await writeClient.fetch(`*[_type == "homePage"][0] { _id }`);
+        // Fetch the home page document ID first
+        let homePage = await writeClient.fetch(`*[_type == "homePage"][0] { _id }`);
+
+        // Add keys to firms if missing (required for Sanity arrays)
+        const firmsWithKeys = firms.map((f, i) => ({
+            ...f,
+            _key: (f as any)._key || `firm-${Date.now()}-${i}`
+        }));
 
         if (!homePage?._id) {
-            return { success: false, error: 'Home Page document not found' };
+            // Create the first homePage document if it doesn't exist
+            const newDoc = await writeClient.create({
+                _type: 'homePage',
+                title: 'Main Home Page',
+                trustedFirms: firmsWithKeys
+            });
+            homePage = { _id: newDoc._id };
+        } else {
+            await writeClient
+                .patch(homePage._id)
+                .set({ trustedFirms: firmsWithKeys })
+                .commit();
         }
-
-        await writeClient
-            .patch(homePage._id)
-            .set({ trustedFirms: firms })
-            .commit();
 
         revalidatePath('/');
         revalidatePath('/dashboard/content');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error updating home page firms:', error);
-        return { success: false, error: 'Failed to update firms' };
+        return { success: false, error: error.message || 'Failed to update firms' };
     }
 }
 
 export async function updateTechnicalEdgeImage(assetId: string) {
     try {
-        const homePage = await writeClient.fetch(`*[_type == "homePage"][0] { _id }`);
+        let homePage = await writeClient.fetch(`*[_type == "homePage"][0] { _id }`);
+
+        const imagePatch = {
+            technicalEdgeImage: {
+                _type: 'image',
+                asset: { _type: 'reference', _ref: assetId }
+            }
+        };
 
         if (!homePage?._id) {
-            return { success: false, error: 'Home Page document not found' };
+            // Create it if missing
+            await writeClient.create({
+                _type: 'homePage',
+                title: 'Main Home Page',
+                ...imagePatch
+            });
+        } else {
+            await writeClient
+                .patch(homePage._id)
+                .set(imagePatch)
+                .commit();
         }
-
-        await writeClient
-            .patch(homePage._id)
-            .set({
-                technicalEdgeImage: {
-                    _type: 'image',
-                    asset: { _type: 'reference', _ref: assetId }
-                }
-            })
-            .commit();
 
         revalidatePath('/');
         revalidatePath('/dashboard/content');
         return { success: true };
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error updating Technical Edge image:', error);
-        return { success: false, error: 'Failed to update image' };
+        return { success: false, error: error.message || 'Failed to update image' };
     }
 }
