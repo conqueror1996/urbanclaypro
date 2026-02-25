@@ -29,7 +29,21 @@ export default defineType({
         }),
         defineField({
             name: 'image',
-            title: 'Category Image',
+            title: 'Category Image / Thumbnail',
+            type: 'image',
+            options: { hotspot: true },
+            fields: [
+                {
+                    name: 'alt',
+                    type: 'string',
+                    title: 'Alternative Text',
+                }
+            ]
+        }),
+        defineField({
+            name: 'pillarHeroImage',
+            title: 'Pillar Page Hero Image',
+            description: 'The large immersive background image for this God-level Pillar Landing Page.',
             type: 'image',
             options: { hotspot: true },
             fields: [

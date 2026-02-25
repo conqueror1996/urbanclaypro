@@ -145,7 +145,7 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
                     {imageUrl ? (
                         <PremiumImage
                             src={imageUrl}
-                            alt={alt || "UrbanClay Terracotta Facade & Roofing Tiles"}
+                            alt={alt || "UrbanClay Flexible Brick Tiles, God-Level Terracotta Panels & Handmade Exposed Bricks"}
                             fill
                             className="object-cover"
                             containerClassName="w-full h-full"

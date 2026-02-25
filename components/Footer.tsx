@@ -55,12 +55,12 @@ export default function Footer() {
                     {/* Column 2: Products (Accordion on Mobile) */}
                     <FooterSection title="Products">
                         <ul className="space-y-4 text-sm text-gray-400">
-                            <li><FooterLink href="/products/exposed-bricks">Exposed Wirecut Bricks</FooterLink></li>
-                            <li><FooterLink href="/products/brick-wall-tiles">Brick Cladding Tiles</FooterLink></li>
-                            <li><FooterLink href="/products/terracotta-jaali">Terracotta Jaali</FooterLink></li>
-                            <li><FooterLink href="/products/clay-facade-panels">Clay Facade Panels</FooterLink></li>
-                            <li><FooterLink href="/products/clay-floor-tiles">Floor & Roof Tiles</FooterLink></li>
-                            <li><FooterLink href="/products/clay-ceiling-tiles">Ceiling Tiles</FooterLink></li>
+                            <li><FooterLink href="/flexible-brick-tiles">Flexible Brick Tiles</FooterLink></li>
+                            <li><FooterLink href="/terracotta-panels">Terracotta Panels</FooterLink></li>
+                            <li><FooterLink href="/exposed-brick">Exposed Wirecut Bricks</FooterLink></li>
+                            <li><FooterLink href="/handmade-brick-tiles">Handmade Brick Tiles</FooterLink></li>
+                            <li><FooterLink href="/products?category=Terracotta Jali">Terracotta Jaali</FooterLink></li>
+                            <li><FooterLink href="/products">View All Catalog</FooterLink></li>
                         </ul>
                     </FooterSection>
 

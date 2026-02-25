@@ -53,12 +53,12 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     }
 
     return {
-        title: "UrbanClay® | Manufacturer of Premium Terracotta Tiles, Facing Bricks & Jaali | India",
-        description: "India's #1 Manufacturer & Exporter of Clay Facade Cladding, Wirecut Bricks, and Terracotta Floor Tiles. Sustainable, scalable, and delivered pan-India. UrbanClay® - The Architect's Choice.",
+        title: "UrbanClay® | Flexible Brick Tiles, God-Level Terracotta Panels, Exposed Bricks & Handmade Brick Tiles | India",
+        description: "India's #1 Manufacturer & Exporter of Flexible Brick Tiles, large format Terracotta Panels, Exposed Bricks, and Bespoke Handmade Brick Tiles. Sustainable, scalable facades delivered pan-India. UrbanClay® - The Architect's Choice.",
         keywords: SEO_KEYWORDS,
         openGraph: {
-            title: "UrbanClay® | Premium Terracotta Tiles, Cladding & Jaali | Manufacturer India",
-            description: "Buy direct from India's leading manufacturer of architectural terracotta. Clay floor tiles, wall cladding & jaali panels. 100% Natural & Sustainable.",
+            title: "UrbanClay® | Flexible Brick Tiles, Terracotta Panels, Exposed & Handmade Bricks | Manufacturer India",
+            description: "Buy direct from India's leading manufacturer of architectural terracotta panels, flexible brick tiles, classical exposed bricks, and bespoke handmade brick tiles. 100% Natural & Sustainable.",
         },
         alternates: {
             canonical: 'https://claytile.in',
@@ -135,8 +135,8 @@ export default async function Home({ searchParams }: Props) {
                             '@type': 'Offer',
                             itemOffered: {
                                 '@type': 'Product',
-                                name: 'Terracotta Tiles',
-                                description: 'Low-efflorescence clay brick tiles for facades and interiors',
+                                name: 'Flexible Brick Tiles',
+                                description: 'Ultra-lightweight, bendable flexible brick wall tiles for interior and exterior facades',
                                 image: 'https://claytile.in/images/premium-terracotta-facade.png',
                                 brand: {
                                     '@type': 'Brand',
@@ -155,8 +155,28 @@ export default async function Home({ searchParams }: Props) {
                             '@type': 'Offer',
                             itemOffered: {
                                 '@type': 'Product',
-                                name: 'Jaali Panels',
-                                description: 'Decorative terracotta jaali panels for ventilation and aesthetics',
+                                name: 'Terracotta Panels',
+                                description: 'Large format, highly durable terracotta facade panels for rainscreen cladding',
+                                image: 'https://claytile.in/images/breeze-block-interior.png',
+                                brand: {
+                                    '@type': 'Brand',
+                                    name: 'UrbanClay'
+                                },
+                                offers: {
+                                    '@type': 'Offer',
+                                    priceCurrency: 'INR',
+                                    price: '120',
+                                    availability: 'https://schema.org/InStock',
+                                    url: 'https://claytile.in/products'
+                                }
+                            },
+                        },
+                        {
+                            '@type': 'Offer',
+                            itemOffered: {
+                                '@type': 'Product',
+                                name: 'Handmade Brick Tiles',
+                                description: 'Artisanal, bespoke handmade clay brick tiles for authentic traditional styling',
                                 image: 'https://claytile.in/images/breeze-block-interior.png',
                                 brand: {
                                     '@type': 'Brand',
@@ -176,7 +196,7 @@ export default async function Home({ searchParams }: Props) {
                             itemOffered: {
                                 '@type': 'Product',
                                 name: 'Exposed Bricks',
-                                description: 'Wirecut, pressed, and handmade exposed clay bricks',
+                                description: 'Wirecut, pressed, and classic exposed clay bricks',
                                 image: 'https://claytile.in/images/commercial-facade-cladding.png',
                                 brand: {
                                     '@type': 'Brand',

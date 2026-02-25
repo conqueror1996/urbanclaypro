@@ -1,7 +1,18 @@
 export const SEO_KEYWORDS = [
+    // God Level Core Keywords
+    "flexible brick tile",
+    "teracotta panel",
+    "terracotta panel",
+    "exposed brick",
+    "handmade brick tile",
+    "flexible bricks",
+    "flexible clay tiles",
+    "terracotta facade panels",
+    "exposed brick wall tiles",
+    "handmade clay bricks",
+
     // Core Product Keywords
     "wirecut brick",
-    "exposed brick",
     "clay bricks",
     "clay tile",
     "clay brick tile",

@@ -67,7 +67,7 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
                         >
                             <Image
                                 src={activeImage}
-                                alt={`${product.title} ${product.category?.title || 'Terracotta'} - Architectural Clay by UrbanClay`}
+                                alt={`${product.title} Flexible Brick Tile & ${product.category?.title || 'Terracotta Panel'} - Handmade Exposed Brick by UrbanClay`}
                                 fill
                                 sizes="(max-width: 768px) 50vw, 25vw"
                                 className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -286,7 +286,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         {activeImage && (
                                             <Image
                                                 src={activeImage}
-                                                alt={product.title + ' ' + (product.category?.title || 'Terracotta') + ' - UrbanClay'}
+                                                alt={`${product.title} ${product.category?.title || 'Terracotta Panel'} - Flexible Brick Tile & Exposed Brick by UrbanClay`}
                                                 fill
                                                 sizes="(max-width: 768px) 100vw, 50vw"
                                                 className="object-cover"
@@ -332,7 +332,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             {v.imageUrl ? (
                                                 <Image
                                                     src={v.imageUrl}
-                                                    alt={v.altText || `${v.name} - ${product.title} - UrbanClay`}
+                                                    alt={v.altText || `${v.name} ${product.title} - Flexible Brick Tile & Handmade Brick Panel`}
                                                     fill
                                                     sizes="56px"
                                                     className="object-cover"
@@ -424,7 +424,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     {v.imageUrl ? (
                                         <Image
                                             src={v.imageUrl}
-                                            alt={v.altText || `${v.name} - ${product.title} - UrbanClay`}
+                                            alt={v.altText || `${v.name} ${product.title} - Flexible Brick Tile & Handmade Brick`}
                                             fill
                                             sizes="80px"
                                             className="object-cover"

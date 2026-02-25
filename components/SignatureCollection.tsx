@@ -321,7 +321,7 @@ function ProductCard({ product, index }: { product: DisplayProduct, index: numbe
                         <>
                             <PremiumImage
                                 src={imageUrl}
-                                alt={title}
+                                alt={`${title} ${subtitle} - Exposed Brick & Flexible Terracotta Panels by UrbanClay`}
                                 fill
                                 sizes="(max-width: 1024px) 50vw, 25vw"
                                 className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"

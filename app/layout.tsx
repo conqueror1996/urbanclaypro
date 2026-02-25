@@ -36,10 +36,10 @@ import { SEO_KEYWORDS } from "@/lib/constants";
 export const metadata: Metadata = {
   metadataBase: new URL('https://claytile.in'),
   title: {
-    default: "UrbanClay® | Premium Terracotta Facades & Bricks",
+    default: "UrbanClay® | Flexible Brick Tiles, Terracotta Panels, Exposed Bricks & Handmade Brick Tiles",
     template: "%s | UrbanClay India"
   },
-  description: "India's finest terracotta tiles, brick cladding & jaali. Sustainable, high-precision clay products for architects. Request free samples today!",
+  description: "India's finest flexible brick tiles, large format terracotta panels, architectural exposed bricks, and bespoke handmade brick tiles. High-precision clay facades for global architects.",
   keywords: SEO_KEYWORDS,
   authors: [{ name: "UrbanClay", url: "https://claytile.in" }],
   creator: "UrbanClay",
@@ -57,8 +57,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "UrbanClay - Premium Terracotta Tiles & Jaali Panels | Pan-India",
-    description: "India's trusted source for low-efflorescence terracotta tiles, jaali panels & architectural cladding. Serving 100+ cities nationwide with premium quality.",
+    title: "UrbanClay - Flexible Brick Tiles, Terracotta Panels & Exposed Brick",
+    description: "Discover architectural mastery with our ultra-lightweight flexible brick tiles, premium terracotta panels, classic exposed bricks, and timeless handmade brick tiles. Serving 100+ cities.",
     url: 'https://claytile.in',
     siteName: 'UrbanClay',
     locale: 'en_IN',
@@ -74,8 +74,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UrbanClay - Premium Terracotta Tiles India',
-    description: 'Low-efflorescence clay brick tiles & jaali panels. Pan-India delivery to all major cities.',
+    title: 'UrbanClay - Flexible Brick Tiles, Terracotta Panels & Exposed Handmade Bricks',
+    description: 'Transform spaces with our flexible brick tiles, premium terracotta panels, and timeless exposed handmade bricks. Pan-India delivery.',
     images: ['/og-image.png'],
   },
   icons: {

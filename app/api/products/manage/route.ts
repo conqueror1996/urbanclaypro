@@ -40,7 +40,8 @@ export async function GET(req: NextRequest) {
             description, 
             displayOrder,
             bottomContent,
-            "imageUrl": image.asset->url 
+            "imageUrl": image.asset->url,
+            "pillarHeroImageUrl": pillarHeroImage.asset->url
         }`);
         return NextResponse.json(categories);
     }
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
         // ==========================================
 
         if (action === 'create_category') {
-            const { title, description, displayOrder, imageAssetId, bottomContent } = data;
+            const { title, description, displayOrder, imageAssetId, pillarHeroImageAssetId, bottomContent } = data;
             const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 96);
 
             const doc: any = {
@@ -79,17 +80,23 @@ export async function POST(req: NextRequest) {
             if (imageAssetId) {
                 doc.image = { _type: 'image', asset: { _type: 'reference', _ref: imageAssetId } };
             }
+            if (pillarHeroImageAssetId) {
+                doc.pillarHeroImage = { _type: 'image', asset: { _type: 'reference', _ref: pillarHeroImageAssetId } };
+            }
 
             const result = await client.create(doc);
             return NextResponse.json({ success: true, category: result });
         }
 
         if (action === 'update_category') {
-            const { _id, title, description, displayOrder, imageAssetId, bottomContent } = data;
+            const { _id, title, description, displayOrder, imageAssetId, pillarHeroImageAssetId, bottomContent } = data;
 
             const patch: any = { title, description, displayOrder, bottomContent };
             if (imageAssetId) {
                 patch.image = { _type: 'image', asset: { _type: 'reference', _ref: imageAssetId } };
+            }
+            if (pillarHeroImageAssetId) {
+                patch.pillarHeroImage = { _type: 'image', asset: { _type: 'reference', _ref: pillarHeroImageAssetId } };
             }
 
             await client.patch(_id).set(patch).commit();

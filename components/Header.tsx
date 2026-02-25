@@ -12,38 +12,38 @@ import { useSampleBox } from '@/context/SampleContext'; // Use context to show b
 // --- PREMIUM MEGA MENU CONFIGURATION ---
 const PRODUCT_CATEGORIES = [
     {
-        title: 'Exposed Bricks',
-        subtitle: 'Authentic Masonry',
-        href: '/products?category=Exposed Bricks',
+        title: 'Flexible Brick Tiles',
+        subtitle: 'Ultra-Thin Cladding',
+        href: '/flexible-brick-tiles',
         color: 'from-[#b45a3c] to-[#96472d]',
         image: '/images/menu-exposed.jpg'
     },
     {
-        title: 'Brick Tiles',
-        subtitle: 'Cladding Veneers',
-        href: '/products?category=Brick Wall Tiles',
+        title: 'Terracotta Panels',
+        subtitle: 'Rainscreen Facades',
+        href: '/terracotta-panels',
         color: 'from-[#8c7b70] to-[#5d554f]',
         image: '/images/menu-cladding.jpg'
     },
     {
-        title: 'Terracotta Jaali',
-        subtitle: 'Breathable Screens',
-        href: '/products?category=Terracotta Jali',
+        title: 'Exposed Bricks',
+        subtitle: 'Authentic Masonry',
+        href: '/exposed-brick',
         color: 'from-[#d6cbb8] to-[#bfae96]',
         image: '/images/menu-jaali.jpg'
     },
     {
-        title: 'Floor Tiles',
-        subtitle: 'Earthy Grounding',
-        href: '/products?category=Floor Tiles',
+        title: 'Handmade Brick Tiles',
+        subtitle: 'Artisanal Beauty',
+        href: '/handmade-brick-tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
         textColor: 'text-[#2A1E16]',
         image: '/images/menu-floor.jpg'
     },
     {
-        title: 'Roof Tiles',
-        subtitle: 'Heritage Roofing',
-        href: '/products?category=Mangalore Roof Tiles',
+        title: 'Terracotta Jaali',
+        subtitle: 'Breathable Screens',
+        href: '/products?category=Terracotta Jali',
         color: 'from-[#2A1E16] to-[#1a1512]',
         image: '/images/menu-roof.jpg'
     }

@@ -240,6 +240,20 @@ export async function getCategoryHero(categorySlug: string): Promise<{ title: st
 
 
 
+// Fetch custom Pillar Hero Image edited by user in Sanity Dashboard
+export async function getPillarHeroImage(categorySlug: string): Promise<string | undefined> {
+    try {
+        const query = groq`*[_type == "category" && slug.current == $slug][0] {
+            "imageUrl": pillarHeroImage.asset->url
+        }`;
+        const result = await client.fetch(query, { slug: categorySlug }, { next: { revalidate: 60 } });
+        return result?.imageUrl;
+    } catch (e) {
+        console.error('Error fetching pillar hero image', e);
+        return undefined;
+    }
+}
+
 const projectsQuery = groq`*[_type == "project"] {
   _id,
   title,

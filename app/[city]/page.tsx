@@ -42,14 +42,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = truncate(data.metaDescription || `Discover premium terracotta tiles, brick cladding, and jaali panels in ${data.name}. Pan-India delivery and architect-preferred quality.`, 155);
 
     const cityKeywords = [
-        `Terracotta Tiles ${data.name}`,
-        `Terracotta Tiles Price in ${data.name}`,
-        `Wirecut Bricks ${data.name}`,
-        `Clay Facade ${data.name}`,
-        `Architectural Clay ${data.name}`,
+        `Flexible Brick Tiles ${data.name}`,
+        `Terracotta Panels ${data.name}`,
+        `Exposed Brick ${data.name}`,
+        `Handmade Brick Tiles ${data.name}`,
+        `Flexible Clay Tiles ${data.name}`,
+        `Terracotta Facade Panels ${data.name}`,
         `Exposed Brick Cladding ${data.name}`,
-        `Terracotta Jaali Manufacturers ${data.name}`,
-        `Clay Roofing Tiles ${data.name}`,
+        `Handmade Clay Bricks ${data.name}`,
         `Wholesale Brick Suppliers ${data.name}`
     ];
 

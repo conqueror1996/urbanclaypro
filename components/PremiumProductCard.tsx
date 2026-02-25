@@ -74,7 +74,7 @@ export default function PremiumProductCard({ product, variant, index }: PremiumP
                     {variant.imageUrl ? (
                         <Image
                             src={variant.imageUrl}
-                            alt={`${product.title} ${variant.name} premium terracotta - UrbanClay India`}
+                            alt={`${product.title} ${variant.name} Flexible Brick Tile & Exposed Terracotta Panel - UrbanClay India`}
                             fill
                             sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                             className="object-cover transition-transform duration-1000 group-hover:scale-110"
