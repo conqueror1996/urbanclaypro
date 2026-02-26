@@ -55,7 +55,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 className="cursor-default"
                             >
                                 <TextReveal
-                                    text={data?.heroHeading || 'The Engineered Clay Facade.'}
+                                    text={data?.heroHeading || 'Engineered Facade Systems.'}
                                     highlightWords={['Engineered']}
                                     className="text-4xl md:text-5xl lg:text-[64px] font-serif font-medium leading-[1.1] text-[#2A1E16] tracking-tight"
                                 />
@@ -68,7 +68,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 transition={{ delay: 0.1, duration: 0.6 }}
 
                             >
-                                {data?.heroSubheading || 'Industrial-grade terracotta systems engineered to eliminate efflorescence, warpage, and site failures in Indian climates.'}
+                                {data?.heroSubheading || 'High-performance terracotta systems engineered for zero-failure cladding in extreme Indian climates. Eliminating efflorescence, warpage, and maintenance risks.'}
                             </motion.p>
 
                             <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">

@@ -1,6 +1,8 @@
 import { createClient, type SanityClient } from 'next-sanity';
 import { groq } from 'next-sanity';
 import { Product, Project } from './types';
+import { enhanceProducts, enhanceProduct } from './seo-content';
+
 export type { Product, Project };
 
 let client: SanityClient;
@@ -86,11 +88,6 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
 }`;
 
 // Fetch functions
-import { enhanceProducts, enhanceProduct } from './seo-content';
-
-// ... (existing imports)
-
-// Fetch functions
 export async function getProducts(): Promise<Product[]> {
     try {
         console.log('Fetching products from Sanity...');
@@ -138,6 +135,7 @@ export async function getCategories(): Promise<string[]> {
 
 export async function getDashboardCategories(): Promise<any[]> {
     try {
+        console.log('Fetching dashboard categories...');
         const categories = await client.fetch(groq`*[_type == "category"] | order(displayOrder asc, title asc) { 
             _id, 
             title, 

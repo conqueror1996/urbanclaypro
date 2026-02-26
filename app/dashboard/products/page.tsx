@@ -3,10 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getProducts, getDashboardProducts, getDashboardCategories, Product } from '@/lib/products';
+import { getProducts, getDashboardProducts, getDashboardCategories } from '@/lib/products';
+import type { Product } from '@/lib/products';
+import VariantCreator from '@/components/admin/VariantCreator';
+import VariantEditor from '@/components/admin/VariantEditor';
+import DeleteConfirmationModal from '@/components/admin/DeleteConfirmationModal';
 import { authenticatedFetch } from '@/lib/auth-utils';
 
-// Types for our robust hierarchy
+// Types for our robust hierarchy (Catalogs and Categories)
 type ViewMode = 'list' | 'create' | 'edit' | 'edit_category';
 
 interface Category {
@@ -396,12 +400,7 @@ function CreateProductWizard({ onCancel, onCreate }: { onCancel: () => void, onC
     )
 }
 
-// --- SUB COMPONENTS ---
-
-// ... imports
-import VariantCreator from '@/components/admin/VariantCreator';
-import VariantEditor from '@/components/admin/VariantEditor';
-import DeleteConfirmationModal from '@/components/admin/DeleteConfirmationModal';
+// --- URBAN LOGIC CORE v4.0 (Architectural Grade Performance Intelligence) ---
 
 // ... existing code ...
 
@@ -1173,7 +1172,7 @@ function CategoryEditor({ category, onRefresh }: { category: Category, onRefresh
                     <div className="mb-4">
                         <h3 className="font-bold text-[#1a1512] flex items-center gap-2">
                             <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            God-Level Pillar Background
+                            Architectural Pillar Background
                         </h3>
                         <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Used as the immersive hero background on the landing page</p>
                     </div>

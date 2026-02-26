@@ -39,13 +39,12 @@ export const metadata: Metadata = {
     default: "UrbanClay® | Flexible Brick Tiles, Terracotta Panels, Exposed Bricks & Handmade Brick Tiles",
     template: "%s | UrbanClay India"
   },
-  description: "India's finest flexible brick tiles, large format terracotta panels, architectural exposed bricks, and bespoke handmade brick tiles. High-precision clay facades for global architects.",
+  description: "India's premier manufacturer of high-precision clay facades. We provide flexible brick tiles, large format terracotta panels, architectural exposed bricks, and bespoke handmade brick tiles engineered for zero-failure performance in Indian climates.",
   keywords: SEO_KEYWORDS,
   authors: [{ name: "UrbanClay", url: "https://claytile.in" }],
   creator: "UrbanClay",
   publisher: "UrbanClay",
   alternates: {
-    canonical: '/',
     languages: {
       'en-IN': '/',
       'en-US': '/en-US',
@@ -57,8 +56,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "UrbanClay - Flexible Brick Tiles, Terracotta Panels & Exposed Brick",
-    description: "Discover architectural mastery with our ultra-lightweight flexible brick tiles, premium terracotta panels, classic exposed bricks, and timeless handmade brick tiles. Serving 100+ cities.",
+    title: "UrbanClay® | High-Precision Clay Facade Systems & Brick Tiles",
+    description: "Discover architectural mastery with ultra-lightweight flexible brick tiles and high-performance terracotta panels. Engineered for zero-failure facade integrity. Trusted by global architects.",
     url: 'https://claytile.in',
     siteName: 'UrbanClay',
     locale: 'en_IN',
@@ -68,14 +67,14 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'UrbanClay - Premium Terracotta Tiles & Jaali Panels India',
+        alt: 'UrbanClay - Industrial Clay Facade Manufacturer India',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UrbanClay - Flexible Brick Tiles, Terracotta Panels & Exposed Handmade Bricks',
-    description: 'Transform spaces with our flexible brick tiles, premium terracotta panels, and timeless exposed handmade bricks. Pan-India delivery.',
+    title: 'UrbanClay® | Engineered Clay Facade Systems & Brick Tiles',
+    description: 'Transforming Indian architecture with high-precision flexible brick tiles and large-format terracotta panels. Pan-India delivery.',
     images: ['/og-image.png'],
   },
   icons: {

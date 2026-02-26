@@ -69,6 +69,13 @@ export default function FeedbackAnalytics() {
         ? (feedbacks.reduce((acc, curr) => acc + curr.workmanshipRating + curr.materialRating + curr.serviceRating, 0) / (feedbacks.length * 3)).toFixed(1)
         : '0.0';
 
+    // Reply Logic
+    const [replyModalOpen, setReplyModalOpen] = useState(false);
+    const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
+    const [replySubject, setReplySubject] = useState('');
+    const [replyMessage, setReplyMessage] = useState('');
+    const [sendingReply, setSendingReply] = useState(false);
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
@@ -76,13 +83,6 @@ export default function FeedbackAnalytics() {
             </div>
         );
     }
-
-    // Reply Logic
-    const [replyModalOpen, setReplyModalOpen] = useState(false);
-    const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
-    const [replySubject, setReplySubject] = useState('');
-    const [replyMessage, setReplyMessage] = useState('');
-    const [sendingReply, setSendingReply] = useState(false);
 
     const openReplyModal = (feedback: Feedback) => {
         setSelectedFeedback(feedback);

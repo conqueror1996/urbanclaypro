@@ -196,10 +196,10 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                         className="mb-8"
                     >
                         <span className="text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-3 block">
-                            Signature Series
+                            System Specifications
                         </span>
                         <h2 className="text-4xl md:text-6xl font-serif text-[var(--ink)] leading-tight">
-                            High-Performance <br /> Clay Systems
+                            Engineered Facade <br /> & Cladding Systems
                         </h2>
                     </motion.div>
 

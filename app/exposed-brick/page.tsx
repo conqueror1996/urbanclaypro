@@ -20,6 +20,7 @@ export default async function ExposedBrickPillar() {
             description="Nothing matches the warmth, character, and timeless appeal of an authentic exposed brick wall. Our structural wirecut and facing bricks are naturally resistant to fading, boasting near-zero efflorescence and unparalleled compressive strength."
             heroImage={heroImage}
             keyword="Exposed Brick"
+            slug="exposed-brick"
             products={brickProducts}
             faqs={[
                 {

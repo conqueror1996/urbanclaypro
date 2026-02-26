@@ -44,7 +44,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     if (term) {
         return {
             title: generateDynamicTitle('Terracotta Tiles', term),
-            description: `Discover premium ${term} by UrbanClay. Low efflorescence, high durability, and delivered across India. Get a free sample today.`,
+            description: "High-performance large format terracotta panels for architectural rainscreen cladding. Engineered for zero-failure thermal insulation and weather resistance in Indian climates. Get a free sample today.",
             openGraph: {
                 title: `Premium ${term} - UrbanClay India`,
                 description: `India's trusted source for ${term}. Serving 100+ cities nationwide with premium quality.`,
@@ -53,12 +53,12 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     }
 
     return {
-        title: "UrbanClay® | Flexible Brick Tiles, God-Level Terracotta Panels, Exposed Bricks & Handmade Brick Tiles | India",
+        title: "UrbanClay® | Flexible Brick Tiles, Architectural Grade Terracotta Panels, Exposed Bricks & Handmade Brick Tiles | India",
         description: "India's #1 Manufacturer & Exporter of Flexible Brick Tiles, large format Terracotta Panels, Exposed Bricks, and Bespoke Handmade Brick Tiles. Sustainable, scalable facades delivered pan-India. UrbanClay® - The Architect's Choice.",
         keywords: SEO_KEYWORDS,
         openGraph: {
             title: "UrbanClay® | Flexible Brick Tiles, Terracotta Panels, Exposed & Handmade Bricks | Manufacturer India",
-            description: "Buy direct from India's leading manufacturer of architectural terracotta panels, flexible brick tiles, classical exposed bricks, and bespoke handmade brick tiles. 100% Natural & Sustainable.",
+            description: "Engineered for high-performance facades, our thermal-regulation panels ensure long-term structural integrity. Zero-failure systems designed for modern, high-rise, and commercial architecture in extreme Indian climates.",
         },
         alternates: {
             canonical: 'https://claytile.in',
@@ -176,7 +176,7 @@ export default async function Home({ searchParams }: Props) {
                             itemOffered: {
                                 '@type': 'Product',
                                 name: 'Handmade Brick Tiles',
-                                description: 'Artisanal, bespoke handmade clay brick tiles for authentic traditional styling',
+                                description: "Architectural grade handmade brick tiles for heritage restoration and bespoke luxury projects. Precision-fired natural Indian clay for industrial durability with artisanal aesthetics.",
                                 image: 'https://claytile.in/images/breeze-block-interior.png',
                                 brand: {
                                     '@type': 'Brand',
@@ -292,7 +292,7 @@ export default async function Home({ searchParams }: Props) {
                 <TechnicalFAQ />
             </ScrollReveal>
 
-            {/* 5. EXECUTION ARCHIVE - Commercial & Luxury Residential Proof */}
+            {/* 5. PROJECT ARCHIVE - Commercial & Luxury Residential Evidence */}
             <ScrollReveal className="bg-white">
                 <Projects projects={recentProjects} />
             </ScrollReveal>
@@ -306,8 +306,6 @@ export default async function Home({ searchParams }: Props) {
                 </Suspense>
             </ScrollReveal>
 
-            {/* 7.5 KILN EXPERIENCE - Immersive Scroll */}
-            <KilnPreview />
 
             {/* FOOTER & LOGISTICS BADGE */}
             <ScrollReveal className="bg-white">

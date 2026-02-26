@@ -39,8 +39,8 @@ export default function TrustBar({ firms }: TrustBarProps) {
                             ease: "linear"
                         }}
                     >
-                        {/* Double the logos for seamless loop */}
-                        {[...displayFirms, ...displayFirms, ...displayFirms, ...displayFirms].map((firm, idx) => (
+                        {/* Reduced repetition for a cleaner loop */}
+                        {[...displayFirms, ...displayFirms].map((firm, idx) => (
                             <div key={`${firm.name}-${idx}`} className="flex-shrink-0 grayscale opacity-40 hover:opacity-100 transition-opacity duration-500 cursor-default">
                                 <span className="text-2xl md:text-3xl font-serif italic text-[var(--ink)] tracking-tight">{firm.name}</span>
                             </div>

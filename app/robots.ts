@@ -16,12 +16,12 @@ export default function robots(): MetadataRoute.Robots {
             },
             {
                 // Explicitly ALLOW major AI Search Bots (AIO Optimization)
-                userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'CCBot', 'ClaudeBot', 'PerplexityBot'],
+                userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'CCBot', 'ClaudeBot', 'PerplexityBot', 'OAI-SearchBot'],
                 allow: '/',
             },
             {
                 // Explicitly BLOCK aggressive scrapers to save crawl budget
-                userAgent: ['Omgilibot', 'Omgili', 'Scrapy', 'Baiduspider', 'YandexBot'],
+                userAgent: ['Omgilibot', 'Omgili', 'Scrapy', 'Baiduspider', 'YandexBot', 'Sogou', 'Exabot', 'facebot', 'ia_archiver'],
                 disallow: '/',
             }
         ],

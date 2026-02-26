@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
@@ -14,6 +15,7 @@ interface PillarPageTemplateProps {
     description: string;
     heroImage: string;
     keyword: string;
+    slug: string;
     products: Product[];
     faqs: { q: string, a: string }[];
 }
@@ -24,6 +26,7 @@ export default function PillarPageTemplate({
     description,
     heroImage,
     keyword,
+    slug,
     products,
     faqs
 }: PillarPageTemplateProps) {
@@ -33,7 +36,7 @@ export default function PillarPageTemplate({
         '@type': 'CollectionPage',
         'name': title,
         'description': description,
-        'url': `https://claytile.in/${keyword.replace(/\\s+/g, '-').toLowerCase()}`,
+        'url': `https://claytile.in/${slug}`,
         'mainEntity': {
             '@type': 'ItemList',
             'itemListElement': products.slice(0, 10).map((p, i) => ({
@@ -57,27 +60,105 @@ export default function PillarPageTemplate({
         }))
     };
 
+    const breadcrumbJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': 'https://claytile.in'
+            },
+            {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': title,
+                'item': `https://claytile.in/${slug}`
+            }
+        ]
+    };
+
     return (
         <main className="bg-[#1a1512] min-h-screen text-[#EBE5E0] selection:bg-[var(--terracotta)] selection:text-white font-sans overflow-x-hidden">
-            <JsonLd data={[jsonLd, faqJsonLd]} />
+            <JsonLd data={[jsonLd, faqJsonLd, breadcrumbJsonLd]} />
             <Header />
 
             {/* HERO SECTION */}
-            <section className="relative w-full min-h-[75vh] flex items-center justify-center pt-32 pb-20 px-6">
-                <div className="absolute inset-0 z-0">
-                    <img src={heroImage} alt={`${title} - UrbanClay India`} className="w-full h-full object-cover opacity-40 mix-blend-overlay" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1512] via-[#1a1512]/60 to-transparent" />
+            <section className="relative w-full min-h-[85vh] flex items-center justify-center pt-32 pb-20 px-6 overflow-hidden">
+                <motion.div
+                    className="absolute inset-0 z-0"
+                    initial={{ scale: 1.1, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 0.5 }}
+                    transition={{ duration: 2, ease: "easeOut" }}
+                >
+                    <img
+                        src={heroImage}
+                        alt={`${title} - UrbanClay India`}
+                        className="w-full h-full object-cover mix-blend-luminosity grayscale contrast-125"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1512] via-[#1a1512]/60 to-[#1a1512]/40" />
+                </motion.div>
+
+                <div className="relative z-10 max-w-6xl mx-auto text-center mt-12">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <span className="inline-block py-1.5 px-4 rounded-full border border-[var(--terracotta)]/40 bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-[10px] md:text-xs font-black tracking-[0.4em] uppercase mb-12 backdrop-blur-sm">
+                            {keyword}
+                        </span>
+
+                        <h1 className="text-5xl md:text-7xl lg:text-[110px] font-serif leading-[0.85] text-white tracking-tighter mb-10 max-w-5xl mx-auto">
+                            {title.split(' ').map((word, i) => (
+                                <span key={i} className="inline-block mr-4 last:mr-0">
+                                    {word === "Engineered" ? (
+                                        <span className="text-[var(--terracotta)] italic">{word}</span>
+                                    ) : (
+                                        word
+                                    )}
+                                </span>
+                            ))}
+                        </h1>
+
+                        <div className="w-24 h-px bg-[var(--terracotta)] mx-auto mb-10 opacity-60" />
+
+                        <p className="text-xl md:text-3xl text-white/70 font-light max-w-3xl mx-auto leading-tight mb-16 tracking-tight">
+                            {subtitle}
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                            <motion.button
+                                onClick={() => document.getElementById('quote')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="group relative px-10 py-5 bg-[var(--terracotta)] text-white font-bold text-sm tracking-widest uppercase overflow-hidden transition-all hover:shadow-[0_0_40px_rgba(204,82,46,0.4)]"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <span className="relative z-10">Request Specifier Kit</span>
+                                <div className="absolute inset-0 bg-white/20 translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500" />
+                            </motion.button>
+
+                            <Link
+                                href="/projects"
+                                className="px-10 py-5 border border-white/20 bg-white/5 text-white/80 font-bold text-sm tracking-widest uppercase backdrop-blur-md hover:bg-white hover:text-[#0a0807] transition-all duration-300"
+                            >
+                                View Signature Projects
+                            </Link>
+                        </div>
+                    </motion.div>
                 </div>
 
-                <div className="relative z-10 max-w-5xl mx-auto text-center mt-12">
-                    <span className="inline-block py-1.5 px-4 rounded-full border border-[var(--terracotta)]/40 bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-8">
-                        {keyword}
-                    </span>
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif leading-[0.9] text-white tracking-tight mb-8">
-                        {title}
-                    </h1>
-                    <p className="text-lg md:text-2xl text-white/60 font-light max-w-3xl mx-auto leading-relaxed border-l-2 border-[var(--terracotta)] pl-6 text-left">
-                        {subtitle}
+                {/* Side Labels */}
+                <div className="absolute left-10 top-1/2 -rotate-90 origin-left hidden lg:block opacity-20">
+                    <p className="text-[9px] uppercase tracking-[0.5em] text-white font-bold flex items-center gap-4">
+                        <span className="w-12 h-px bg-white" /> Performance Validated
+                    </p>
+                </div>
+
+                <div className="absolute right-10 top-1/2 rotate-90 origin-right hidden lg:block opacity-20">
+                    <p className="text-[9px] uppercase tracking-[0.5em] text-white font-bold flex items-center gap-4">
+                        Architectural Integrity <span className="w-12 h-px bg-white" />
                     </p>
                 </div>
             </section>
@@ -94,11 +175,11 @@ export default function PillarPageTemplate({
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                         <div>
-                            <h2 className="text-4xl font-serif text-white mb-4">The {title} Collection</h2>
-                            <p className="text-white/50">Explore our curated range of premium {keyword.toLowerCase()}.</p>
+                            <h2 className="text-4xl font-serif text-white mb-4">{title} System Specifications</h2>
+                            <p className="text-white/50">Technical configurations for high-performance facade integration.</p>
                         </div>
-                        <Link href="/products" className="text-[var(--terracotta)] uppercase tracking-[0.2em] text-xs font-bold hover:text-white transition-colors flex items-center gap-2">
-                            View All Catalog <span>→</span>
+                        <Link href="/projects" className="text-[var(--terracotta)] uppercase tracking-[0.2em] text-xs font-bold hover:text-white transition-colors flex items-center gap-2">
+                            Full Project Archive <span>→</span>
                         </Link>
                     </div>
 
@@ -120,8 +201,8 @@ export default function PillarPageTemplate({
                         </div>
                     ) : (
                         <div className="py-32 text-center border border-white/10 rounded-3xl">
-                            <h3 className="text-2xl font-serif text-white/40">Collection Expanding Soon</h3>
-                            <p className="text-white/30 mt-4">We are currently curating our newest {keyword.toLowerCase()}. Check back shortly.</p>
+                            <h3 className="text-2xl font-serif text-white/40">Technical Library Loading</h3>
+                            <p className="text-white/30 mt-4">We are updating our {keyword.toLowerCase()} technical documentation.</p>
                         </div>
                     )}
                 </div>
@@ -130,8 +211,8 @@ export default function PillarPageTemplate({
             {/* FAQs */}
             <section className="py-32 px-6 max-w-4xl mx-auto">
                 <div className="text-center mb-16">
-                    <span className="text-[var(--terracotta)] uppercase tracking-[0.2em] font-bold text-xs mb-4 block">Expert Knowledge</span>
-                    <h2 className="text-4xl font-serif text-white">Frequently Asked Questions</h2>
+                    <span className="text-[var(--terracotta)] uppercase tracking-[0.2em] font-bold text-xs mb-4 block">Performance Parameters</span>
+                    <h2 className="text-4xl font-serif text-white">System FAQ & Integrity</h2>
                 </div>
 
                 <div className="space-y-4">

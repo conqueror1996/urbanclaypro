@@ -4,7 +4,7 @@ import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
     title: "Flexible Brick Tiles | Ultra-Lightweight Wall Cladding India",
-    description: "Discover flexible brick tiles, the innovative god-level 3mm cladding solution that wraps around columns and curved walls with zero structural load.",
+    description: "Advanced flexible cladding systems offering 3mm ultra-lightweight solutions. Engineered to wrap columns and curved facades with zero structural load and maximum durability.",
     alternates: { canonical: 'https://claytile.in/flexible-brick-tiles' }
 };
 
@@ -20,6 +20,7 @@ export default async function FlexibleBrickTilesPillar() {
             description="Our newest material innovation: Flexible Brick Tiles. At just 3mm thick, these ultra-lightweight, bendable clay tiles wrap effortlessly around curved walls, circular columns, and complex geometries. Real brick texture, zero structural overhead."
             heroImage={heroImage}
             keyword="Flexible Brick Tile"
+            slug="flexible-brick-tiles"
             products={flexProducts}
             faqs={[
                 {

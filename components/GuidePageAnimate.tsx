@@ -25,7 +25,7 @@ export default function GuidePageAnimate() {
             title: 'Handmade',
             subtitle: 'Heritage & Soul',
             description: 'Thrown into molds by skilled artisans. Each brick is unique, bearing the thumbprints of its maker. Ideal for restoration projects or spaces needing rustic warmth.',
-            image: '/images/products/handmade-texture.jpg',
+            image: '/images/terracotta-texture.png',
             features: ['Organic texture', 'Rustic charm', 'Unique variations'],
             bestFor: 'Heritage, Farmhouses, Interiors',
             link: '/products?category=Exposed%20Brick'

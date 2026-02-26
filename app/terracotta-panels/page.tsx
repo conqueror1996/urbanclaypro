@@ -4,13 +4,13 @@ import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
     title: "Terracotta Panels | Premium Rain-Screen Cladding India",
-    description: "God-Level large format terracotta panels for architectural rainscreen cladding. Enjoy unmatched thermal insulation and weather resistance. Made by UrbanClay India.",
+    description: "High-performance large format terracotta panels for architectural rainscreen cladding. Engineered for zero-failure thermal insulation and weather resistance in Indian climates.",
     alternates: { canonical: 'https://claytile.in/terracotta-panels' }
 };
 
 export default async function TerracottaPanelsPillar() {
     const products = await getProducts();
-    const heroImage = await getPillarHeroImage('terracotta-panels', 'terracotta-panel') || "/images/products/wirecut-texture.jpg";
+    const heroImage = await getPillarHeroImage('terracotta-panels', 'terracotta-panel') || "/images/failure-free-facade.jpg";
 
     // Filter logic: In real-world, we'd add tags, but here we can just do broad matching or mock an array.
     const panelProducts = products.filter(p => {
@@ -28,11 +28,12 @@ export default async function TerracottaPanelsPillar() {
 
     return (
         <PillarPageTemplate
-            title="Terracotta Panels"
-            subtitle="Architectural Rainscreen Cladding Systems"
-            description="Our God-Level terracotta panels are engineered for modern, high-rise, and commercial facades. Superior thermal regulation, extreme fire resistance, and precision engineering ensure a perfectly ventilated facade that withstands the harshest Indian climates."
+            title="India’s Most Engineered Terracotta Facade System"
+            subtitle="Designed for architects who refuse site failures."
+            description="Our architectural-grade terracotta panels are engineered for mission-critical facades. Delivering advanced thermal regulation, A1 fire rating, and precision engineering for perfectly ventilated high-rise systems."
             heroImage={heroImage}
             keyword="Terracotta Panel"
+            slug="terracotta-panels"
             products={panelProducts}
             faqs={[
                 {

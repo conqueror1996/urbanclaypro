@@ -28,6 +28,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/wiki',
         '/commercial',
         '/export',
+        '/exposed-brick',
+        '/terracotta-jali',
+        '/terracotta-panels',
+        '/handmade-brick-tiles',
+        '/flexible-brick-tiles',
         '/journal/architects-guide-terracotta-cladding-bricks',
     ];
 

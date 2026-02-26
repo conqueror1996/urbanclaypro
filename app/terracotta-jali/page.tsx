@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function TerracottaJaliPillar() {
     const products = await getProducts();
     // Try both common spellings and slugs
-    const heroImage = await getPillarHeroImage('terracotta-jaalis', 'terracotta-jali') || "/images/products/pressed-texture.jpg";
+    const heroImage = await getPillarHeroImage('terracotta-jaalis', 'terracotta-jali') || "/images/products/pressed-texture.jpg"; // Keep existing default or use a cinematic one if found
 
     // Filter for Jali products - Exclude Cement
     const jaliProducts = products.filter(p => {
@@ -29,11 +29,12 @@ export default async function TerracottaJaliPillar() {
 
     return (
         <PillarPageTemplate
-            title="Terracotta Jaali"
-            subtitle="Breathable Architectural Screens"
+            title="India’s Most Engineered Terracotta Screen System"
+            subtitle="Designed for architects who refuse site failures."
             description="Timeless terracotta screens that balance light, privacy, and airflow. Our jaalis are handcrafted from natural clay, offering a sustainable and aesthetic solution for facades, balconies, and partitions."
             heroImage={heroImage}
             keyword="Terracotta Jali"
+            slug="terracotta-jali"
             products={jaliProducts}
             faqs={[
                 {
