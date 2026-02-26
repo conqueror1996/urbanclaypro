@@ -124,8 +124,9 @@ export default function ContentEnginePage() {
             } else {
                 alert('Image upload failed');
             }
-        } catch (err) {
-            alert('Error uploading image');
+        } catch (err: any) {
+            console.error('Upload catch error:', err);
+            alert('Error uploading image: ' + (err.message || String(err)));
         } finally {
             setIsSavingImage(false);
         }

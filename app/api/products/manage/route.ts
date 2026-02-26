@@ -29,12 +29,12 @@ export async function GET(req: NextRequest) {
     }
 
     if (intent === 'categories') {
-        const categories = await client.fetch(`*[_type == "category"] | order(title asc) { title }`);
+        const categories = await client.fetch(`*[_type == "category" && (count(*[_type == "product" && references(^._id)]) > 0 || !(_id match "imported-cat-*"))] | order(title asc) { title }`);
         return NextResponse.json(categories.map((c: any) => c.title));
     }
 
     if (intent === 'categories_full') {
-        const categories = await client.fetch(`*[_type == "category"] | order(displayOrder asc, title asc) { 
+        const categories = await client.fetch(`*[_type == "category" && (count(*[_type == "product" && references(^._id)]) > 0 || !(_id match "imported-cat-*"))] | order(displayOrder asc, title asc) { 
             _id, 
             title, 
             description, 

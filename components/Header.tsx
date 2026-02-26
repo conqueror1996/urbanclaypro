@@ -43,7 +43,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Terracotta Jaali',
         subtitle: 'Breathable Screens',
-        href: '/products?category=Terracotta Jali',
+        href: '/terracotta-jali',
         color: 'from-[#2A1E16] to-[#1a1512]',
         image: '/images/menu-roof.jpg'
     }

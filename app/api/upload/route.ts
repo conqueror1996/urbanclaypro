@@ -22,15 +22,21 @@ export async function POST(req: NextRequest) {
         const file = formData.get('file') as File;
 
         if (!file) {
+            console.error("Upload Route: No file in formData");
             return NextResponse.json({ error: 'No file provided' }, { status: 400 });
         }
+
+        console.log(`Upload Route: Received file ${file.name}, size ${file.size}, type ${file.type}`);
 
         const buffer = await file.arrayBuffer();
         const assetType = file.type.startsWith('image/') ? 'image' : 'file';
 
+        console.log(`Upload Route: Uploading to Sanity...`);
         const asset = await client.assets.upload(assetType, Buffer.from(buffer), {
             filename: file.name
         });
+
+        console.log(`Upload Route: Upload success, asset ID: ${asset._id}`);
 
         return NextResponse.json({
             success: true,
@@ -40,8 +46,12 @@ export async function POST(req: NextRequest) {
             }
         });
 
-    } catch (error) {
-        console.error("Upload Error:", error);
-        return NextResponse.json({ error: 'Upload Failed', details: error }, { status: 500 });
+    } catch (error: any) {
+        console.error("Upload API Route Exception:", error);
+        return NextResponse.json({
+            error: 'Upload Failed',
+            message: error.message,
+            stack: error.stack
+        }, { status: 500 });
     }
 }

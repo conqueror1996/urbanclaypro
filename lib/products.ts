@@ -136,6 +136,24 @@ export async function getCategories(): Promise<string[]> {
     }
 }
 
+export async function getDashboardCategories(): Promise<any[]> {
+    try {
+        const categories = await client.fetch(groq`*[_type == "category"] | order(displayOrder asc, title asc) { 
+            _id, 
+            title, 
+            description, 
+            displayOrder,
+            bottomContent,
+            "imageUrl": image.asset->url,
+            "pillarHeroImageUrl": pillarHeroImage.asset->url
+        }`, {}, { next: { revalidate: 0 } });
+        return categories;
+    } catch (error) {
+        console.error('Error fetching dashboard categories:', error);
+        return [];
+    }
+}
+
 export async function getProduct(slug: string): Promise<Product | undefined> {
     try {
         const product = await client.fetch(productBySlugQuery, { slug }, { next: { revalidate: 60 } });
@@ -241,12 +259,15 @@ export async function getCategoryHero(categorySlug: string): Promise<{ title: st
 
 
 // Fetch custom Pillar Hero Image edited by user in Sanity Dashboard
-export async function getPillarHeroImage(categorySlug: string): Promise<string | undefined> {
+export async function getPillarHeroImage(categorySlug: string, fallbackSlug?: string): Promise<string | undefined> {
     try {
-        const query = groq`*[_type == "category" && slug.current == $slug][0] {
+        const query = groq`*[_type == "category" && slug.current in $slugs] | order(select(slug.current == $primary => 0, 1) asc)[0] {
             "imageUrl": pillarHeroImage.asset->url
         }`;
-        const result = await client.fetch(query, { slug: categorySlug }, { next: { revalidate: 60 } });
+        const slugs = [categorySlug];
+        if (fallbackSlug) slugs.push(fallbackSlug);
+
+        const result = await client.fetch(query, { slugs, primary: categorySlug }, { next: { revalidate: 60 } });
         return result?.imageUrl;
     } catch (e) {
         console.error('Error fetching pillar hero image', e);

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function TerracottaPanelsPillar() {
     const products = await getProducts();
-    const heroImage = await getPillarHeroImage('terracotta-panel') || await getPillarHeroImage('clay-facade-panels') || "/images/products/wirecut-texture.jpg";
+    const heroImage = await getPillarHeroImage('terracotta-panels', 'terracotta-panel') || "/images/products/wirecut-texture.jpg";
 
     // Filter logic: In real-world, we'd add tags, but here we can just do broad matching or mock an array.
     const panelProducts = products.filter(p => {

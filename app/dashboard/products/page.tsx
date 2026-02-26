@@ -3,27 +3,48 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getProducts, getDashboardProducts, Product } from '@/lib/products';
+import { getProducts, getDashboardProducts, getDashboardCategories, Product } from '@/lib/products';
 import { authenticatedFetch } from '@/lib/auth-utils';
 
 // Types for our robust hierarchy
-type ViewMode = 'list' | 'create' | 'edit';
+type ViewMode = 'list' | 'create' | 'edit' | 'edit_category';
+
+interface Category {
+    _id: string;
+    title: string;
+    description?: string;
+    bottomContent?: string;
+    imageUrl?: string;
+    pillarHeroImageUrl?: string;
+    displayOrder?: number;
+}
 
 export default function ProductDashboardPage() {
     const [viewMode, setViewMode] = useState<ViewMode>('list');
     const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const refresh = async () => {
         setIsLoading(true);
         try {
-            const data = await getDashboardProducts();
-            setProducts(data);
+            const [pData, cData] = await Promise.all([
+                getDashboardProducts(),
+                getDashboardCategories()
+            ]);
+            setProducts(pData);
+            setCategories(cData);
+
             if (selectedProduct) {
                 // keep selected product in sync
-                const updated = data.find(p => p._id === selectedProduct._id);
+                const updated = pData.find(p => p._id === selectedProduct._id);
                 if (updated) setSelectedProduct(updated);
+            }
+            if (selectedCategory) {
+                const updatedCat = cData.find(c => c._id === selectedCategory._id);
+                if (updatedCat) setSelectedCategory(updatedCat);
             }
         } catch (e) {
             console.error(e);
@@ -103,20 +124,63 @@ export default function ProductDashboardPage() {
                         Object.entries(hierarchicalProducts).map(([category, ranges]) => (
                             <div key={category}>
                                 {/* Category Header */}
-                                <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
-                                    <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                                    {category}
-                                </h3>
+                                <div className="flex justify-between items-center pr-2 mb-3 bg-gray-50/50 py-1 rounded-lg">
+                                    <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
+                                        {category}
+                                    </h3>
+                                    <button
+                                        onClick={() => {
+                                            const catObj = categories.find(c => c.title.toLowerCase().trim() === category.toLowerCase().trim()) ||
+                                                categories.find(c => c.title.toLowerCase().includes(category.toLowerCase().trim()));
+                                            if (catObj) {
+                                                setSelectedCategory(catObj);
+                                                setSelectedProduct(null);
+                                                setViewMode('edit_category');
+                                            } else {
+                                                alert(`Category "${category}" details not found in Sanity. Please create it in the Category Manager if you need a Pillar Page for this.`);
+                                            }
+                                        }}
+                                        className="p-1.5 hover:bg-white rounded-lg transition-all text-[var(--terracotta)] shadow-sm border border-gray-100 bg-white"
+                                        title="Edit Category details (Hero Background, etc.)"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    </button>
+                                </div>
 
                                 {/* Ranges */}
                                 <div className="space-y-4 pl-4 border-l border-gray-100 ml-1">
                                     {Object.entries(ranges).map(([rangeName, products]) => (
-                                        <div key={rangeName}>
+                                        <div key={rangeName} className="group/range">
                                             {/* Range Header */}
-                                            <h4 className="text-[9px] font-bold text-blue-500 uppercase tracking-widest mb-2 px-2 flex items-center gap-2">
-                                                <span className="w-0.5 h-0.5 rounded-full bg-blue-400"></span>
-                                                {rangeName}
-                                            </h4>
+                                            <div className="flex justify-between items-center pr-2 mb-2">
+                                                <h4 className="text-[9px] font-bold text-blue-500 uppercase tracking-widest px-2 flex items-center gap-2">
+                                                    <span className="w-0.5 h-0.5 rounded-full bg-blue-400"></span>
+                                                    {rangeName}
+                                                </h4>
+
+                                                {/* Smart Sub-category Pillar Gear */}
+                                                <button
+                                                    onClick={() => {
+                                                        const cleanRange = rangeName.toLowerCase().replace(/ collection| series/g, '').trim();
+                                                        const catObj = categories.find(c => c.title.toLowerCase().trim() === cleanRange) ||
+                                                            categories.find(c => c.title.toLowerCase().includes(cleanRange)) ||
+                                                            categories.find(c => cleanRange.includes(c.title.toLowerCase().trim()));
+
+                                                        if (catObj) {
+                                                            setSelectedCategory(catObj);
+                                                            setSelectedProduct(null);
+                                                            setViewMode('edit_category');
+                                                        } else {
+                                                            alert(`Pillar Page settings for "${rangeName}" not found. If this is a sub-category that needs its own pillar image, please create a Category document named exactly "${rangeName}" or similar.`);
+                                                        }
+                                                    }}
+                                                    className="opacity-0 group-hover/range:opacity-100 p-1 hover:bg-blue-50 rounded transition-all text-blue-400"
+                                                    title="Edit Pillar Page content for this sub-category"
+                                                >
+                                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                                </button>
+                                            </div>
 
                                             {/* Series (Products) */}
                                             <div className="space-y-2 pl-4 border-l border-blue-100 ml-1">
@@ -207,6 +271,10 @@ export default function ProductDashboardPage() {
 
                     {viewMode === 'edit' && selectedProduct && (
                         <ProductEditor product={selectedProduct} existingProducts={products} key={selectedProduct._id} onRefresh={refresh} />
+                    )}
+
+                    {viewMode === 'edit_category' && selectedCategory && (
+                        <CategoryEditor category={selectedCategory} key={selectedCategory._id} onRefresh={refresh} />
                     )}
 
                     {viewMode === 'create' && (
@@ -1030,5 +1098,142 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                 </div >
             </div >
         </motion.div >
+    );
+}
+
+function CategoryEditor({ category, onRefresh }: { category: Category, onRefresh: () => Promise<void> }) {
+    const [form, setForm] = useState(category);
+    const [isSaving, setIsSaving] = useState(false);
+    const [pillarHeroImageFile, setPillarHeroImageFile] = useState<{ file: File; preview: string } | null>(null);
+
+    const handleSave = async () => {
+        setIsSaving(true);
+        try {
+            let pillarAssetId = null;
+
+            if (pillarHeroImageFile) {
+                const formData = new FormData();
+                formData.append('file', pillarHeroImageFile.file);
+                const uploadRes = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
+                const uploadJson = await uploadRes.json();
+                if (uploadJson.success) pillarAssetId = uploadJson.asset._id;
+            }
+
+            await authenticatedFetch('/api/products/manage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'update_category',
+                    data: {
+                        _id: form._id,
+                        title: form.title,
+                        description: form.description,
+                        bottomContent: form.bottomContent,
+                        displayOrder: Number(form.displayOrder),
+                        ...(pillarAssetId && { pillarHeroImageAssetId: pillarAssetId })
+                    }
+                })
+            });
+            await onRefresh();
+            setPillarHeroImageFile(null);
+            alert("Category updated successfully!");
+        } catch (e) {
+            console.error(e);
+            alert("Failed to save category");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    return (
+        <div className="flex flex-col h-full bg-white animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Header */}
+            <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-start bg-blue-50/30">
+                <div>
+                    <h1 className="text-3xl font-serif text-[#1a1512] flex items-center gap-3">
+                        {form.title}
+                        <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded-full uppercase tracking-widest font-bold">Category Level</span>
+                    </h1>
+                    <p className="text-xs text-gray-400 mt-2 uppercase tracking-widest font-bold">Manage Pillar Page Content & Assets</p>
+                </div>
+                <div className="flex gap-4">
+                    <button
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="px-6 py-3 rounded-xl bg-blue-600 text-white text-xs font-bold uppercase shadow-lg shadow-blue-900/10 hover:bg-blue-700 transition-all disabled:opacity-50"
+                    >
+                        {isSaving ? 'Saving...' : 'Update Category'}
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-8 space-y-8 max-w-4xl">
+                {/* Pillar Hero Asset Selection */}
+                <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                    <div className="mb-4">
+                        <h3 className="font-bold text-[#1a1512] flex items-center gap-2">
+                            <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            God-Level Pillar Background
+                        </h3>
+                        <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Used as the immersive hero background on the landing page</p>
+                    </div>
+
+                    <div className="flex gap-8 items-start">
+                        <div className="w-1/2 aspect-[16/9] bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 overflow-hidden relative group cursor-pointer">
+                            {pillarHeroImageFile ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={pillarHeroImageFile.preview} alt="Pillar Preview" className="w-full h-full object-cover" />
+                            ) : form.pillarHeroImageUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={form.pillarHeroImageUrl} alt="Current" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                                    <svg className="w-10 h-10 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v16m8-8H4" /></svg>
+                                    <span className="text-[10px] font-bold uppercase">Upload Immersive Background</span>
+                                </div>
+                            )}
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) setPillarHeroImageFile({ file, preview: URL.createObjectURL(file) });
+                                }}
+                            />
+                        </div>
+                        <div className="flex-1 space-y-4">
+                            <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 flex gap-3 text-xs text-blue-700 leading-relaxed">
+                                <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <p><strong>Design Tip:</strong> Use a high-resolution (min 1920px), low-contrast, or dark image. This image will sit behind the white text on your pillar landing page.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Text Content */}
+                <div className="grid grid-cols-1 gap-6">
+                    <div>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Category Description</label>
+                        <textarea
+                            rows={3}
+                            value={form.description || ''}
+                            onChange={e => setForm({ ...form, description: e.target.value })}
+                            className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-all font-serif"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Bottom SEO Content (Pillar Page Only)</label>
+                        <textarea
+                            rows={10}
+                            value={form.bottomContent || ''}
+                            onChange={e => setForm({ ...form, bottomContent: e.target.value })}
+                            className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-blue-500 transition-all font-mono text-sm"
+                            placeholder="Long-form story-telling and keyword optimized content..."
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }

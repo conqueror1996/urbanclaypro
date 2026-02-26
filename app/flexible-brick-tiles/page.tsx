@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function FlexibleBrickTilesPillar() {
     const products = await getProducts();
-    const heroImage = await getPillarHeroImage('flexible-brick-tile') || await getPillarHeroImage('flexible-brick-tiles') || "/images/premium-terracotta-facade.png";
+    const heroImage = await getPillarHeroImage('flexible-brick-tiles', 'flexible-brick-tile') || "/images/premium-terracotta-facade.png";
     const flexProducts = products.filter(p => p.category?.slug === 'flexible-brick-tile' || p.category?.slug === 'flexible-brick-tiles' || p.title.toLowerCase().includes('flexible'));
 
     return (
