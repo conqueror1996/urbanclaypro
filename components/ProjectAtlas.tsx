@@ -8,7 +8,7 @@ interface ProjectAtlasProps {
 
 export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
     return (
-        <section className="py-10 md:py-24 bg-[#2A1E16] text-white overflow-hidden relative">
+        <section className="py-12 md:py-24 bg-[#2A1E16] text-white overflow-hidden relative">
             {/* Background Texture - Static CSS is cheaper than JS */}
             <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 

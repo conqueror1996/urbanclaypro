@@ -10,7 +10,7 @@ export default function Architects() {
     const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
 
     return (
-        <section id="architects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+        <section id="architects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-32">
             <motion.div
                 className="relative rounded-[2.5rem] bg-[#2A1E16] text-white overflow-hidden"
                 initial={{ opacity: 0, y: 40 }}
@@ -27,7 +27,7 @@ export default function Architects() {
                         <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-[10px] md:text-xs font-semibold tracking-wider uppercase mb-4 md:mb-6 border border-white/10">
                             Professional Resources
                         </span>
-                        <h3 className="text-3xl md:text-5xl font-serif mb-4 md:mb-6 leading-tight">
+                        <h3 className="text-3xl md:text-5xl font-serif mb-4 md:mb-6 leading-tight text-center lg:text-left">
                             For Architects & <br className="hidden md:block" /> Designers
                         </h3>
                         <p className="text-sm md:text-lg text-white/70 mb-8 md:mb-10 leading-relaxed max-w-md mx-auto lg:mx-0">

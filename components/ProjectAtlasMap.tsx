@@ -95,7 +95,7 @@ export default function ProjectAtlasMap({ projects = [] }: ProjectAtlasMapProps)
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative aspect-[3/4] md:aspect-square lg:aspect-[4/5] w-[60%] md:w-full max-w-md mx-auto mt-4 md:mt-0"
+            className="relative aspect-[3/4] md:aspect-square lg:aspect-[4/5] w-full max-w-md mx-auto mt-4 md:mt-0"
         >
             <svg viewBox="0 0 600 700" className="w-full h-full drop-shadow-2xl filter">
                 <defs>
@@ -165,10 +165,10 @@ export default function ProjectAtlasMap({ projects = [] }: ProjectAtlasMapProps)
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 5, scale: 0.95 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 bg-[#1a1512]/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl p-4 z-50 pointer-events-none origin-bottom"
+                                className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-[240px] md:w-72 bg-[#1a1512]/95 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl p-3 md:p-4 z-50 pointer-events-none origin-bottom"
                             >
-                                <div className="flex gap-4">
-                                    <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-white/10 relative">
+                                <div className="flex gap-3 md:gap-4">
+                                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border border-white/10 relative">
                                         <img
                                             src={loc.project.image}
                                             alt={loc.project.name}
@@ -177,15 +177,12 @@ export default function ProjectAtlasMap({ projects = [] }: ProjectAtlasMapProps)
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                                     </div>
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
-                                            <span className="text-[10px] font-bold text-white/60 uppercase tracking-wider">{loc.city}</span>
+                                        <div className="flex items-center gap-2 mb-0.5 md:mb-1">
+                                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-[var(--terracotta)]"></span>
+                                            <span className="text-[9px] md:text-[10px] font-bold text-white/60 uppercase tracking-wider">{loc.city}</span>
                                         </div>
-                                        <h4 className="text-base font-serif text-white leading-tight mb-1 truncate">{loc.project.name}</h4>
-                                        <p className="text-xs text-white/50 leading-snug line-clamp-2">{loc.project.details}</p>
-                                        <div className="mt-2 flex items-center text-[10px] font-medium text-[var(--terracotta)]">
-                                            View Project <span className="ml-1">→</span>
-                                        </div>
+                                        <h4 className="text-sm md:text-base font-serif text-white leading-tight mb-0.5 md:mb-1 truncate">{loc.project.name}</h4>
+                                        <p className="text-[10px] md:text-xs text-white/50 leading-snug line-clamp-2">{loc.project.details}</p>
                                     </div>
                                 </div>
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-8 border-transparent border-t-[#1a1512]/95"></div>

@@ -27,7 +27,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                 {/* Animated Background - Kiln Glow (Removed KilnDistort) */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[var(--sand)] to-white opacity-50 pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-36 pb-8 md:pt-48 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4 md:pt-48 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
@@ -39,13 +39,13 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                             {injectedKeyword && (
                                 <div
                                     data-testid="keyword-badge"
-                                    className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-sm font-medium border border-[var(--terracotta)]/20 backdrop-blur-sm animate-fade-in self-start"
+                                    className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-[11px] sm:text-sm font-medium border border-[var(--terracotta)]/20 backdrop-blur-sm animate-fade-in self-start max-w-full"
                                 >
-                                    <span className="relative flex h-2 w-2">
+                                    <span className="relative flex h-2 w-2 flex-shrink-0">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--terracotta)] opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--terracotta)]"></span>
                                     </span>
-                                    Viewing High-Performance Options for "{injectedKeyword}"
+                                    <span className="truncate">Viewing High-Performance Options for "{injectedKeyword}"</span>
                                 </div>
                             )}
 
@@ -89,19 +89,17 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 </button>
                             </div>
 
-                            <div className="mt-8 flex items-center gap-3 text-sm font-medium text-[#5d554f]">
-                                <span className="flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
+                            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12px] sm:text-sm font-medium text-[#5d554f]">
+                                <span className="flex items-center gap-2 whitespace-nowrap">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] flex-shrink-0"></span>
                                     Zero Efflorescence
                                 </span>
-                                <span className="text-gray-300">•</span>
-                                <span className="flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
+                                <span className="flex items-center gap-2 whitespace-nowrap">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] flex-shrink-0"></span>
                                     Standardized Tolerances
                                 </span>
-                                <span className="text-gray-300">•</span>
-                                <span className="flex items-center gap-1">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
+                                <span className="flex items-center gap-2 whitespace-nowrap">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] flex-shrink-0"></span>
                                     Pan-India Scale
                                 </span>
                             </div>

@@ -125,7 +125,7 @@ export default function Header() {
                         >
                             <Link href="/flexible-brick-tile" className="group relative w-full block bg-[#1a1512] hover:bg-[var(--terracotta)] transition-colors duration-500 z-50 overflow-hidden mb-2 shadow-md">
                                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-2.5 flex items-center justify-center relative z-10">
-                                    <span className="text-white text-[9px] sm:text-[10px] md:text-xs font-medium tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-center flex items-center justify-center gap-1 sm:gap-1.5 uppercase">
+                                    <span className="text-white text-[9px] sm:text-[10px] md:text-xs font-medium tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-center flex items-center justify-center gap-1 sm:gap-1.5 uppercase px-2">
                                         <span className="animate-pulse origin-bottom group-hover:animate-bounce">🚀</span>
                                         <span className="opacity-90 font-bold ml-1 text-[var(--terracotta)] group-hover:text-white transition-colors hidden sm:inline">NOW TESTING:</span>
                                         <span className="font-semibold tracking-[0.2em] ml-1">Flexible Brick Tile</span>
@@ -149,7 +149,7 @@ export default function Header() {
                         alt="UrbanClay Logo"
                         width={240}
                         height={120}
-                        className="h-10 md:h-16 lg:h-20 w-auto group-hover:opacity-80 transition-opacity duration-300"
+                        className="h-10 sm:h-12 md:h-16 lg:h-20 w-auto group-hover:opacity-80 transition-opacity duration-300"
                         priority
                     />
                 </Link>

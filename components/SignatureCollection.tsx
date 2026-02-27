@@ -183,7 +183,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
     const activeCategory = categoryData.find(c => c.id === activeTab) || categoryData[0];
 
     return (
-        <section className="py-20 md:py-32 bg-[#Fbf9f7] overflow-hidden" id="signature-collection">
+        <section className="py-12 md:py-32 bg-[#Fbf9f7] overflow-hidden" id="signature-collection">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* HEADLINE SECTION - Compact Layout */}
@@ -204,42 +204,44 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                     </motion.div>
 
                     {/* TABS NAVIGATION - Premium Typography / Editorial Style */}
-                    <motion.nav
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="flex flex-wrap justify-center items-baseline gap-x-8 gap-y-4 mb-2 md:mb-8"
-                    >
-                        {categoryData.map((cat, i) => (
-                            <React.Fragment key={cat.id}>
-                                {/* Divider - Subtle Dot */}
-                                {i > 0 && (
-                                    <span className="hidden md:block text-[var(--ink)]/10 text-xs">•</span>
-                                )}
-                                <button
-                                    onClick={() => setActiveTab(cat.id)}
-                                    className={`
-                                        relative transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group
-                                        ${activeTab === cat.id
-                                            ? 'text-2xl md:text-3xl font-serif text-[var(--ink)] italic'
-                                            : 'text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-[var(--ink)]/40 hover:text-[var(--ink)]/80'}
-                                    `}
-                                >
-                                    <span className="relative z-10">{cat.label}</span>
-
-                                    {/* Active Underline - Elegant & Thin */}
-                                    {activeTab === cat.id && (
-                                        <motion.div
-                                            layoutId="active-tab-line"
-                                            className="absolute -bottom-4 left-0 right-0 h-[1px] bg-[var(--terracotta)]"
-                                            transition={{ duration: 0.5, ease: "circOut" }}
-                                        />
+                    <div className="w-full overflow-x-auto no-scrollbar -mx-4 px-4 mb-4 md:mb-8">
+                        <motion.nav
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 }}
+                            className="flex flex-nowrap md:flex-wrap md:justify-center items-baseline gap-x-6 md:gap-x-8 gap-y-4 min-w-max md:min-w-0"
+                        >
+                            {categoryData.map((cat, i) => (
+                                <React.Fragment key={cat.id}>
+                                    {/* Divider - Subtle Dot */}
+                                    {i > 0 && (
+                                        <span className="hidden md:block text-[var(--ink)]/10 text-xs">•</span>
                                     )}
-                                </button>
-                            </React.Fragment>
-                        ))}
-                    </motion.nav>
+                                    <button
+                                        onClick={() => setActiveTab(cat.id)}
+                                        className={`
+                                            relative transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group
+                                            ${activeTab === cat.id
+                                                ? 'text-xl md:text-3xl font-serif text-[var(--ink)] italic'
+                                                : 'text-[10px] md:text-sm font-medium uppercase tracking-[0.2em] text-[var(--ink)]/40 hover:text-[var(--ink)]/80'}
+                                        `}
+                                    >
+                                        <span className="relative z-10 whitespace-nowrap">{cat.label}</span>
+
+                                        {/* Active Underline - Elegant & Thin */}
+                                        {activeTab === cat.id && (
+                                            <motion.div
+                                                layoutId="active-tab-line"
+                                                className="absolute -bottom-2 md:-bottom-4 left-0 right-0 h-[1px] bg-[var(--terracotta)]"
+                                                transition={{ duration: 0.5, ease: "circOut" }}
+                                            />
+                                        )}
+                                    </button>
+                                </React.Fragment>
+                            ))}
+                        </motion.nav>
+                    </div>
                 </div>
 
                 {/* CONTENT AREA */}
@@ -316,7 +318,7 @@ function ProductCard({ product, index }: { product: DisplayProduct, index: numbe
                 className="block h-full"
             >
                 {/* Image Card - Increased Radius & Smaller Aspect */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] rounded-3xl border border-transparent group-hover:border-[var(--line)]">
+                <div className="relative aspect-[3/4] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] rounded-2xl md:rounded-3xl border border-transparent group-hover:border-[var(--line)]">
                     {imageUrl ? (
                         <>
                             <PremiumImage

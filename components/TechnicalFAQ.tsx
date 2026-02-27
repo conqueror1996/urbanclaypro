@@ -35,25 +35,25 @@ export default function TechnicalFAQ() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (
-        <section className="py-20 md:py-32 bg-[#1a1512] text-white">
+        <section className="py-10 md:py-32 bg-[#1a1512] text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
+                <div className="grid lg:grid-cols-12 gap-6 md:gap-8 lg:gap-16">
 
                     {/* Sticky Side Content */}
                     <div className="lg:col-span-4 lg:sticky lg:top-32 h-fit">
-                        <span className="text-[var(--terracotta)] text-xs font-bold tracking-[0.3em] uppercase mb-6 block">
+                        <span className="text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-2 md:mb-6 block">
                             Knowledge Base
                         </span>
-                        <h2 className="text-4xl md:text-5xl font-serif leading-[1.1] mb-8">
+                        <h2 className="text-3xl md:text-5xl font-serif leading-[1.1] mb-3 md:mb-8">
                             Technical <br />
-                            <span className="italic text-white/60 text-3xl">Specifications & FAQs</span>
+                            <span className="italic text-white/60 text-xl md:text-3xl">Specifications & FAQs</span>
                         </h2>
-                        <p className="text-white/40 leading-relaxed mb-8">
+                        <p className="text-white/40 text-[13px] md:text-base leading-relaxed mb-4 md:mb-8 max-w-sm md:max-w-none">
                             Detailed insights into material science, installation protocols, and performance metrics for architects and specifiers.
                         </p>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 mb-4 md:mb-0">
                             {['Thermal', 'Structural', 'Acoustics', 'LEED'].map(tag => (
-                                <span key={tag} className="px-3 py-1 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-white/60">
+                                <span key={tag} className="px-2 py-0.5 border border-white/10 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-white/60">
                                     {tag}
                                 </span>
                             ))}
@@ -61,25 +61,25 @@ export default function TechnicalFAQ() {
                     </div>
 
                     {/* FAQ Items */}
-                    <div className="lg:col-span-8 space-y-4">
+                    <div className="lg:col-span-8 space-y-2 md:space-y-4">
                         {technicalFaqs.map((faq, idx) => (
                             <div
                                 key={idx}
-                                className={`border-b border-white/10 transition-all duration-500 pb-4 ${openIndex === idx ? 'bg-white/5 p-8 rounded-2xl border-transparent' : ''}`}
+                                className={`border-b border-white/10 transition-all duration-500 pb-2 md:pb-4 ${openIndex === idx ? 'bg-white/5 p-4 md:p-8 rounded-2xl border-transparent' : ''}`}
                             >
                                 <button
                                     onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-                                    className="w-full flex items-center justify-between text-left group"
+                                    className="w-full flex items-center justify-between text-left group py-2"
                                 >
-                                    <div className="flex items-center gap-6">
-                                        <span className={`text-xs font-mono transition-colors ${openIndex === idx ? 'text-[var(--terracotta)]' : 'text-white/30'}`}>
+                                    <div className="flex items-center gap-3 md:gap-6">
+                                        <span className={`text-[10px] md:text-xs font-mono transition-colors ${openIndex === idx ? 'text-[var(--terracotta)]' : 'text-white/30'}`}>
                                             0{idx + 1}
                                         </span>
-                                        <h3 className={`text-xl md:text-2xl font-serif transition-colors ${openIndex === idx ? 'text-white' : 'text-white/80 group-hover:text-white'}`}>
+                                        <h3 className={`text-base md:text-2xl font-serif transition-colors ${openIndex === idx ? 'text-white' : 'text-white/80 group-hover:text-white'}`}>
                                             {faq.question}
                                         </h3>
                                     </div>
-                                    <span className={`text-2xl transition-transform duration-500 ${openIndex === idx ? 'rotate-45 text-[var(--terracotta)]' : 'text-white/20'}`}>
+                                    <span className={`text-xl md:text-2xl transition-transform duration-500 ${openIndex === idx ? 'rotate-45 text-[var(--terracotta)]' : 'text-white/20'}`}>
                                         +
                                     </span>
                                 </button>
@@ -93,15 +93,15 @@ export default function TechnicalFAQ() {
                                             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                                             className="overflow-hidden"
                                         >
-                                            <div className="pt-6 pl-12">
-                                                <p className="text-lg text-white/60 leading-relaxed max-w-2xl">
+                                            <div className="pt-2 md:pt-6 pl-6 md:pl-12">
+                                                <p className="text-sm md:text-lg text-white/60 leading-relaxed max-w-2xl">
                                                     {faq.answer}
                                                 </p>
-                                                <div className="mt-8 flex items-center gap-4">
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--terracotta)] px-2 py-1 bg-[var(--terracotta)]/10 rounded">
+                                                <div className="mt-4 md:mt-8 flex flex-wrap items-center gap-3">
+                                                    <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[var(--terracotta)] px-2 py-0.5 bg-[var(--terracotta)]/10 rounded">
                                                         Expert insight
                                                     </span>
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/30 underline decoration-white/10 underline-offset-4">
+                                                    <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-white/30 underline decoration-white/10 underline-offset-4">
                                                         Read Technical Sheet
                                                     </span>
                                                 </div>

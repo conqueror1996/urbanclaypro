@@ -133,7 +133,7 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
     return (
         <div className="w-full h-full" style={{ perspective: 1200 }}>
             <motion.div
-                className="relative w-full h-full min-h-[400px] md:min-h-[550px] overflow-hidden"
+                className="relative w-full h-full min-h-[320px] md:min-h-[550px] overflow-hidden"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={{

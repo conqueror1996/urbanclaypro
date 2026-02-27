@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 
 export default function Sustainability() {
     return (
-        <section className="py-24 md:py-32 bg-[var(--sand)] relative overflow-hidden">
+        <section className="py-12 md:py-32 bg-[var(--sand)] relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
                     <div className="relative z-10">
                         <span className="text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
                             Our Responsibility
                         </span>
-                        <h2 className="text-4xl md:text-6xl font-serif text-[var(--ink)] leading-tight mb-8">
+                        <h2 className="text-3xl md:text-6xl font-serif text-[var(--ink)] leading-tight mb-6 md:mb-8">
                             100% Natural. <br />
                             1000 Years of Durability.
                         </h2>
@@ -20,22 +20,22 @@ export default function Sustainability() {
                             Clay is the ultimate circular material. Sourced from the earth, fired by hand, and designed to outlast the structures it protects. No toxic binders, no microplastics, just timeless geology.
                         </p>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-10">
+                        <div className="grid grid-cols-2 lg:grid-cols-2 gap-6 md:gap-10">
                             <div>
-                                <span className="block text-3xl font-serif text-[var(--ink)] mb-1">Low</span>
-                                <span className="text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Carbon Footprint</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">Low</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Carbon Footprint</span>
                             </div>
                             <div>
-                                <span className="block text-3xl font-serif text-[var(--ink)] mb-1">Bio</span>
-                                <span className="text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Degradable</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">Bio</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Degradable</span>
                             </div>
                             <div>
-                                <span className="block text-3xl font-serif text-[var(--ink)] mb-1">High</span>
-                                <span className="text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Recyclability</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">High</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Recyclability</span>
                             </div>
                             <div>
-                                <span className="block text-3xl font-serif text-[var(--ink)] mb-1">0%</span>
-                                <span className="text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Chemical Waste</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">0%</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/40 font-bold">Chemical Waste</span>
                             </div>
                         </div>
                     </div>

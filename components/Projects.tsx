@@ -27,7 +27,7 @@ const ParallaxProjectCard = ({ project, index, isMixed, isLarge }: { project: Pr
             className={`
                 ${isMixed
                     ? `block h-full ${isLarge ? 'md:col-span-2' : 'md:col-span-1'}`
-                    : 'block min-w-[85vw] sm:min-w-0 snap-center h-full'
+                    : 'block min-w-[75vw] sm:min-w-0 snap-center h-full'
                 }
             `}
         >
@@ -67,7 +67,7 @@ const ParallaxProjectCard = ({ project, index, isMixed, isLarge }: { project: Pr
 
                 <div className="mt-6 px-2 flex-grow">
                     <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-2xl font-serif text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors duration-300">
+                        <h3 className="text-xl md:text-2xl font-serif text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors duration-300">
                             {project.title}
                         </h3>
                     </div>
@@ -94,17 +94,17 @@ export default function Projects({ projects = [], showLink = true, layoutMode = 
     const isMixed = layoutMode === 'mixed';
 
     return (
-        <section id="projects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+        <section id="projects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-32">
             {/* HEADER */}
             <motion.div
-                className="text-center mb-16"
+                className="text-center mb-10 md:mb-16"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
             >
-                <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-3 block">Project Validation</span>
-                <h2 className="text-4xl md:text-5xl font-serif text-[#2A1E16]">Technical Benchmarks & <br className="hidden md:block" /> Signature Projects</h2>
+                <span className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-[10px] md:text-xs mb-3 block">Project Validation</span>
+                <h2 className="text-3xl md:text-5xl font-serif text-[#2A1E16]">Technical Benchmarks & <br className="hidden md:block" /> Signature Projects</h2>
             </motion.div>
 
             <div className={`

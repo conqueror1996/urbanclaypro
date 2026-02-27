@@ -38,7 +38,7 @@ interface TechnicalEdgeProps {
 
 export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
     return (
-        <section className="py-16 md:py-32 bg-[var(--ink)] text-white overflow-hidden">
+        <section className="py-12 md:py-32 bg-[var(--ink)] text-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="grid lg:grid-cols-2 gap-12 md:gap-24 items-center">
                     <div>
@@ -96,10 +96,10 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
                             whileInView={{ x: 0, opacity: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.3, duration: 0.8 }}
-                            className="absolute -bottom-6 -right-6 bg-[var(--terracotta)] p-5 md:p-8 rounded-2xl shadow-2xl z-20"
+                            className="absolute bottom-2 right-2 md:-bottom-6 md:-right-6 bg-[var(--terracotta)] p-4 md:p-8 rounded-2xl shadow-2xl z-20"
                         >
-                            <span className="block text-3xl md:text-5xl font-serif text-white mb-1 tracking-tight">1000y+</span>
-                            <span className="text-[9px] uppercase tracking-wider text-white/80 font-bold leading-tight">
+                            <span className="block text-2xl md:text-5xl font-serif text-white mb-1 tracking-tight">1000y+</span>
+                            <span className="text-[8px] md:text-[9px] uppercase tracking-wider text-white/80 font-bold leading-tight">
                                 Material Longevity<br />100% Circular
                             </span>
                         </motion.div>
