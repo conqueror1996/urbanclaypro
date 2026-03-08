@@ -16,7 +16,7 @@ export default function OurStoryTeaser({ data }: OurStoryTeaserProps) {
     const imageUrl = data?.ourStoryImageUrl || '/images/our-philosophy-texture.jpg';
 
     return (
-        <section className="py-20 md:py-32 bg-[var(--sand)] border-y border-[var(--line)] relative overflow-hidden">
+        <section className="section-padding bg-[var(--sand)] border-y border-[var(--line)] relative overflow-hidden">
             {/* Subtle Background Animation */}
             <div className="absolute inset-0 pointer-events-none">
                 <motion.div
@@ -68,11 +68,11 @@ export default function OurStoryTeaser({ data }: OurStoryTeaserProps) {
                         className="py-10"
                     >
                         <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-[var(--terracotta)] font-medium tracking-widest uppercase text-xs mb-4 block">Our Philosophy</motion.span>
-                        <motion.h2 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-4xl md:text-5xl font-serif text-[#2A1E16] mb-8 leading-tight">
+                        <motion.h2 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="mb-8 leading-tight">
                             Crafting Earth into <br />
                             <span className="italic text-[var(--terracotta)]">Timeless Legacies</span>
                         </motion.h2>
-                        <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-lg text-[#5d554f] mb-8 leading-relaxed font-light">
+                        <motion.p variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-lg text-[#5d554f] mb-8 leading-relaxed">
                             UrbanClay wasn't just built to sell tiles; it was born from a reverence for the earth.
                             For over 17 years, we have been partnering with visionary architects to transform humble clay into facades that breathe, age gracefully, and tell a story.
                         </motion.p>

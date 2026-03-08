@@ -1,4 +1,5 @@
 'use client';
+import JsonLd from './JsonLd';
 
 export default function FAQSchema() {
     const faqData = {
@@ -104,10 +105,5 @@ export default function FAQSchema() {
         ]
     };
 
-    return (
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
-        />
-    );
+    return <JsonLd data={faqData} />;
 }

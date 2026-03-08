@@ -21,12 +21,64 @@
 }
 
 :root {
+  /* Colors */
   --terracotta: #b45a3c;
   --ink: #2f2a26;
-  --sand: #faf7f3;
+  --sand: #faf9f6;
   --line: #e9e2da;
   --background: var(--sand);
   --foreground: var(--ink);
+
+  /* Strict Type Scale (14, 16, 20, 28, 40, 64) */
+  --h1: 4rem;
+  /* 64px */
+  --h2: 2.5rem;
+  /* 40px */
+  --h3: 1.75rem;
+  /* 28px */
+  --h4: 1.25rem;
+  /* 20px */
+  --body: 1rem;
+  /* 16px */
+  --small: 0.875rem;
+  /* 14px */
+
+  /* Mobile Scale (Adjusted for narrow viewports but following logic) */
+  --h1-m: 2.5rem;
+  /* 40px */
+  --h2-m: 1.75rem;
+  /* 28px */
+  --h3-m: 1.25rem;
+  /* 20px */
+  --h4-m: 1rem;
+  /* 16px */
+  --body-m: 1rem;
+  /* 16px */
+  --small-m: 0.875rem;
+  /* 14px */
+
+  /* Strict 8px Spacing System (8, 16, 24, 32, 48, 64, 96) */
+  --space-1: 0.5rem;
+  /* 8px */
+  --space-2: 1rem;
+  /* 16px */
+  --space-3: 1.5rem;
+  /* 24px */
+  --space-4: 2rem;
+  /* 32px */
+  --space-6: 3rem;
+  /* 48px */
+  --space-8: 4rem;
+  /* 64px */
+  --space-12: 6rem;
+  /* 96px */
+
+  --section-py-desktop: 6rem;
+  /* 96px */
+  --section-py-mobile: 4rem;
+  /* 64px */
+  --container-px: 1.5rem;
+  /* 24px */
 }
 
 @theme inline {
@@ -125,20 +177,58 @@ h5,
 h6 {
   font-family: var(--font-serif);
   letter-spacing: -0.01em;
-  /* Tight, crafted feel */
+  line-height: 1.1;
+  color: var(--ink);
 }
 
 h1 {
+  font-size: var(--h1-m);
   font-weight: 800;
 }
 
 h2 {
-  font-weight: 700;
+  font-size: var(--h2-m);
+  font-weight: 800;
 }
 
-h3,
-h4 {
+h3 {
+  font-size: var(--h3-m);
   font-weight: 600;
+}
+
+h4 {
+  font-size: var(--h4-m);
+  font-weight: 600;
+}
+
+@media (min-width: 1024px) {
+  h1 {
+    font-size: var(--h1);
+  }
+
+  h2 {
+    font-size: var(--h2);
+  }
+
+  h3 {
+    font-size: var(--h3);
+  }
+
+  h4 {
+    font-size: var(--h4);
+  }
+}
+
+.section-padding {
+  padding-top: var(--section-py-mobile);
+  padding-bottom: var(--section-py-mobile);
+}
+
+@media (min-width: 1024px) {
+  .section-padding {
+    padding-top: var(--section-py-desktop);
+    padding-bottom: var(--section-py-desktop);
+  }
 }
 
 .font-serif {
@@ -151,21 +241,21 @@ h4 {
 
 /* Premium Button Styles with GPU Acceleration */
 .btn-primary {
-  @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#2A1E16] text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:bg-[#4a3e36] active:scale-95;
+  @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#2A1E16] text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:bg-[#4a3e36] active:scale-95;
   transform: translateZ(0);
   /* GPU acceleration */
   backface-visibility: hidden;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-[#2A1E16] border border-[#e9e2da] font-medium transition-all duration-300 shadow-sm hover:shadow-md hover:border-[#2A1E16] hover:-translate-y-0.5 active:scale-95;
+  @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-white text-[#2A1E16] border border-[#e9e2da] font-normal transition-all duration-300 shadow-sm hover:shadow-md hover:border-[#2A1E16] hover:-translate-y-0.5 active:scale-95;
   transform: translateZ(0);
   /* GPU acceleration */
   backface-visibility: hidden;
 }
 
 .btn-terracotta {
-  @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-[var(--terracotta)] text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-[#a85638] hover:-translate-y-0.5 active:scale-95;
+  @apply inline-flex items-center justify-center px-8 py-4 rounded-full bg-[var(--terracotta)] text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-[#a85638] hover:-translate-y-0.5 active:scale-95;
   transform: translateZ(0);
   /* GPU acceleration */
   backface-visibility: hidden;

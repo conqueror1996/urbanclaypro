@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import JsonLd from './JsonLd';
 
 export default function Breadcrumbs({ range }: { range?: string }) {
     const pathname = usePathname();
@@ -37,11 +38,8 @@ export default function Breadcrumbs({ range }: { range?: string }) {
     };
 
     return (
-        <nav className="flex flex-nowrap items-center justify-start text-[10px] font-bold uppercase tracking-wide text-gray-500 leading-none">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+        <nav className="flex flex-nowrap items-center justify-start text-[10px] font-bold uppercase tracking-wide text-[var(--foreground)]/40 leading-none">
+            <JsonLd data={jsonLd} />
             <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center">Home</Link>
 
             {parts.map((part, idx) => {
@@ -50,7 +48,7 @@ export default function Breadcrumbs({ range }: { range?: string }) {
 
                 return (
                     <React.Fragment key={path}>
-                        <span className="mx-2 text-gray-300 text-[10px] flex items-center">/</span>
+                        <span className="mx-2 text-[var(--line)] text-[10px] flex items-center">/</span>
                         {isLast ? (
                             <span className="text-[var(--terracotta)] flex items-center whitespace-nowrap">{formatLabel(part)}</span>
                         ) : (
@@ -61,8 +59,8 @@ export default function Breadcrumbs({ range }: { range?: string }) {
                                 {/* Insert Range if present and we just rendered the category (second to last item) */}
                                 {range && idx === parts.length - 2 && (
                                     <>
-                                        <span className="mx-2 text-gray-300 text-[10px] flex items-center">/</span>
-                                        <span className="text-[#5d554f] cursor-default flex items-center whitespace-nowrap">{range}</span>
+                                        <span className="mx-2 text-[var(--line)] text-[10px] flex items-center">/</span>
+                                        <span className="text-[var(--foreground)]/60 cursor-default flex items-center whitespace-nowrap">{range}</span>
                                     </>
                                 )}
                             </>
@@ -73,7 +71,7 @@ export default function Breadcrumbs({ range }: { range?: string }) {
 
             {variantName && (
                 <>
-                    <span className="mx-2 text-gray-300 text-[10px] flex items-center">/</span>
+                    <span className="mx-2 text-[var(--line)] text-[10px] flex items-center">/</span>
                     <span className="text-[var(--terracotta)] flex items-center whitespace-nowrap">{variantName}</span>
                 </>
             )}

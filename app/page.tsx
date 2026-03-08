@@ -283,7 +283,7 @@ export default async function Home({ searchParams }: Props) {
             <TrustBar firms={homePageData?.trustedFirms} />
 
             {/* 4. SYSTEM ARCHITECTURES - Application-Based Discovery */}
-            <ScrollReveal className="bg-white">
+            <ScrollReveal>
                 <SignatureCollection products={products} />
             </ScrollReveal>
 
@@ -293,14 +293,14 @@ export default async function Home({ searchParams }: Props) {
             </ScrollReveal>
 
             {/* 5. PROJECT ARCHIVE - Commercial & Luxury Residential Evidence */}
-            <ScrollReveal className="bg-white">
+            <ScrollReveal>
                 <Projects projects={recentProjects} />
             </ScrollReveal>
 
 
 
             {/* 7. THE TECHNICAL DESK - Project-Specific Consultation */}
-            <ScrollReveal className="bg-white" id="quote">
+            <ScrollReveal id="quote">
                 <Suspense fallback={<div className="py-20 text-center">Loading form...</div>}>
                     <QuoteForm />
                 </Suspense>
@@ -308,7 +308,7 @@ export default async function Home({ searchParams }: Props) {
 
 
             {/* FOOTER & LOGISTICS BADGE */}
-            <ScrollReveal className="bg-white">
+            <ScrollReveal>
                 <Footer />
             </ScrollReveal>
         </div>

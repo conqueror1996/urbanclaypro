@@ -216,8 +216,12 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                                     <div className="w-full h-full" style={{ backgroundColor: sample.color }} />
                                                                 )}
                                                             </div>
-                                                            <button onClick={(e) => { e.stopPropagation(); removeFromBox(sample.id); }} className="absolute -top-2 -right-2 w-5 h-5 bg-white text-red-500 rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-75 group-hover:scale-100 z-10">
-                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                            <button
+                                                                onClick={(e) => { e.stopPropagation(); removeFromBox(sample.id); }}
+                                                                className="absolute -top-2 -right-2 w-7 h-7 md:w-5 md:h-5 bg-white text-red-500 rounded-full shadow-lg flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all scale-100 md:scale-75 md:group-hover:scale-100 z-10 border border-red-50"
+                                                                aria-label={`Remove ${sample.name}`}
+                                                            >
+                                                                <svg className="w-4 h-4 md:w-3 md:h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.6} d="M6 18L18 6M6 6l12 12" /></svg>
                                                             </button>
                                                         </div>
                                                     ))}

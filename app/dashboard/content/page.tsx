@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { createBlogDraft } from '@/app/actions/generate-blog';
 import { publishBlog } from '@/app/actions/publish-blog';
 import { getHomePageData } from '@/lib/products';
-import { updateHomePageFirms, updateTechnicalEdgeImage } from '@/app/actions/manage-home';
+import { updateHomePageFirms, updateTechnicalEdgeImage, updateSpecifierToolkitImage } from '@/app/actions/manage-home';
 import { authenticatedFetch } from '@/lib/auth-utils';
-import { Plus, Trash2, Save, Sparkles, Home } from 'lucide-react';
+import { Plus, Trash2, Save, Sparkles, Home, Box } from 'lucide-react';
 
 export default function ContentEnginePage() {
     const [activeTab, setActiveTab] = useState<'blog' | 'home'>('blog');
@@ -15,12 +15,14 @@ export default function ContentEnginePage() {
     const [isPublishing, setIsPublishing] = useState(false);
 
     // Homepage Management State
-    // Homepage Management State
     const [firms, setFirms] = useState<{ name: string }[]>([]);
     const [isSavingHome, setIsSavingHome] = useState(false);
     const [technicalEdgeImage, setTechnicalEdgeImage] = useState<string | null>(null);
     const [technicalEdgeImageFile, setTechnicalEdgeImageFile] = useState<{ file: File; preview: string } | null>(null);
+    const [specifierToolkitImage, setSpecifierToolkitImage] = useState<string | null>(null);
+    const [specifierToolkitImageFile, setSpecifierToolkitImageFile] = useState<{ file: File; preview: string } | null>(null);
     const [isSavingImage, setIsSavingImage] = useState(false);
+    const [isSavingToolkit, setIsSavingToolkit] = useState(false);
 
     // Draft Result State
     const [draftRequest, setDraftRequest] = useState<{
@@ -39,7 +41,7 @@ export default function ContentEnginePage() {
         error?: string
     } | null>(null);
 
-    // Load Homepage Data
+    // Load Data
     useEffect(() => {
         const loadHomeData = async () => {
             const data = await getHomePageData();
@@ -48,6 +50,9 @@ export default function ContentEnginePage() {
             }
             if (data?.technicalEdgeImageUrl) {
                 setTechnicalEdgeImage(data.technicalEdgeImageUrl);
+            }
+            if (data?.specifierToolkitImageUrl) {
+                setSpecifierToolkitImage(data.specifierToolkitImageUrl);
             }
         };
         loadHomeData();
@@ -76,7 +81,7 @@ export default function ContentEnginePage() {
             const res = await publishBlog(draftRequest.id);
             if (res.success) {
                 setPublishedResult(res);
-                setDraftRequest(null); // Clear draft view
+                setDraftRequest(null);
             } else {
                 alert('Publish failed: ' + (res as any).error);
             }
@@ -129,6 +134,35 @@ export default function ContentEnginePage() {
             alert('Error uploading image: ' + (err.message || String(err)));
         } finally {
             setIsSavingImage(false);
+        }
+    };
+
+    const handleSaveToolkitImage = async () => {
+        if (!specifierToolkitImageFile) return;
+        setIsSavingToolkit(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', specifierToolkitImageFile.file);
+            const uploadRes = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
+            const uploadJson = await uploadRes.json();
+
+            if (uploadJson.success && uploadJson.asset._id) {
+                const res = await updateSpecifierToolkitImage(uploadJson.asset._id);
+                if (res.success) {
+                    alert('Specifier Toolkit Image updated successfully!');
+                    setSpecifierToolkitImage(specifierToolkitImageFile.preview);
+                    setSpecifierToolkitImageFile(null);
+                } else {
+                    alert('Failed to update image reference in Sanity');
+                }
+            } else {
+                alert('Image upload failed');
+            }
+        } catch (err: any) {
+            console.error('Upload toolkit catch error:', err);
+            alert('Error uploading toolkit image: ' + (err.message || String(err)));
+        } finally {
+            setIsSavingToolkit(false);
         }
     };
 
@@ -315,7 +349,7 @@ export default function ContentEnginePage() {
                     )}
                 </>
             ) : (
-                <div className="bg-white rounded-2xl p-8 border border-[#e5e0d8] shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="bg-white rounded-2xl p-8 border border-[#e5e0d8] shadow-sm">
                     <div className="flex justify-between items-center mb-8">
                         <div>
                             <h2 className="text-xl font-serif text-[#2A1E16]">Trusted Architect Firms</h2>
@@ -332,7 +366,7 @@ export default function ContentEnginePage() {
 
                     <div className="space-y-4 mb-10">
                         {firms.map((firm, idx) => (
-                            <div key={idx} className="flex gap-4 items-center animate-in fade-in slide-in-from-left-2 duration-200" style={{ animationDelay: `${idx * 50}ms` }}>
+                            <div key={idx} className="flex gap-4 items-center">
                                 <div className="flex-1 bg-[#faf9f8] p-4 rounded-xl border border-gray-100 flex items-center gap-4">
                                     <span className="text-[10px] font-bold text-gray-300 uppercase w-4">{idx + 1}</span>
                                     <input
@@ -360,7 +394,7 @@ export default function ContentEnginePage() {
                         )}
                     </div>
 
-                    {/* Image Section */}
+                    {/* Image Section 1 */}
                     <div className="pt-8 border-t border-gray-100 mb-8">
                         <div className="mb-6">
                             <h2 className="text-xl font-serif text-[#2A1E16]">Technical Edge Background</h2>
@@ -370,10 +404,8 @@ export default function ContentEnginePage() {
                         <div className="flex gap-6 items-start">
                             <div className="w-1/2 aspect-[4/5] max-w-[300px] bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 relative overflow-hidden flex items-center justify-center">
                                 {technicalEdgeImageFile ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img src={technicalEdgeImageFile.preview} alt="Preview" className="w-full h-full object-contain bg-white" />
                                 ) : technicalEdgeImage ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img src={technicalEdgeImage} alt="Existing" className="w-full h-full object-contain bg-white" />
                                 ) : (
                                     <div className="text-center text-gray-400 p-4">
@@ -408,6 +440,52 @@ export default function ContentEnginePage() {
                         </div>
                     </div>
 
+                    {/* Image Section 2 */}
+                    <div className="pt-8 border-t border-gray-100 mb-8">
+                        <div className="mb-6">
+                            <h2 className="text-xl font-serif text-[#2A1E16]">Specifier Toolkit Image</h2>
+                            <p className="text-sm text-gray-500 mt-1">The system diagram shown in the "Fast-Track Your Technical Specification" section on pillar pages.</p>
+                        </div>
+
+                        <div className="flex gap-6 items-start">
+                            <div className="w-1/2 aspect-video max-w-[400px] bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 relative overflow-hidden flex items-center justify-center">
+                                {specifierToolkitImageFile ? (
+                                    <img src={specifierToolkitImageFile.preview} alt="Preview" className="w-full h-full object-contain bg-white" />
+                                ) : specifierToolkitImage ? (
+                                    <img src={specifierToolkitImage} alt="Existing" className="w-full h-full object-contain bg-white" />
+                                ) : (
+                                    <div className="text-center text-gray-400 p-4">
+                                        <p className="text-xs uppercase font-bold">No Image Set</p>
+                                    </div>
+                                )}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) setSpecifierToolkitImageFile({ file, preview: URL.createObjectURL(file) });
+                                    }}
+                                />
+                            </div>
+
+                            <div className="flex-1 space-y-4">
+                                <p className="text-sm text-gray-600">
+                                    Click the frame on the left to select a new image. Best format: <strong>Transparent PNG</strong> (Detailed system diagram).
+                                </p>
+                                {specifierToolkitImageFile && (
+                                    <button
+                                        onClick={handleSaveToolkitImage}
+                                        disabled={isSavingToolkit}
+                                        className="px-6 py-3 bg-[var(--terracotta)] text-white rounded-xl font-bold uppercase tracking-widest shadow-lg hover:bg-[#a85638] transition-all disabled:opacity-50 text-xs w-full sm:w-auto"
+                                    >
+                                        {isSavingToolkit ? 'Uploading...' : 'Upload & Save Image'}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="pt-8 border-t border-gray-100 flex justify-end">
                         <button
                             onClick={handleSaveFirms}
@@ -422,7 +500,7 @@ export default function ContentEnginePage() {
                             ) : (
                                 <>
                                     <Save size={18} />
-                                    <span>Save Homepage Assets</span>
+                                    <span>Save Homepage Firms</span>
                                 </>
                             )}
                         </button>

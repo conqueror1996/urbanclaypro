@@ -34,10 +34,10 @@ export default function WhatsAppFloat() {
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.8 }}
-                    className="fixed bottom-28 right-6 z-[9999] flex flex-col items-end gap-2"
+                    className="fixed bottom-6 left-6 md:bottom-28 md:right-6 z-[9999] flex flex-col items-start md:items-end gap-2"
                 >
-                    {/* Chat Bubble */}
-                    <div className="bg-white px-4 py-3 rounded-2xl rounded-tr-none shadow-xl border border-gray-100 relative mb-2 animate-bounce-subtle origin-bottom-right">
+                    {/* Chat Bubble - Hidden on Mobile for Minimalism */}
+                    <div className="hidden md:block bg-white px-4 py-3 rounded-2xl rounded-tr-none shadow-xl border border-gray-100 relative mb-2 animate-bounce-subtle origin-bottom-right">
                         <p className="text-xs font-bold text-gray-800">
                             👋 Need Help? <span className="text-[var(--terracotta)]">Chat with us!</span>
                         </p>

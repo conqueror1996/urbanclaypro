@@ -70,7 +70,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
 
     // Generate Product Schema for Google Rich Snippets
     const productSchema = {
-        '@context': 'https://schema.org/',
+        '@context': 'https://schema.org',
         '@type': 'Product',
         name: product.title,
         image: product.imageUrl,

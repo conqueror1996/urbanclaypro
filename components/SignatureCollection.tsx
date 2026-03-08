@@ -183,7 +183,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
     const activeCategory = categoryData.find(c => c.id === activeTab) || categoryData[0];
 
     return (
-        <section className="py-12 md:py-32 bg-[#Fbf9f7] overflow-hidden" id="signature-collection">
+        <section className="section-padding overflow-hidden" id="signature-collection">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* HEADLINE SECTION - Compact Layout */}
@@ -195,10 +195,10 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                         viewport={{ once: true }}
                         className="mb-8"
                     >
-                        <span className="text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-3 block">
+                        <span className="text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
                             System Specifications
                         </span>
-                        <h2 className="text-4xl md:text-6xl font-serif text-[var(--ink)] leading-tight">
+                        <h2 className="mb-4">
                             Engineered Facade <br /> & Cladding Systems
                         </h2>
                     </motion.div>
@@ -223,8 +223,8 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                                         className={`
                                             relative transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group
                                             ${activeTab === cat.id
-                                                ? 'text-xl md:text-3xl font-serif text-[var(--ink)] italic'
-                                                : 'text-[10px] md:text-sm font-medium uppercase tracking-[0.2em] text-[var(--ink)]/40 hover:text-[var(--ink)]/80'}
+                                                ? 'text-xl md:text-[28px] font-serif text-[var(--ink)] italic font-semibold'
+                                                : 'text-[10px] md:text-sm font-semibold uppercase tracking-[0.2em] text-[var(--ink)]/40 hover:text-[var(--ink)]/80'}
                                         `}
                                     >
                                         <span className="relative z-10 whitespace-nowrap">{cat.label}</span>
@@ -267,7 +267,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                             </div>
 
                             {/* Products Grid - Smaller Cards (4 cols) */}
-                            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                            <div className="flex flex-wrap justify-center gap-6 md:gap-8">
                                 {activeCategory.items.map((item, index) => (
                                     <ProductCard
                                         key={item._id}
@@ -289,7 +289,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                             <div className="mt-16 md:mt-24 text-center">
                                 <Link
                                     href={`/products?category=${activeCategory.id}`}
-                                    className="btn-link-dotted text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]"
+                                    className="btn-link-dotted text-[10px] md:text-xs font-extrabold uppercase tracking-[0.2em]"
                                 >
                                     View All {activeCategory.label}
                                     <span>→</span>
@@ -311,14 +311,14 @@ function ProductCard({ product, index }: { product: DisplayProduct, index: numbe
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group relative w-[calc(50%-0.5rem)] md:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
+            className="group relative w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)]"
         >
             <Link
                 href={`/products/${categorySlug || 'products'}/${slug}${variantName ? `?variant=${encodeURIComponent(variantName)}` : ''}`}
-                className="block h-full"
+                className="block h-full bg-[var(--background)] rounded-2xl md:rounded-3xl p-6 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] border border-[var(--line)] group-hover:border-[var(--terracotta)]/30"
             >
                 {/* Image Card - Increased Radius & Smaller Aspect */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] rounded-2xl md:rounded-3xl border border-transparent group-hover:border-[var(--line)]">
+                <div className="relative aspect-[3/4] overflow-hidden bg-[var(--background)] mb-4 rounded-xl md:rounded-2xl">
                     {imageUrl ? (
                         <>
                             <PremiumImage
@@ -340,18 +340,18 @@ function ProductCard({ product, index }: { product: DisplayProduct, index: numbe
 
                     {/* Floating Action Button */}
                     <div className="absolute bottom-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100 z-10">
-                        <span className="h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-lg text-[var(--ink)]">
+                        <span className="h-8 w-8 bg-[var(--background)] rounded-full flex items-center justify-center shadow-lg text-[var(--foreground)]">
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                         </span>
                     </div>
                 </div>
 
                 {/* Minimal Info */}
-                <div className="text-center group-hover:-translate-y-1 transition-transform duration-500 px-2">
-                    <h4 className="text-lg font-serif text-[var(--ink)] mb-1 group-hover:text-[var(--terracotta)] transition-colors line-clamp-1">
+                <div className="text-center group-hover:-translate-y-1 transition-transform duration-500">
+                    <h3 className="text-xl font-serif text-[var(--ink)] font-semibold mb-2 group-hover:text-[var(--terracotta)] transition-colors line-clamp-1">
                         {title}
-                    </h4>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink)]/40 font-bold line-clamp-1 mt-1">
+                    </h3>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink)]/40 font-extrabold line-clamp-1 mt-0">
                         {subtitle}
                     </p>
                 </div>

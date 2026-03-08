@@ -70,7 +70,7 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
                 className="block relative overflow-hidden"
             >
                 {/* Visual Card Container */}
-                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[#241e1a] mb-5 border border-white/5 group-hover:border-[var(--terracotta)]/30 transition-all duration-700 shadow-[0_20px_50px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_60px_rgba(180,90,60,0.15)]">
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[var(--background)] mb-5 border border-[var(--line)] group-hover:border-[var(--terracotta)]/30 transition-all duration-700 shadow-[0_20px_40px_rgba(0,0,0,0.06)] group-hover:shadow-[0_20px_50px_rgba(180,90,60,0.12)]">
                     {variant.imageUrl ? (
                         <Image
                             src={variant.imageUrl}
@@ -80,13 +80,13 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
                             className="object-cover transition-transform duration-1000 group-hover:scale-110"
                         />
                     ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-white/10 text-[10px] tracking-[0.2em] font-mono uppercase">
+                        <div className="absolute inset-0 flex items-center justify-center text-[var(--foreground)]/10 text-[10px] tracking-[0.2em] font-mono uppercase">
                             Visual Pending
                         </div>
                     )}
 
                     {/* Premium Overlays */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)]/80 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-700" />
 
                     {/* Variant Badge */}
                     {variant.badge && (
@@ -99,16 +99,16 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
 
                     {/* Indicator Icon */}
                     <div className="absolute top-4 right-4 z-20">
-                        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center">
-                            <ArrowUpRight className="w-4 h-4 text-white group-hover:rotate-45 transition-transform duration-500" />
+                        <div className="w-8 h-8 rounded-full bg-[var(--background)]/40 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center">
+                            <ArrowUpRight className="w-4 h-4 text-[var(--foreground)] group-hover:rotate-45 transition-transform duration-500" />
                         </div>
                     </div>
                 </div>
 
                 {/* Info Text */}
-                <div className="relative z-10 transition-transform duration-500 group-hover:-translate-y-1">
-                    <h4 className="text-base font-serif text-[#EBE5E0] mb-1 group-hover:text-white transition-colors">{variant.name}</h4>
-                    <p className="text-[10px] text-[var(--terracotta)] font-bold uppercase tracking-[0.2em] opacity-80 group-hover:opacity-100">
+                <div className="relative z-10 p-2 transition-transform duration-500 group-hover:-translate-y-1">
+                    <h4 className="text-base font-serif text-[var(--foreground)] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{variant.name}</h4>
+                    <p className="text-[10px] text-[var(--foreground)]/50 font-bold uppercase tracking-[0.2em] opacity-80 group-hover:opacity-100">
                         {product.title}
                     </p>
                 </div>
@@ -119,14 +119,14 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
                 <div className="flex items-center gap-2">
                     <button
                         onClick={handleAddSample}
-                        className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] transition-all active:scale-95 group/btn shadow-xl"
+                        className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--terracotta)] hover:text-white hover:border-[var(--terracotta)] transition-all active:scale-95 group/btn shadow-xl"
                         title="Add to Sample Tray"
                     >
                         <Plus className="w-5 h-5 group-hover/btn:rotate-90 transition-transform duration-300" />
                     </button>
                     <button
                         onClick={handleWhatsAppShare}
-                        className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-emerald-500 hover:border-emerald-500 transition-all active:scale-95 shadow-xl"
+                        className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all active:scale-95 shadow-xl"
                         title="Share on WhatsApp"
                     >
                         <MessageCircle className="w-5 h-5" />

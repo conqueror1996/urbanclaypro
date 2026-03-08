@@ -10,9 +10,9 @@ export default function Architects() {
     const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
 
     return (
-        <section id="architects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-32">
+        <section id="architects" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-padding">
             <motion.div
-                className="relative rounded-[2.5rem] bg-[#2A1E16] text-white overflow-hidden"
+                className="relative rounded-[2.5rem] bg-[var(--background)] text-[var(--foreground)] overflow-hidden border border-[var(--line)] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)]"
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -24,16 +24,16 @@ export default function Architects() {
 
                 <div className="relative z-10 p-6 md:p-16 grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
                     <div className="text-center lg:text-left">
-                        <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-[10px] md:text-xs font-semibold tracking-wider uppercase mb-4 md:mb-6 border border-white/10">
+                        <span className="inline-block px-3 py-1 rounded-full bg-[var(--ink)]/5 text-[var(--foreground)] text-[10px] md:text-xs font-semibold tracking-wider uppercase mb-4 md:mb-6 border border-[var(--line)]">
                             Professional Resources
                         </span>
-                        <h3 className="text-3xl md:text-5xl font-serif mb-4 md:mb-6 leading-tight text-center lg:text-left">
+                        <h2 className="text-[var(--foreground)] mb-4 md:mb-6 leading-tight text-center lg:text-left">
                             For Architects & <br className="hidden md:block" /> Designers
-                        </h3>
-                        <p className="text-sm md:text-lg text-white/70 mb-8 md:mb-10 leading-relaxed max-w-md mx-auto lg:mx-0">
+                        </h2>
+                        <p className="text-sm md:text-lg text-[var(--foreground)]/60 mb-8 md:mb-10 leading-relaxed max-w-md mx-auto lg:mx-0">
                             Streamline your workflow with our comprehensive technical library. Download high-res textures, BIM objects, and detailed specification sheets.
                         </p>
-                        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                             <button
                                 onClick={() => setIsModalOpen(true)}
                                 className="btn-secondary border-none shadow-lg hover:shadow-xl w-full sm:w-auto py-3 md:py-4 text-sm md:text-base"
@@ -42,7 +42,7 @@ export default function Architects() {
                             </button>
                             <motion.button
                                 onClick={() => setIsSampleModalOpen(true)}
-                                className="px-8 py-3 md:py-4 rounded-full border border-white/20 hover:bg-white/10 transition-colors font-medium backdrop-blur-sm w-full sm:w-auto text-sm md:text-base"
+                                className="px-8 py-3 md:py-4 rounded-full border border-[var(--line)] hover:bg-[var(--sand)] transition-colors font-medium text-[var(--foreground)] backdrop-blur-sm w-full sm:w-auto text-sm md:text-base shadow-sm"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
@@ -52,10 +52,10 @@ export default function Architects() {
                     </div>
 
                     {/* Visual Element - Hidden on Mobile to save space per user request */}
-                    <div className="relative hidden md:block h-full min-h-[400px] bg-white/5 rounded-3xl border border-white/10 p-6 backdrop-blur-sm overflow-hidden group">
+                    <div className="relative hidden md:block h-full min-h-[400px] bg-[var(--sand)] rounded-3xl border border-[var(--line)] p-6 backdrop-blur-sm overflow-hidden group">
                         {/* Grid Background */}
-                        <div className="absolute inset-0 opacity-20"
-                            style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+                        <div className="absolute inset-0 opacity-40"
+                            style={{ backgroundImage: 'linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
                         </div>
 
                         {/* Floating Cards Container */}
@@ -82,7 +82,7 @@ export default function Architects() {
 
                             {/* Card 2: DWG (Middle) */}
                             <motion.div
-                                className="absolute w-48 h-64 bg-[#2A1E16] rounded-xl shadow-2xl p-4 transform rotate-6 translate-x-12 -translate-y-8 border border-white/10"
+                                className="absolute w-48 h-64 bg-[var(--ink)] rounded-xl shadow-2xl p-4 transform rotate-6 translate-x-12 -translate-y-8 border border-[var(--line)]"
                                 animate={{ y: [0, -15, 0] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                             >

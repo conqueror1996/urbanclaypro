@@ -72,8 +72,8 @@ export default function ArchitectPageAnimate() {
                         className="object-cover object-center brightness-[0.4]"
                         priority
                     />
-                    <div className="absolute inset-0 bg-[#1a1512]/60 mix-blend-multiply" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1512] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-[var(--background)]/60 mix-blend-multiply" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent" />
                 </motion.div>
 
                 <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
@@ -88,11 +88,11 @@ export default function ArchitectPageAnimate() {
                         <span className="text-[var(--terracotta)] font-medium tracking-[0.4em] uppercase text-xs mb-6 block">
                             UrbanClay Studio
                         </span>
-                        <h1 className="text-5xl md:text-8xl font-serif text-[#EBE5E0] leading-[1.1] mb-8">
+                        <h1 className="text-5xl md:text-8xl font-serif text-[var(--foreground)] leading-[1.1] mb-8">
                             Designed for <br />
-                            <span className="italic font-light text-white/50">Visionaries</span>
+                            <span className="italic font-light text-[var(--foreground)]/50">Visionaries</span>
                         </h1>
-                        <p className="text-lg md:text-xl text-[#EBE5E0]/60 max-w-2xl mx-auto leading-relaxed font-light mb-12">
+                        <p className="text-lg md:text-xl text-[var(--foreground)]/60 max-w-2xl mx-auto leading-relaxed font-light mb-12">
                             A curated digital atelier for architects. Access high-fidelity assets, technical specifications, and bespoke manufacturing services.
                         </p>
 
@@ -105,7 +105,7 @@ export default function ArchitectPageAnimate() {
                             </button>
                             <button
                                 onClick={() => setSampleModalOpen(true)}
-                                className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-full font-bold uppercase tracking-wider text-sm hover:bg-white/10 transition-colors min-w-[200px] backdrop-blur-sm"
+                                className="px-8 py-4 bg-[var(--ink)]/5 border border-[var(--line)] text-[var(--foreground)] rounded-full font-bold uppercase tracking-wider text-sm hover:bg-[var(--line)] transition-colors min-w-[200px] backdrop-blur-sm"
                             >
                                 Request Samples
                             </button>
@@ -116,16 +116,16 @@ export default function ArchitectPageAnimate() {
 
 
             {/* --- MATERIAL LIBRARY SECTION --- */}
-            <section className="py-32 bg-[#1a1512] relative z-20">
+            <section className="py-32 bg-[var(--background)] relative z-20">
                 <div className="max-w-7xl mx-auto px-6">
-                    <div className="flex items-end justify-between mb-20 border-b border-white/10 pb-8">
+                    <div className="flex items-end justify-between mb-20 border-b border-[var(--line)] pb-8">
                         <div>
-                            <h2 className="text-4xl md:text-5xl font-serif text-[#EBE5E0] mb-4">Material Library</h2>
-                            <p className="text-white/40 max-w-md">Everything you need to specify UrbanClay products with confidence.</p>
+                            <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">Material Library</h2>
+                            <p className="text-[var(--foreground)]/40 max-w-md">Everything you need to specify UrbanClay products with confidence.</p>
                         </div>
                         <div className="hidden md:block text-right">
                             <div className="text-[var(--terracotta)] text-5xl font-serif">03</div>
-                            <div className="text-xs uppercase tracking-widest text-white/40 mt-1">Resource Categories</div>
+                            <div className="text-xs uppercase tracking-widest text-[var(--foreground)]/40 mt-1">Resource Categories</div>
                         </div>
                     </div>
 
@@ -146,16 +146,16 @@ export default function ArchitectPageAnimate() {
                                 </div>
 
                                 <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
-                                    <div className="md:col-span-1 text-white/20 group-hover:text-[var(--terracotta)] transition-colors">
+                                    <div className="md:col-span-1 text-[var(--foreground)]/20 group-hover:text-[var(--terracotta)] transition-colors">
                                         {resource.icon}
                                     </div>
                                     <div className="md:col-span-5">
-                                        <h3 className="text-2xl font-serif text-[#EBE5E0] mb-2 group-hover:text-white transition-colors">{resource.title}</h3>
-                                        <p className="text-white/40 text-sm leading-relaxed">{resource.description}</p>
+                                        <h3 className="text-2xl font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--Ink)] transition-colors">{resource.title}</h3>
+                                        <p className="text-[var(--foreground)]/40 text-sm leading-relaxed">{resource.description}</p>
                                     </div>
                                     <div className="md:col-span-6 flex flex-wrap gap-3 justify-start md:justify-end">
                                         {resource.files.map((file, i) => (
-                                            <span key={i} className="px-4 py-2 bg-black/20 rounded-lg text-xs font-medium text-white/60 border border-white/5 group-hover:border-white/10 transition-colors">
+                                            <span key={i} className="px-4 py-2 bg-[var(--line)]/50 rounded-lg text-xs font-medium text-[var(--foreground)]/60 border border-[var(--line)] group-hover:border-[var(--line)] transition-colors">
                                                 {file}
                                             </span>
                                         ))}
@@ -248,15 +248,15 @@ export default function ArchitectPageAnimate() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.3, duration: 0.8 }}
-                                className="absolute -bottom-10 -left-4 md:-left-12 bg-[#2A1E16] text-[#EBE5E0] p-8 rounded-2xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] max-w-xs hidden md:block border border-white/5"
+                                className="absolute -bottom-10 -left-4 md:-left-12 bg-[var(--background)] text-[var(--foreground)] p-8 rounded-2xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] max-w-xs hidden md:block border border-[var(--line)]"
                             >
                                 <div className="flex items-baseline gap-2 mb-2">
                                     <span className="text-5xl font-serif text-[var(--terracotta)]">500</span>
                                     <span className="text-xl font-serif text-[var(--terracotta)]">+</span>
                                 </div>
-                                <div className="w-full h-px bg-white/10 mb-4" />
+                                <div className="w-full h-px bg-[var(--line)] mb-4" />
                                 <div className="text-sm font-bold uppercase tracking-widest opacity-90 mb-2">Partnered Firms</div>
-                                <p className="text-xs text-white/50 leading-relaxed font-light">
+                                <p className="text-xs text-[var(--foreground)]/50 leading-relaxed font-light">
                                     Empowering India's leading architects with precision-crafted terracotta solutions since 2006.
                                 </p>
                             </motion.div>

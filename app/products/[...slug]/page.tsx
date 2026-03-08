@@ -338,7 +338,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
 
 
         return (
-            <div className="bg-[#1a1512] min-h-screen">
+            <div className="bg-[var(--background)] min-h-screen">
                 <JsonLd data={[jsonLd, faqJsonLd, breadcrumbJsonLd]} />
                 <Header />
                 <ProductPageAnimate
@@ -424,28 +424,28 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         };
 
         return (
-            <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0] overflow-x-hidden">
+            <div className="bg-[var(--background)] min-h-screen text-[var(--foreground)] overflow-x-hidden">
                 <JsonLd data={[jsonLdCat, faqJsonLd, breadcrumbJsonLd]} />
                 <Header />
                 <main className="pt-36 lg:pt-48 pb-20 px-4 md:px-6 max-w-[1800px] mx-auto min-h-screen">
                     {/* Category Hero */}
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 border-b border-white/10 pb-12">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 border-b border-[var(--line)] pb-12">
                         <div>
                             <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
                                 Collection
                             </span>
-                            <h1 className="text-4xl md:text-7xl font-serif text-[#EBE5E0] leading-[0.9] mb-6 break-words">
+                            <h1 className="text-4xl md:text-7xl font-serif text-[var(--foreground)] leading-[0.9] mb-6 break-words">
                                 {title}
                             </h1>
                             {/* SEO Power Text */}
-                            <p className="max-w-2xl text-white/60 text-lg font-light leading-relaxed">
+                            <p className="max-w-2xl text-[var(--foreground)]/60 text-lg font-light leading-relaxed">
                                 {description}
                             </p>
                         </div>
 
                         {/* Render cover image if available (Dynamic Sanity Only) */}
                         {collection.imageUrl && (
-                            <div className="hidden md:block w-32 h-32 rounded-lg overflow-hidden border border-white/10">
+                            <div className="hidden md:block w-32 h-32 rounded-lg overflow-hidden border border-[var(--line)]">
                                 <Image src={collection.imageUrl} alt={title} width={200} height={200} className="object-cover w-full h-full" />
                             </div>
                         )}
@@ -459,11 +459,11 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                                     {/* Simplified Series Header */}
                                     <div className="flex items-center gap-4 mb-8">
                                         <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></div>
-                                        <h3 className="text-2xl font-serif text-[#EBE5E0]">
-                                            {product.title} <span className="text-white/30 text-lg font-sans font-light italic ml-2">Series</span>
+                                        <h3 className="text-2xl font-serif text-[var(--foreground)]">
+                                            {product.title} <span className="text-[var(--foreground)]/40 text-lg font-sans font-light italic ml-2">Series</span>
                                         </h3>
-                                        <div className="h-px bg-white/5 flex-1" />
-                                        <Link href={`/products/${product.category?.slug || 'collection'}/${product.slug}`} className="text-xs uppercase tracking-widest text-[#d8b09a] hover:text-white transition-colors">
+                                        <div className="h-px bg-[var(--line)] flex-1" />
+                                        <Link href={`/products/${product.category?.slug || 'collection'}/${product.slug}`} className="text-xs uppercase tracking-widest text-[var(--terracotta)] hover:text-[var(--foreground)] transition-colors">
                                             View Specs →
                                         </Link>
                                     </div>
@@ -491,9 +491,9 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
 
                     {/* SEO Power Text (Bottom Content) */}
                     {collection.bottomContent && (
-                        <div className="mt-32 pt-20 border-t border-white/10 max-w-4xl mx-auto">
-                            <div className="prose prose-invert prose-lg text-white/50 leading-loose whitespace-pre-wrap font-light">
-                                <h2 className="text-2xl font-serif text-[#EBE5E0] mb-8">More about {title}</h2>
+                        <div className="mt-32 pt-20 border-t border-[var(--line)] max-w-4xl mx-auto">
+                            <div className="prose prose-invert prose-lg text-[var(--foreground)]/50 leading-loose whitespace-pre-wrap font-light">
+                                <h2 className="text-2xl font-serif text-[var(--foreground)] mb-8">More about {title}</h2>
                                 {collection.bottomContent}
                             </div>
                         </div>

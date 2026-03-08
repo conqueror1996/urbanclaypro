@@ -53,8 +53,8 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
     const activeImage = images[currentImageIndex];
 
     return (
-        <Link href={`/products/${product.slug}`} className="group block">
-            <div className="aspect-[3/4] bg-[#241e1a] rounded-xl overflow-hidden relative mb-4">
+        <Link href={`/products/${product.slug}`} className="group block h-full bg-[var(--background)] rounded-3xl p-6 border border-[var(--line)] hover:border-[var(--terracotta)]/30 transition-all shadow-sm hover:shadow-xl">
+            <div className="aspect-[3/4] bg-[var(--sand)] rounded-xl overflow-hidden relative mb-4">
                 <AnimatePresence mode='wait'>
                     {activeImage && (
                         <motion.div
@@ -76,14 +76,21 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
                     )}
                 </AnimatePresence>
             </div>
-            <h4 className="text-white font-serif">{product.title}</h4>
-            {images.length > 1 && (
-                <div className="flex gap-1 mt-2">
-                    {images.map((_, i) => (
-                        <div key={i} className={`h-0.5 rounded-full transition-all duration-300 ${i === currentImageIndex ? 'w-4 bg-[var(--terracotta)]' : 'w-1 bg-white/20'}`} />
-                    ))}
-                </div>
-            )}
+            <div className="text-center">
+                <h4 className="text-[var(--foreground)] font-bold text-lg leading-tight group-hover:text-[var(--terracotta)] transition-colors mb-2">
+                    {product.title}
+                </h4>
+                <span className="block text-[10px] font-normal uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-2">
+                    {product.category?.title || 'Terracotta'}
+                </span>
+                {images.length > 1 && (
+                    <div className="flex justify-center gap-1.5 mt-4">
+                        {images.map((_, i) => (
+                            <div key={i} className={`h-1 rounded-full transition-all duration-300 ${i === currentImageIndex ? 'w-5 bg-[var(--terracotta)]' : 'bg-[var(--line)] w-1.5'}`} />
+                        ))}
+                    </div>
+                )}
+            </div>
         </Link>
     );
 };
@@ -179,14 +186,14 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
     };
 
     return (
-        <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-0 lg:pb-0 overflow-x-hidden w-full relative">
+        <main className="bg-[var(--background)] text-[var(--foreground)] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-0 lg:pb-0 overflow-x-hidden w-full relative">
 
             {/* --- HERO SECTION: Swiss Hierarchy --- */}
             <section className="relative min-h-[90vh] flex flex-col pt-36 lg:pt-48 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto overflow-hidden">
 
                 {/* Background Text - Large decorative text */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
-                    <h2 className="text-[20vw] md:text-[15vw] font-serif font-bold text-white/5 whitespace-nowrap tracking-tighter">
+                    <h2 className="text-[20vw] md:text-[15vw] font-serif font-bold text-[var(--line)]/30 whitespace-nowrap tracking-tighter">
                         {product.title.split(' ')[0]}
                     </h2>
                 </div>
@@ -216,7 +223,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             </span>
 
                             {/* H1: Commanding, Minimal */}
-                            <h1 className="text-4xl md:text-7xl lg:text-8xl font-serif text-[#EBE5E0] leading-[0.9] mb-4 lg:mb-8 tracking-tight break-words hyphens-auto w-full max-w-full overflow-hidden">
+                            <h1 className="text-4xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9] mb-4 lg:mb-8 tracking-tight break-words hyphens-auto w-full max-w-full overflow-hidden">
                                 {product.title}
                                 {(selectedVariant?.name || product.variants?.find(v => v.imageUrl === activeImage)?.name) && (
                                     <span className="block text-3xl md:text-5xl lg:text-6xl text-[var(--terracotta)] mt-2 font-light italic break-words">
@@ -226,29 +233,58 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             </h1>
 
                             {/* Body: Breathable, High Readability */}
-                            <p className="text-base md:text-xl text-white/60 font-light leading-relaxed mb-6 lg:mb-10 max-w-xl border-l-[3px] border-[var(--terracotta)] pl-6">
+                            <p className="text-base md:text-xl text-[var(--foreground)]/60 font-light leading-relaxed mb-6 lg:mb-10 max-w-xl border-l-[3px] border-[var(--terracotta)] pl-6">
                                 {product.subtitle || 'Premium handcrafted clay for timeless architecture. Engineered for durability and designed for elegance.'}
                             </p>
 
                             {/* Micro: Origin Data */}
-                            <div className="flex items-center gap-6 text-[10px] lg:text-xs font-mono text-white/30 uppercase tracking-[0.15em] mb-4 lg:mb-0">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[10px] lg:text-xs font-mono text-[var(--foreground)]/30 uppercase tracking-[0.15em] mb-4 lg:mb-8">
                                 <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white/20"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--line)]"></span>
                                     Est. 2024
                                 </span>
                                 <span className="flex items-center gap-2">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-white/20"></span>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--line)]"></span>
                                     Mumbai Studio
+                                </span>
+                                <span className="flex items-center gap-2 text-[var(--terracotta)] font-bold">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
+                                    Pan-India Delivery
                                 </span>
                             </div>
 
-                            {/* Social Share: Pinterest & WhatsApp */}
-                            <div className="mt-8">
+                            {/* Trust & Technical Edge Badges */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full mb-10 pb-8 border-b border-[var(--line)]">
+                                {[
+                                    { label: 'A1 Fire Rated', icon: '🔥' },
+                                    { label: 'Zero Efflorescence', icon: '✨' },
+                                    { label: 'Weather Proof', icon: '⛈️' },
+                                    { label: 'Natural Clay', icon: '🏺' }
+                                ].map((badge, i) => (
+                                    <div key={i} className="flex flex-col items-center lg:items-start text-center lg:text-left gap-1">
+                                        <span className="text-xl mb-1">{badge.icon}</span>
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-[var(--foreground)]/40 leading-none">{badge.label}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Social Share & Quick WhatsApp CTA */}
+                            <div className="flex items-center gap-4 mt-4 lg:mt-0">
                                 <SocialShare
                                     url={`https://claytile.in${pathname}${selectedVariant ? `?variant=${encodeURIComponent(selectedVariant.name)}` : ''}`}
                                     title={`Check out ${selectedVariant?.name || product.title} by UrbanClay`}
                                     image={activeImage}
                                 />
+                                <div className="h-8 w-px bg-[var(--line)] mx-2" />
+                                <a
+                                    href={`https://wa.me/919930495393?text=Hi, I am interested in ${product.title}${selectedVariant ? ` (${selectedVariant.name})` : ''}. Could you please send more details?`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#25D366] hover:opacity-80 transition-opacity"
+                                >
+                                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+                                    Expert Technical Support
+                                </a>
                             </div>
 
                             {/* Price Showcase - Added Request */}
@@ -260,7 +296,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                     {/* RIGHT: Product Container + Chips (Visual Block) --- added min-w-0 */}
                     <div className="lg:col-span-7 w-full flex flex-col gap-6 lg:gap-10 items-center justify-center order-2 lg:order-2 min-w-0">
 
-                        <div className="relative w-full aspect-[4/3] rounded-[2rem] lg:rounded-[3rem] overflow-hidden bg-[#120d0b] border border-white/5 shadow-2xl group">
+                        <div className="relative w-full aspect-[4/3] rounded-[2rem] lg:rounded-[3rem] overflow-hidden bg-[var(--background)] border border-[var(--line)] shadow-2xl group">
 
                             {/* Disclaimer on Border */}
                             <div className="absolute z-20 pointer-events-none
@@ -271,7 +307,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 </p>
                             </div>
 
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0" />
+                            <div className="absolute inset-0 bg-gradient-to-br from-[var(--terracotta)]/5 to-transparent z-0" />
 
                             <AnimatePresence>
                                 <motion.div
@@ -307,10 +343,10 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             </AnimatePresence>
 
                             {displayImages.length > 1 && (
-                                <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 md:gap-2 bg-black/60 backdrop-blur-md px-2 py-1 md:px-3 md:py-2 rounded-full border border-white/10 transition-all">
-                                    <button onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">←</button>
-                                    <span className="text-[9px] md:text-[10px] font-mono font-medium text-white/60 w-10 md:w-12 text-center">{activeImageIndex + 1} / {displayImages.length}</span>
-                                    <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-white/20 text-white transition-colors">→</button>
+                                <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 md:gap-2 bg-[var(--background)]/80 backdrop-blur-md px-2 py-1 md:px-3 md:py-2 rounded-full border border-[var(--line)] transition-all">
+                                    <button onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-[var(--line)] text-[var(--foreground)] transition-colors">←</button>
+                                    <span className="text-[9px] md:text-[10px] font-mono font-medium text-[var(--foreground)]/60 w-10 md:w-12 text-center">{activeImageIndex + 1} / {displayImages.length}</span>
+                                    <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-[var(--line)] text-[var(--foreground)] transition-colors">→</button>
                                 </div>
                             )}
                         </div>
@@ -407,8 +443,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                 </div>
 
                 {/* --- VARIANT CHIPS: DESKTOP (Full Width Grid) --- */}
-                <div className="mt-20 w-full hidden lg:flex flex-col items-center border-t border-white/5 pt-12">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 mb-8">Select Variant</span>
+                <div className="mt-20 w-full hidden lg:flex flex-col items-center border-t border-[var(--line)] pt-12">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/30 mb-8">Select Variant</span>
                     {product.variants && product.variants.length > 0 && (
                         <div className="flex flex-wrap justify-center gap-6">
                             {product.variants.map((v, i) => (
@@ -416,8 +452,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     key={v._key || i}
                                     onClick={() => handleVariantSelect(v.name)}
                                     className={`group/btn relative w-20 h-20 rounded-full overflow-hidden border-2 transition-all duration-300 ${selectedVariant?.name === v.name || (!selectedVariant && activeImage === v.imageUrl)
-                                        ? 'border-[var(--terracotta)] ring-2 ring-[var(--terracotta)] ring-offset-4 ring-offset-[#120d0b] scale-110'
-                                        : 'border-white/20 hover:border-white/60 hover:scale-105'
+                                        ? 'border-[var(--terracotta)] ring-2 ring-[var(--terracotta)] ring-offset-4 ring-offset-[var(--background)] scale-110'
+                                        : 'border-[var(--line)] hover:border-[var(--terracotta)] hover:scale-105'
                                         }`}
                                     title={v.name}
                                 >
@@ -438,7 +474,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         className="absolute inset-0 z-10 opacity-0 group-hover/btn:opacity-100 flex items-center justify-center transition-opacity pointer-events-none bg-black/20"
                                     >
                                         <div
-                                            className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center cursor-pointer pointer-events-auto hover:bg-[var(--terracotta)] hover:scale-110 transition-all backdrop-blur-sm shadow-xl border border-white/10"
+                                            className="w-10 h-10 rounded-full bg-[var(--background)]/80 flex items-center justify-center cursor-pointer pointer-events-auto hover:bg-[var(--terracotta)] hover:scale-110 transition-all backdrop-blur-sm shadow-xl border border-[var(--line)]"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 if (isInBox(`${product.slug}-${v.name}`)) {
@@ -468,7 +504,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             {isInBox(`${product.slug}-${v.name}`) ? (
                                                 <svg className="w-5 h-5 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                                             ) : (
-                                                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                <svg className="w-6 h-6 text-[var(--foreground)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                                             )}
                                         </div>
                                     </div>
@@ -495,20 +531,20 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             </section>
 
             {/* --- OVERVIEW & SPECS: Centered Layout (Sidebar Removed) --- */}
-            <section className="py-20 md:py-32 px-4 md:px-12 max-w-[1800px] mx-auto border-t border-white/5">
+            <section className="py-20 md:py-32 px-4 md:px-12 max-w-[1800px] mx-auto border-t border-[var(--line)]">
                 <div className="max-w-5xl mx-auto space-y-24">
 
                     {/* 1. Narrative Section */}
                     <div className="group">
                         <div className="flex items-center gap-4 mb-8">
                             <span className="text-[var(--terracotta)] text-3xl font-serif">01</span>
-                            <div className="h-px w-16 bg-white/10" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">The Narrative</span>
+                            <div className="h-px w-16 bg-[var(--line)]" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/60">The Narrative</span>
                         </div>
-                        <h2 className="text-3xl md:text-5xl font-serif mb-8 text-[#EBE5E0] leading-tight">
+                        <h2 className="text-3xl md:text-5xl font-serif mb-8 text-[var(--foreground)] leading-tight">
                             Distinctive Character
                         </h2>
-                        <div className="prose prose-invert prose-lg md:prose-xl max-w-none text-white/60 font-light leading-loose">
+                        <div className="prose prose-invert prose-lg md:prose-xl max-w-none text-[var(--foreground)] leading-loose font-light">
                             <p>{product.distinctiveCharacter || product.category?.description || product.description || `Crafted with precision and fired to perfection, ${product.title} represents the pinnacle of terracotta engineering.`}</p>
                         </div>
                     </div>
@@ -517,18 +553,18 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                     <div className="group">
                         <div className="flex items-center gap-4 mb-8">
                             <span className="text-[var(--terracotta)] text-3xl font-serif">02</span>
-                            <div className="h-px w-16 bg-white/10" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Technical Profile</span>
+                            <div className="h-px w-16 bg-[var(--line)]" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/60">Technical Profile</span>
                         </div>
 
-                        <div className="bg-[#1a1512] border border-white/5 rounded-3xl overflow-hidden shadow-2xl relative">
+                        <div className="bg-[var(--background)] border border-[var(--line)] rounded-3xl overflow-hidden shadow-2xl relative">
                             {/* Header */}
-                            <div className="p-8 md:p-10 border-b border-white/5 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <div className="p-8 md:p-10 border-b border-[var(--line)] flex flex-col md:flex-row md:items-end justify-between gap-4">
                                 <div>
-                                    <h2 className="text-2xl font-serif text-[#EBE5E0]">Specifications</h2>
-                                    <p className="text-[10px] mt-2 text-white/40 uppercase tracking-widest font-bold">ISO 10545 Certified</p>
+                                    <h2 className="text-2xl font-serif text-[var(--foreground)]">Specifications</h2>
+                                    <p className="text-[10px] mt-2 text-[var(--foreground)]/60 uppercase tracking-widest font-bold">ISO 10545 Certified</p>
                                 </div>
-                                <div className="px-3 py-1 bg-white/5 rounded text-[10px] font-bold text-[var(--terracotta)] tracking-widest border border-white/5">
+                                <div className="px-3 py-1 bg-[var(--line)]/50 rounded text-[10px] font-bold text-[var(--terracotta)] tracking-widest border border-[var(--line)]">
                                     REF: {product.slug.toUpperCase().slice(0, 6)}
                                 </div>
                             </div>
@@ -537,15 +573,15 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="p-6 md:p-10">
                                 <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
                                     {generateLuxurySpecs(product, selectedVariant).map((spec, i) => (
-                                        <div key={i} className="flex flex-col border-b border-white/5 pb-4 last:border-0 hover:bg-white/[0.02] transition-colors rounded-lg px-2 -mx-2">
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 block mb-2">
+                                        <div key={i} className="flex flex-col border-b border-[var(--line)] pb-4 last:border-0 hover:bg-[var(--line)]/20 transition-colors rounded-lg px-2 -mx-2">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/50 block mb-2">
                                                 {spec.label}
                                             </span>
                                             <div>
-                                                <span className="block text-xl font-bold leading-none tracking-tight uppercase mb-2 text-[#EBE5E0] break-words">
+                                                <span className="block text-xl font-bold leading-none tracking-tight uppercase mb-2 text-[var(--foreground)] break-words">
                                                     {spec.value}
                                                 </span>
-                                                <p className="text-xs leading-relaxed text-white/50 font-medium">
+                                                <p className="text-xs leading-relaxed text-[var(--foreground)]/70 font-medium">
                                                     {spec.detail}
                                                 </p>
                                             </div>
@@ -561,36 +597,36 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         <div className="group">
                             <div className="flex items-center gap-4 mb-4">
                             </div>
-                            <div className="bg-[#2a2420] border border-white/5 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div className="bg-[var(--sand)] border border-[var(--line)] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
                                 <div>
-                                    <h3 className="text-2xl font-serif text-[#EBE5E0] mb-2">Architect's Toolkit</h3>
-                                    <p className="text-white/50 text-sm max-w-md">Download high-res textures, BIM objects, and technical specifications for your project documentation.</p>
+                                    <h3 className="text-2xl font-serif text-[var(--foreground)] mb-2">Architect's Toolkit</h3>
+                                    <p className="text-[var(--foreground)]/80 text-sm max-w-md font-light">Download high-res textures, BIM objects, and technical specifications for your project documentation.</p>
                                 </div>
                                 <div className="flex flex-wrap gap-3">
                                     {product.resources?.technicalSheets?.map((sheet: any, i: number) => (
-                                        <a key={i} href={`${sheet.fileUrl}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
+                                        <a key={i} href={`${sheet.fileUrl}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-[var(--background)] hover:bg-[var(--line)] border border-[var(--line)] rounded-xl transition-all">
                                             <svg className="w-5 h-5 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                                             <div className="text-left">
-                                                <span className="block text-xs font-bold text-white uppercase tracking-wider">Spec Sheet</span>
-                                                <span className="block text-[9px] text-white/40">PDF</span>
+                                                <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wider">Spec Sheet</span>
+                                                <span className="block text-[9px] text-[var(--foreground)]/60">PDF</span>
                                             </div>
                                         </a>
                                     ))}
                                     {product.resources?.bimModels?.map((model: any, i: number) => (
-                                        <a key={i} href={`${model.fileUrl}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
-                                            <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                                        <a key={i} href={`${model.fileUrl}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-[var(--background)] hover:bg-[var(--line)] border border-[var(--line)] rounded-xl transition-all">
+                                            <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                                             <div className="text-left">
-                                                <span className="block text-xs font-bold text-white uppercase tracking-wider">Revit / BIM</span>
-                                                <span className="block text-[9px] text-white/40">RFA / IFC</span>
+                                                <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wider">Revit / BIM</span>
+                                                <span className="block text-[9px] text-[var(--foreground)]/60">RFA / IFC</span>
                                             </div>
                                         </a>
                                     ))}
                                     {product.texturePackage?.downloadFile && (
-                                        <a href={`${product.texturePackage.downloadFile}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all">
-                                            <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                        <a href={`${product.texturePackage.downloadFile}?dl=`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-3 bg-[var(--background)] hover:bg-[var(--line)] border border-[var(--line)] rounded-xl transition-all">
+                                            <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                             <div className="text-left">
-                                                <span className="block text-xs font-bold text-white uppercase tracking-wider">4K Texture</span>
-                                                <span className="block text-[9px] text-white/40">JPG / MAPS</span>
+                                                <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wider">4K Texture</span>
+                                                <span className="block text-[9px] text-[var(--foreground)]/60">JPG / MAPS</span>
                                             </div>
                                         </a>
                                     )}
@@ -603,14 +639,14 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                     <div className="group">
                         <div className="flex items-center gap-4 mb-8">
                             <span className="text-[var(--terracotta)] text-3xl font-serif">03</span>
-                            <div className="h-px w-16 bg-white/10" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Expert Inputs</span>
+                            <div className="h-px w-16 bg-[var(--line)]" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/30">Expert Inputs</span>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-8">
                             {/* FAQ Column */}
                             <div className="space-y-4">
-                                <h3 className="text-2xl font-serif text-[#EBE5E0] mb-6">Common Questions</h3>
+                                <h3 className="text-2xl font-serif text-[var(--foreground)] mb-6">Common Questions</h3>
                                 {[
                                     {
                                         q: `Is ${product.title} suitable for exterior use in high-rainfall areas?`,
@@ -629,12 +665,12 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         a: "Standard profiles are typically in stock for immediate dispatch. Custom sizes or large project orders (above 5000 sq.ft) may require 3-4 weeks."
                                     }
                                 ].map((faq, i) => (
-                                    <details key={i} className="group/faq bg-[#1a1512] border border-white/5 rounded-xl overflow-hidden open:bg-white/[0.02] transition-colors">
-                                        <summary className="p-4 cursor-pointer font-medium text-[#EBE5E0] flex justify-between items-center select-none marker:content-none">
+                                    <details key={i} className="group/faq bg-[var(--background)] border border-[var(--line)] rounded-xl overflow-hidden open:bg-[var(--line)]/20 transition-colors">
+                                        <summary className="p-4 cursor-pointer font-medium text-[var(--foreground)] flex justify-between items-center select-none marker:content-none">
                                             {faq.q}
                                             <span className="text-[var(--terracotta)] text-xl group-open/faq:rotate-45 transition-transform">+</span>
                                         </summary>
-                                        <div className="px-4 pb-4 text-white/50 text-sm leading-relaxed">
+                                        <div className="px-4 pb-4 text-[var(--foreground)]/50 text-sm leading-relaxed">
                                             {faq.a}
                                         </div>
                                     </details>
@@ -643,10 +679,10 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                             {/* Technical Cheat Sheet (Table for AI Parsing) */}
                             <div>
-                                <h3 className="text-2xl font-serif text-[#EBE5E0] mb-6">Data Sheet</h3>
-                                <div className="border border-white/10 rounded-2xl overflow-hidden">
+                                <h3 className="text-2xl font-serif text-[var(--foreground)] mb-6">Data Sheet</h3>
+                                <div className="border border-[var(--line)] rounded-2xl overflow-hidden">
                                     <table className="w-full text-left text-sm">
-                                        <tbody className="divide-y divide-white/5">
+                                        <tbody className="divide-y divide-[var(--line)]">
                                             {[
                                                 ["Material", "Natural Terracotta Clay"],
                                                 ["Firing Temp", "> 1000°C"],
@@ -656,9 +692,9 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                                 ["Origin", "Made in India"],
                                                 ["Application", "Interior & Exterior"]
                                             ].map(([k, v], i) => (
-                                                <tr key={i} className="hover:bg-white/[0.02]">
-                                                    <th className="py-3 px-4 text-white/40 font-medium uppercase tracking-wider text-[10px] w-1/2">{k}</th>
-                                                    <td className="py-3 px-4 text-[#EBE5E0] font-mono">{v}</td>
+                                                <tr key={i} className="hover:bg-[var(--line)]/20">
+                                                    <th className="py-3 px-4 text-[var(--foreground)]/40 font-medium uppercase tracking-wider text-[10px] w-1/2">{k}</th>
+                                                    <td className="py-3 px-4 text-[var(--foreground)] font-mono">{v}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -674,12 +710,12 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             {/* --- CURATED PALETTE (Related) --- */}
             {
                 relatedProducts && relatedProducts.length > 0 && (
-                    <section className="py-20 md:py-32 border-t border-white/5 relative bg-[#1f1a16]">
+                    <section className="py-20 md:py-32 border-t border-[var(--line)] relative bg-[var(--background)]">
                         <div className="max-w-[1800px] mx-auto px-4 md:px-6 relative z-10">
                             <div className="mb-12">
-                                <h2 className="text-3xl font-serif text-[#EBE5E0]">Curated Palette</h2>
+                                <h2 className="text-3xl font-serif text-[var(--foreground)]">Curated Palette</h2>
                             </div>
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                                 {relatedProducts.slice(0, 4).map((bgProduct) => (
                                     <CuratedProductCard key={bgProduct.slug} product={bgProduct} />
                                 ))}
@@ -706,25 +742,33 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             <QuoteModal isOpen={isQuoteModalOpen} onClose={() => setIsQuoteModalOpen(false)} productName={product.title} variantName={selectedVariant?.name} />
 
             {/* --- UNIFIED STICKY DOCK (Mobile & Desktop) --- */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1512]/90 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+            <div className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--background)]/90 backdrop-blur-xl border-t border-[var(--line)] shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
                 <div className="max-w-[1800px] mx-auto w-full px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
                     {/* Price Display - Responsive */}
                     <div className="flex flex-col items-start w-full md:w-auto mb-3 md:mb-0">
                         <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-serif text-[#EBE5E0]">{product.priceRange?.split('/')[0] || 'Inquire'}</span>
-                            {product.priceRange && <span className="text-xs text-white/40 font-light lowercase">/ sq.ft</span>}
+                            <span className="text-2xl font-serif text-[var(--foreground)]">{product.priceRange?.split('/')[0] || 'Inquire'}</span>
+                            {product.priceRange && <span className="text-xs text-[var(--foreground)]/40 font-light lowercase">/ sq.ft</span>}
                         </div>
-                        <span className="text-[9px] text-white/40 font-medium tracking-wide uppercase">*Pricing depends upon quantity</span>
+                        <span className="text-[9px] text-[var(--foreground)]/40 font-medium tracking-wide uppercase">*Pricing depends upon quantity</span>
                     </div>
 
                     {/* Buttons Container */}
-                    <div className="flex w-full md:w-auto gap-3 md:gap-4">
-                        {/* Talk to Expert / Get Sample - WhatsApp */}
-                        {/* Talk to Expert / Get Sample - WhatsApp */}
+                    <div className="flex w-full md:w-auto gap-2 md:gap-4 items-center">
+                        {/* Quick WhatsApp Support (Mobile Only or Low Profile Desktop) */}
+                        <a
+                            href={`https://wa.me/919930495393?text=Hi, I am looking at ${product.title}. Can you help me with a technical query?`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-3.5 md:p-4 bg-[var(--line)] hover:bg-[var(--sand)] border border-[var(--line)] rounded-xl text-[#25D366] active:scale-95 transition-all shadow-sm group"
+                            title="Chat with an Expert"
+                        >
+                            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+                        </a>
+
                         <button
                             ref={(el) => {
-                                // Store ref for animation origin
                                 if (el) (window as any)._sampleBtnRef = el;
                             }}
                             onClick={(e) => {
@@ -737,14 +781,12 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 const startX = rect.left + rect.width / 2;
                                 const startY = rect.top + rect.height / 2;
 
-                                // Trigger Flying Animation
                                 setFlyingImage({
                                     src: activeImage,
                                     x: startX,
                                     y: startY
                                 });
 
-                                // Delay adding to box until animation "arrives" (approx 800ms)
                                 setTimeout(() => {
                                     const itemToAdd = {
                                         id: selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug,
@@ -753,31 +795,31 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         texture: activeImage
                                     };
                                     addToBox(itemToAdd);
-                                    setBoxOpen(true); // Open box to confirm
-                                    setFlyingImage(null); // Cleanup
+                                    setBoxOpen(true);
+                                    setFlyingImage(null);
                                 }, 800);
                             }}
-                            disabled={false} // Always clickable to open box if added
-                            className={`flex-1 md:flex-none md:w-56 py-3.5 md:py-4 border rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all flex items-center justify-center gap-2
+                            disabled={false}
+                            className={`flex-1 md:w-48 py-3.5 md:py-4 border rounded-xl font-bold uppercase tracking-[0.15em] text-[10px] active:scale-95 transition-all flex items-center justify-center gap-2
                                 ${isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)
-                                    ? 'bg-white/10 border-[var(--terracotta)] text-[var(--terracotta)]'
-                                    : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 text-white'
+                                    ? 'bg-[var(--terracotta)]/5 border-[var(--terracotta)] text-[var(--terracotta)]'
+                                    : 'bg-[var(--background)] border-[var(--line)] hover:border-[var(--terracotta)]/40 text-[var(--foreground)]'
                                 }`}
                         >
-                            <svg className={`w-4 h-4 ${isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'text-[var(--terracotta)]' : 'text-[var(--terracotta)]'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 {isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)
                                     ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 }
                             </svg>
-                            <span>{isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'View Cart' : 'Get Sample'}</span>
+                            <span>{isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'In Tray' : 'Order Sample'}</span>
                         </button>
 
                         <button
                             onClick={() => setIsQuoteModalOpen(true)}
-                            className="flex-1 md:flex-none md:w-56 py-3.5 md:py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-all shadow-lg shadow-orange-900/20"
+                            className="flex-[1.5] md:w-56 py-3.5 md:py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl text-center font-bold uppercase tracking-[0.15em] text-[10px] active:scale-95 transition-all shadow-lg shadow-orange-900/10"
                         >
-                            Get Custom Quote
+                            Get Professional Quote
                         </button>
                     </div>
                 </div>

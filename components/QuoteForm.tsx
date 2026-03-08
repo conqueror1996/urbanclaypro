@@ -113,32 +113,32 @@ Sent from UrbanClay`;
     };
 
     return (
-        <section id="quote" className="py-12 md:py-32 bg-[#Fbf9f7] border-t border-[var(--line)]">
+        <section id="quote" className="py-16 md:py-24 bg-[var(--background)] border-t border-[var(--line)]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div className="grid lg:grid-cols-12 gap-8 lg:gap-0 bg-white rounded-[2.5rem] shadow-2xl border border-[var(--line)]">
+                <div className="grid lg:grid-cols-12 gap-6 lg:gap-0 bg-[var(--background)] rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-[var(--line)]">
 
                     {/* LEFT: VISUAL CONTEXT (Premium Side Panel) */}
-                    <div className="lg:col-span-5 relative bg-[#1a1512] text-[#EBE5E0] p-8 md:p-16 flex flex-col justify-between min-h-[220px] lg:min-h-[400px] rounded-t-[2.5rem] lg:rounded-l-[2.5rem] lg:rounded-tr-none overflow-hidden">
+                    <div className="lg:col-span-5 relative bg-[var(--sand)] text-[var(--foreground)] p-6 md:p-16 flex flex-col justify-between min-h-[220px] lg:min-h-[400px] rounded-t-[2rem] lg:rounded-l-[2.5rem] lg:rounded-tr-none overflow-hidden border-r border-[var(--line)]">
                         {/* Background Texture/Image */}
-                        <div className="absolute inset-0 opacity-40 mix-blend-overlay">
+                        <div className="absolute inset-0 opacity-10 mix-blend-multiply">
                             <Image
-                                src="/images/architect-hero-confidence.png" // Reusing an existing asset for vibe
+                                src="/images/architect-hero-confidence.png"
                                 alt="Texture"
                                 fill
                                 className="object-cover grayscale"
                             />
                         </div>
-                        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1512]/80 to-[#1a1512]" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-[var(--sand)]/80 to-[var(--sand)]" />
 
                         <div className="relative z-10">
                             <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-4 block">
                                 The Technical Desk
                             </span>
-                            <h2 className="text-3xl md:text-5xl font-serif leading-tight text-white mb-6">
-                                Let's Build <br /> <span className="italic text-white/50">Details.</span>
+                            <h2 className="text-[var(--foreground)] mb-6">
+                                Let's Build <br /> <span className="italic text-[var(--foreground)]/50">Details.</span>
                             </h2>
-                            <p className="text-white/60 leading-relaxed font-light">
+                            <p className="text-[var(--foreground)]/80 leading-relaxed">
                                 Get a precise estimate, technical consultation, or sample box for your next facade project.
                             </p>
                         </div>
@@ -146,31 +146,31 @@ Sent from UrbanClay`;
                         {/* Trust Indicators */}
                         <div className="relative z-10 mt-8 md:mt-12 space-y-4 md:space-y-6">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[var(--terracotta)]">
+                                <div className="w-10 h-10 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center text-[var(--terracotta)]">
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-white">2-Hour Response</h4>
-                                    <p className="text-xs text-white/40">During business hours (Mon-Sat)</p>
+                                    <h4 className="font-bold text-sm text-[var(--foreground)]">2-Hour Response</h4>
+                                    <p className="text-xs text-[var(--foreground)]/40">During business hours (Mon-Sat)</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[var(--terracotta)]">
+                                <div className="w-10 h-10 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center text-[var(--terracotta)]">
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-white">Direct Factory Pricing</h4>
-                                    <p className="text-xs text-white/40">No middlemen, straight from kiln.</p>
+                                    <h4 className="font-bold text-sm text-[var(--foreground)]">Direct Factory Pricing</h4>
+                                    <p className="text-xs text-[var(--foreground)]/40">No middlemen, straight from kiln.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* RIGHT: INTERACTIVE FORM */}
-                    <div className="lg:col-span-7 p-6 md:p-16 bg-white relative rounded-b-[2.5rem] lg:rounded-r-[2.5rem] lg:rounded-bl-none">
+                    <div className="lg:col-span-7 p-6 md:p-16 bg-[var(--background)] relative rounded-b-[2rem] lg:rounded-b-none lg:rounded-r-[2.5rem] lg:rounded-bl-none">
 
                         {/* Progress Header */}
-                        <div className="flex items-center justify-between mb-10">
+                        <div className="flex items-center justify-between mb-6 md:mb-10">
                             <span className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Step {currentStep} of 3</span>
                             <div className="flex gap-1">
                                 {[1, 2, 3].map(step => (
@@ -194,20 +194,20 @@ Sent from UrbanClay`;
                                         exit={{ opacity: 0, x: -20 }}
                                         className="space-y-6 md:space-y-8"
                                     >
-                                        <div className="space-y-4">
-                                            <h3 className="text-2xl font-serif text-[var(--ink)]">What is your role?</h3>
-                                            <div className="grid grid-cols-2 gap-3">
+                                        <div className="space-y-3 md:space-y-4">
+                                            <h3 className="text-xl md:text-2xl font-serif text-[var(--ink)]">What is your role?</h3>
+                                            <div className="grid grid-cols-2 gap-3 md:gap-4">
                                                 {['Architect', 'Builder', 'Homeowner', 'Contractor'].map(role => (
                                                     <button
                                                         key={role}
                                                         type="button"
                                                         onClick={() => handleChange('role', role)}
-                                                        className={`p-3 md:p-4 rounded-xl border-2 text-left transition-all ${formData.role === role
-                                                            ? 'border-[var(--terracotta)] bg-[var(--terracotta)]/5 text-[var(--terracotta)] shadow-sm'
-                                                            : 'border-gray-100 text-[var(--ink)] hover:border-gray-200'
+                                                        className={`p-5 md:p-6 rounded-2xl border-2 text-left transition-all active:scale-[0.98] ${formData.role === role
+                                                            ? 'border-[var(--terracotta)] bg-[var(--terracotta)]/5 text-[var(--terracotta)] shadow-md'
+                                                            : 'border-gray-100 text-[var(--ink)] hover:border-gray-200 bg-gray-50/30'
                                                             }`}
                                                     >
-                                                        <span className="font-bold text-sm block">{role}</span>
+                                                        <span className="font-bold text-sm md:text-base block">{role}</span>
                                                     </button>
                                                 ))}
                                             </div>
@@ -215,32 +215,32 @@ Sent from UrbanClay`;
 
                                         {(formData.role === 'Architect' || formData.role === 'Builder' || formData.role === 'Contractor') && (
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Firm Name</label>
+                                                <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Firm Name</label>
                                                 <input
                                                     value={formData.firmName}
                                                     onChange={e => handleChange('firmName', e.target.value)}
-                                                    className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-3 md:py-4 text-base text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none"
+                                                    className="w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 focus:border-[var(--terracotta)]/30 transition-all outline-none"
                                                     placeholder="Studio / Company Name"
                                                     autoFocus
                                                 />
                                             </div>
                                         )}
 
-                                        <div className="space-y-4 pt-4 relative">
-                                            <h3 className="text-2xl font-serif text-[var(--ink)]">Interested Product?</h3>
+                                        <div className="space-y-3 md:space-y-4 pt-2 md:pt-4 relative">
+                                            <h3 className="text-xl md:text-2xl font-serif text-[var(--ink)]">Interested Product?</h3>
 
                                             {/* Custom Premium Dropdown */}
                                             <div className="relative z-50">
                                                 <button
                                                     type="button"
                                                     onClick={() => setProductDropdownOpen(!productDropdownOpen)}
-                                                    className="w-full bg-[#f8f8f8] rounded-xl px-5 py-3 md:py-4 text-left flex items-center justify-between group hover:ring-2 hover:ring-gray-100 transition-all border border-transparent focus:border-[var(--terracotta)]/30"
+                                                    className="w-full bg-[#f8f8f8] rounded-2xl px-5 md:px-6 py-4 md:py-5 text-left flex items-center justify-between group hover:ring-2 hover:ring-gray-100 transition-all border border-transparent focus:border-[var(--terracotta)]/30"
                                                 >
-                                                    <span className="font-medium text-[var(--ink)] text-base md:text-lg">
+                                                    <span className="font-semibold text-[var(--ink)] text-base md:text-lg">
                                                         {formData.product}
                                                     </span>
                                                     <svg
-                                                        className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${productDropdownOpen ? 'rotate-180' : ''}`}
+                                                        className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${productDropdownOpen ? 'rotate-180' : ''}`}
                                                         fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                                     >
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -254,7 +254,7 @@ Sent from UrbanClay`;
                                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                                             exit={{ opacity: 0, y: 10, scale: 0.98 }}
                                                             transition={{ duration: 0.2 }}
-                                                            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden py-2 max-h-[300px] overflow-y-auto z-50"
+                                                            className="absolute top-full left-0 right-0 mt-2 bg-[var(--background)] rounded-xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] border border-[var(--line)] overflow-hidden py-2 max-h-[300px] overflow-y-auto z-50"
                                                         >
                                                             {[
                                                                 'Exposed Wirecut Bricks',
@@ -300,44 +300,45 @@ Sent from UrbanClay`;
                                         exit={{ opacity: 0, x: -20 }}
                                         className="space-y-6 md:space-y-8"
                                     >
-                                        <div className="space-y-6">
-                                            <h3 className="text-2xl font-serif text-[var(--ink)]">Project Logistics</h3>
+                                        <div className="space-y-6 md:space-y-8">
+                                            <h3 className="text-xl md:text-2xl font-serif text-[var(--ink)]">Project Logistics</h3>
 
                                             <div className="grid grid-cols-2 gap-4 md:gap-6">
                                                 <div className="space-y-2">
-                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Project City <span className="text-[var(--terracotta)]">*</span></label>
+                                                    <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Project City <span className="text-[var(--terracotta)]">*</span></label>
                                                     <input
                                                         value={formData.city}
                                                         onChange={e => handleChange('city', e.target.value)}
-                                                        className={`w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-3 md:py-4 text-base text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${errors.city ? 'ring-2 ring-red-500/20 bg-red-50' : ''}`}
+                                                        className={`w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${errors.city ? 'ring-2 ring-red-500/20 bg-red-50' : 'focus:border-[var(--terracotta)]/30'}`}
                                                         placeholder="Site Location"
                                                         autoFocus
                                                     />
-                                                    {errors.city && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider">{errors.city}</p>}
+                                                    {errors.city && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider pl-1">{errors.city}</p>}
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Est. Quantity <span className="text-[var(--terracotta)]">*</span></label>
+                                                    <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40 ml-1">Est. Quantity <span className="text-[var(--terracotta)]">*</span></label>
                                                     <input
                                                         value={formData.quantity}
                                                         onChange={e => handleChange('quantity', e.target.value)}
-                                                        className={`w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-3 md:py-4 text-base text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${errors.quantity ? 'ring-2 ring-red-500/20 bg-red-50' : ''}`}
+                                                        inputMode="decimal"
+                                                        className={`w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${errors.quantity ? 'ring-2 ring-red-500/20 bg-red-50' : 'focus:border-[var(--terracotta)]/30'}`}
                                                         placeholder="Sq. Ft."
                                                     />
-                                                    {errors.quantity && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider">{errors.quantity}</p>}
+                                                    {errors.quantity && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider pl-1">{errors.quantity}</p>}
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Timeline Requirement</label>
-                                                <div className="flex gap-3">
+                                                <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Timeline Requirement</label>
+                                                <div className="flex flex-wrap gap-2 md:gap-3">
                                                     {['Immediate', '1-2 Months', 'Planning Phase'].map(time => (
                                                         <button
                                                             key={time}
                                                             type="button"
                                                             onClick={() => handleChange('timeline', time)}
-                                                            className={`px-4 py-3 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all ${formData.timeline === time
-                                                                ? 'border-[var(--terracotta)] bg-[var(--terracotta)] text-white'
-                                                                : 'border-gray-200 text-gray-400 hover:border-gray-300'
+                                                            className={`px-5 md:px-6 py-4 md:py-4 rounded-2xl border-2 text-[10px] md:text-xs font-bold uppercase tracking-wider transition-all active:scale-[0.98] ${formData.timeline === time
+                                                                ? 'border-[var(--terracotta)] bg-[var(--terracotta)] text-white shadow-md'
+                                                                : 'border-gray-100 text-gray-400 hover:border-gray-200 bg-gray-50/30'
                                                                 }`}
                                                         >
                                                             {time}
@@ -369,46 +370,50 @@ Sent from UrbanClay`;
                                         exit={{ opacity: 0, x: -20 }}
                                         className="space-y-4 md:space-y-6"
                                     >
-                                        <h3 className="text-2xl font-serif text-[var(--ink)]">Where should we send the estimate?</h3>
+                                        <h3 className="text-xl md:text-2xl font-serif text-[var(--ink)]">Where should we send the estimate?</h3>
 
-                                        <div className="space-y-4">
-                                            <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-3 md:space-y-4">
+                                            <div className="grid grid-cols-2 gap-3 md:gap-4">
                                                 <div className="space-y-2">
-                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Your Name</label>
+                                                    <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40 ml-1">Your Name</label>
                                                     <input
                                                         value={formData.name}
                                                         onChange={e => handleChange('name', e.target.value)}
-                                                        className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-3 md:py-4 text-base text-[var(--ink)] font-medium outline-none"
+                                                        className="w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium outline-none focus:ring-2 focus:ring-[var(--terracotta)]/20 focus:border-[var(--terracotta)]/30 transition-all"
                                                         placeholder="Full Name"
                                                         autoFocus
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Mobile <span className="text-[var(--terracotta)]">*</span></label>
+                                                    <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40 ml-1">Mobile <span className="text-[var(--terracotta)]">*</span></label>
                                                     <input
                                                         value={formData.contact}
                                                         onChange={e => handleChange('contact', e.target.value)}
-                                                        className={`w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-3 md:py-4 text-base text-[var(--ink)] font-medium outline-none ${errors.contact ? 'ring-2 ring-red-500/20 bg-red-50' : ''}`}
+                                                        type="tel"
+                                                        inputMode="tel"
+                                                        className={`w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium outline-none transition-all ${errors.contact ? 'ring-2 ring-red-500/20 bg-red-50' : 'focus:ring-2 focus:ring-[var(--terracotta)]/20 focus:border-[var(--terracotta)]/30'}`}
                                                         placeholder="+91 WhatsApp"
                                                     />
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Email (Optional)</label>
+                                                <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40 ml-1">Email <span className="text-[var(--ink)]/20 italic">(Optional)</span></label>
                                                 <input
                                                     value={formData.email}
                                                     onChange={e => handleChange('email', e.target.value)}
-                                                    className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-3 md:py-4 text-base text-[var(--ink)] font-medium outline-none"
+                                                    type="email"
+                                                    inputMode="email"
+                                                    className="w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium outline-none focus:ring-2 focus:ring-[var(--terracotta)]/20 focus:border-[var(--terracotta)]/30 transition-all"
                                                     placeholder="architect@studio.com"
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Additional Notes</label>
+                                                <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40 ml-1">Additional Notes</label>
                                                 <textarea
                                                     value={formData.notes}
                                                     onChange={e => handleChange('notes', e.target.value)}
-                                                    className="w-full bg-[#f8f8f8] border-none rounded-xl px-5 py-3 md:py-4 text-base text-[var(--ink)] font-medium outline-none h-20 md:h-24 resize-none"
-                                                    placeholder="Specify any custom requirements..."
+                                                    className="w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium outline-none h-32 md:h-36 resize-none focus:ring-2 focus:ring-[var(--terracotta)]/20 focus:border-[var(--terracotta)]/30 transition-all"
+                                                    placeholder="Specify any custom requirements (e.g. sample textures, project scope)..."
                                                 />
                                             </div>
                                         </div>
@@ -433,20 +438,20 @@ Sent from UrbanClay`;
                                     onClick={currentStep < 3 ? nextStep : undefined}
                                     disabled={isSubmitting || isSubmitted}
                                     className={`
-                                        ${currentStep === 1 ? 'col-span-12' : currentStep === 2 ? 'col-span-9' : 'col-span-9'}
-                                        py-3 md:py-4 rounded-xl font-bold uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center justify-center gap-2 md:gap-3
-                                        ${isSubmitted ? 'bg-green-600 text-white cursor-default' : 'bg-[var(--ink)] text-white hover:bg-[var(--terracotta)]'}
-                                        disabled:opacity-70 disabled:cursor-not-allowed
-                                    `}
+                                            ${currentStep === 1 ? 'col-span-12' : currentStep === 2 ? 'col-span-9' : 'col-span-9'}
+                                            py-4 md:py-5 rounded-2xl font-bold uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl active:scale-[0.98] md:hover:-translate-y-1 flex items-center justify-center gap-2 md:gap-3
+                                            ${isSubmitted ? 'bg-green-600 text-white cursor-default' : 'bg-[var(--ink)] text-white hover:bg-[var(--terracotta)]'}
+                                            disabled:opacity-70 disabled:cursor-not-allowed text-sm md:text-base
+                                        `}
                                 >
                                     {isSubmitting ? (
                                         'Processing...'
                                     ) : isSubmitted ? (
-                                        <><span>✓</span> Sent</>
+                                        <><span>✓</span> Sent Successfully</>
                                     ) : currentStep === 3 ? (
-                                        <>Get Estimate <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg></>
+                                        <>Get Expert Estimate <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg></>
                                     ) : (
-                                        'Next Step'
+                                        'Next Phase'
                                     )}
                                 </button>
                             </div>

@@ -189,7 +189,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
     };
 
     return (
-        <div className="bg-[#1a1512] min-h-screen text-[#EBE5E0] overflow-x-hidden">
+        <div className="bg-[var(--background)] min-h-screen text-[var(--foreground)] overflow-x-hidden">
             <Header />
 
             <main className="max-w-[1800px] mx-auto min-h-screen pt-32 pb-20 px-0 md:px-6">
@@ -203,7 +203,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                         <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
                             Material Library
                         </span>
-                        <h1 className="text-4xl md:text-6xl lg:text-8xl font-serif text-[#EBE5E0] leading-[0.9]">
+                        <h1 className="text-4xl md:text-6xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9]">
                             The<br />Archive
                         </h1>
                     </div>
@@ -308,7 +308,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                                             setActiveTab('All');
                                             router.push(pathname, { scroll: false });
                                         }}
-                                        className="ml-4 p-2 text-white/30 hover:text-[var(--terracotta)] transition-colors"
+                                        className="ml-4 p-2 text-[var(--foreground)]/30 hover:text-[var(--terracotta)] transition-all"
                                         title="Reset Filters"
                                     >
                                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -323,21 +323,21 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                     {/* Mobile: Premium Architectural Grid (Sync Check) */}
                     <div className="md:hidden relative z-30">
                         {/* Scrollable Container */}
-                        <div className="bg-[#1a1a1a]/95 backdrop-blur-xl border-y border-white/10 overflow-x-auto scrollbar-hide flex items-stretch">
+                        <div className="bg-[var(--background)]/90 backdrop-blur-xl border-y border-[var(--line)] overflow-x-auto scrollbar-hide flex items-stretch">
 
                             {/* 1. Categories Block */}
-                            <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
+                            <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
                                     Categories
                                 </label>
                                 <div className="relative">
                                     <select
                                         value={activeTab}
                                         onChange={(e) => handleTabClick(e.target.value)}
-                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-[var(--foreground)] appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
                                     >
                                         {tabs.map((tab) => (
-                                            <option key={tab.name} value={tab.name} className="bg-[#1a1a1a] text-gray-300">
+                                            <option key={tab.name} value={tab.name} className="bg-[var(--background)] text-[var(--foreground)]">
                                                 {tab.name}
                                             </option>
                                         ))}
@@ -351,17 +351,17 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                             </div>
 
                             {/* 2. Budget Block */}
-                            <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
+                            <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
                                     Budget Range
                                 </label>
                                 <div className="relative">
                                     <select
                                         value={selectedPrice}
                                         onChange={(e) => setSelectedPrice(e.target.value)}
-                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-[var(--foreground)] appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
                                     >
-                                        {priceOptions.map(p => <option key={p.value} value={p.value} className="bg-[#1a1a1a] text-gray-300">{p.label}</option>)}
+                                        {priceOptions.map(p => <option key={p.value} value={p.value} className="bg-[var(--background)] text-[var(--foreground)]">{p.label}</option>)}
                                     </select>
                                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
                                         <svg className="w-3 h-3 text-[var(--terracotta)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -372,18 +372,18 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                             </div>
 
                             {/* 3. Color Block */}
-                            <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
+                            <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
                                     Color
                                 </label>
                                 <div className="relative">
                                     <select
                                         value={selectedColor}
                                         onChange={(e) => setSelectedColor(e.target.value)}
-                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-[var(--foreground)] appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
                                     >
-                                        <option className="bg-[#1a1a1a] text-gray-300">Any Color</option>
-                                        {uniqueColors.map(c => <option key={c} value={c} className="bg-[#1a1a1a] text-gray-300">{c}</option>)}
+                                        <option className="bg-[var(--background)] text-[var(--foreground)]">Any Color</option>
+                                        {uniqueColors.map(c => <option key={c} value={c} className="bg-[var(--background)] text-[var(--foreground)]">{c}</option>)}
                                     </select>
                                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
                                         <svg className="w-3 h-3 text-[var(--terracotta)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -394,18 +394,18 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                             </div>
 
                             {/* 4. Series Block */}
-                            <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-white/10 relative group active:bg-white/5 transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1">
+                            <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
                                     Series
                                 </label>
                                 <div className="relative">
                                     <select
                                         value={selectedSeries}
                                         onChange={(e) => setSelectedSeries(e.target.value)}
-                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-white appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
+                                        className="w-full bg-transparent text-xs font-bold uppercase tracking-widest text-[var(--foreground)] appearance-none border-none p-0 pr-6 focus:ring-0 outline-none focus:outline-none cursor-pointer"
                                     >
-                                        <option className="bg-[#1a1a1a] text-gray-300">All Series</option>
-                                        {uniqueSeries.map(s => <option key={s} value={s} className="bg-[#1a1a1a] text-gray-300">{s}</option>)}
+                                        <option className="bg-[var(--background)] text-[var(--foreground)]">All Series</option>
+                                        {uniqueSeries.map(s => <option key={s} value={s} className="bg-[var(--background)] text-[var(--foreground)]">{s}</option>)}
                                     </select>
                                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
                                         <svg className="w-3 h-3 text-[var(--terracotta)] opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -419,7 +419,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                             <div className="w-8 flex-shrink-0"></div>
 
                             {/* Right Fade Affordance */}
-                            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#1a1a1a] to-transparent pointer-events-none border-y border-transparent"></div>
+                            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[var(--background)] to-transparent pointer-events-none border-y border-transparent"></div>
                         </div>
                     </div>
                 </div>
@@ -446,13 +446,16 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                             ).sort().map(([category, categoryProducts]) => (
                                 <div key={category} className="section-category">
                                     {/* CATEGORY HEADER */}
-                                    <div className="flex items-end gap-6 mb-12 border-b border-white/10 pb-6">
-                                        <h2 className="text-5xl md:text-7xl font-serif text-white font-bold uppercase tracking-tighter leading-none select-none">
-                                            {category.split(' ')[0]}
-                                        </h2>
-                                        <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-4 ml-[-20px] bg-[#1a1512] px-2 z-10">
+                                    <div className="flex flex-col mb-12 border-b border-[var(--line)] pb-8 pt-4 relative">
+                                        <span className="text-[var(--terracotta)] font-black tracking-[0.3em] uppercase text-[10px] mb-4 block">
                                             {category}
                                         </span>
+                                        <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] font-bold uppercase tracking-tighter leading-[0.8] select-none opacity-[0.03] absolute -mt-4 pointer-events-none">
+                                            {category.split(' ')[0]}
+                                        </h2>
+                                        <h2 className="text-3xl md:text-5xl font-serif text-[var(--ink)] font-medium">
+                                            {category}
+                                        </h2>
                                     </div>
 
                                     <div className="space-y-20">
@@ -461,13 +464,13 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                                                 {/* SERIES HEADER */}
                                                 <div className="flex items-center gap-4 mb-8">
                                                     <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></div>
-                                                    <h3 className="text-2xl md:text-3xl font-serif text-[#EBE5E0]">
-                                                        {product.title} <span className="text-white/30 text-lg font-sans font-light italic ml-2">Series</span>
+                                                    <h3 className="text-2xl md:text-3xl font-serif text-[var(--foreground)]">
+                                                        {product.title} <span className="text-[var(--foreground)]/30 text-lg font-sans font-light italic ml-2">Series</span>
                                                     </h3>
-                                                    <div className="h-px bg-white/5 flex-1 ml-4" />
+                                                    <div className="h-px bg-[var(--line)] flex-1 ml-4" />
                                                     <Link
                                                         href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
-                                                        className="text-white/30 text-[10px] font-bold uppercase tracking-widest hover:text-[var(--terracotta)] transition-colors"
+                                                        className="text-[var(--foreground)]/30 text-[10px] font-bold uppercase tracking-widest hover:text-[var(--terracotta)] transition-colors"
                                                     >
                                                         View Details
                                                     </Link>
@@ -504,10 +507,10 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                                 <div key={product._id} className="col-span-full mb-12">
                                     {/* SERIES HEADER */}
                                     <div className="flex items-center gap-4 mb-8">
-                                        <h3 className="text-2xl font-serif text-[#EBE5E0]">
-                                            {product.title} <span className="text-white/30 text-lg font-sans font-light italic ml-2">Series</span>
+                                        <h3 className="text-2xl font-serif text-[var(--foreground)]">
+                                            {product.title} <span className="text-[var(--foreground)]/30 text-lg font-sans font-light italic ml-2">Series</span>
                                         </h3>
-                                        <div className="h-px bg-white/5 flex-1 ml-4" />
+                                        <div className="h-px bg-[var(--line)] flex-1 ml-4" />
                                     </div>
 
                                     {/* VARIANTS GRID */}
@@ -526,8 +529,8 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                         )}
 
                         {matchingProducts.length === 0 && (
-                            <div className="col-span-full py-32 text-center border-t border-white/5">
-                                <span className="text-white/30 text-lg font-serif italic">No architectural pieces found in this collection.</span>
+                            <div className="col-span-full py-32 text-center border-t border-[var(--line)]">
+                                <span className="text-[var(--foreground)]/30 text-lg font-serif italic">No architectural pieces found in this collection.</span>
                             </div>
                         )}
                     </motion.div>
@@ -540,7 +543,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
-                        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#1a1a1a] text-white px-6 py-3 rounded-full border border-white/20 shadow-2xl flex items-center gap-3 backdrop-blur-xl"
+                        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[var(--background)] text-[var(--foreground)] px-6 py-3 rounded-full border border-[var(--line)] shadow-2xl flex items-center gap-3 backdrop-blur-xl"
                     >
                         <div className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] animate-pulse" />
                         <span className="text-[10px] font-bold uppercase tracking-widest">{toastMessage}</span>

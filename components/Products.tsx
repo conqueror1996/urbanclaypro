@@ -145,7 +145,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
 
 
     return (
-        <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+        <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
 
             {/* HEADer */}
             <motion.div
@@ -259,21 +259,21 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                 </div>
                                             )}
 
-                                            <div className={`grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12 ${featuredOnly ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
+                                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                                                 {variants.map((variant, index) => (
                                                     <div key={`${variant.slug}-${index}`} className="group block h-full">
                                                         <Link
                                                             href={`/products/${variant.categorySlug}/${variant.slug}${variant.variantName ? `?variant=${encodeURIComponent(variant.variantName)}` : ''}`}
-                                                            className="flex flex-col h-full"
+                                                            className="flex flex-col h-full bg-white rounded-[2rem] p-6 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] border border-transparent group-hover:border-[var(--line)]"
                                                         >
                                                             {/* Image Card */}
-                                                            <div className="aspect-[4/5] rounded-[2rem] mb-6 relative overflow-hidden bg-[#f4f1ee] group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
+                                                            <div className="aspect-[4/5] rounded-2xl mb-4 relative overflow-hidden bg-[#f4f1ee]">
                                                                 {variant.imageUrl ? (
                                                                     <PremiumImage
                                                                         src={variant.imageUrl}
                                                                         alt={variant.name}
                                                                         fill
-                                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                                                                        sizes="(max-width: 768px) 50vw, 25vw"
                                                                         className="object-cover transition-all duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-110"
                                                                         containerClassName="w-full h-full"
                                                                     />
@@ -293,21 +293,26 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                                             texture: variant.imageUrl ? `url('${variant.imageUrl}')` : variant.color
                                                                         });
                                                                     }}
-                                                                    className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur text-[var(--ink)] shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center z-20"
+                                                                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-[var(--ink)] shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center z-20"
                                                                     title="Add Sample"
                                                                 >
-                                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                                                                 </button>
                                                             </div>
 
                                                             {/* Details */}
-                                                            <div className="text-center px-2 group-hover:-translate-y-1 transition-transform duration-500">
-                                                                <h3 className="text-lg font-serif text-[#2A1E16] mb-2 group-hover:text-[var(--terracotta)] transition-colors line-clamp-1">
+                                                            <div className="text-center group-hover:-translate-y-1 transition-transform duration-500">
+                                                                <h3 className="text-base font-extrabold text-[#222] mb-2 group-hover:text-[var(--terracotta)] transition-colors line-clamp-1">
                                                                     {variant.name}
                                                                 </h3>
-                                                                <span className="text-[10px] uppercase tracking-[0.15em] font-bold text-[#7a6f66]/60 border border-[#e9e2da] px-2 py-1 rounded-full">
-                                                                    {variant.tag}
+                                                                <span className="block text-[10px] uppercase tracking-[0.2em] font-bold text-[#777] mb-2">
+                                                                    {variant.tag || 'Terracotta'}
                                                                 </span>
+                                                                <div className="flex justify-center">
+                                                                    <span className="text-[10px] font-semibold text-[#555] bg-gray-50 px-2 py-1 rounded-sm uppercase tracking-widest border border-gray-100">
+                                                                        {variant.priceRange || 'Contact for Price'}
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         </Link>
                                                     </div>

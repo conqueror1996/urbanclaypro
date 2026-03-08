@@ -71,3 +71,36 @@ export async function updateTechnicalEdgeImage(assetId: string) {
         return { success: false, error: error.message || 'Failed to update image' };
     }
 }
+
+export async function updateSpecifierToolkitImage(assetId: string) {
+    try {
+        let homePage = await writeClient.fetch(`*[_type == "homePage"][0] { _id }`);
+
+        const imagePatch = {
+            specifierToolkitImage: {
+                _type: 'image',
+                asset: { _type: 'reference', _ref: assetId }
+            }
+        };
+
+        if (!homePage?._id) {
+            await writeClient.create({
+                _type: 'homePage',
+                title: 'Main Home Page',
+                ...imagePatch
+            });
+        } else {
+            await writeClient
+                .patch(homePage._id)
+                .set(imagePatch)
+                .commit();
+        }
+
+        revalidatePath('/');
+        revalidatePath('/dashboard/content');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error updating Specifier Toolkit image:', error);
+        return { success: false, error: error.message || 'Failed to update image' };
+    }
+}

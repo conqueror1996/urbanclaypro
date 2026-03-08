@@ -26,7 +26,7 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: 'cover', // For notched devices (iPhone X+)
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FAF7F3' },
+    { media: '(prefers-color-scheme: light)', color: '#FAF9F6' },
     { media: '(prefers-color-scheme: dark)', color: '#1a1512' },
   ],
 };
@@ -125,7 +125,6 @@ import SmartExitPopup from "@/components/SmartExitPopup";
 
 
 import FootprintTracker from "@/components/FootprintTracker";
-import FloatingSampleBadge from "@/components/FloatingSampleBadge";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { Toaster } from 'sonner';
 import JsonLd from "@/components/JsonLd";
@@ -153,7 +152,6 @@ export default function RootLayout({
             <WebVitalsReporter />
             <GlobalSampleModal />
             <SmartExitPopup />
-            <FloatingSampleBadge />
             <WhatsAppFloat />
             <Toaster position="top-right" richColors />
           </SampleProvider>

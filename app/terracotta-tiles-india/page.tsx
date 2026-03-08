@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FAQSchema from '@/components/FAQSchema';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata: Metadata = {
     title: 'Terracotta Tiles India | Premium Clay Facade & Brick Cladding Manufacturer',
@@ -58,10 +59,7 @@ export default function TerracottaTilesIndia() {
 
     return (
         <div className="bg-[#fcfaf8] text-[#2A1E16] font-sans selection:bg-[var(--terracotta)] selection:text-white">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            <JsonLd data={jsonLd} />
             <FAQSchema />
             <Header />
 

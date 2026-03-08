@@ -153,15 +153,15 @@ Sent from UrbanClay Website`;
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="relative w-full max-w-lg bg-[#1a1512] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
+                className="relative w-full max-w-lg bg-[var(--background)] border-t sm:border border-[var(--line)] rounded-t-3xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
             >
                 {/* Header */}
-                <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+                <div className="flex justify-between items-center mb-6 border-b border-[var(--line)] pb-4">
                     <div>
-                        <h3 className="text-xl font-serif text-[#EBE5E0]">Request Quote</h3>
-                        <p className="text-white/40 text-xs mt-1">Get pricing for {productName}</p>
+                        <h3 className="text-xl font-serif text-[var(--foreground)]">Request Quote</h3>
+                        <p className="text-[var(--foreground)]/40 text-xs mt-1">Get pricing for {productName}</p>
                     </div>
-                    <button onClick={onClose} className="p-2 bg-white/5 rounded-full text-white/60 hover:text-white">
+                    <button onClick={onClose} className="p-2 bg-[var(--line)]/50 rounded-full text-[var(--foreground)]/60 hover:text-[var(--foreground)]">
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
@@ -169,7 +169,7 @@ Sent from UrbanClay Website`;
                 {/* Steps Indicator */}
                 <div className="flex items-center gap-2 mb-8">
                     {[1, 2, 3].map(step => (
-                        <div key={step} className={`h-1 flex-1 rounded-full bg-white/10 ${currentStep >= step ? 'bg-[var(--terracotta)]' : ''}`} />
+                        <div key={step} className={`h-1 flex-1 rounded-full bg-[var(--line)] ${currentStep >= step ? 'bg-[var(--terracotta)]' : ''}`} />
                     ))}
                 </div>
 
@@ -184,34 +184,34 @@ Sent from UrbanClay Website`;
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">Your Name</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Your Name</label>
                                     <input
                                         type="text"
                                         name="name"
                                         value={formData.name}
                                         onChange={handleChange}
                                         placeholder="Enter your full name"
-                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-[#EBE5E0] focus:border-[var(--terracotta)] outline-none ${errors.name ? 'border-red-500' : 'border-white/10'}`}
+                                        className={`w-full bg-[var(--background)] border rounded-xl px-4 py-3 text-[var(--foreground)] focus:border-[var(--terracotta)] outline-none ${errors.name ? 'border-red-500' : 'border-[var(--line)]'}`}
                                     />
                                     {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">I am a...</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">I am a...</label>
                                     <select
                                         name="role"
                                         value={formData.role}
                                         onChange={handleChange}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#EBE5E0] focus:border-[var(--terracotta)] outline-none"
+                                        className="w-full bg-[var(--background)] border border-[var(--line)] rounded-xl px-4 py-3 text-[var(--foreground)] focus:border-[var(--terracotta)] outline-none"
                                     >
-                                        <option value="Architect" className="bg-[#1a1512]">Architect</option>
-                                        <option value="Builder" className="bg-[#1a1512]">Builder</option>
-                                        <option value="Homeowner" className="bg-[#1a1512]">Homeowner</option>
-                                        <option value="Contractor" className="bg-[#1a1512]">Contractor</option>
+                                        <option value="Architect" className="bg-[var(--background)]">Architect</option>
+                                        <option value="Builder" className="bg-[var(--background)]">Builder</option>
+                                        <option value="Homeowner" className="bg-[var(--background)]">Homeowner</option>
+                                        <option value="Contractor" className="bg-[var(--background)]">Contractor</option>
                                     </select>
                                 </div>
-                                <div className="p-4 bg-[var(--terracotta)]/10 rounded-xl border border-[var(--terracotta)]/20">
+                                <div className="p-4 bg-[var(--terracotta)]/5 rounded-xl border border-[var(--terracotta)]/10">
                                     <p className="text-[var(--terracotta)] text-sm mb-1 font-medium">Why we ask?</p>
-                                    <p className="text-white/60 text-xs">We customize pricing based on project type and volume.</p>
+                                    <p className="text-[var(--foreground)]/60 text-xs">We customize pricing based on project type and volume.</p>
                                 </div>
                                 <button type="button" onClick={nextStep} className="w-full py-4 bg-[var(--terracotta)] text-white font-bold uppercase tracking-widest text-xs rounded-xl mt-4">
                                     Next
@@ -228,29 +228,29 @@ Sent from UrbanClay Website`;
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">Project City</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Project City</label>
                                     <input
                                         type="text"
                                         name="city"
                                         value={formData.city}
                                         onChange={handleChange}
                                         placeholder="e.g. Bangalore"
-                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-[#EBE5E0] focus:border-[var(--terracotta)] outline-none ${errors.city ? 'border-red-500' : 'border-white/10'}`}
+                                        className={`w-full bg-[var(--background)] border rounded-xl px-4 py-3 text-[var(--foreground)] focus:border-[var(--terracotta)] outline-none ${errors.city ? 'border-red-500' : 'border-[var(--line)]'}`}
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">Quantity (Approx)</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Quantity (Approx)</label>
                                     <input
                                         type="text"
                                         name="quantity"
                                         value={formData.quantity}
                                         onChange={handleChange}
                                         placeholder="e.g. 1000 sq ft"
-                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-[#EBE5E0] focus:border-[var(--terracotta)] outline-none ${errors.quantity ? 'border-red-500' : 'border-white/10'}`}
+                                        className={`w-full bg-[var(--background)] border rounded-xl px-4 py-3 text-[var(--foreground)] focus:border-[var(--terracotta)] outline-none ${errors.quantity ? 'border-red-500' : 'border-[var(--line)]'}`}
                                     />
                                 </div>
                                 <div className="flex gap-3 mt-4">
-                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-white/5 text-white/60 font-bold uppercase tracking-widest text-xs rounded-xl">
+                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-[var(--line)]/50 text-[var(--foreground)]/60 font-bold uppercase tracking-widest text-xs rounded-xl">
                                         Back
                                     </button>
                                     <button type="button" onClick={nextStep} className="flex-[2] py-4 bg-[var(--terracotta)] text-white font-bold uppercase tracking-widest text-xs rounded-xl">
@@ -269,29 +269,29 @@ Sent from UrbanClay Website`;
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">Mobile Number</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Mobile Number</label>
                                     <input
                                         type="tel"
                                         name="contact"
                                         value={formData.contact}
                                         onChange={handleChange}
                                         placeholder="+91"
-                                        className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-[#EBE5E0] focus:border-[var(--terracotta)] outline-none ${errors.contact ? 'border-red-500' : 'border-white/10'}`}
+                                        className={`w-full bg-[var(--background)] border rounded-xl px-4 py-3 text-[var(--foreground)] focus:border-[var(--terracotta)] outline-none ${errors.contact ? 'border-red-500' : 'border-[var(--line)]'}`}
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 mb-2 block">Notes (Optional)</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Notes (Optional)</label>
                                     <textarea
                                         name="notes"
                                         value={formData.notes}
                                         onChange={handleChange}
                                         rows={2}
                                         placeholder="Any specific variation?"
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-[#EBE5E0] focus:border-[var(--terracotta)] outline-none resize-none"
+                                        className="w-full bg-[var(--background)] border border-[var(--line)] rounded-xl px-4 py-3 text-[var(--foreground)] focus:border-[var(--terracotta)] outline-none resize-none"
                                     />
                                 </div>
                                 <div className="flex gap-3 mt-4">
-                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-white/5 text-white/60 font-bold uppercase tracking-widest text-xs rounded-xl">
+                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-[var(--line)]/50 text-[var(--foreground)]/60 font-bold uppercase tracking-widest text-xs rounded-xl">
                                         Back
                                     </button>
                                     <button

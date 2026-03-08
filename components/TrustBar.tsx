@@ -19,33 +19,51 @@ export default function TrustBar({ firms }: TrustBarProps) {
     const displayFirms = (firms && firms.length > 0) ? firms : DEFAULT_LOGOS;
 
     return (
-        <section className="py-8 md:py-12 bg-white border-y border-[var(--line)] overflow-hidden">
+        <section className="section-padding border-y border-[var(--line)] overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <p className="text-center text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-[var(--ink)]/40 font-bold mb-6 md:mb-10">
+                <p className="text-center text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-[#777] font-semibold mb-6 md:mb-12">
                     Trusted by India&apos;s leading Architectural Firms
                 </p>
 
-                <div className="relative">
-                    {/* Gradient Masks */}
-                    <div className="absolute inset-y-0 left-0 w-12 md:w-32 bg-gradient-to-r from-white to-transparent z-10" />
-                    <div className="absolute inset-y-0 right-0 w-12 md:w-32 bg-gradient-to-l from-white to-transparent z-10" />
-
+                <div className="md:hidden overflow-hidden -mx-6">
                     <motion.div
-                        className="flex items-center gap-12 md:gap-20 whitespace-nowrap"
-                        animate={{ x: ["0%", "-50%"] }}
-                        transition={{
-                            duration: 30,
-                            repeat: Infinity,
-                            ease: "linear"
+                        animate={{
+                            x: [0, -1000],
                         }}
+                        transition={{
+                            x: {
+                                repeat: Infinity,
+                                repeatType: "loop",
+                                duration: 30,
+                                ease: "linear",
+                            },
+                        }}
+                        className="flex items-center gap-12 whitespace-nowrap pl-6"
                     >
-                        {/* Reduced repetition for a cleaner loop */}
-                        {[...displayFirms, ...displayFirms].map((firm, idx) => (
-                            <div key={`${firm.name}-${idx}`} className="flex-shrink-0 grayscale opacity-40 hover:opacity-100 transition-opacity duration-500 cursor-default">
-                                <span className="text-xl md:text-3xl font-serif italic text-[var(--ink)] tracking-tight">{firm.name}</span>
+                        {[...displayFirms, ...displayFirms, ...displayFirms].map((firm, idx) => (
+                            <div
+                                key={`${firm.name}-${idx}`}
+                                className="flex-shrink-0 grayscale opacity-40"
+                            >
+                                <span className="text-lg font-serif italic text-[#777] tracking-tight font-normal">
+                                    {firm.name}
+                                </span>
                             </div>
                         ))}
                     </motion.div>
+                </div>
+
+                <div className="hidden md:flex flex-wrap items-center justify-center gap-x-12 gap-y-8 md:gap-x-24">
+                    {displayFirms.map((firm, idx) => (
+                        <div
+                            key={`${firm.name}-${idx}`}
+                            className="flex-shrink-0 grayscale opacity-30 hover:opacity-100 transition-opacity duration-500 cursor-default"
+                        >
+                            <span className="text-lg md:text-xl font-serif italic text-[#777] tracking-tight font-normal">
+                                {firm.name}
+                            </span>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

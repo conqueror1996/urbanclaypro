@@ -57,11 +57,11 @@ export default function ProductShowcase({ projects, title, description }: Produc
                                 </div>
                             )}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <p className="text-xs font-medium uppercase tracking-wider opacity-90 mb-1">
+                            <div className="absolute bottom-6 left-6 text-white z-20">
+                                <p className="text-[10px] font-normal uppercase tracking-[0.2em] opacity-80 mb-2">
                                     {project.location || 'Project'}
                                 </p>
-                                <h3 className="text-lg font-bold leading-tight">
+                                <h3 className="text-xl font-bold leading-tight">
                                     {project.title}
                                 </h3>
                             </div>

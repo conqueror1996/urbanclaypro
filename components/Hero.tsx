@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import TextReveal from './TextReveal';
 import HeroVisual from './HeroVisual';
+import { ShieldCheck, Clock, Zap } from 'lucide-react';
 
 
 interface HeroProps {
@@ -19,15 +20,15 @@ interface HeroProps {
 
 export default function Hero({ data, injectedKeyword }: HeroProps) {
 
-    const [isHoveringText, setIsHoveringText] = useState(false);
+
 
     return (
         <>
             <section className="relative overflow-hidden">
                 {/* Animated Background - Kiln Glow (Removed KilnDistort) */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[var(--sand)] to-white opacity-50 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[var(--sand)] to-[var(--sand)] opacity-50 pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4 md:pt-48 md:pb-16 lg:pt-52 lg:pb-24 relative z-10">
+                <div className="max-w-7xl mx-auto px-6 pt-[140px] pb-16 md:pt-[192px] lg:pt-[246px] lg:pb-24 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
@@ -39,75 +40,76 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                             {injectedKeyword && (
                                 <div
                                     data-testid="keyword-badge"
-                                    className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-[11px] sm:text-sm font-medium border border-[var(--terracotta)]/20 backdrop-blur-sm animate-fade-in self-start max-w-full"
+                                    className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-sm font-semibold border border-[var(--terracotta)]/20 backdrop-blur-sm animate-fade-in self-start max-w-full"
                                 >
                                     <span className="relative flex h-2 w-2 flex-shrink-0">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--terracotta)] opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--terracotta)]"></span>
                                     </span>
-                                    <span className="truncate">Viewing High-Performance Options for "{injectedKeyword}"</span>
+                                    <span className="truncate">Viewing Options for "{injectedKeyword}"</span>
                                 </div>
                             )}
 
-                            <div
-                                onMouseEnter={() => setIsHoveringText(true)}
-                                onMouseLeave={() => setIsHoveringText(false)}
-                                className="cursor-default"
-                            >
-                                <TextReveal
-                                    text={data?.heroHeading || 'Engineered Facade Systems.'}
-                                    highlightWords={['Engineered']}
-                                    className="text-4xl md:text-5xl lg:text-[64px] font-serif font-medium leading-[1.1] text-[#2A1E16] tracking-tight"
-                                />
+                            <div className="cursor-default">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <span className="h-[1px] w-8 bg-[var(--terracotta)]" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--terracotta)]">Global Specification Grade</span>
+                                </div>
+                                <h1 className="font-serif leading-[0.95] text-[#111] tracking-tighter flex flex-col mb-8">
+                                    <span className="text-[52px] md:text-[88px] font-extrabold text-balance">
+                                        India&apos;s Most <br className="hidden md:block" />
+                                        <span className="text-[var(--terracotta)] italic">Engineered</span> <br className="hidden md:block" />
+                                        Facade Systems.
+                                    </span>
+                                </h1>
+                            </div>
+
+                            <div className="flex flex-wrap gap-4 mb-10">
+                                {[
+                                    { text: "A1 Fire Rated", icon: ShieldCheck },
+                                    { text: "1000y+ Life", icon: Clock },
+                                    { text: "Non-Combustible", icon: Zap }
+                                ].map((badge, i) => (
+                                    <div key={i} className="flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-md border border-[var(--line)] rounded-full shadow-sm">
+                                        <badge.icon className="w-3 h-3 text-[var(--terracotta)]" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-[var(--ink)]/60">{badge.text}</span>
+                                    </div>
+                                ))}
                             </div>
 
                             <motion.p
-                                className="mt-4 md:mt-8 text-base md:text-xl text-[#5d554f] font-light leading-relaxed max-w-lg"
+                                className="text-lg md:text-[22px] font-light text-[#555] leading-snug max-w-lg mb-12"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1, duration: 0.6 }}
-
                             >
-                                {data?.heroSubheading || 'High-performance terracotta systems engineered for zero-failure cladding in extreme Indian climates. Eliminating efflorescence, warpage, and maintenance risks.'}
+                                Purpose-built for the Indian climate. Zero efflorescence, zero maintenance, <span className="font-bold text-[var(--ink)]">infinite durability.</span>
                             </motion.p>
 
-                            <div className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">
+                            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4">
                                 <motion.button
                                     onClick={() => document.getElementById('quote')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="btn-terracotta min-h-[48px] md:min-h-[56px]"
-                                    whileHover={{ scale: 1.02 }}
+                                    className="bg-[var(--terracotta)] text-white h-[60px] px-12 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center"
+                                    whileHover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
-                                    aria-label="Request Specifier Kit"
+                                    aria-label="Request Quote"
                                 >
-                                    Request Specifier Kit
+                                    Request a Quote
                                 </motion.button>
-                                <button
+                                <motion.button
                                     onClick={() => document.getElementById('signature-collection')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-[#2A1E16]/10 text-[#2A1E16] font-medium hover:bg-white/50 transition-colors"
+                                    className="bg-transparent text-[#222] h-[60px] px-12 rounded-full border border-[#222]/20 font-semibold text-base hover:bg-[#222]/5 transition-all active:scale-95 flex items-center justify-center"
+                                    whileHover={{ y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
-                                    Explore System Logic
-                                </button>
-                            </div>
-
-                            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 text-[12px] sm:text-sm font-medium text-[#5d554f]">
-                                <span className="flex items-center gap-2 whitespace-nowrap">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] flex-shrink-0"></span>
-                                    Zero Efflorescence
-                                </span>
-                                <span className="flex items-center gap-2 whitespace-nowrap">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] flex-shrink-0"></span>
-                                    Standardized Tolerances
-                                </span>
-                                <span className="flex items-center gap-2 whitespace-nowrap">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] flex-shrink-0"></span>
-                                    Pan-India Scale
-                                </span>
+                                    Explore Systems
+                                </motion.button>
                             </div>
                         </motion.div>
 
                         {/* Right Column: Visual with Heat Haze & Embers */}
                         <div
-                            className="relative h-full min-h-[300px] md:min-h-[400px] lg:min-h-[600px] w-full"
+                            className="relative h-full min-h-[300px] md:min-h-[400px] lg:min-h-[600px] w-full mt-6 flex lg:block"
                         >
                             <HeroVisual
                                 imageUrl={data?.heroImageUrl}
@@ -117,16 +119,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                     </div>
                 </div>
 
-                {/* Scroll Indicator */}
-                <motion.div
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[#2A1E16]/30 hidden md:flex flex-col items-center gap-2"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
-                >
-                    <span className="text-[10px] uppercase tracking-widest font-medium">Scroll</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-                </motion.div>
+                {/* Scroll Indicator Removed for Premium Minimalism */}
             </section >
         </>
     );

@@ -7,8 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { usePathname } from 'next/navigation';
 
-import KeywordFooter from './KeywordFooter';
-
 export default function Footer() {
     const pathname = usePathname();
 
@@ -23,11 +21,9 @@ export default function Footer() {
     };
 
     return (
-        <footer id="contact" className="bg-[#2A1E16] text-white border-t border-white/10">
-            {/* SEO Keywords Cloud */}
-            <KeywordFooter />
+        <footer id="contact" className="bg-[var(--background)] text-[var(--foreground)] border-t border-[var(--line)]">
 
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 md:py-20">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
                     {/* Column 1: Brand (Always Visible) */}
                     <div className="space-y-6">
@@ -37,11 +33,11 @@ export default function Footer() {
                                 alt="UrbanClay"
                                 width={160}
                                 height={50}
-                                className="h-10 md:h-12 lg:h-14 w-auto opacity-90 brightness-0 invert"
+                                className="h-10 md:h-12 lg:h-14 w-auto opacity-90"
                             />
                         </Link>
 
-                        <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
+                        <p className="text-[var(--foreground)]/90 text-sm leading-relaxed max-w-xs font-light">
                             India's premier manufacturer of sustainable terracotta tiles, brick cladding, and architectural facades.
                         </p>
                         <div className="flex items-center gap-4">
@@ -54,7 +50,7 @@ export default function Footer() {
 
                     {/* Column 2: Products (Accordion on Mobile) */}
                     <FooterSection title="Products">
-                        <ul className="space-y-4 text-sm text-gray-400">
+                        <ul className="space-y-2 md:space-y-4 text-[13px] md:text-sm text-[var(--foreground)]/70">
                             <li><FooterLink href="/flexible-brick-tiles">Flexible Brick Tiles</FooterLink></li>
                             <li><FooterLink href="/terracotta-panels">Terracotta Panels</FooterLink></li>
                             <li><FooterLink href="/exposed-brick">Exposed Wirecut Bricks</FooterLink></li>
@@ -66,7 +62,7 @@ export default function Footer() {
 
                     {/* Column 3: Resources (Accordion on Mobile) */}
                     <FooterSection title="Resources">
-                        <ul className="space-y-4 text-sm text-gray-400">
+                        <ul className="space-y-2 md:space-y-4 text-[13px] md:text-sm text-[var(--foreground)]/70">
                             <li><FooterLink href="/journal">The Clay Journal</FooterLink></li>
                             <li><FooterLink href="/resources">Installation Guides</FooterLink></li>
                             <li><FooterLink href="/resources">Technical Data Sheets</FooterLink></li>
@@ -79,28 +75,28 @@ export default function Footer() {
 
                     {/* Column 4: Company (Accordion on Mobile) */}
                     <FooterSection title="Company">
-                        <ul className="space-y-4 text-sm text-gray-400">
+                        <ul className="space-y-2 md:space-y-4 text-[13px] md:text-sm text-[var(--foreground)]/70">
                             <li><FooterLink href="/our-story">Our Story</FooterLink></li>
                             <li><FooterLink href="/terracotta-tiles-india">Pan-India Presence</FooterLink></li>
                             <li><FooterLink href="/commercial">Commercial Projects</FooterLink></li>
                             <li><FooterLink href="/export">Export Division</FooterLink></li>
                             <li><FooterLink href="/contact">Contact Us</FooterLink></li>
-                            <li><FooterLink href="/#quote" onClick={handleQuoteClick}><span className="text-[#ea580c] font-medium">Request a Quote</span></FooterLink></li>
+                            <li><FooterLink href="/#quote" onClick={handleQuoteClick}><span className="text-[#ea580c] font-semibold">Request a Quote</span></FooterLink></li>
                             <li className="pt-4 border-t border-white/5 mt-4">
-                                <p className="text-xs uppercase tracking-wider text-gray-500 mb-2">Sales & Support</p>
-                                <a href="tel:+918080081951" className="block text-white hover:text-[#d8b09a] transition-colors font-medium mb-1">+91 80800 81951</a>
-                                <a href="mailto:urbanclay@claytile.in" className="block text-white hover:text-[#d8b09a] transition-colors font-medium">urbanclay@claytile.in</a>
+                                <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/70 mb-2 font-normal">Sales & Support</p>
+                                <a href="tel:+918080081951" className="block text-[var(--foreground)] hover:text-[var(--terracotta)] transition-colors font-normal mb-1">+91 80800 81951</a>
+                                <a href="mailto:urbanclay@claytile.in" className="block text-[var(--foreground)] hover:text-[var(--terracotta)] transition-colors font-normal">urbanclay@claytile.in</a>
                             </li>
                         </ul>
                     </FooterSection>
                 </div>
 
-                <div className="mt-12 md:mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500 text-center md:text-left">
+                <div className="mt-12 md:mt-24 pt-8 border-t border-[var(--line)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--foreground)]/80 text-center md:text-left">
                     <p>© {new Date().getFullYear()} UrbanClay. All rights reserved.</p>
                     <div className="flex gap-6">
-                        <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-                        <Link href="/terms" className="hover:text-white transition-colors">Terms of Use</Link>
-                        <Link href="/return-policy" className="hover:text-white transition-colors">Return Policy</Link>
+                        <Link href="/privacy-policy" className="hover:text-[var(--terracotta)] transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" className="hover:text-[var(--terracotta)] transition-colors">Terms of Use</Link>
+                        <Link href="/return-policy" className="hover:text-[var(--terracotta)] transition-colors">Return Policy</Link>
                     </div>
                 </div>
             </div>
@@ -110,7 +106,7 @@ export default function Footer() {
                 href="https://superbuildindia.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full bg-[#F7F7F7] border-t border-[#E5E5E5] py-4 text-center group transition-colors duration-300 hover:bg-[#F0F0F0]"
+                className="block w-full bg-[var(--background)] border-t border-[var(--line)] py-4 text-center group transition-colors duration-300 hover:bg-[var(--line)]"
             >
                 <div className="flex items-center justify-center gap-3">
                     <svg
@@ -140,12 +136,12 @@ function FooterSection({ title, children }: { title: string, children: React.Rea
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="border-b border-white/10 md:border-none pb-4 md:pb-0">
+        <div className="border-b border-[var(--foreground)]/10 md:border-none pb-4 md:pb-0">
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center justify-between w-full md:cursor-default md:mb-6 group"
             >
-                <h3 className="font-serif text-lg text-[#d8b09a]">{title}</h3>
+                <h3 className="font-serif text-base uppercase tracking-widest text-[#d8b09a] font-semibold">{title}</h3>
                 {/* Plus/Minus Icon - Only visible on mobile */}
                 <span className={`md:hidden text-[#d8b09a] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
                     {isOpen ? (
@@ -166,7 +162,7 @@ function FooterSection({ title, children }: { title: string, children: React.Rea
 
 function FooterLink({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: (e: React.MouseEvent) => void }) {
     return (
-        <Link href={href} onClick={onClick} className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+        <Link href={href} onClick={onClick} className="text-[var(--foreground)]/80 hover:text-[var(--terracotta)] hover:translate-x-1 transition-all duration-300 inline-block font-normal">
             {children}
         </Link>
     );

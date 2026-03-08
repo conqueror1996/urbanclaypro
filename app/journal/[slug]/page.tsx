@@ -11,6 +11,7 @@ import SocialShare from '@/components/SocialShare';
 import { PortableText } from '@portabletext/react';
 import { urlForImage } from '@/sanity/lib/image';
 import RelatedArticles from '@/components/RelatedArticles';
+import JsonLd from '@/components/JsonLd';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -167,10 +168,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
     return (
         <div className="bg-[#fcfbf9] min-h-screen selection:bg-[var(--terracotta)] selection:text-white">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify([blogJsonLd, breadcrumbJsonLd]) }}
-            />
+            <JsonLd data={[blogJsonLd, breadcrumbJsonLd]} />
             <Header />
 
             <article className="pt-32 pb-12">
