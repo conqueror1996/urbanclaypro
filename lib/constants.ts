@@ -96,6 +96,18 @@ export const SEO_KEYWORDS = [
     "facade contractors Jaipur",
     "architects in Surat",
     "builders in Indore",
+    "Pan India Delivery",
+    "clay tiles India-wide",
+    "terracotta suppliers Maharashtra",
+    "brick cladding Gujarat",
+    "facade systems Karnataka",
+    "architectural products Tamil Nadu",
+    "exterior wall tiles Kerala",
+    "brick tiles Uttar Pradesh",
+    "terracotta panels West Bengal",
+    "clay cladding Rajasthan",
+    "exposed bricks Telangana",
+    "natural clay products Andhra Pradesh",
 
     // Application Keywords
     "office facade design",
@@ -181,7 +193,14 @@ export const SEO_KEYWORDS = [
     "facade engineering consultants", "building facade contractors",
     "turnkey cladding solutions", "wholesale building materials",
     "export quality terracotta", "made in india tiles",
-    "clay tile manufacturing process", "terracotta firing temperature"
+    "clay tile manufacturing process", "terracotta firing temperature",
+
+    // Market Capture Keywords
+    "Best brick cladding in Bangalore", "Premium terracotta panels Mumbai", "Architectural jaali design India",
+    "Modern house elevation tiles", "Natural stone vs Clay cladding", "Sustainable facade materials 2024",
+    "High-end project materials India", "Architects choice clay tiles", "Zero maintenance exterior wall cladding",
+    "Modern Contemporary elevation", "Rustic Industrial interior brick", "Traditional South Indian home design",
+    "Minimalist facade solutions", "Brutalist architecture brickwork"
 ];
 
 // --- PROGRAMMATIC SEO DATA ---
@@ -189,7 +208,17 @@ export const SEO_CITIES = [
     "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata", "Ahmedabad", "Gurgaon", "Noida",
     "Jaipur", "Surat", "Chandigarh", "Lucknow", "Indore", "Thane", "Bhopal", "Visakhapatnam", "Vadodara", "Ghaziabad",
     "Ludhiana", "Agra", "Nashik", "Faridabad", "Meerut", "Rajkot", "Varanasi", "Srinagar", "Aurangabad", "Dhanbad",
-    "Amritsar", "Navi Mumbai", "Allahabad", "Ranchi", "Howrah", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Jodhpur"
+    "Amritsar", "Navi Mumbai", "Allahabad", "Ranchi", "Howrah", "Coimbatore", "Jabalpur", "Gwalior", "Vijayawada", "Jodhpur",
+    "Madurai", "Raipur", "Kota", "Guwahati", "Chandigarh", "Solapur", "Hubli-Dharwad", "Mysore", "Tiruchirappalli", "Bareilly",
+    "Aligarh", "Bhubaneswar", "Salem", "Mira-Bhayandar", "Warangal", "Guntur", "Bhiwandi", "Saharanpur", "Gorakhpur", "Bikaner"
+];
+
+export const SEO_STATES = [
+    "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh",
+    "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir",
+    "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+    "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+    "Uttar Pradesh", "Uttarakhand", "West Bengal"
 ];
 
 export const SEO_PRODUCTS = [

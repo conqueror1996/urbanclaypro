@@ -1,109 +1,49 @@
 import { MetadataRoute } from 'next';
 import { getProducts, getProjects } from '@/lib/products';
-import { client } from '@/sanity/lib/client';
-import { CITIES } from '@/lib/locations';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://claytile.in';
 
-    // 1. ALL DYNAMIC DATA FETCHING
-    const products = await getProducts();
-    const projects = await getProjects();
-    const posts = await client.fetch(`*[_type == "journal"]{ "slug": slug.current, publishedAt }`);
-
-    // 2. STATIC PAGES
-    const staticRoutes = [
+    // Core Pages
+    const routes = [
         '',
         '/products',
         '/projects',
-        '/guide',
-        '/architects',
         '/our-story',
-        '/journal',
-        '/resources',
-        '/contact',
-        '/privacy-policy',
-        '/terms',
-        '/terracotta-tiles-india',
-        '/wiki',
-        '/commercial',
-        '/export',
-        '/exposed-brick',
-        '/terracotta-jali',
+        '/flexible-brick-tile',
         '/terracotta-panels',
+        '/exposed-brick',
         '/handmade-brick-tiles',
-        '/flexible-brick-tiles',
-        '/journal/architects-guide-terracotta-cladding-bricks',
-    ];
-
-    const staticPages = staticRoutes.map((route) => ({
+        '/terracotta-jali',
+        '/terracotta-tiles-india',
+        '/guide',
+        '/resources',
+        '/journal',
+        '/contact',
+    ].map((route) => ({
         url: `${baseUrl}${route}`,
-        lastModified: new Date(),
+        lastModified: new Date().toISOString(),
         changeFrequency: 'weekly' as const,
         priority: route === '' ? 1 : 0.8,
     }));
 
-    // 3. CITY PAGES (High SEO Value - Dynamic from Sanity)
-    const cityDocs = await client.fetch(`*[_type == "cityPage"]{ "slug": slug.current, _updatedAt }`);
-    const allCitySlugs: string[] = cityDocs.map((c: any) => c.slug);
-
-    const cityPages = allCitySlugs.map((slug) => ({
-        url: `${baseUrl}/${slug}`,
-        lastModified: new Date(), // Ideally use _updatedAt from Sanity if available
-        changeFrequency: 'daily' as const, // Ramp up to daily for local SEO saturation
-        priority: 0.9,
-    }));
-
-    // 4. CATEGORY & COLLECTION PAGES (Dynamic from Sanity)
-    const categoryDocs = await client.fetch(`*[(_type == "category" || _type == "collection") && defined(slug.current)]{ "slug": slug.current, _updatedAt }`);
-    const categoryPages = categoryDocs.map((doc: any) => ({
-        url: `${baseUrl}/products/${doc.slug}`,
-        lastModified: doc._updatedAt ? new Date(doc._updatedAt) : new Date(),
-        changeFrequency: 'daily' as const, // Pillar pages should be scanned daily
-        priority: 1.0, // Categories are high-converting
-    }));
-
-    // 5. PRODUCT PAGES
-    const productPages = products.map((product) => ({
+    // Dynamic Products
+    const products = await getProducts();
+    const productRoutes = products.map((product) => ({
         url: `${baseUrl}/products/${product.category?.slug || 'collection'}/${product.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.95, // Individual products are the core revenue drivers
-    }));
-
-    // 6. PROJECT PAGES
-    const projectPages = projects.map((project) => ({
-        url: `${baseUrl}/projects/${project.slug}`,
-        lastModified: new Date(),
+        lastModified: new Date().toISOString(),
         changeFrequency: 'monthly' as const,
         priority: 0.7,
     }));
 
-    // 7. JOURNAL / BLOG POSTS (New Content Engine)
-    // 7. JOURNAL / BLOG POSTS (New Content Engine)
-    const journalPages = posts.map((post: any) => ({
-        url: `${baseUrl}/journal/${post.slug}`,
-        lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
+    // Dynamic Projects
+    const projects = await getProjects();
+    const projectRoutes = projects.map((project) => ({
+        url: `${baseUrl}/projects/${project.slug}`,
+        lastModified: new Date().toISOString(),
         changeFrequency: 'monthly' as const,
-        priority: 0.75, // Higher than generic pages, content is king
+        priority: 0.6,
     }));
 
-    // 8. WIKI / TECH ARTICLES (High Authority Content)
-    const wikiDocs = await client.fetch(`*[_type == "wikiArticle"]{ "slug": slug.current, _updatedAt }`);
-    const wikiPages = wikiDocs.map((doc: any) => ({
-        url: `${baseUrl}/wiki/${doc.slug}`,
-        lastModified: doc._updatedAt ? new Date(doc._updatedAt) : new Date(),
-        changeFrequency: 'monthly' as const,
-        priority: 0.8, // Strong Technical SEO signal
-    }));
-
-    return [
-        ...staticPages,
-        ...cityPages,
-        ...categoryPages,
-        ...productPages,
-        ...projectPages,
-        ...journalPages,
-        ...wikiPages
-    ];
+    return [...routes, ...productRoutes, ...projectRoutes];
 }

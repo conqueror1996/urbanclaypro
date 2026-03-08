@@ -1,6 +1,25 @@
 
 import { Product, Project } from "./types";
 
+export function generateGlobalSchema() {
+    return [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            '@id': 'https://claytile.in/#website',
+            name: 'UrbanClay',
+            url: 'https://claytile.in',
+            publisher: { '@id': 'https://claytile.in/#organization' },
+            potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://claytile.in/products?q={search_term_string}',
+                'query-input': 'required name=search_term_string'
+            }
+        },
+        ...generateOrganizationSchema()
+    ];
+}
+
 export function generateOrganizationSchema() {
     return [
         {
@@ -28,6 +47,19 @@ export function generateOrganizationSchema() {
                 contactType: 'sales',
                 areaServed: 'IN',
                 availableLanguage: ['en', 'hi']
+            },
+            address: {
+                '@type': 'PostalAddress',
+                addressCountry: 'IN'
+            },
+            serviceArea: {
+                '@type': 'Country',
+                name: 'India'
+            },
+            areaServed: {
+                '@type': 'Country',
+                name: 'India',
+                '@id': 'https://en.wikipedia.org/wiki/India'
             }
         },
         {
@@ -44,6 +76,10 @@ export function generateOrganizationSchema() {
                 addressRegion: 'Maharashtra',
                 addressCountry: 'IN'
             },
+            areaServed: [
+                'Maharashtra', 'Karnataka', 'Tamil Nadu', 'Kerala', 'Telangana', 'Andhra Pradesh',
+                'Gujarat', 'Rajasthan', 'Delhi', 'Uttar Pradesh', 'West Bengal', 'Punjab', 'Haryana'
+            ],
             geo: {
                 '@type': 'GeoCoordinates',
                 latitude: '19.1130',

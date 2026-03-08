@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     default: "UrbanClay® | Flexible Brick Tiles, Terracotta Panels, Exposed Bricks & Handmade Brick Tiles",
     template: "%s | UrbanClay India"
   },
-  description: "India's premier manufacturer of high-precision clay facades. We provide flexible brick tiles, large format terracotta panels, architectural exposed bricks, and bespoke handmade brick tiles engineered for zero-failure performance in Indian climates.",
+  description: "India's premier manufacturer of high-precision clay facades. Delivering flexible brick tiles, large format terracotta panels, and bespoke handmade bricks across all Indian states including Maharashtra, Karnataka, Tamil Nadu, Kerala, Gujarat, Delhi NCR, and more. Engineered for zero-failure performance in all Indian climates.",
   keywords: SEO_KEYWORDS,
   authors: [{ name: "UrbanClay", url: "https://claytile.in" }],
   creator: "UrbanClay",
@@ -128,7 +128,7 @@ import FootprintTracker from "@/components/FootprintTracker";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { Toaster } from 'sonner';
 import JsonLd from "@/components/JsonLd";
-import { generateOrganizationSchema } from "@/lib/schema";
+import { generateGlobalSchema } from "@/lib/schema";
 
 
 export default function RootLayout({
@@ -146,7 +146,7 @@ export default function RootLayout({
           <SampleProvider>
             <SmoothScroll />
             <SplashLoader />
-            <JsonLd data={generateOrganizationSchema()} />
+            <JsonLd data={generateGlobalSchema()} />
             <PageTransition>{children}</PageTransition>
             <FootprintTracker />
             <WebVitalsReporter />

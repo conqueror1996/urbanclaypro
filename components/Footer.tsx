@@ -22,7 +22,6 @@ export default function Footer() {
 
     return (
         <footer id="contact" className="bg-[var(--background)] text-[var(--foreground)] border-t border-[var(--line)]">
-
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
                     {/* Column 1: Brand (Always Visible) */}

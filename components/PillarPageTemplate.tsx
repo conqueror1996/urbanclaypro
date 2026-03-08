@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Product, getHomePageData } from '@/lib/products';
+import { useSampleBox } from '@/context/SampleContext';
 import PremiumProductCard from '@/components/PremiumProductCard';
 import JsonLd from '@/components/JsonLd';
 import { ShieldCheck, FileText, Maximize2, Layers, MessageCircle, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
@@ -32,6 +33,7 @@ export default function PillarPageTemplate({
     faqs
 }: PillarPageTemplateProps) {
     const [specifierImage, setSpecifierImage] = useState<string>("/images/technical-detail.png");
+    const { setBoxOpen } = useSampleBox();
 
     useEffect(() => {
         const loadData = async () => {
@@ -306,12 +308,12 @@ export default function PillarPageTemplate({
                         <span className="text-[9px] font-black uppercase text-[var(--foreground)]/40 mb-1">Pillar Inquiry</span>
                         <span className="text-[11px] font-serif font-bold text-[var(--ink)]">Technical Support Ready</span>
                     </div>
-                    <Link
-                        href="/#quote"
+                    <button
+                        onClick={() => setBoxOpen(true)}
                         className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center"
                     >
                         Request Sample Kit
-                    </Link>
+                    </button>
                     <a
                         href="https://wa.me/918080081951"
                         target="_blank"

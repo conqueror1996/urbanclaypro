@@ -44,6 +44,9 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
             color: '#b45a3c',
             texture: variant.imageUrl ? `url('${variant.imageUrl}')` : '#b45a3c'
         });
+
+        // Open the modal immediately for visual feedback
+        setBoxOpen(true);
     };
 
     const handleWhatsAppShare = (e: React.MouseEvent) => {
@@ -115,7 +118,7 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
             </Link>
 
             {/* Action Palette (Floating over the card) */}
-            <div className="absolute bottom-20 left-4 right-4 flex items-center justify-between opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 z-30">
+            <div className="absolute bottom-20 left-4 right-4 flex items-center justify-between md:opacity-0 md:group-hover:opacity-100 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-500 z-30 opacity-100 translate-y-0 text-white">
                 <div className="flex items-center gap-2">
                     <button
                         onClick={handleAddSample}
