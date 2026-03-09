@@ -14,7 +14,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Flexible Brick Tiles',
         subtitle: 'Ultra-Thin Cladding',
-        href: '/flexible-brick-tiles',
+        href: '/flexible-brick-tile',
         color: 'from-[#b45a3c] to-[#96472d]',
         image: '/images/menu-exposed.jpg'
     },
@@ -37,7 +37,6 @@ const PRODUCT_CATEGORIES = [
         subtitle: 'Artisanal Beauty',
         href: '/handmade-brick-tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
-        textColor: 'text-[#2A1E16]',
         image: '/images/menu-floor.jpg'
     },
     {
@@ -247,7 +246,7 @@ export default function Header({ hideAnnouncement = false }: { hideAnnouncement?
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2, ease: 'easeOut' }}
-                        className="hidden md:block absolute top-full left-0 right-0 bg-[var(--background)] border-t border-[var(--line)] shadow-2xl z-40 overflow-hidden"
+                        className="hidden md:block absolute top-full left-0 right-0 bg-[#1c1917] border-t border-white/5 shadow-2xl z-40 overflow-hidden"
                         onMouseEnter={() => {
                             if (closeTimeoutRef.current) {
                                 clearTimeout(closeTimeoutRef.current);
@@ -260,11 +259,11 @@ export default function Header({ hideAnnouncement = false }: { hideAnnouncement?
                             <div className="grid grid-cols-12 gap-12">
                                 {/* Intro Column */}
                                 <div className="col-span-3">
-                                    <h3 className="font-serif text-2xl text-[#2A1E16] mb-3">Refined Earth</h3>
-                                    <p className="text-sm text-gray-500 leading-relaxed mb-6">
+                                    <h3 className="font-serif text-2xl text-[#FAF9F6] mb-3">Refined Earth</h3>
+                                    <p className="text-sm text-[#FAF9F6]/60 leading-relaxed mb-6">
                                         Explore our curated collection of handcrafted terracotta and clay products designed for modern architecture.
                                     </p>
-                                    <Link href="/products" className="text-xs font-bold uppercase tracking-wider text-[var(--terracotta)] hover:text-[#2A1E16] transition-colors flex items-center gap-2">
+                                    <Link href="/products" className="text-xs font-bold uppercase tracking-wider text-[var(--terracotta)] hover:text-white transition-colors flex items-center gap-2">
                                         View Full Catalog
                                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                                     </Link>
@@ -280,15 +279,15 @@ export default function Header({ hideAnnouncement = false }: { hideAnnouncement?
                                             onClick={() => setActiveDropdown(null)}
                                         >
                                             {/* Background / Placeholder Image */}
-                                            <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} transition-transform duration-700 group-hover:scale-110`} />
+                                            <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} opacity-80 transition-transform duration-700 group-hover:scale-110`} />
                                             {/* Here we would put <Image /> if we had real assets, falling back to gradient for now which looks clean */}
 
                                             {/* Overlay Content */}
-                                            <div className="absolute inset-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black/40 via-transparent to-transparent">
-                                                <p className={`text-[10px] font-bold uppercase tracking-wider mb-1 opacity-80 ${cat.textColor || 'text-white'}`}>
+                                            <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+                                                <p className="text-[10px] font-black uppercase tracking-wider mb-1 opacity-90 !text-white">
                                                     {cat.subtitle}
                                                 </p>
-                                                <h4 className={`font-serif text-lg leading-tight ${cat.textColor || 'text-white'} group-hover:underline decoration-1 underline-offset-4`}>
+                                                <h4 className="font-serif text-lg leading-tight !text-white group-hover:underline decoration-1 underline-offset-4">
                                                     {cat.title}
                                                 </h4>
                                             </div>
