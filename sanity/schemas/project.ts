@@ -44,7 +44,6 @@ export default defineType({
             title: 'Main Image',
             type: 'image',
             options: { hotspot: true },
-            validation: (rule) => rule.required(),
         }),
         defineField({
             name: 'gallery',
