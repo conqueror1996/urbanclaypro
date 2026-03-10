@@ -41,6 +41,7 @@ export async function submitLead(formData: any) {
             product: formData.product,
             firmName: formData.firmName,
             city: formData.city,
+            country: formData.country,
             quantity: formData.quantity,
             timeline: formData.timeline,
             contact: formData.contact,

@@ -27,6 +27,11 @@ export default defineType({
       type: 'string',
     }),
     defineField({
+      name: 'country',
+      title: 'Country',
+      type: 'string',
+    }),
+    defineField({
       name: 'quantity',
       title: 'Quantity',
       type: 'string',

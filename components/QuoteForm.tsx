@@ -6,7 +6,11 @@ import { useSearchParams } from 'next/navigation';
 import { submitLead } from '@/app/actions/submit-lead';
 import Image from 'next/image';
 
-export default function QuoteForm() {
+interface QuoteFormProps {
+    mode?: 'default' | 'export';
+}
+
+export default function QuoteForm({ mode = 'default' }: QuoteFormProps) {
     const searchParams = useSearchParams();
     const [currentStep, setCurrentStep] = useState(1);
     const [productDropdownOpen, setProductDropdownOpen] = useState(false);
@@ -16,12 +20,13 @@ export default function QuoteForm() {
         product: 'Exposed Brick Tiles',
         firmName: '',
         city: '',
+        country: '',
         quantity: '',
         timeline: '',
         contact: '',
         email: '',
         name: '',
-        notes: ''
+        notes: mode === 'export' ? 'International Inquiry' : ''
     });
 
     // Auto-fill from URL
@@ -48,7 +53,11 @@ export default function QuoteForm() {
         let isValid = true;
 
         if (step === 2) {
-            if (!formData.city.trim()) { newErrors.city = 'Required'; isValid = false; }
+            if (mode === 'export') {
+                if (!formData.country.trim()) { newErrors.country = 'Required'; isValid = false; }
+            } else {
+                if (!formData.city.trim()) { newErrors.city = 'Required'; isValid = false; }
+            }
             if (!formData.quantity.trim()) { newErrors.quantity = 'Required'; isValid = false; }
         }
 
@@ -100,20 +109,20 @@ export default function QuoteForm() {
 *Role:* ${formData.role}
 *Firm:* ${formData.firmName || 'N/A'}
 *Product:* ${formData.product}
-*City:* ${formData.city}
+*${mode === 'export' ? 'Country' : 'City'}:* ${mode === 'export' ? formData.country : formData.city}
 *Quantity:* ${formData.quantity}
 *Timeline:* ${formData.timeline}
 *Contact:* ${formData.contact}
 *Notes:* ${formData.notes}
 ----------------
-Sent from UrbanClay`;
+Sent from UrbanClay ${mode === 'export' ? 'Global' : ''}`;
 
         const whatsappUrl = `https://wa.me/918080081951?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     };
 
     return (
-        <section id="quote" className="py-16 md:py-24 bg-[var(--background)] border-t border-[var(--line)]">
+        <section id="quote" className={`py-16 md:py-24 bg-[var(--background)] ${mode === 'export' ? '' : 'border-t border-[var(--line)]'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div className="grid lg:grid-cols-12 gap-6 lg:gap-0 bg-[var(--background)] rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-[var(--line)]">
@@ -133,13 +142,15 @@ Sent from UrbanClay`;
 
                         <div className="relative z-10">
                             <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-4 block">
-                                The Technical Desk
+                                {mode === 'export' ? 'Global Export Division' : 'The Technical Desk'}
                             </span>
                             <h2 className="text-[var(--foreground)] mb-6">
-                                Let's Build <br /> <span className="italic text-[var(--foreground)]/50">Details.</span>
+                                {mode === 'export' ? 'Logistics' : "Let's Build"} <br /> <span className="italic text-[var(--foreground)]/50">{mode === 'export' ? 'Simplified.' : 'Details.'}</span>
                             </h2>
-                            <p className="text-[var(--foreground)]/80 leading-relaxed">
-                                Get a precise estimate, technical consultation, or sample box for your next facade project.
+                            <p className="text-[var(--foreground)]/80 leading-relaxed font-light">
+                                {mode === 'export'
+                                    ? 'Technical support for global specification. We handle ASTM certifications and seaworthy logistics for high-rise projects.'
+                                    : 'Get a precise estimate, technical consultation, or sample box for your next facade project.'}
                             </p>
                         </div>
 
@@ -150,17 +161,17 @@ Sent from UrbanClay`;
                                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-[var(--foreground)]">2-Hour Response</h4>
-                                    <p className="text-xs text-[var(--foreground)]/40">During business hours (Mon-Sat)</p>
+                                    <h4 className="font-bold text-sm text-[var(--foreground)]">24h Response</h4>
+                                    <p className="text-xs text-[var(--foreground)]/40">International Desk Timezones</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center text-[var(--terracotta)]">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" /></svg>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-[var(--foreground)]">Direct Factory Pricing</h4>
-                                    <p className="text-xs text-[var(--foreground)]/40">No middlemen, straight from kiln.</p>
+                                    <h4 className="font-bold text-sm text-[var(--foreground)]">FOB / CIF Pricing</h4>
+                                    <p className="text-xs text-[var(--foreground)]/40">Port-to-Port transparency.</p>
                                 </div>
                             </div>
                         </div>
@@ -305,15 +316,15 @@ Sent from UrbanClay`;
 
                                             <div className="grid grid-cols-2 gap-4 md:gap-6">
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">Project City <span className="text-[var(--terracotta)]">*</span></label>
+                                                    <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40">{mode === 'export' ? 'Target Country' : 'Project City'} <span className="text-[var(--terracotta)]">*</span></label>
                                                     <input
-                                                        value={formData.city}
-                                                        onChange={e => handleChange('city', e.target.value)}
-                                                        className={`w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${errors.city ? 'ring-2 ring-red-500/20 bg-red-50' : 'focus:border-[var(--terracotta)]/30'}`}
-                                                        placeholder="Site Location"
+                                                        value={mode === 'export' ? formData.country : formData.city}
+                                                        onChange={e => handleChange(mode === 'export' ? 'country' : 'city', e.target.value)}
+                                                        className={`w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium focus:ring-2 focus:ring-[var(--terracotta)]/20 transition-all outline-none ${(mode === 'export' ? errors.country : errors.city) ? 'ring-2 ring-red-500/20 bg-red-50' : 'focus:border-[var(--terracotta)]/30'}`}
+                                                        placeholder={mode === 'export' ? "e.g. USA, UAE, UK" : "Site Location"}
                                                         autoFocus
                                                     />
-                                                    {errors.city && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider pl-1">{errors.city}</p>}
+                                                    {(mode === 'export' ? errors.country : errors.city) && <p className="text-red-500 text-[10px] uppercase font-bold tracking-wider pl-1">{mode === 'export' ? errors.country : errors.city}</p>}
                                                 </div>
                                                 <div className="space-y-2">
                                                     <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--ink)]/40 ml-1">Est. Quantity <span className="text-[var(--terracotta)]">*</span></label>
@@ -392,7 +403,7 @@ Sent from UrbanClay`;
                                                         type="tel"
                                                         inputMode="tel"
                                                         className={`w-full bg-[#f8f8f8] border border-transparent rounded-2xl px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-[var(--ink)] font-medium outline-none transition-all ${errors.contact ? 'ring-2 ring-red-500/20 bg-red-50' : 'focus:ring-2 focus:ring-[var(--terracotta)]/20 focus:border-[var(--terracotta)]/30'}`}
-                                                        placeholder="+91 WhatsApp"
+                                                        placeholder={mode === 'export' ? "Include Country Code" : "+91 WhatsApp"}
                                                     />
                                                 </div>
                                             </div>

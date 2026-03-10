@@ -129,20 +129,13 @@ export default function ExportPage() {
             </section>
 
             {/* INQUIRY FORM */}
-            <section id="inquiry" className="py-24 bg-[#FAF7F3]">
-                <div className="max-w-3xl mx-auto px-6">
-                    <div className="text-center mb-12">
-                        <h2 className="font-serif text-4xl mb-4 text-[#2A1E16]">International Inquiry</h2>
-                        <p className="text-gray-500">Direct channel to our Export Division.</p>
-                    </div>
-                    <div className="bg-white p-8 rounded-3xl shadow-xl">
-                        {/* We reuse the QuoteForm but maybe pass a prop or context to indicate export? 
-                            For now, reusing standard form is fine as it captures project details. 
-                        */}
-                        <QuoteForm />
-                    </div>
+            <div id="inquiry">
+                <div className="max-w-7xl mx-auto px-6 pt-24 text-center">
+                    <h2 className="font-serif text-5xl md:text-7xl mb-6 text-[#2A1E16]">International Inquiry</h2>
+                    <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-light">Direct channel to our Export Division for global architectural specifications, ASTM certified testing, and sea-worthy bulk logistics.</p>
                 </div>
-            </section>
+                <QuoteForm mode="export" />
+            </div>
 
             <Footer />
         </div>
