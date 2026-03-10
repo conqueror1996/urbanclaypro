@@ -156,22 +156,26 @@ Sent from UrbanClay ${mode === 'export' ? 'Global' : ''}`;
 
                         {/* Trust Indicators */}
                         <div className="relative z-10 mt-8 md:mt-12 space-y-4 md:space-y-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center text-[var(--terracotta)]">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <div className="flex items-center gap-5">
+                                <div className="w-12 h-12 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center text-[var(--terracotta)] shrink-0 transition-transform hover:scale-110">
+                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-[var(--foreground)]">24h Response</h4>
-                                    <p className="text-xs text-[var(--foreground)]/40">International Desk Timezones</p>
+                                    <h4 className="font-bold text-base text-[var(--foreground)] tracking-tight">24h Response</h4>
+                                    <p className="text-xs text-[var(--foreground)]/50">International Desk Timezones</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center text-[var(--terracotta)]">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" /></svg>
+                            <div className="flex items-center gap-5">
+                                <div className="w-12 h-12 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center text-[var(--terracotta)] shrink-0 transition-transform hover:scale-110">
+                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                                    </svg>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-sm text-[var(--foreground)]">FOB / CIF Pricing</h4>
-                                    <p className="text-xs text-[var(--foreground)]/40">Port-to-Port transparency.</p>
+                                    <h4 className="font-bold text-base text-[var(--foreground)] tracking-tight">FOB / CIF Pricing</h4>
+                                    <p className="text-xs text-[var(--foreground)]/50">Port-to-Port transparency.</p>
                                 </div>
                             </div>
                         </div>
