@@ -86,9 +86,9 @@ export default function ArchitectPageAnimate() {
                         <span className="text-[var(--terracotta)] font-medium tracking-[0.4em] uppercase text-xs mb-6 block">
                             UrbanClay Studio
                         </span>
-                        <h1 className="text-5xl md:text-8xl font-serif text-[#EBE5E0] leading-[1.1] mb-8">
+                        <h1 className="text-5xl md:text-8xl font-serif text-white leading-[1.1] mb-8">
                             Designed for <br />
-                            <span className="italic font-light text-[#EBE5E0]/70">Visionaries</span>
+                            <span className="italic font-light text-white/70">Visionaries</span>
                         </h1>
                         <p className="text-lg md:text-xl text-[#EBE5E0]/80 max-w-2xl mx-auto leading-relaxed font-light mb-12">
                             A curated digital atelier for architects. Access high-fidelity assets, technical specifications, and bespoke manufacturing services.
