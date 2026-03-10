@@ -1,11 +1,11 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Flexible Brick Tile | Ultra-Thin 3mm Modified Clay | UrbanClay',
-    description: 'Discover the future of architectural facing. UrbanClay\'s Flexible Brick Tile is a genuine terracotta surface with authentic wire-cut texture that wraps around columns and shapes to your imagination—at just 3mm thick and 90% lighter than traditional brick.',
-    keywords: 'flexible brick, thin brick veneer, modified clay tile, lightweight brick, curved wall cladding, architectural terracotta, 3mm brick, UrbanClay',
+    title: 'Ultra Thin Flexible Brick Veneers | Curved Wall Clay Tiles India | UrbanClay',
+    description: 'Transform complex architectural forms with our 3mm ultra-thin flexible brick tiles. Engineered for curved walls, lightweight exterior cladding, and seamless column wrapping across India.',
+    keywords: 'ultra thin flexible brick veneers, bendable clay tiles for curved walls, lightweight brick slips exterior, flexible terracotta facade, modified clay materials India, UrbanClay',
     openGraph: {
-        title: 'Flexible Brick Tile | The Impossible Material by UrbanClay',
+        title: 'Ultra Thin Flexible Brick Veneers | UrbanClay',
         description: '100% Modified Clay. Zero Rigidity. A 3mm ultra-thin, featherweight brick tile that seamlessly bends around convex walls and columns.',
         images: [{
             url: '/images/flexible_thin_brick.png',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'UrbanClay | Flexible Brick Tile Showcase',
+        title: 'Ultra Thin Flexible Brick Veneers | UrbanClay',
         description: 'We engineered the traditional masonry block down to a microscopic 3mm profile. Authentic clay texture. Zero rigidity.',
         images: ['/images/flexible_thin_brick.png'],
     }

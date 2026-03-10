@@ -3,8 +3,9 @@ import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCa
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
-    title: "Exposed Brick Wall & Facades | Authentic Wirecut Bricks India",
-    description: "Discover classic and contemporary exposed brick textures. UrbanClay provides high-strength wirecut clay bricks engineered for structural and aesthetic excellence.",
+    title: "Wirecut Exposed Red Brick Masonry | Architectural Facing Bricks India",
+    description: "Premium high-strength wirecut clay bricks engineered for structural and aesthetic excellence. High-fired facing bricks with near-zero efflorescence for both interior and exterior architectural masonry.",
+    keywords: "wirecut exposed red brick masonry, architectural facing bricks india, interior exposed brick walls, premium red bricks for elevation, zero efflorescence bricks, UrbanClay",
     alternates: { canonical: 'https://claytile.in/exposed-brick' }
 };
 

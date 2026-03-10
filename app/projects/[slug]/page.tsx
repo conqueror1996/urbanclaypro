@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const keywords = Array.from(new Set([...baseKeywords, ...productsUsedNames]));
 
     return {
-        title: `${project.title} | ${project.location} | UrbanClay Case Study`,
-        description: project.description?.slice(0, 160) || `Explore the architectural excellence of ${project.title} in ${project.location}, featuring premium UrbanClay materials.`,
+        title: `${project.title} | Premium ${project.type || 'Architectural Ceramics'} in ${project.location || 'India'} | UrbanClay`,
+        description: project.description?.slice(0, 160) || `Explore the architectural excellence of ${project.title} in ${project.location}. Premium ${project.type || 'materials'} engineered by UrbanClay.`,
         keywords: keywords,
         openGraph: {
             title: project.title,

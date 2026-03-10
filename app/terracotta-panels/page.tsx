@@ -3,8 +3,9 @@ import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCa
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
-    title: "Terracotta Panels | Premium Rain-Screen Cladding India",
-    description: "High-performance large format terracotta panels for architectural rainscreen cladding. Engineered for zero-failure thermal insulation and weather resistance in Indian climates.",
+    title: "Large Format Terracotta Rainscreen Cladding India | UrbanClay",
+    description: "High-performance large format terracotta panels and ventilated facade systems. Engineered for zero-failure thermal insulation and A1 fire-rated weather resistance in Indian climates.",
+    keywords: "large format terracotta rainscreen cladding india, terracotta facade panels price module, ventilated terracotta facade systems, A1 fire rated ceramic facades, UrbanClay",
     alternates: { canonical: 'https://claytile.in/terracotta-panels' }
 };
 

@@ -3,8 +3,9 @@ import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCa
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
-    title: "Handmade Brick Tiles | Bespoke Artisanal Cladding India",
-    description: "Architectural grade handmade brick tiles for heritage restoration and bespoke luxury projects. Precision-fired natural Indian clay for industrial durability with artisanal aesthetics.",
+    title: "Handmade Brick Tiles | Bespoke Artisanal Masonry India | UrbanClay",
+    description: "Architectural grade handmade brick tiles for heritage restoration and bespoke luxury projects. Precision-fired natural Indian clay for artisanal textures & industrial durability.",
+    keywords: "handmade brick tiles india, bespoke artisanal cladding, rustic brick wall tiles, heritage restoration bricks, reclaimed style bricks, UrbanClay",
     alternates: { canonical: 'https://claytile.in/handmade-brick-tiles' }
 };
 

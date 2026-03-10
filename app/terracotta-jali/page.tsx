@@ -3,8 +3,9 @@ import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCa
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
-    title: "Terracotta Jaali | Breathable Clay Screens India",
-    description: "Discover our range of authentic terracotta jaalis. Perfect for ventilation, privacy, and architectural shading. Handcrafted clay screens for modern Indian homes.",
+    title: "Terracotta screen blocks & Architectural clay Jali India | UrbanClay",
+    description: "Premium architectural terracotta jali blocks for natural ventilation, privacy screens, and facade sun breakers. Handcrafted clay breezeway blocks for sustainable cooling.",
+    keywords: "breezeway clay blocks, clay jali screens architectural, sun breaker terracotta screens, terracotta screen blocks, clay ventilation blocks, UrbanClay",
     alternates: { canonical: 'https://claytile.in/terracotta-jali' }
 };
 
