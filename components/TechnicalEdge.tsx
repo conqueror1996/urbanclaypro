@@ -19,10 +19,10 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
                             THE TECHNICAL EDGE
                         </span>
                         <h2 className="text-[var(--foreground)] leading-tight mb-4 md:mb-6 text-3xl md:text-5xl font-serif">
-                            Why UrbanClay Outperforms <br className="hidden md:block" /> Conventional Systems
+                            The Science of <br className="hidden md:block" /> Perfect Facades
                         </h2>
                         <p className="text-[var(--foreground)]/60 text-sm md:text-lg leading-relaxed max-w-lg mb-8 md:mb-12 font-normal">
-                            Engineered for zero-failure performance. Our systems replace traditional artisan methods with industrialized precision, ensuring structural integrity in extreme Indian climates.
+                            We bridge the gap between architectural vision and material reality. By replacing traditional masonry with industrialized precision, we ensure your facade remains pristine for generations.
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-12">

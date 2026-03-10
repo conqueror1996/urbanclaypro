@@ -48,17 +48,20 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
             openGraph: {
                 title: `Premium ${term} - UrbanClay India`,
                 description: `India's trusted source for ${term}. Serving 100+ cities nationwide with premium quality.`,
+            },
+            alternates: {
+                canonical: 'https://claytile.in',
             }
-        }
+        };
     }
 
     return {
-        title: "UrbanClay® | Flexible Brick Tiles, Architectural Grade Terracotta Panels, Exposed Bricks & Handmade Brick Tiles | India",
-        description: "India's #1 Manufacturer & Exporter of Flexible Brick Tiles, large format Terracotta Panels, Exposed Bricks, and Bespoke Handmade Brick Tiles. Sustainable, scalable facades delivered pan-India. UrbanClay® - The Architect's Choice.",
+        title: "UrbanClay® | High-Precision Terracotta Facades & Clay Brick Systems | India",
+        description: "India's premier manufacturer of high-performance clay facades. Delivering flexible brick tiles, large format terracotta panels, and bespoke handmade bricks for modern architecture nationwide.",
         keywords: SEO_KEYWORDS,
         openGraph: {
-            title: "UrbanClay® | Flexible Brick Tiles, Terracotta Panels, Exposed & Handmade Bricks | Manufacturer India",
-            description: "Engineered for high-performance facades, our thermal-regulation panels ensure long-term structural integrity. Zero-failure systems designed for modern, high-rise, and commercial architecture in extreme Indian climates.",
+            title: "UrbanClay® | Premier Terracotta & Clay Facade Systems | Manufacturer India",
+            description: "Built for the elements. Our engineered terracotta systems ensure thermal comfort and structural longevity, designed specifically for India's diverse architectural landscape.",
         },
         alternates: {
             canonical: 'https://claytile.in',

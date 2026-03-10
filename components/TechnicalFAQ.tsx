@@ -5,23 +5,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const technicalFaqs = [
     {
-        question: "How do you prevent efflorescence (white patches) on bricks?",
-        answer: "Efflorescence is caused by soluble salts reacting with moisture. At UrbanClay, we utilize a high-temperature firing process and low-alkali clay sources. Additionally, we recommend using a low-cement mortar and ensuring proper drainage during installation to minimize any lime blooming.",
+        question: "How do you prevent salt-buildup and patches on exterior bricks?",
+        answer: "Efflorescence is a natural reaction to moisture, but it can be engineered out. We use high-purity clay sources and precisely controlled firing to ensure our bricks are vitrified and salt-free, keeping your walls clean for decades.",
         category: "Reliability"
     },
     {
-        question: "What is the thermal insulation performance of terracotta cladding?",
-        answer: "Terracotta is a natural insulator with high thermal mass. It creates a 'Thermal Buffer' that absorbs heat during the day and releases it at night. When used in a ventilated facade system, it can reduce building cooling loads by up to 20-30% compared to standard glass or metal facades.",
+        question: "Does terracotta cladding actually help with building temperature?",
+        answer: "Yes. Terracotta has a high 'thermal mass' which acts like a natural heat-sink. In a ventilated facade setup, it creates a moving air pocket that prevents external heat from soaking into the building, significantly reducing air-conditioning loads.",
         category: "Energy"
     },
     {
-        question: "What is the compression strength of your wirecut bricks?",
-        answer: "Our wirecut bricks typically exhibit a compressive strength ranging from 15 N/mm² to 25 N/mm², which is significantly higher than standard fly-ash or locally kilned bricks. This makes them suitable for load-bearing structures as well as decorative cladding.",
+        question: "What makes UrbanClay bricks stronger than local alternatives?",
+        answer: "Local bricks are often porous and irregularly fired. Our wirecut collection is fired at 1150°C+, creating a dense, stone-like structure with twice the compressive strength (15-25 N/mm²) of standard masonry blocks.",
         category: "Structural"
     },
     {
-        question: "Are UrbanClay products suitable for coastal regions like Mumbai or Chennai?",
-        answer: "Yes. Our vitrified terracotta range features a very low water absorption rate (typically <8%). This prevents salt-air penetration and moisture-induced damage, making them the preferred choice for high-humidity coastal environments.",
+        question: "Is clay cladding durable enough for high-humidity coastal cities?",
+        answer: "Vitrified clay is naturally resistant to saltwater and humidity. With a water absorption rate under 8%, our panels won't soak up moisture or degrade in humid climates like Mumbai or Chennai.",
         category: "Durability"
     },
     {

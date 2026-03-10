@@ -17,7 +17,7 @@ export default function Sustainability() {
                             1000 Years of Durability.
                         </h2>
                         <p className="text-[var(--ink)]/80 text-lg md:text-xl leading-relaxed mb-12 font-normal">
-                            Clay is the ultimate circular material. Sourced from the earth, fired by hand, and designed to outlast the structures it protects. No toxic binders, no microplastics, just timeless geology.
+                            Clay is the ultimate circular material. Sourced from the earth and refined by fire, it is designed to outlast the structures it protects. No toxic binders, no plastics—just pure, timeless geology.
                         </p>
 
                         <div className="grid grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12">
