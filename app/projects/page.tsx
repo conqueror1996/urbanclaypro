@@ -42,8 +42,21 @@ export const revalidate = 60;
 export default async function ProjectsPage() {
     const rawProjects = await getProjects();
 
+    // Deduplicate by slug, prioritizing the entry with an image if there are duplicates
+    const uniqueProjectsMap = new Map();
+    for (const p of rawProjects) {
+        if (uniqueProjectsMap.has(p.slug)) {
+            const existing = uniqueProjectsMap.get(p.slug);
+            if (!existing.imageUrl && p.imageUrl) {
+                uniqueProjectsMap.set(p.slug, p);
+            }
+        } else {
+            uniqueProjectsMap.set(p.slug, p);
+        }
+    }
+
     // Type Safety Fix: ensure imageUrl is string
-    const projects = rawProjects.map(p => ({
+    const projects = Array.from(uniqueProjectsMap.values()).map(p => ({
         ...p,
         imageUrl: p.imageUrl || '' // Fallback to empty string if undefined
     }));

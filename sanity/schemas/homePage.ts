@@ -68,6 +68,14 @@ export default defineType({
                 }
             ],
             description: 'List of firms to display in the Trust Bar'
+        }),
+        defineField({
+            name: 'specifierToolkitImage',
+            title: 'Specifier Toolkit Image',
+            type: 'image',
+            description: 'Image displayed in the "Fast-Track Your Technical Specification" section on the Pillar pages',
+            options: { hotspot: true },
+            fields: [{ name: 'alt', type: 'string', title: 'Alternative Text' }]
         })
     ],
 })

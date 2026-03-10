@@ -67,7 +67,7 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-700" />
                     </motion.div>
 
-                    <div className="relative z-10 max-w-7xl w-full mx-auto px-6 pb-20 md:pb-32">
+                    <div className="relative z-30 max-w-7xl w-full mx-auto px-6 pb-20 md:pb-32 pointer-events-none">
                         <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                                 <span className="px-3 py-1 border border-white/20 rounded-full backdrop-blur-md uppercase tracking-widest text-[10px]">Featured Work</span>
                                 <span>{featuredProject.location}</span>
                             </div>
-                            <h1 className="text-5xl md:text-8xl font-serif text-[#EBE5E0] leading-[0.9] mb-6 max-w-4xl">
+                            <h1 className="text-5xl md:text-8xl font-serif !text-[#EBE5E0] drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] leading-[0.9] mb-6 max-w-4xl">
                                 {featuredProject.title}
                             </h1>
                             <div className="flex items-center gap-4 group-hover:gap-8 transition-all duration-300">
@@ -132,10 +132,10 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                 {/* GALLERY GRID */}
                 <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <AnimatePresence>
-                        {filteredProjects.filter(p => p !== featuredProject).map((project) => (
+                        {filteredProjects.filter(p => p !== featuredProject).map((project, idx) => (
                             <motion.div
                                 layout
-                                key={project.slug}
+                                key={`${project.slug}-${idx}`}
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
@@ -165,7 +165,7 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
 
                                     <div>
                                         <div className="flex items-center justify-between mb-1">
-                                            <h3 className="text-xl font-serif text-[#EBE5E0] group-hover:text-[var(--terracotta)] transition-colors">{project.title}</h3>
+                                            <h3 className="text-xl font-serif !text-[#EBE5E0] group-hover:!text-[var(--terracotta)] transition-colors">{project.title}</h3>
                                             <span className="text-[10px] uppercase tracking-widest text-white/30 border border-white/10 px-2 py-0.5 rounded-full">{project.category}</span>
                                         </div>
                                         <p className="text-sm text-white/50">{project.location || 'India'}</p>

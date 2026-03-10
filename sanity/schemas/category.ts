@@ -71,5 +71,19 @@ export default defineType({
             title: 'SEO Settings',
             type: 'seo',
         }),
+        defineField({
+            name: 'specifierToolkitImage',
+            title: 'Specifier Toolkit Image',
+            description: 'The unique system diagram image shown in the "Fast-Track Your Technical Specification" section for this specific category pillar page.',
+            type: 'image',
+            options: { hotspot: true },
+            fields: [
+                {
+                    name: 'alt',
+                    type: 'string',
+                    title: 'Alternative Text',
+                }
+            ]
+        }),
     ],
 })

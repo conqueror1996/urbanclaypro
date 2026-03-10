@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getProducts, getPillarHeroImage } from '@/lib/products';
+import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCategory } from '@/lib/products';
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
@@ -9,9 +9,12 @@ export const metadata: Metadata = {
 };
 
 export default async function TerracottaJaliPillar() {
-    const products = await getProducts();
-    // Try both common spellings and slugs
-    const heroImage = await getPillarHeroImage('terracotta-jaalis', 'terracotta-jali') || "/images/products/pressed-texture.jpg"; // Keep existing default or use a cinematic one if found
+    const [products, heroImage, specifierToolkitImage, projects] = await Promise.all([
+        getProducts(),
+        getPillarHeroImage('terracotta-jaalis', 'terracotta-jali').then(img => img || "/images/products/pressed-texture.jpg"),
+        getPillarToolkitImage('terracotta-jaalis', 'terracotta-jali'),
+        getProjectsByCategory('terracotta-jaalis'),
+    ]);
 
     // Filter for Jali products - Exclude Cement
     const jaliProducts = products.filter(p => {
@@ -33,9 +36,11 @@ export default async function TerracottaJaliPillar() {
             subtitle="Designed for architects who refuse site failures."
             description="Timeless terracotta screens that balance light, privacy, and airflow. Our jaalis are handcrafted from natural clay, offering a sustainable and aesthetic solution for facades, balconies, and partitions."
             heroImage={heroImage}
+            specifierToolkitImage={specifierToolkitImage}
             keyword="Terracotta Jali"
             slug="terracotta-jali"
             products={jaliProducts}
+            projects={projects}
             faqs={[
                 {
                     q: "What are the common sizes for Jali?",

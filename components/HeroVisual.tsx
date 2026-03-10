@@ -64,7 +64,20 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
             }
         };
 
+        let isVisible = true;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisible = entry.isIntersecting;
+            },
+            { threshold: 0.1 }
+        );
+
         const animate = () => {
+            if (!isVisible) {
+                animationFrameId = requestAnimationFrame(animate);
+                return;
+            }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             particles.forEach((p, index) => {
@@ -89,13 +102,15 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
             resizeCanvas();
             initParticles();
             animate();
-            window.addEventListener('resize', resizeCanvas);
+            observer.observe(canvas);
+            window.addEventListener('resize', resizeCanvas, { passive: true });
         }, 1000);
 
         return () => {
             clearTimeout(timer);
             window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
+            observer.disconnect();
         };
     }, [prefersReducedMotion]);
 

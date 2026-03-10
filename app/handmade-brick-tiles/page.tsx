@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getProducts, getPillarHeroImage } from '@/lib/products';
+import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCategory } from '@/lib/products';
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 };
 
 export default async function HandmadeBrickTilesPillar() {
-    const products = await getProducts();
-    const heroImage = await getPillarHeroImage('handmade-brick-tiles', 'brick-wall-tiles') || "/images/products/pressed-texture.jpg";
+    const [products, heroImage, specifierToolkitImage, projects] = await Promise.all([
+        getProducts(),
+        getPillarHeroImage('handmade-brick-tiles', 'brick-wall-tiles').then(img => img || "/images/products/pressed-texture.jpg"),
+        getPillarToolkitImage('handmade-brick-tiles', 'brick-wall-tiles'),
+        getProjectsByCategory('handmade-brick-tiles'),
+    ]);
     const handmadeProducts = products.filter(p => p.category?.slug === 'handmade-brick' || p.category?.slug === 'handmade-brick-tiles' || (p.title.toLowerCase().includes('handmade') && !p.title.toLowerCase().includes('panel') && !p.category?.slug?.includes('panel')));
 
     return (
@@ -19,9 +23,11 @@ export default async function HandmadeBrickTilesPillar() {
             subtitle="Artisanal Character In Every Piece"
             description="Embrace the imperfect beauty of traditional craftsmanship. Our handmade brick tiles are individually moulded by skilled artisans, meaning no two tiles are exactly identical. The result is a facade rich with natural shadow, texture, and soul."
             heroImage={heroImage}
+            specifierToolkitImage={specifierToolkitImage}
             keyword="Handmade Brick Tile"
             slug="handmade-brick-tiles"
             products={handmadeProducts}
+            projects={projects}
             faqs={[
                 {
                     q: "Why choose handmade over machine-made?",

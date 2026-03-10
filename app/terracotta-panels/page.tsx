@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getProducts, getPillarHeroImage } from '@/lib/products';
+import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCategory } from '@/lib/products';
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 };
 
 export default async function TerracottaPanelsPillar() {
-    const products = await getProducts();
-    const heroImage = await getPillarHeroImage('terracotta-panels', 'terracotta-panel') || "/images/failure-free-facade.jpg";
+    const [products, heroImage, specifierToolkitImage, projects] = await Promise.all([
+        getProducts(),
+        getPillarHeroImage('terracotta-panels', 'terracotta-panel').then(img => img || "/images/failure-free-facade.jpg"),
+        getPillarToolkitImage('terracotta-panels', 'terracotta-panel'),
+        getProjectsByCategory('terracotta-panels'),
+    ]);
 
     // Filter logic: In real-world, we'd add tags, but here we can just do broad matching or mock an array.
     const panelProducts = products.filter(p => {
@@ -32,9 +36,11 @@ export default async function TerracottaPanelsPillar() {
             subtitle="Designed for architects who refuse site failures."
             description="Our architectural-grade terracotta panels are engineered for mission-critical facades. Delivering advanced thermal regulation, A1 fire rating, and precision engineering for perfectly ventilated high-rise systems."
             heroImage={heroImage}
+            specifierToolkitImage={specifierToolkitImage}
             keyword="Terracotta Panel"
             slug="terracotta-panels"
             products={panelProducts}
+            projects={projects}
             faqs={[
                 {
                     q: "What is a terracotta rainscreen panel?",

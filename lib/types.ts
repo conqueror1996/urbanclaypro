@@ -90,6 +90,10 @@ export interface Project {
     description: string;
     imageUrl?: string;
     gallery?: string[];
+    categories?: {
+        title: string;
+        slug: string;
+    }[];
     productsUsed?: {
         title: string;
         slug: string;

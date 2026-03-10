@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Product, getHomePageData } from '@/lib/products';
+import { Product, Project, getHomePageData } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
 import PremiumProductCard from '@/components/PremiumProductCard';
 import JsonLd from '@/components/JsonLd';
@@ -16,9 +16,11 @@ interface PillarPageTemplateProps {
     subtitle: string;
     description: string;
     heroImage: string;
+    specifierToolkitImage?: string;
     keyword: string;
     slug: string;
     products: Product[];
+    projects?: Project[];
     faqs: { q: string, a: string }[];
 }
 
@@ -27,23 +29,28 @@ export default function PillarPageTemplate({
     subtitle,
     description,
     heroImage,
+    specifierToolkitImage,
     keyword,
     slug,
     products,
+    projects = [],
     faqs
 }: PillarPageTemplateProps) {
-    const [specifierImage, setSpecifierImage] = useState<string>("/images/technical-detail.png");
+    const firstProductImage = products?.[0]?.imageUrl || products?.[0]?.variants?.[0]?.imageUrl;
+    const [specifierImage, setSpecifierImage] = useState<string>(specifierToolkitImage || firstProductImage || "/images/technical-detail.png");
     const { setBoxOpen } = useSampleBox();
 
     useEffect(() => {
         const loadData = async () => {
+            if (specifierToolkitImage || firstProductImage) return; // Prioritize the specific one passed as prop or product image
+
             const data = await getHomePageData();
             if (data?.specifierToolkitImageUrl) {
                 setSpecifierImage(data.specifierToolkitImageUrl);
             }
         };
         loadData();
-    }, []);
+    }, [specifierToolkitImage, firstProductImage]);
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -266,7 +273,7 @@ export default function PillarPageTemplate({
                 </div>
             </section>
 
-            {/* PROJECT SHOWCASE - Rapid Validation */}
+            {/* PROJECT SHOWCASE - Real Field Evidence from Sanity */}
             <section className="py-24 bg-[var(--background)] border-b border-[var(--line)] px-6">
                 <div className="max-w-[1800px] mx-auto">
                     <div className="flex flex-col md:flex-row justify-between items-baseline mb-12 gap-8">
@@ -274,26 +281,57 @@ export default function PillarPageTemplate({
                             <span className="text-[var(--terracotta)] font-black tracking-[0.2em] uppercase text-[10px] mb-4 block">Field Evidence</span>
                             <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] italic tracking-tight">Built Across India.</h2>
                         </div>
-                        <p className="text-[var(--foreground)]/40 max-w-sm text-sm uppercase font-bold tracking-widest">High-rise & large-scale implementations.</p>
+                        <div className="flex flex-col items-end gap-2">
+                            <p className="text-[var(--foreground)]/40 max-w-sm text-sm uppercase font-bold tracking-widest">High-rise & large-scale implementations.</p>
+                            {projects.length > 0 && (
+                                <Link href="/projects" className="text-[10px] font-black uppercase tracking-widest text-[var(--terracotta)] hover:underline underline-offset-4">
+                                    View All Projects →
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { name: "Corporate Hub", city: "Ahmedabad", img: "/images/commercial-facade-cladding.png" },
-                            { name: "Luxury Plaza", city: "Delhi NCR", img: "/images/failure-free-facade.jpg" },
-                            { name: "Global Academy", city: "Bangalore", img: "/images/mesmerizing-clay-raw.png" }
-                        ].map((project, i) => (
-                            <div key={i} className="group cursor-pointer">
-                                <div className="aspect-[16/10] overflow-hidden rounded-[32px] mb-6 border border-[var(--line)] group-hover:border-[var(--terracotta)]/40 transition-all duration-700">
-                                    <img src={project.img} alt={project.name} className="w-full h-full object-cover grayscale brightness-90 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-100" />
-                                </div>
-                                <div className="px-2">
-                                    <h4 className="text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors font-serif text-2xl mb-1">{project.name}</h4>
-                                    <p className="text-[var(--foreground)]/40 text-[10px] font-black uppercase tracking-[0.2em]">{project.city} | Specification Grade</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    {projects.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {projects.slice(0, 3).map((project, i) => (
+                                <Link key={i} href={`/projects/${project.slug}`} className="group cursor-pointer">
+                                    <div className="aspect-[16/10] overflow-hidden rounded-[32px] mb-6 border border-[var(--line)] group-hover:border-[var(--terracotta)]/40 transition-all duration-700 bg-[var(--sand)] relative">
+                                        {project.imageUrl ? (
+                                            <img
+                                                src={project.imageUrl}
+                                                alt={project.title}
+                                                className="w-full h-full object-cover grayscale brightness-90 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-100"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <span className="text-[var(--foreground)]/20 font-serif text-2xl italic">No Image</span>
+                                            </div>
+                                        )}
+                                        {project.isFeatured && (
+                                            <span className="absolute top-4 left-4 bg-[var(--terracotta)] text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
+                                                Featured
+                                            </span>
+                                        )}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <span className="flex items-center gap-1 text-white text-[10px] font-black uppercase tracking-widest">View Case Study <ArrowRight className="w-3 h-3" /></span>
+                                        </div>
+                                    </div>
+                                    <div className="px-2">
+                                        <h4 className="text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors font-serif text-2xl mb-1 leading-tight">{project.title}</h4>
+                                        <p className="text-[var(--foreground)]/40 text-[10px] font-black uppercase tracking-[0.2em]">
+                                            {project.location}{project.type ? ` | ${project.type}` : ''}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="py-24 text-center border border-dashed border-[var(--line)] rounded-3xl">
+                            <p className="text-[var(--foreground)]/30 text-sm uppercase tracking-widest font-bold">Projects Coming Soon</p>
+                            <p className="text-[var(--foreground)]/20 text-xs mt-2">Tag projects with the "{keyword}" category in Sanity Studio.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 

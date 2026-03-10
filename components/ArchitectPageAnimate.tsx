@@ -72,8 +72,6 @@ export default function ArchitectPageAnimate() {
                         className="object-cover object-center brightness-[0.4]"
                         priority
                     />
-                    <div className="absolute inset-0 bg-[var(--background)]/60 mix-blend-multiply" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent" />
                 </motion.div>
 
                 <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
@@ -88,11 +86,11 @@ export default function ArchitectPageAnimate() {
                         <span className="text-[var(--terracotta)] font-medium tracking-[0.4em] uppercase text-xs mb-6 block">
                             UrbanClay Studio
                         </span>
-                        <h1 className="text-5xl md:text-8xl font-serif text-[var(--foreground)] leading-[1.1] mb-8">
+                        <h1 className="text-5xl md:text-8xl font-serif text-[#EBE5E0] leading-[1.1] mb-8">
                             Designed for <br />
-                            <span className="italic font-light text-[var(--foreground)]/50">Visionaries</span>
+                            <span className="italic font-light text-[#EBE5E0]/70">Visionaries</span>
                         </h1>
-                        <p className="text-lg md:text-xl text-[var(--foreground)]/60 max-w-2xl mx-auto leading-relaxed font-light mb-12">
+                        <p className="text-lg md:text-xl text-[#EBE5E0]/80 max-w-2xl mx-auto leading-relaxed font-light mb-12">
                             A curated digital atelier for architects. Access high-fidelity assets, technical specifications, and bespoke manufacturing services.
                         </p>
 
@@ -105,7 +103,7 @@ export default function ArchitectPageAnimate() {
                             </button>
                             <button
                                 onClick={() => setSampleModalOpen(true)}
-                                className="px-8 py-4 bg-[var(--ink)]/5 border border-[var(--line)] text-[var(--foreground)] rounded-full font-bold uppercase tracking-wider text-sm hover:bg-[var(--line)] transition-colors min-w-[200px] backdrop-blur-sm"
+                                className="px-8 py-4 bg-white/10 border border-white/20 text-[#EBE5E0] rounded-full font-bold uppercase tracking-wider text-sm hover:bg-white/20 transition-colors min-w-[200px] backdrop-blur-sm"
                             >
                                 Request Samples
                             </button>

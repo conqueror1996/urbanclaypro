@@ -41,7 +41,8 @@ export async function GET(req: NextRequest) {
             displayOrder,
             bottomContent,
             "imageUrl": image.asset->url,
-            "pillarHeroImageUrl": pillarHeroImage.asset->url
+            "pillarHeroImageUrl": pillarHeroImage.asset->url,
+            "specifierToolkitImageUrl": specifierToolkitImage.asset->url
         }`);
         return NextResponse.json(categories);
     }
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
         // ==========================================
 
         if (action === 'create_category') {
-            const { title, description, displayOrder, imageAssetId, pillarHeroImageAssetId, bottomContent } = data;
+            const { title, description, displayOrder, imageAssetId, pillarHeroImageAssetId, specifierToolkitImageAssetId, bottomContent } = data;
             const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 96);
 
             const doc: any = {
@@ -83,13 +84,16 @@ export async function POST(req: NextRequest) {
             if (pillarHeroImageAssetId) {
                 doc.pillarHeroImage = { _type: 'image', asset: { _type: 'reference', _ref: pillarHeroImageAssetId } };
             }
+            if (specifierToolkitImageAssetId) {
+                doc.specifierToolkitImage = { _type: 'image', asset: { _type: 'reference', _ref: specifierToolkitImageAssetId } };
+            }
 
             const result = await client.create(doc);
             return NextResponse.json({ success: true, category: result });
         }
 
         if (action === 'update_category') {
-            const { _id, title, description, displayOrder, imageAssetId, pillarHeroImageAssetId, bottomContent } = data;
+            const { _id, title, description, displayOrder, imageAssetId, pillarHeroImageAssetId, specifierToolkitImageAssetId, bottomContent } = data;
 
             const patch: any = { title, description, displayOrder, bottomContent };
             if (imageAssetId) {
@@ -97,6 +101,9 @@ export async function POST(req: NextRequest) {
             }
             if (pillarHeroImageAssetId) {
                 patch.pillarHeroImage = { _type: 'image', asset: { _type: 'reference', _ref: pillarHeroImageAssetId } };
+            }
+            if (specifierToolkitImageAssetId) {
+                patch.specifierToolkitImage = { _type: 'image', asset: { _type: 'reference', _ref: specifierToolkitImageAssetId } };
             }
 
             await client.patch(_id).set(patch).commit();

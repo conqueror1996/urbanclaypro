@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getProducts, getPillarHeroImage } from '@/lib/products';
+import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCategory } from '@/lib/products';
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 };
 
 export default async function FlexibleBrickTilesPillar() {
-    const products = await getProducts();
-    const heroImage = await getPillarHeroImage('flexible-brick-tiles', 'flexible-brick-tile') || "/images/premium-terracotta-facade.png";
+    const [products, heroImage, specifierToolkitImage, projects] = await Promise.all([
+        getProducts(),
+        getPillarHeroImage('flexible-brick-tiles', 'flexible-brick-tile').then(img => img || "/images/premium-terracotta-facade.png"),
+        getPillarToolkitImage('flexible-brick-tiles', 'flexible-brick-tile'),
+        getProjectsByCategory('flexible-brick-tiles'),
+    ]);
     const flexProducts = products.filter(p => p.category?.slug === 'flexible-brick-tile' || p.category?.slug === 'flexible-brick-tiles' || p.title.toLowerCase().includes('flexible'));
 
     return (
@@ -19,9 +23,11 @@ export default async function FlexibleBrickTilesPillar() {
             subtitle="The Future of Architectural Cladding"
             description="Our newest material innovation: Flexible Brick Tiles. At just 3mm thick, these ultra-lightweight, bendable clay tiles wrap effortlessly around curved walls, circular columns, and complex geometries. Real brick texture, zero structural overhead."
             heroImage={heroImage}
+            specifierToolkitImage={specifierToolkitImage}
             keyword="Flexible Brick Tile"
             slug="flexible-brick-tiles"
             products={flexProducts}
+            projects={projects}
             faqs={[
                 {
                     q: "What is a flexible brick tile made of?",

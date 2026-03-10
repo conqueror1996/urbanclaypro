@@ -60,6 +60,13 @@ export default defineType({
             type: 'text',
         }),
         defineField({
+            name: 'categories',
+            title: 'Product Categories',
+            description: 'Tag this project with one or more product categories (e.g. Terracotta Jali, Exposed Brick). Used to show this project as "Field Evidence" on the relevant Pillar Pages.',
+            type: 'array',
+            of: [{ type: 'reference', to: [{ type: 'category' }] }],
+        }),
+        defineField({
             name: 'productsUsed',
             title: 'Products Used',
             type: 'array',

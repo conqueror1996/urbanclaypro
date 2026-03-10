@@ -6,8 +6,10 @@ import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSampleBox } from '@/context/SampleContext'; // Use context to show badge
+import dynamic from 'next/dynamic';
 
-// ... imports remain the same
+const MegaMenu = dynamic(() => import('./header/MegaMenu'), { ssr: false });
+const MobileMenu = dynamic(() => import('./header/MobileMenu'), { ssr: false });
 
 // --- PREMIUM MEGA MENU CONFIGURATION ---
 const PRODUCT_CATEGORIES = [
@@ -241,12 +243,8 @@ export default function Header({ hideAnnouncement = false }: { hideAnnouncement?
             {/* MEGA MENU DROPDOWN */}
             <AnimatePresence>
                 {activeDropdown === 'products' && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                        className="hidden md:block absolute top-full left-0 right-0 bg-[var(--sand)] border-t border-[var(--line)] shadow-2xl z-40 overflow-hidden"
+                    <MegaMenu
+                        onClose={() => setActiveDropdown(null)}
                         onMouseEnter={() => {
                             if (closeTimeoutRef.current) {
                                 clearTimeout(closeTimeoutRef.current);
@@ -254,157 +252,22 @@ export default function Header({ hideAnnouncement = false }: { hideAnnouncement?
                             }
                         }}
                         onMouseLeave={handleMouseLeave}
-                    >
-                        <div className="max-w-7xl mx-auto px-8 py-12">
-                            <div className="grid grid-cols-12 gap-12">
-                                {/* Intro Column */}
-                                <div className="col-span-3">
-                                    <h3 className="font-serif text-2xl text-[var(--ink)] mb-3">Refined Earth</h3>
-                                    <p className="text-sm text-[var(--ink)]/60 leading-relaxed mb-6">
-                                        Explore our curated collection of handcrafted terracotta and clay products designed for modern architecture.
-                                    </p>
-                                    <Link href="/products" className="text-xs font-bold uppercase tracking-wider text-[var(--terracotta)] hover:text-[var(--ink)] transition-colors flex items-center gap-2">
-                                        View Full Catalog
-                                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                    </Link>
-                                </div>
-
-                                {/* Visual Categories Grid */}
-                                <div className="col-span-9 grid grid-cols-5 gap-4">
-                                    {PRODUCT_CATEGORIES.map((cat, idx) => (
-                                        <Link
-                                            key={idx}
-                                            href={cat.href}
-                                            className="group block relative rounded-xl overflow-hidden aspect-[3/4] hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
-                                            onClick={() => setActiveDropdown(null)}
-                                        >
-                                            {/* Background / Placeholder Image */}
-                                            <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} opacity-80 transition-transform duration-700 group-hover:scale-110`} />
-                                            {/* Here we would put <Image /> if we had real assets, falling back to gradient for now which looks clean */}
-
-                                            {/* Overlay Content */}
-                                            <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/40 to-transparent">
-                                                <p className="text-[10px] font-black uppercase tracking-wider mb-1 opacity-90 !text-white">
-                                                    {cat.subtitle}
-                                                </p>
-                                                <h4 className="font-serif text-lg leading-tight !text-white group-hover:underline decoration-1 underline-offset-4">
-                                                    {cat.title}
-                                                </h4>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
+                    />
                 )}
             </AnimatePresence>
 
-            {/* MOBILE MENU (Existing logic with improved easing) */}
+            {/* MOBILE MENU */}
             <AnimatePresence>
                 {mobileMenuOpen && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="fixed inset-0 bg-black/40 backdrop-blur-sm md:hidden z-40"
-                            style={{ top: '0' }}
-                        />
-                        <motion.div
-                            initial={{ x: '-100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '-100%' }}
-                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed left-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-[var(--background)] shadow-2xl md:hidden z-[60] overflow-y-auto overscroll-contain border-r border-[var(--line)]"
-                            data-lenis-prevent
-                        >
-                            <div className="p-6 flex flex-col gap-6">
-                                {/* Header in Menu */}
-                                <div className="flex items-center justify-between mb-2">
-                                    <Link href="/" onClick={() => setMobileMenuOpen(false)}>
-                                        <Image
-                                            src="/urbanclay-logo.png"
-                                            alt="UrbanClay"
-                                            width={120}
-                                            height={32}
-                                            className="h-8 w-auto"
-                                        />
-                                    </Link>
-                                    {/* Redundant close button removed, using main header toggle instead */}
-                                </div>
-
-                                <nav className="flex flex-col gap-2">
-                                    {/* Products Dropdown (Expanded by default or accordion) */}
-                                    <div className="py-2">
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Products</h4>
-                                        <div className="pl-2 flex flex-col gap-2 border-l-2 border-gray-100">
-                                            {PRODUCT_CATEGORIES.map((cat, idx) => {
-                                                const isActive = pathname === cat.href || (cat.href.includes('?') && pathname === cat.href.split('?')[0] && searchParams.toString() === cat.href.split('?')[1]);
-                                                return (
-                                                    <Link
-                                                        key={idx}
-                                                        href={cat.href}
-                                                        onClick={() => setMobileMenuOpen(false)}
-                                                        className={`min-h-[48px] py-3 flex items-center justify-between group active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2 ${isActive ? 'bg-gray-50' : ''}`}
-                                                    >
-                                                        <span className={`text-base font-serif transition-colors ${isActive ? 'text-[var(--terracotta)] font-bold' : 'text-[#2A1E16] group-hover:text-[var(--terracotta)]'}`}>
-                                                            {cat.title}
-                                                        </span>
-                                                        <span className="text-[10px] uppercase tracking-wider text-gray-400">{cat.subtitle}</span>
-                                                    </Link>
-                                                );
-                                            })}
-                                            <Link
-                                                href="/products"
-                                                onClick={() => setMobileMenuOpen(false)}
-                                                className="mt-2 min-h-[44px] py-3 text-xs font-bold uppercase tracking-widest text-[var(--terracotta)] flex items-center gap-2"
-                                            >
-                                                View All Products →
-                                            </Link>
-                                        </div>
-                                    </div>
-
-                                    <div className="h-px bg-gray-100 my-2" />
-
-                                    {/* Other Links - THUMB OPTIMIZED */}
-                                    {navLinks.filter(l => l.label !== 'Products').map((link) => {
-                                        const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
-                                        return (
-                                            <Link
-                                                key={link.href}
-                                                href={link.href}
-                                                onClick={() => setMobileMenuOpen(false)}
-                                                className={`min-h-[52px] py-4 text-lg font-serif font-medium flex justify-between items-center border-b border-gray-50 last:border-0 active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2 ${isActive ? 'text-[var(--terracotta)] font-bold bg-gray-50' : 'text-[#2A1E16]'}`}
-                                            >
-                                                {link.label}
-                                                <svg className={`w-4 h-4 ${isActive ? 'text-[var(--terracotta)]' : 'text-gray-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                                            </Link>
-                                        );
-                                    })}
-                                </nav>
-
-                                <div className="mt-auto pt-8 space-y-4">
-                                    <button
-                                        onClick={() => {
-                                            setBoxOpen(true);
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className="w-full min-h-[52px] py-4 bg-[var(--terracotta)] text-white font-bold rounded-xl uppercase tracking-wider text-sm shadow-lg shadow-orange-900/10 flex items-center justify-center gap-2 active:scale-95 transition-transform"
-                                        aria-label={box.length > 0 ? `Get samples, ${box.length} items in tray` : "Get samples"}
-                                    >
-                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                                        Get Samples {box.length > 0 && <span className="bg-white text-[var(--terracotta)] w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">{box.length}</span>}
-                                    </button>
-                                    <div className="text-center pt-2">
-                                        <p className="text-xs text-gray-400 mb-2">Need help?</p>
-                                        <a href="tel:+918080081951" className="text-base font-medium text-[#2A1E16] block min-h-[44px] flex items-center justify-center hover:text-[var(--terracotta)] transition-colors">+91 80800 81951</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </>
+                    <MobileMenu
+                        isOpen={mobileMenuOpen}
+                        onClose={() => setMobileMenuOpen(false)}
+                        pathname={pathname || ''}
+                        searchParams={searchParams}
+                        navLinks={navLinks}
+                        boxLength={box.length}
+                        setBoxOpen={setBoxOpen}
+                    />
                 )}
             </AnimatePresence>
         </header>

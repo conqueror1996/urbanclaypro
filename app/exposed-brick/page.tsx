@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getProducts, getPillarHeroImage } from '@/lib/products';
+import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCategory } from '@/lib/products';
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 };
 
 export default async function ExposedBrickPillar() {
-    const products = await getProducts();
-    const heroImage = await getPillarHeroImage('exposed-bricks', 'exposed-brick') || "/images/products/wirecut-texture.jpg";
+    const [products, heroImage, specifierToolkitImage, projects] = await Promise.all([
+        getProducts(),
+        getPillarHeroImage('exposed-bricks', 'exposed-brick').then(img => img || "/images/products/wirecut-texture.jpg"),
+        getPillarToolkitImage('exposed-bricks', 'exposed-brick'),
+        getProjectsByCategory('exposed-bricks'),
+    ]);
     const brickProducts = products.filter(p => p.category?.slug === 'exposed-bricks' || p.category?.slug === 'exposed-brick' || (p.title.toLowerCase().includes('brick') && !p.title.toLowerCase().includes('tile') && !p.title.toLowerCase().includes('flexible') && !p.title.toLowerCase().includes('handmade')));
 
     return (
@@ -19,9 +23,11 @@ export default async function ExposedBrickPillar() {
             subtitle="The Architecture of Authenticity"
             description="Nothing matches the warmth, character, and timeless appeal of an authentic exposed brick wall. Our structural wirecut and facing bricks are naturally resistant to fading, boasting near-zero efflorescence and unparalleled compressive strength."
             heroImage={heroImage}
+            specifierToolkitImage={specifierToolkitImage}
             keyword="Exposed Brick"
             slug="exposed-brick"
             products={brickProducts}
+            projects={projects}
             faqs={[
                 {
                     q: "Does exposed brick suffer from efflorescence (white salt)?",

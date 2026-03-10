@@ -256,7 +256,6 @@ export async function getCategoryHero(categorySlug: string): Promise<{ title: st
 
 
 
-// Fetch custom Pillar Hero Image edited by user in Sanity Dashboard
 export async function getPillarHeroImage(categorySlug: string, fallbackSlug?: string): Promise<string | undefined> {
     try {
         const query = groq`*[_type == "category" && slug.current in $slugs] | order(select(slug.current == $primary => 0, 1) asc)[0] {
@@ -273,6 +272,22 @@ export async function getPillarHeroImage(categorySlug: string, fallbackSlug?: st
     }
 }
 
+export async function getPillarToolkitImage(categorySlug: string, fallbackSlug?: string): Promise<string | undefined> {
+    try {
+        const query = groq`*[_type == "category" && slug.current in $slugs] | order(select(slug.current == $primary => 0, 1) asc)[0] {
+            "imageUrl": specifierToolkitImage.asset->url
+        }`;
+        const slugs = [categorySlug];
+        if (fallbackSlug) slugs.push(fallbackSlug);
+
+        const result = await client.fetch(query, { slugs, primary: categorySlug }, { next: { revalidate: 60 } });
+        return result?.imageUrl;
+    } catch (e) {
+        console.error('Error fetching pillar toolkit image', e);
+        return undefined;
+    }
+}
+
 const projectsQuery = groq`*[_type == "project"] {
   _id,
   title,
@@ -283,6 +298,7 @@ const projectsQuery = groq`*[_type == "project"] {
   description,
   "imageUrl": image.asset->url,
   "gallery": gallery[].asset->url,
+  "categories": categories[]->{ title, "slug": slug.current },
   "productsUsed": productsUsed[]->{
     title,
     "slug": slug.current,
@@ -291,11 +307,12 @@ const projectsQuery = groq`*[_type == "project"] {
   }
 }`;
 
-const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0] {
+const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug] | order(defined(image.asset) desc)[0] {
   ...,
   "slug": slug.current,
   "imageUrl": image.asset->url,
   "gallery": gallery[].asset->url,
+  "categories": categories[]->{ title, "slug": slug.current },
   "productsUsed": productsUsed[]->{
     title,
     "slug": slug.current,
@@ -306,14 +323,58 @@ const projectBySlugQuery = groq`*[_type == "project" && slug.current == $slug][0
 
 export async function getProjects(): Promise<Project[]> {
     try {
-        const projects = await client.fetch(projectsQuery, {}, { next: { revalidate: 60 } });
-        return projects || [];
+        const rawProjects = await client.fetch(projectsQuery, {}, { next: { revalidate: 60 } });
+        if (!rawProjects) return [];
+
+        // Deduplicate globally to prevent any duplicate slug issues 
+        const uniqueProjectsMap = new Map();
+        for (const p of rawProjects) {
+            if (uniqueProjectsMap.has(p.slug)) {
+                const existing = uniqueProjectsMap.get(p.slug);
+                if (!existing.imageUrl && p.imageUrl) {
+                    uniqueProjectsMap.set(p.slug, p);
+                }
+            } else {
+                uniqueProjectsMap.set(p.slug, p);
+            }
+        }
+        return Array.from(uniqueProjectsMap.values());
     } catch (error) {
         console.error('Error fetching projects:', error);
         return [];
     }
 }
 
+/**
+ * Fetch projects that are tagged with a specific product category.
+ * Used by Pillar Pages to show relevant "Field Evidence" projects.
+ * @param categorySlug - the slug of the category (e.g. 'terracotta-jaali', 'exposed-bricks')
+ */
+export async function getProjectsByCategory(categorySlug: string): Promise<Project[]> {
+    try {
+        const query = groq`*[_type == "project" && $categorySlug in categories[]->slug.current] | order(isFeatured desc) {
+            _id,
+            title,
+            "slug": slug.current,
+            location,
+            type,
+            "isFeatured": isFeatured,
+            description,
+            "imageUrl": image.asset->url,
+            "categories": categories[]->{ title, "slug": slug.current },
+            "productsUsed": productsUsed[]->{
+                title,
+                "slug": slug.current,
+                "imageUrl": images[0].asset->url
+            }
+        }`;
+        const projects = await client.fetch(query, { categorySlug }, { next: { revalidate: 60 } });
+        return projects || [];
+    } catch (error) {
+        console.error('Error fetching projects by category:', error);
+        return [];
+    }
+}
 
 export async function getProject(slug: string): Promise<Project | undefined> {
     try {

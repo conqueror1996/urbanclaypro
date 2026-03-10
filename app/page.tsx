@@ -72,7 +72,21 @@ export default async function Home({ searchParams }: Props) {
 
     const products = await getProducts()
     const allProjects = await getProjects();
-    const recentProjects = allProjects.slice(0, 3);
+
+    // Deduplicate projects to prevent showing the same project multiple times on the homepage
+    const uniqueProjectsMap = new Map();
+    for (const p of allProjects) {
+        if (uniqueProjectsMap.has(p.slug)) {
+            const existing = uniqueProjectsMap.get(p.slug);
+            if (!existing.imageUrl && p.imageUrl) {
+                uniqueProjectsMap.set(p.slug, p);
+            }
+        } else {
+            uniqueProjectsMap.set(p.slug, p);
+        }
+    }
+    const deduplicatedProjects = Array.from(uniqueProjectsMap.values());
+    const recentProjects = deduplicatedProjects.slice(0, 3);
     const homePageData = await getHomePageData();
 
     const jsonLd = {

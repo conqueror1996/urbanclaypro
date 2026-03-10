@@ -15,6 +15,8 @@ interface Category {
     bottomContent?: string;
     slug?: { current: string };
     imageUrl?: string;
+    pillarHeroImageUrl?: string;
+    specifierToolkitImageUrl?: string;
     displayOrder?: number;
 }
 
@@ -26,7 +28,7 @@ interface CategoryManagerProps {
 export default function CategoryManager({ categories, onRefresh }: CategoryManagerProps) {
     const [isCreating, setIsCreating] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
-    const [form, setForm] = useState<{ title: string; description: string; bottomContent: string; displayOrder: number; imageFile?: ProcessedFile }>({
+    const [form, setForm] = useState<{ title: string; description: string; bottomContent: string; displayOrder: number; imageFile?: ProcessedFile; specifierToolkitImageFile?: ProcessedFile }>({
         title: '',
         description: '',
         bottomContent: '',
@@ -34,7 +36,7 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
     });
     const [isSaving, setIsSaving] = useState(false);
 
-    const resetForm = () => setForm({ title: '', description: '', bottomContent: '', displayOrder: 0, imageFile: undefined });
+    const resetForm = () => setForm({ title: '', description: '', bottomContent: '', displayOrder: 0, imageFile: undefined, specifierToolkitImageFile: undefined });
 
     const handleEdit = (cat: Category) => {
         setEditingId(cat._id);
@@ -53,14 +55,23 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
         setIsSaving(true);
         try {
             let assetId = null;
+            let specifierToolkitAssetId = null;
 
-            // 1. Upload Image if present
+            // 1. Upload Images if present
             if (form.imageFile) {
                 const formData = new FormData();
                 formData.append('file', form.imageFile.file);
                 const uploadRes = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
                 const uploadJson = await uploadRes.json();
                 if (uploadJson.success) assetId = uploadJson.asset._id;
+            }
+
+            if (form.specifierToolkitImageFile) {
+                const formData = new FormData();
+                formData.append('file', form.specifierToolkitImageFile.file);
+                const uploadRes = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
+                const uploadJson = await uploadRes.json();
+                if (uploadJson.success) specifierToolkitAssetId = uploadJson.asset._id;
             }
 
             // 2. Save Category
@@ -72,7 +83,8 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
                     description: form.description,
                     bottomContent: form.bottomContent,
                     displayOrder: Number(form.displayOrder),
-                    ...(assetId && { imageAssetId: assetId })
+                    ...(assetId && { imageAssetId: assetId }),
+                    ...(specifierToolkitAssetId && { specifierToolkitImageAssetId: specifierToolkitAssetId })
                 }
             };
 
@@ -140,33 +152,66 @@ export default function CategoryManager({ categories, onRefresh }: CategoryManag
                         </div>
 
                         <div className="grid grid-cols-1 gap-6">
-                            {/* Image Upload */}
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Thumbnail Image</label>
-                                <div className="w-full aspect-video bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 relative group overflow-hidden flex items-center justify-center">
-                                    {form.imageFile ? (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img src={form.imageFile.preview} alt="Preview" className="w-full h-full object-cover" />
-                                    ) : (
-                                        editingId && categories.find(c => c._id === editingId)?.imageUrl ? (
+                            {/* Image Upload Row */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Thumbnail Upload */}
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Thumbnail Image</label>
+                                    <div className="w-full aspect-video bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 relative group overflow-hidden flex items-center justify-center">
+                                        {form.imageFile ? (
                                             // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={categories.find(c => c._id === editingId)?.imageUrl} alt="Existing" className="w-full h-full object-cover" />
+                                            <img src={form.imageFile.preview} alt="Preview" className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="text-center text-gray-400">
-                                                <svg className="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                                <p className="text-[10px] font-bold uppercase tracking-widest">Upload Thumb</p>
-                                            </div>
-                                        )
-                                    )}
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="absolute inset-0 opacity-0 cursor-pointer"
-                                        onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) setForm({ ...form, imageFile: { file, preview: URL.createObjectURL(file) } });
-                                        }}
-                                    />
+                                            editingId && categories.find(c => c._id === editingId)?.imageUrl ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={categories.find(c => c._id === editingId)?.imageUrl} alt="Existing" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="text-center text-gray-400">
+                                                    <svg className="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest">Upload Thumb</p>
+                                                </div>
+                                            )
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) setForm({ ...form, imageFile: { file, preview: URL.createObjectURL(file) } });
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Specifier Toolkit Direct Image */}
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Specifier Toolkit Diagram</label>
+                                    <div className="w-full aspect-video bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 relative group overflow-hidden flex items-center p-4 justify-center">
+                                        {form.specifierToolkitImageFile ? (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img src={form.specifierToolkitImageFile.preview} alt="Preview" className="w-full h-full object-contain" />
+                                        ) : (
+                                            editingId && categories.find(c => c._id === editingId)?.specifierToolkitImageUrl ? (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img src={categories.find(c => c._id === editingId)?.specifierToolkitImageUrl} alt="Existing" className="w-full h-full object-contain" />
+                                            ) : (
+                                                <div className="text-center text-gray-400">
+                                                    <svg className="w-8 h-8 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest">Upload Diagram</p>
+                                                </div>
+                                            )
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) setForm({ ...form, specifierToolkitImageFile: { file, preview: URL.createObjectURL(file) } });
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Epilogue, Inter } from "next/font/google";
 import "./globals.css";
-import SplashLoader from "@/components/SplashLoader";
+import React from "react";
+import dynamic from "next/dynamic";
+import { SampleProvider } from '@/context/SampleContext';
+import SecurityProvider from "@/components/SecurityProvider";
 import PageTransition from "@/components/PageTransition";
 import ResourceHints from "@/components/ResourceHints";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -107,29 +110,10 @@ export const metadata: Metadata = {
 
 import { GoogleAnalytics } from '@next/third-parties/google';
 
-import WebVitalsReporter from '../components/WebVitalsReporter';
-
-import SmoothScroll from '@/components/SmoothScroll';
-
-import { SampleProvider } from '@/context/SampleContext';
-
-import GlobalSampleModal from '@/components/GlobalSampleModal';
-
-// ... imports
-
-import SecurityProvider from "@/components/SecurityProvider";
-import SmartExitPopup from "@/components/SmartExitPopup";
-
-
-// ... imports
-
-
-import FootprintTracker from "@/components/FootprintTracker";
-import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { Toaster } from 'sonner';
 import JsonLd from "@/components/JsonLd";
 import { generateGlobalSchema } from "@/lib/schema";
-
+import GlobalClientFeatures from "@/components/GlobalClientFeatures";
 
 export default function RootLayout({
   children,
@@ -144,15 +128,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${epilogue.variable} font-sans antialiased`} suppressHydrationWarning>
         <SecurityProvider>
           <SampleProvider>
-            <SmoothScroll />
-            <SplashLoader />
+            <GlobalClientFeatures />
             <JsonLd data={generateGlobalSchema()} />
             <PageTransition>{children}</PageTransition>
-            <FootprintTracker />
-            <WebVitalsReporter />
-            <GlobalSampleModal />
-            <SmartExitPopup />
-            <WhatsAppFloat />
             <Toaster position="top-right" richColors />
           </SampleProvider>
         </SecurityProvider>
