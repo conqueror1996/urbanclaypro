@@ -32,25 +32,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             name,
             metaTitle,
             metaDescription,
-            "slug": slug.current
+            "slug": slug.current,
+            region
         }
     `, { city });
 
     if (!data) return { title: 'City Not Found' };
 
-    const title = data.metaTitle || `UrbanClay ${data.name} | Premium Terracotta Tiles & Facades`;
-    const description = truncate(data.metaDescription || `Discover premium terracotta tiles, brick cladding, and jaali panels in ${data.name}. Pan-India delivery and architect-preferred quality.`, 155);
+    // Boss SEO Template: [Category Hub] in [City] | Premium Terracotta | UrbanClay
+    const title = data.metaTitle || `Premium Terracotta Tiles & Facades in ${data.name} | UrbanClay ${data.region || ''}`;
+    const description = truncate(data.metaDescription || `Discover architectural-grade terracotta tiles, flexible brick cladding, and jali panels in ${data.name}. Engineered for the ${data.region || ''} Indian climate. Pan-India delivery.`, 155);
 
     const cityKeywords = [
-        `Flexible Brick Tiles ${data.name}`,
-        `Terracotta Panels ${data.name}`,
-        `Exposed Brick ${data.name}`,
-        `Handmade Brick Tiles ${data.name}`,
-        `Flexible Clay Tiles ${data.name}`,
+        `Terracotta Tiles ${data.name}`,
+        `Brick Cladding Tiles ${data.name}`,
+        `Flexible Brick Veneers ${data.name}`,
         `Terracotta Facade Panels ${data.name}`,
-        `Exposed Brick Cladding ${data.name}`,
-        `Handmade Clay Bricks ${data.name}`,
-        `Wholesale Brick Suppliers ${data.name}`
+        `Exposed Bricks ${data.name}`,
+        `Clay Jali Blocks ${data.name}`,
+        `Best Tiles for ${data.name} Climate`
     ];
 
     return {
