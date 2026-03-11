@@ -746,25 +746,36 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                 <div className="max-w-[1800px] mx-auto w-full px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
                     {/* Price Display - Responsive */}
-                    <div className="flex flex-col items-start w-full md:w-auto mb-3 md:mb-0">
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-2xl font-serif text-[var(--foreground)]">{product.priceRange?.split('/')[0] || 'Inquire'}</span>
-                            {product.priceRange && <span className="text-xs text-[var(--foreground)]/40 font-light lowercase">/ sq.ft</span>}
+                    <div className="flex flex-col items-start w-full md:w-auto mb-1 md:mb-0">
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-xl md:text-2xl font-serif text-[var(--foreground)]">
+                                {(() => {
+                                    const raw = product.priceRange?.split('/')[0] || 'Inquire';
+                                    // Remove any existing symbols and trailing characters to clean it up
+                                    const cleaned = raw.replace(/[₹\s]/g, '').trim();
+                                    if (cleaned && /^\d+/.test(cleaned)) {
+                                        // If it's a range like "22-29", format it as "₹22 - 29"
+                                        return `₹${cleaned.replace('-', ' - ')}`;
+                                    }
+                                    return raw;
+                                })()}
+                            </span>
+                            {product.priceRange && <span className="text-[10px] md:text-xs text-[var(--foreground)]/40 font-light lowercase">/ sq.ft</span>}
                         </div>
-                        <span className="text-[9px] text-[var(--foreground)]/40 font-medium tracking-wide uppercase">*Pricing depends upon quantity</span>
+                        <span className="text-[8px] md:text-[9px] text-[var(--foreground)]/40 font-bold tracking-widest uppercase">*Quantity based pricing</span>
                     </div>
 
                     {/* Buttons Container */}
-                    <div className="flex w-full md:w-auto gap-2 md:gap-4 items-center">
-                        {/* Quick WhatsApp Support (Mobile Only or Low Profile Desktop) */}
+                    <div className="flex w-full md:w-auto gap-2 items-stretch h-12 md:h-14">
+                        {/* Quick WhatsApp Support */}
                         <a
                             href={`https://wa.me/919930495393?text=Hi, I am looking at ${product.title}. Can you help me with a technical query?`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-3.5 md:p-4 bg-[var(--line)] hover:bg-[var(--sand)] border border-[var(--line)] rounded-xl text-[#25D366] active:scale-95 transition-all shadow-sm group"
+                            className="w-12 md:w-14 flex items-center justify-center bg-[var(--line)]/50 hover:bg-[var(--line)] border border-[var(--line)] rounded-xl text-[#25D366] active:scale-95 transition-all shadow-sm shrink-0"
                             title="Chat with an Expert"
                         >
-                            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+                            <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
                         </a>
 
                         <button
@@ -799,25 +810,24 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     setFlyingImage(null);
                                 }, 800);
                             }}
-                            disabled={false}
-                            className={`flex-1 md:w-48 py-3.5 md:py-4 border rounded-xl font-bold uppercase tracking-[0.15em] text-[10px] active:scale-95 transition-all flex items-center justify-center gap-2
+                            className={`flex-1 md:w-48 py-2 md:py-4 border rounded-xl font-bold uppercase tracking-[0.1em] text-[9px] md:text-[10px] active:scale-95 transition-all flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-2 leading-tight
                                 ${isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)
                                     ? 'bg-[var(--terracotta)]/5 border-[var(--terracotta)] text-[var(--terracotta)]'
                                     : 'bg-[var(--background)] border-[var(--line)] hover:border-[var(--terracotta)]/40 text-[var(--foreground)]'
                                 }`}
                         >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 {isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug)
                                     ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 }
                             </svg>
-                            <span>{isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'In Tray' : 'Order Sample'}</span>
+                            <span className="text-center">{isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'In Tray' : 'Order Sample'}</span>
                         </button>
 
                         <button
                             onClick={() => setIsQuoteModalOpen(true)}
-                            className="flex-[1.5] md:w-56 py-3.5 md:py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl text-center font-bold uppercase tracking-[0.15em] text-[10px] active:scale-95 transition-all shadow-lg shadow-orange-900/10"
+                            className="flex-[1.8] md:w-56 py-2 md:py-4 bg-[var(--terracotta)] hover:bg-[#a85638] text-white rounded-xl text-center font-bold uppercase tracking-[0.1em] text-[9px] md:text-[10px] active:scale-95 transition-all shadow-lg shadow-orange-900/10 leading-tight"
                         >
                             Get Professional Quote
                         </button>
