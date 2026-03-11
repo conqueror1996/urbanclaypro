@@ -115,7 +115,7 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
                             />
 
                             {/* Subtler Scanning Line */}
-                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--terracotta)]/5 to-transparent h-1 w-full animate-scan z-20 pointer-events-none" />
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--terracotta)]/5 to-transparent h-1 w-full animate-technical-scan z-20 pointer-events-none" />
 
                             {/* Compact Overlays */}
                             <div className="absolute top-4 right-4 pointer-events-none">
@@ -152,16 +152,6 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
 
                 </div>
             </div>
-
-            <style jsx>{`
-                @keyframes scan {
-                    0% { transform: translateY(-100%); }
-                    100% { transform: translateY(500%); }
-                }
-                .animate-scan {
-                    animation: scan 5s linear infinite;
-                }
-            `}</style>
         </section>
     );
 }

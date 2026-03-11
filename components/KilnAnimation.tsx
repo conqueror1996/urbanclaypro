@@ -583,23 +583,15 @@ export default function KilnAnimation() {
                             onClick={() => setHammerMode(!hammerMode)}
                             className={`px-8 py-3.5 rounded-full font-serif tracking-widest uppercase text-xs font-bold transition-all flex items-center gap-3 border-2 ${hammerMode
                                 ? 'bg-orange-600 border-orange-600 text-white shadow-xl ring-4 ring-orange-200'
-                                : 'bg-white border-orange-100 text-gray-900 shadow-xl hover:shadow-2xl hover:border-orange-200'
+                                : 'bg-white border-orange-100 text-gray-900 shadow-xl hover:shadow-2xl hover:border-orange-200 animate-pulse-orange'
                                 }`}
                             style={{
                                 cursor: 'pointer',
-                                animation: !hammerMode ? 'pulse-orange 1.5s infinite' : 'none'
                             }}
                         >
                             <span className="text-xl leading-none">🔨</span>
                             <span className="pt-0.5">{hammerMode ? 'Tap Brick to Break' : 'Verify Strength'}</span>
                         </motion.button>
-                        <style jsx>{`
-                            @keyframes pulse-orange {
-                                0% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4); }
-                                70% { box-shadow: 0 0 0 15px rgba(234, 88, 12, 0); }
-                                100% { box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); }
-                            }
-                        `}</style>
                     </div>
                 )}
             </AnimatePresence>

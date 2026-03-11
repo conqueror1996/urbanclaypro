@@ -460,9 +460,7 @@ export default function FacadeSpecificationDesk() {
                 document.body
             )}
 
-    // ------------------------------------------------------------------------
-            // DESKTOP VIEW
-            // ------------------------------------------------------------------------
+            {/* DESKTOP VIEW */}
             <section id="facade-specification-desk" className="py-20 lg:py-24 bg-[#FAF9F6] text-[var(--ink)] border-t border-[var(--line)]">
                 {/* Hidden SEO text */}
                 <h1 className="sr-only">Terracotta Facade Systems and Brick Cladding Custom Specification Desk</h1>
