@@ -29,6 +29,12 @@ export default async function ExposedBrickPillar() {
             slug="exposed-brick"
             products={brickProducts}
             projects={projects}
+            metrics={[
+                { label: "Fire Rating", val: "Fireproof", detail: "1200°C Fired" },
+                { label: "Durability", val: "Lifelong", detail: "Natural Clay" },
+                { label: "HVAC Energy", val: "High Thermal Mass", detail: "Passive Insulation" },
+                { label: "Installation", val: "Structural Masonry", detail: "Zero Efflorescence" }
+            ]}
             faqs={[
                 {
                     q: "Does exposed brick suffer from efflorescence (white salt)?",

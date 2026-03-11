@@ -42,6 +42,12 @@ export default async function TerracottaPanelsPillar() {
             slug="terracotta-panels"
             products={panelProducts}
             projects={projects}
+            metrics={[
+                { label: "Fire Rating", val: "Non-Combustible (A1)", detail: "ASTM E84 Tested" },
+                { label: "Durability", val: "100+ Years", detail: "Zero-Fade Tech" },
+                { label: "HVAC Energy", val: "30% Reduction", detail: "Ventilated Facade" },
+                { label: "Installation", val: "Mechanical Dry Fix", detail: "Z-Clip System" }
+            ]}
             faqs={[
                 {
                     q: "What is a terracotta rainscreen panel?",

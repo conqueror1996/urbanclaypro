@@ -29,6 +29,12 @@ export default async function HandmadeBrickTilesPillar() {
             slug="handmade-brick-tiles"
             products={handmadeProducts}
             projects={projects}
+            metrics={[
+                { label: "Fire Rating", val: "Fire Resistant (A1)", detail: "Stone Fired" },
+                { label: "Durability", val: "Aged Character", detail: "Natural Variances" },
+                { label: "HVAC Energy", val: "High Insulation", detail: "Porous Breathability" },
+                { label: "Installation", val: "Wet Adhesive Fix", detail: "Thin Profile (15mm)" }
+            ]}
             faqs={[
                 {
                     q: "Why choose handmade over machine-made?",

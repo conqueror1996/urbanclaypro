@@ -22,6 +22,7 @@ interface PillarPageTemplateProps {
     products: Product[];
     projects?: Project[];
     faqs: { q: string, a: string }[];
+    metrics?: { label: string, val: string, detail: string }[];
 }
 
 export default function PillarPageTemplate({
@@ -34,7 +35,13 @@ export default function PillarPageTemplate({
     slug,
     products,
     projects = [],
-    faqs
+    faqs,
+    metrics = [
+        { label: "Fire Rating", val: "Non-Combustible", detail: "A1 Certified" },
+        { label: "Durability", val: "1000 Years+", detail: "Natural Clay" },
+        { label: "HVAC Energy", val: "30% Lower", detail: "Thermal Buffer" },
+        { label: "Installation", val: "Dry Install", detail: "Self-Drainage" }
+    ]
 }: PillarPageTemplateProps) {
     const firstProductImage = products?.[0]?.imageUrl || products?.[0]?.variants?.[0]?.imageUrl;
     const [specifierImage, setSpecifierImage] = useState<string>(specifierToolkitImage || firstProductImage || "/images/technical-detail.png");
@@ -142,22 +149,17 @@ export default function PillarPageTemplate({
                                     </span>
                                 </motion.button>
 
-                                <Link
-                                    href="/#specify"
-                                    className="btn-link-dotted text-xs font-bold uppercase tracking-widest px-4"
+                                <button
+                                    onClick={() => document.getElementById('specify')?.scrollIntoView({ behavior: 'smooth' })}
+                                    className="btn-link-dotted text-xs font-bold uppercase tracking-widest px-4 cursor-pointer"
                                 >
                                     Speak to Consultant
-                                </Link>
+                                </button>
                             </div>
 
                             {/* Rapid Metrics - Scannable */}
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-[var(--line)] w-full max-w-3xl">
-                                {[
-                                    { label: "Fire Rating", val: "Non-Combustible", detail: "A1 Certified" },
-                                    { label: "Durability", val: "1000 Years+", detail: "Natural Clay" },
-                                    { label: "HVAC Energy", val: "30% Lower", detail: "Thermal Buffer" },
-                                    { label: "Installation", val: "Dry Install", detail: "Self-Drainage" }
-                                ].map((stat, i) => (
+                                {metrics.map((stat, i) => (
                                     <div key={i} className="flex flex-col">
                                         <span className="text-[9px] uppercase tracking-widest font-black text-[var(--foreground)]/40 mb-1">{stat.label}</span>
                                         <span className="text-base font-serif font-bold text-[var(--foreground)]">{stat.val}</span>
@@ -423,7 +425,23 @@ export default function PillarPageTemplate({
                 </div>
             </section>
 
+            {/* LOCAL INQUIRY FORM */}
+            <section id="specify" className="py-24 bg-[var(--sand)] px-6 border-t border-[var(--line)]">
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-16">
+                        <span className="text-[var(--terracotta)] text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Direct Project Inquiry</span>
+                        <h2 className="font-serif text-4xl md:text-5xl text-[var(--foreground)] mb-6">Specify {keyword}</h2>
+                        <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto">Get technical support, custom quotes, or arrange for sample delivery for your current project.</p>
+                    </div>
+                    <div className="bg-white rounded-[2.5rem] shadow-2xl border border-[var(--line)] p-8 md:p-12">
+                        <QuoteForm />
+                    </div>
+                </div>
+            </section>
+
             <Footer />
         </main>
     );
 }
+
+import QuoteForm from '@/components/QuoteForm';

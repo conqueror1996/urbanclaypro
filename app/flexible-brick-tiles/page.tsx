@@ -28,6 +28,12 @@ export default async function FlexibleBrickTilesPillar() {
             slug="flexible-brick-tiles"
             products={flexProducts}
             projects={projects}
+            metrics={[
+                { label: "Fire Rating", val: "Class A", detail: "Self-Extinguishing" },
+                { label: "Durability", val: "Crack Resistant", detail: "Bends 360°" },
+                { label: "HVAC Energy", val: "Low Carbon", detail: "3mm Thin" },
+                { label: "Installation", val: "Adhesive Fix", detail: "90% Faster" }
+            ]}
             faqs={[
                 {
                     q: "What is a flexible brick tile made of?",

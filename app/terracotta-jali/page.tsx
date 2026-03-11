@@ -42,6 +42,12 @@ export default async function TerracottaJaliPillar() {
             slug="terracotta-jali"
             products={jaliProducts}
             projects={projects}
+            metrics={[
+                { label: "Fire Rating", val: "Fire Resistant (A1)", detail: "Non-Combustible" },
+                { label: "Durability", val: "Weather Proof", detail: "Fired @ 1100°C" },
+                { label: "HVAC Energy", val: "Natural Cooling", detail: "Passive Airflow" },
+                { label: "Installation", val: "Reinforced Fix", detail: "Structural Mesh" }
+            ]}
             faqs={[
                 {
                     q: "What are the common sizes for Jali?",
