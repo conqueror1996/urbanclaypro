@@ -37,6 +37,7 @@ export async function submitLead(formData: any) {
         // 2. Save to Sanity
         const doc = {
             _type: 'lead',
+            name: formData.name,
             role: formData.role,
             product: formData.product,
             firmName: formData.firmName,

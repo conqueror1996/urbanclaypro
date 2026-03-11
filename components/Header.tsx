@@ -18,35 +18,35 @@ const PRODUCT_CATEGORIES = [
         subtitle: 'Ultra-Thin Cladding',
         href: '/flexible-brick-tile',
         color: 'from-[#b45a3c] to-[#96472d]',
-        image: '/images/menu-exposed.jpg'
+        image: '/images/flexible-brick-showcase.png'
     },
     {
         title: 'Terracotta Panels',
         subtitle: 'Rainscreen Facades',
         href: '/terracotta-panels',
         color: 'from-[#8c7b70] to-[#5d554f]',
-        image: '/images/menu-cladding.jpg'
+        image: '/images/premium-terracotta-facade.png'
     },
     {
         title: 'Exposed Bricks',
         subtitle: 'Authentic Masonry',
         href: '/exposed-brick',
         color: 'from-[#d6cbb8] to-[#bfae96]',
-        image: '/images/menu-jaali.jpg'
+        image: '/images/exposed-brick-guide.png'
     },
     {
         title: 'Handmade Brick Tiles',
         subtitle: 'Artisanal Beauty',
         href: '/handmade-brick-tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
-        image: '/images/menu-floor.jpg'
+        image: '/images/raw-brick.jpg'
     },
     {
         title: 'Terracotta Jaali',
         subtitle: 'Breathable Screens',
         href: '/terracotta-jali',
         color: 'from-[#2A1E16] to-[#1a1512]',
-        image: '/images/menu-roof.jpg'
+        image: '/images/breeze-block-interior.png'
     }
 ];
 
@@ -64,7 +64,7 @@ const navLinks: NavLink[] = [
     { href: '/projects', label: 'Projects' },
     { href: '/guide', label: 'Selection Guide' },
     { href: '/architects', label: 'For Architects' },
-    { href: '/#quote', label: 'Contact' }
+    { href: '/#specify', label: 'Contact' }
 ];
 
 

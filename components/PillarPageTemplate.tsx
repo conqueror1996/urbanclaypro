@@ -143,7 +143,7 @@ export default function PillarPageTemplate({
                                 </motion.button>
 
                                 <Link
-                                    href="/#quote"
+                                    href="/#specify"
                                     className="btn-link-dotted text-xs font-bold uppercase tracking-widest px-4"
                                 >
                                     Speak to Consultant

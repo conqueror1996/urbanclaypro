@@ -407,7 +407,7 @@ export default async function CityPage({ params }: PageProps) {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-6 justify-center">
                             <Link
-                                href="/#quote"
+                                href="/#specify"
                                 className="px-10 py-5 bg-[var(--terracotta)] text-white rounded-xl font-bold uppercase tracking-widest hover:bg-[#a85638] transition-all shadow-xl hover:scale-105"
                             >
                                 Get Free Quote

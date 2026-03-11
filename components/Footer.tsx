@@ -13,7 +13,7 @@ export default function Footer() {
     const handleQuoteClick = (e: React.MouseEvent) => {
         if (pathname === '/') {
             e.preventDefault();
-            const element = document.getElementById('quote');
+            const element = document.getElementById('specify');
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth' });
             }
@@ -80,7 +80,7 @@ export default function Footer() {
                             <li><FooterLink href="/commercial">Commercial Projects</FooterLink></li>
                             <li><FooterLink href="/export">Export Division</FooterLink></li>
                             <li><FooterLink href="/contact">Contact Us</FooterLink></li>
-                            <li><FooterLink href="/#quote" onClick={handleQuoteClick}><span className="text-[#ea580c] font-semibold">Request a Quote</span></FooterLink></li>
+                            <li><FooterLink href="/#specify" onClick={handleQuoteClick}><span className="text-[#ea580c] font-semibold">Request a Quote</span></FooterLink></li>
                             <li className="pt-4 border-t border-white/5 mt-4">
                                 <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/70 mb-2 font-normal">Sales & Support</p>
                                 <a href="tel:+918080081951" className="block text-[var(--foreground)] hover:text-[var(--terracotta)] transition-colors font-normal mb-1">+91 80800 81951</a>

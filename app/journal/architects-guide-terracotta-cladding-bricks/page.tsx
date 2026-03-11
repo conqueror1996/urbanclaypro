@@ -288,7 +288,7 @@ export default function PillarPage() {
                         Get our physical sample board delivered to your studio within 48 hours. Experience the texture before you specify.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <Link href="/#quote" className="bg-white text-[#2A1E16] px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gray-100 transition-all">
+                        <Link href="/#specify" className="bg-white text-[#2A1E16] px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gray-100 transition-all">
                             Request Sample Box
                         </Link>
                         <Link href="/products" className="border border-white/20 px-8 py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-white/10 transition-all">

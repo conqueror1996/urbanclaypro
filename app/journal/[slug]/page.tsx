@@ -295,7 +295,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-6 justify-center">
                         <Link
-                            href="/#quote"
+                            href="/#specify"
                             className="inline-flex items-center justify-center bg-[var(--terracotta)] text-white px-10 py-5 rounded-xl font-bold uppercase tracking-widest hover:bg-[#a85638] transition-all hover:scale-105 shadow-xl shadow-orange-900/30"
                         >
                             Request Samples
