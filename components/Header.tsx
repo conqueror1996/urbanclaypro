@@ -64,7 +64,7 @@ const navLinks: NavLink[] = [
     { href: '/projects', label: 'Projects' },
     { href: '/guide', label: 'Selection Guide' },
     { href: '/architects', label: 'For Architects' },
-    { href: '/#specify', label: 'Contact' }
+    { href: '/contact', label: 'Contact' }
 ];
 
 
