@@ -91,7 +91,7 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
 
             {/* --- ATLAS SECTION --- */}
             {AtlasComponent && (
-                <section className="relative z-10 -mt-12 mb-24 max-w-7xl mx-auto px-6">
+                <section className="relative z-10 -mt-8 mb-16 max-w-7xl mx-auto px-6">
                     <div className="bg-[#2A1E16] rounded-[2rem] p-1 shadow-2xl overflow-hidden border border-white/5">
                         <div className="rounded-[1.8rem] overflow-hidden opacity-80 hover:opacity-100 transition-opacity duration-500 bg-[#1a1512]">
                             {/* Atlas Container */}

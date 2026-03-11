@@ -95,7 +95,7 @@ export default function ProjectAtlasMap({ projects = [] }: ProjectAtlasMapProps)
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative aspect-[3/4] md:aspect-square lg:aspect-[4/5] w-full max-w-md mx-auto mt-4 md:mt-0"
+            className="relative aspect-square lg:aspect-[4/5] w-full max-w-md mx-auto mt-4 md:mt-0"
         >
             <svg viewBox="0 0 600 700" className="w-full h-full drop-shadow-2xl filter">
                 <defs>
