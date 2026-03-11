@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Ruler, Flame, ShieldCheck, Thermometer, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 interface TechnicalEdgeProps {
@@ -10,79 +10,158 @@ interface TechnicalEdgeProps {
 }
 
 export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
+    const features = [
+        {
+            icon: <Ruler className="w-4 h-4" />,
+            label: "0.2mm Precision",
+            desc: "Industrial-grade joins."
+        },
+        {
+            icon: <Flame className="w-4 h-4" />,
+            label: "Vitrified",
+            desc: "Zero water absorption."
+        },
+        {
+            icon: <ShieldCheck className="w-4 h-4" />,
+            label: "Salt-Free",
+            desc: "No white staining."
+        },
+        {
+            icon: <Thermometer className="w-4 h-4" />,
+            label: "Thermal",
+            desc: "30% HVAC efficiency."
+        }
+    ];
+
     return (
-        <section className="py-16 md:py-24 text-[var(--foreground)] overflow-hidden">
-            <div className="max-w-7xl mx-auto px-6 md:px-6 lg:px-8">
-                <div className="grid lg:grid-cols-2 gap-12 md:gap-24 items-center">
-                    <div>
-                        <span className="text-[var(--terracotta)] text-[11px] md:text-xs font-black tracking-[0.3em] uppercase mb-4 block">
-                            THE TECHNICAL EDGE
-                        </span>
-                        <h2 className="text-[var(--foreground)] leading-tight mb-4 md:mb-6 text-3xl md:text-5xl font-serif">
-                            The Science of <br className="hidden md:block" /> Perfect Facades
-                        </h2>
-                        <p className="text-[var(--foreground)]/60 text-sm md:text-lg leading-relaxed max-w-lg mb-8 md:mb-12 font-normal">
-                            We bridge the gap between architectural vision and material reality. By replacing traditional masonry with industrialized precision, we ensure your facade remains pristine for generations.
-                        </p>
+        <section className="py-16 md:py-20 bg-[#F9F8F6] text-[var(--ink)] overflow-hidden relative border-y border-[var(--line)]/50">
+            {/* Background Engineering Grid - Subtle contrast for light theme */}
+            <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
+                style={{ backgroundImage: 'radial-gradient(var(--ink) 1px, transparent 0)', backgroundSize: '60px 60px' }} />
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-12">
-                            {[
-                                { label: "0.2mm Precision", desc: "Industrial-grade tolerance" },
-                                { label: "1150°C Kiln Firing", desc: "Full vitrification" },
-                                { label: "Salt-Free Clay Processing", desc: "Zero efflorescence" },
-                                { label: "30% HVAC Efficiency", desc: "Thermal buffer technology" }
-                            ].map((feature, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: idx * 0.1 }}
-                                    className="flex flex-col gap-1"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)] shrink-0" />
-                                        <span className="font-bold text-base md:text-lg text-[var(--foreground)]">{feature.label}</span>
-                                    </div>
-                                    <span className="text-xs text-[var(--foreground)]/50 ml-4.5 uppercase tracking-widest font-semibold">{feature.desc}</span>
-                                </motion.div>
-                            ))}
-                        </div>
+            <div className="max-w-7xl mx-auto px-6 relative z-10">
+                <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
 
-                        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
-                            <Link href="/contact" className="inline-flex items-center justify-center h-[56px] px-10 bg-[var(--terracotta)] hover:bg-[#c25e3b] text-white text-xs font-semibold uppercase tracking-widest rounded-full transition-all shadow-lg active:scale-95 text-center flex-1 md:flex-none">
-                                Request Spec Kit
-                            </Link>
-                            <Link href="/products" className="inline-flex items-center justify-center h-[56px] px-10 bg-transparent border border-[var(--line)] hover:bg-[var(--sand)] text-[var(--foreground)] text-xs font-semibold uppercase tracking-widest rounded-full transition-all active:scale-95 text-center flex-1 md:flex-none shadow-sm">
-                                Explore Systems
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div className="relative mt-4 lg:mt-0 group/tech">
-                        <div className="aspect-[4/3] lg:aspect-[4/5] rounded-2xl md:rounded-3xl overflow-hidden bg-gray-50 flex items-center justify-center border border-[var(--line)]">
-                            <img
-                                src={imageUrl || "/images/technical-detail.png"}
-                                alt="Technical clay drafting and precision alignment"
-                                className="w-full h-full object-contain transition-all duration-[1.5s] ease-in-out scale-105 group-hover/tech:scale-100"
-                            />
-                        </div>
-                        {/* Material Longevity Badge - Responsive Positioning */}
+                    {/* Left Side: Scaled down Content */}
+                    <div className="lg:col-span-5">
                         <motion.div
-                            initial={{ x: 20, opacity: 0 }}
-                            whileInView={{ x: 0, opacity: 1 }}
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.3, duration: 0.8 }}
-                            className="mt-6 lg:mt-0 lg:absolute lg:bottom-4 lg:right-4 md:lg:-bottom-8 md:lg:-right-8 bg-[var(--background)] p-6 md:p-8 rounded-2xl shadow-2xl z-20 border border-[var(--line)]"
+                            transition={{ duration: 0.6 }}
                         >
-                            <span className="block text-[32px] md:text-[40px] font-serif text-[var(--foreground)] mb-1 tracking-tight">1000y+</span>
-                            <span className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/50 font-extrabold leading-tight">
-                                Material Longevity<br />100% Circular
+                            <span className="inline-flex items-center gap-2 text-[var(--terracotta)] text-[10px] font-bold tracking-[0.4em] uppercase mb-4">
+                                <span className="w-6 h-px bg-[var(--terracotta)]" />
+                                Engineering
                             </span>
+
+                            <h2 className="text-3xl md:text-5xl font-serif leading-[1] mb-6 tracking-tighter text-[var(--ink)]">
+                                The Physics of <br />
+                                <span className="text-[var(--ink)]/40 italic">Perfect Facades.</span>
+                            </h2>
+
+                            {/* Feature Grid - More compact 2-column layout */}
+                            <div className="grid grid-cols-2 gap-x-6 gap-y-6 mb-10">
+                                {features.map((feature, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        className="group"
+                                    >
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="w-10 h-10 rounded-lg bg-white border border-[var(--line)] flex items-center justify-center text-[var(--terracotta)] group-hover:bg-[var(--terracotta)] group-hover:text-white transition-all duration-300 shadow-sm shrink-0">
+                                                {feature.icon}
+                                            </div>
+                                            <h4 className="text-sm font-bold uppercase tracking-tight text-[var(--ink)] group-hover:text-[var(--terracotta)] transition-colors">
+                                                {feature.label}
+                                            </h4>
+                                        </div>
+                                        <p className="text-[11px] text-[var(--ink)]/50 leading-tight pl-1">
+                                            {feature.desc}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            <div className="flex flex-wrap gap-4">
+                                <Link
+                                    href="/contact"
+                                    className="group inline-flex items-center gap-2.5 bg-[var(--terracotta)] hover:bg-[#c25e3b] text-white px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-[var(--terracotta)]/20"
+                                >
+                                    Technical Catalog
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            </div>
                         </motion.div>
                     </div>
+
+                    {/* Right Side: Vibrant Image with tighter overlays */}
+                    <div className="lg:col-span-7 relative">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            className="relative aspect-video lg:aspect-[16/10] rounded-2xl overflow-hidden border border-[var(--line)] group/img shadow-xl"
+                        >
+                            <img
+                                src={imageUrl || "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80"}
+                                alt="Technical detail"
+                                className="w-full h-full object-cover transition-all duration-[2s] group-hover/img:scale-105"
+                            // Removed grayscale and opacity filters
+                            />
+
+                            {/* Subtler Scanning Line */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--terracotta)]/5 to-transparent h-1 w-full animate-scan z-20 pointer-events-none" />
+
+                            {/* Compact Overlays */}
+                            <div className="absolute top-4 right-4 pointer-events-none">
+                                <div className="p-3 bg-white/90 backdrop-blur-md rounded-lg border border-[var(--line)] text-[8px] uppercase tracking-widest font-mono text-[var(--ink)]/40 shadow-sm leading-tight text-right">
+                                    ASTM: C1088-20 <br />
+                                    ISO: 10545
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {/* Tighter Floating Performance Badge */}
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.4, duration: 1 }}
+                            className="mt-6 lg:mt-0 lg:absolute lg:bottom-4 lg:-left-6 bg-[var(--ink)] p-6 rounded-xl shadow-xl z-20 border border-white/10 text-white"
+                        >
+                            <div className="flex items-center gap-5">
+                                <div>
+                                    <span className="block text-3xl font-serif text-white mb-0.5 tracking-tighter">1000y<span className="text-[var(--terracotta)]">+</span></span>
+                                    <span className="text-[9px] uppercase tracking-[0.2em] text-white/40 font-black leading-none block border-t border-white/5 pt-2">
+                                        Longevity Grade
+                                    </span>
+                                </div>
+                                <div className="w-px h-10 bg-white/10" />
+                                <div>
+                                    <span className="block text-lg font-serif text-white">A1</span>
+                                    <span className="text-[9px] uppercase tracking-widest text-white/40">Fire Rated</span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+
                 </div>
             </div>
+
+            <style jsx>{`
+                @keyframes scan {
+                    0% { transform: translateY(-100%); }
+                    100% { transform: translateY(500%); }
+                }
+                .animate-scan {
+                    animation: scan 5s linear infinite;
+                }
+            `}</style>
         </section>
     );
 }

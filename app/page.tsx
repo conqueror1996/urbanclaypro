@@ -15,7 +15,7 @@ const Architects = dynamic(() => import('@/components/Architects'));
 const Projects = dynamic(() => import('@/components/Projects'));
 const ProjectAtlas = dynamic(() => import('@/components/ProjectAtlas'));
 
-const QuoteForm = dynamic(() => import('@/components/QuoteForm'));
+const FacadeSpecificationDesk = dynamic(() => import('@/components/FacadeSpecificationDesk'));
 const Footer = dynamic(() => import('@/components/Footer'));
 const OurStoryTeaser = dynamic(() => import('@/components/OurStoryTeaser'));
 const FAQSchema = dynamic(() => import('@/components/FAQSchema'));
@@ -316,11 +316,9 @@ export default async function Home({ searchParams }: Props) {
 
 
 
-            {/* 7. THE TECHNICAL DESK - Project-Specific Consultation */}
-            <ScrollReveal id="quote">
-                <Suspense fallback={<div className="py-20 text-center">Loading form...</div>}>
-                    <QuoteForm />
-                </Suspense>
+            {/* 6. FACADE SPECIFICATION DESK */}
+            <ScrollReveal id="specify">
+                <FacadeSpecificationDesk />
             </ScrollReveal>
 
 
