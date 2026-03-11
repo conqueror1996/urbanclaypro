@@ -191,9 +191,9 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
             {/* --- HERO SECTION: Swiss Hierarchy --- */}
             <section className="relative min-h-[90vh] flex flex-col pt-36 lg:pt-48 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto overflow-hidden">
 
-                {/* Background Text - Large decorative text */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
-                    <h2 className="text-[20vw] md:text-[15vw] font-serif font-bold text-[var(--line)]/30 whitespace-nowrap tracking-tighter">
+                {/* Background Text - Large decorative text (Hidden on mobile to prevent overlap) */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0 hidden lg:block">
+                    <h2 className="text-[20vw] md:text-[15vw] font-serif font-bold text-[var(--line)]/20 whitespace-nowrap tracking-tighter">
                         {product.title.split(' ')[0]}
                     </h2>
                 </div>
@@ -222,11 +222,11 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 {product.category?.title || 'Collection'}
                             </span>
 
-                            {/* H1: Commanding, Minimal */}
-                            <h1 className="text-4xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[0.9] mb-4 lg:mb-8 tracking-tight break-words hyphens-auto w-full max-w-full overflow-hidden">
+                            {/* H1: Commanding, Minimal - Reduced mobile size to prevent crowding */}
+                            <h1 className="text-3xl md:text-7xl lg:text-8xl font-serif text-[var(--foreground)] leading-[1] md:leading-[0.9] mb-4 lg:mb-8 tracking-tight break-words hyphens-auto w-full max-w-full overflow-hidden">
                                 {product.title}
                                 {(selectedVariant?.name || product.variants?.find(v => v.imageUrl === activeImage)?.name) && (
-                                    <span className="block text-3xl md:text-5xl lg:text-6xl text-[var(--terracotta)] mt-2 font-light italic break-words">
+                                    <span className="block text-2xl md:text-5xl lg:text-6xl text-[var(--terracotta)] mt-3 font-light italic break-words">
                                         {selectedVariant?.name || product.variants?.find(v => v.imageUrl === activeImage)?.name}
                                     </span>
                                 )}
@@ -253,17 +253,17 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 </span>
                             </div>
 
-                            {/* Trust & Technical Edge Badges */}
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full mb-10 pb-8 border-b border-[var(--line)]">
+                            {/* Trust & Technical Edge Badges - Better spacing on mobile */}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4 w-full mb-10 pb-10 border-b border-[var(--line)]">
                                 {[
                                     { label: 'A1 Fire Rated', icon: '🔥' },
                                     { label: 'Zero Efflorescence', icon: '✨' },
                                     { label: 'Weather Proof', icon: '⛈️' },
                                     { label: 'Natural Clay', icon: '🏺' }
                                 ].map((badge, i) => (
-                                    <div key={i} className="flex flex-col items-center lg:items-start text-center lg:text-left gap-1">
-                                        <span className="text-xl mb-1">{badge.icon}</span>
-                                        <span className="text-[9px] font-black uppercase tracking-widest text-[var(--foreground)]/40 leading-none">{badge.label}</span>
+                                    <div key={i} className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
+                                        <span className="text-2xl mb-1">{badge.icon}</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/50 leading-none">{badge.label}</span>
                                     </div>
                                 ))}
                             </div>
