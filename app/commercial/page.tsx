@@ -110,12 +110,12 @@ export default function CommercialPage() {
             </section>
 
             {/* CONTACT FORM */}
-            <section id="partner" className="py-24 max-w-4xl mx-auto px-6">
+            <section id="partner" className="py-24 max-w-6xl mx-auto px-6">
                 <div className="text-center mb-12">
                     <h2 className="text-4xl font-serif text-[#2A1E16] mb-4">Project Inquiry</h2>
                     <p className="text-gray-500">Submit your BOQ or Requirements.</p>
                 </div>
-                <QuoteForm />
+                <QuoteForm isEmbedded={true} />
             </section>
 
             <Footer />

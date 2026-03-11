@@ -155,17 +155,13 @@ export default function ContactPage() {
                     </div>
                 </section>
 
-                <div className="max-w-7xl mx-auto px-6 mb-32" id="specify">
-                    <div className="text-center mb-16">
-                        <span className="text-[var(--terracotta)] text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block">Project Inquiry</span>
-                        <h2 className="font-serif text-4xl md:text-5xl text-[var(--ink)] mb-6">Have a project in mind?</h2>
-                        <p className="text-[var(--ink)]/60 max-w-2xl mx-auto">Fill out the form below to receive a custom quote, technical assistance, or arrange for sample delivery.</p>
+                <section id="partner" className="py-24 max-w-6xl mx-auto px-6">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl font-serif text-[#2A1E16] mb-4">Project Inquiry</h2>
+                        <p className="text-gray-500">Submit your BOQ or Requirements.</p>
                     </div>
-                    {/* Embedded form logic */}
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-black/5 p-8 md:p-12">
-                        <QuoteForm />
-                    </div>
-                </div>
+                    <QuoteForm isEmbedded={true} />
+                </section>
             </main>
             <Footer />
         </div>

@@ -109,6 +109,29 @@ export default function PillarPageTemplate({
         ]
     };
 
+    const [showDock, setShowDock] = useState(true);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                // If specify section is in view, hide the fixed dock
+                setShowDock(!entry.isIntersecting);
+            },
+            { threshold: 0.1 }
+        );
+
+        const specifySection = document.getElementById('specify');
+        if (specifySection) {
+            observer.observe(specifySection);
+        }
+
+        return () => {
+            if (specifySection) {
+                observer.unobserve(specifySection);
+            }
+        };
+    }, []);
+
     return (
         <main className="bg-[var(--background)] min-h-screen text-[var(--foreground)] selection:bg-[var(--terracotta)] selection:text-white font-sans overflow-x-hidden">
             <JsonLd data={[jsonLd, faqJsonLd, breadcrumbJsonLd]} />
@@ -338,32 +361,37 @@ export default function PillarPageTemplate({
             </section>
 
             {/* PERSISTENT SALES HERO CTA DOCK */}
-            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl md:w-auto">
-                <motion.div
-                    initial={{ y: 100, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    className="bg-white/80 backdrop-blur-2xl border border-[var(--line)] rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl"
-                >
-                    <div className="hidden md:flex px-4 py-2 flex-col leading-none border-r border-[var(--line)]">
-                        <span className="text-[9px] font-black uppercase text-[var(--foreground)]/40 mb-1">Pillar Inquiry</span>
-                        <span className="text-[11px] font-serif font-bold text-[var(--ink)]">Technical Support Ready</span>
+            <AnimatePresence>
+                {showDock && (
+                    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl md:w-auto">
+                        <motion.div
+                            initial={{ y: 100, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 100, opacity: 0 }}
+                            className="bg-white/80 backdrop-blur-2xl border border-[var(--line)] rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl"
+                        >
+                            <div className="hidden md:flex px-4 py-2 flex-col leading-none border-r border-[var(--line)]">
+                                <span className="text-[9px] font-black uppercase text-[var(--foreground)]/40 mb-1">Pillar Inquiry</span>
+                                <span className="text-[11px] font-serif font-bold text-[var(--ink)]">Technical Support Ready</span>
+                            </div>
+                            <button
+                                onClick={() => document.getElementById('specify')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center"
+                            >
+                                Request Sample Kit
+                            </button>
+                            <a
+                                href="https://wa.me/918080081951"
+                                target="_blank"
+                                className="w-12 h-12 md:w-auto md:px-6 bg-[#25D366] text-white rounded-full flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-all shadow-lg"
+                            >
+                                <MessageCircle className="w-5 h-5" />
+                                <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em]">WhatsApp Expert</span>
+                            </a>
+                        </motion.div>
                     </div>
-                    <button
-                        onClick={() => setBoxOpen(true)}
-                        className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center"
-                    >
-                        Request Sample Kit
-                    </button>
-                    <a
-                        href="https://wa.me/918080081951"
-                        target="_blank"
-                        className="w-12 h-12 md:w-auto md:px-6 bg-[#25D366] text-white rounded-full flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-all shadow-lg"
-                    >
-                        <MessageCircle className="w-5 h-5" />
-                        <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em]">WhatsApp Expert</span>
-                    </a>
-                </motion.div>
-            </div>
+                )}
+            </AnimatePresence>
 
             {/* COLUMN: COMPARISON STRIP - Fast Decision Logic */}
             <section className="py-24 bg-[var(--background)] px-6">
@@ -427,15 +455,15 @@ export default function PillarPageTemplate({
 
             {/* LOCAL INQUIRY FORM */}
             <section id="specify" className="py-24 bg-[var(--sand)] px-6 border-t border-[var(--line)]">
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
                         <span className="text-[var(--terracotta)] text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Direct Project Inquiry</span>
                         <h2 className="font-serif text-4xl md:text-5xl text-[var(--foreground)] mb-6">Specify {keyword}</h2>
                         <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto">Get technical support, custom quotes, or arrange for sample delivery for your current project.</p>
                     </div>
-                    <div className="bg-white rounded-[2.5rem] shadow-2xl border border-[var(--line)] p-8 md:p-12">
-                        <QuoteForm />
-                    </div>
+
+                    {/* Embedded form - we pass a prop to clean up its internal padding/border */}
+                    <QuoteForm isEmbedded={true} />
                 </div>
             </section>
 
