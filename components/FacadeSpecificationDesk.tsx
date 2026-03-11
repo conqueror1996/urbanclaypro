@@ -236,7 +236,7 @@ export default function FacadeSpecificationDesk() {
     // ------------------------------------------------------------------------
     if (isMobileOpen) {
         return (
-            <div className="fixed inset-0 bg-[#FAF9F6] z-50 flex flex-col overflow-hidden text-[var(--ink)]">
+            <div className="fixed inset-0 bg-[#FAF9F6] z-[150] flex flex-col overflow-hidden text-[var(--ink)]">
                 {/* Mobile Header Loader/Progress */}
                 <div className="pt-unsafe-top bg-white border-b border-[var(--line)] px-4 py-4 flex items-center justify-between z-10 sticky top-0">
                     <button onClick={step > 1 ? handleBackMobile : startOver} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[var(--sand)] transition-colors active:scale-95">
