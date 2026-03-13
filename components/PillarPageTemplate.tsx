@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import QuoteForm from '@/components/QuoteForm';
 import Link from 'next/link';
 import { Product, Project, getHomePageData } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
@@ -173,7 +174,7 @@ export default function PillarPageTemplate({
                                 </motion.button>
 
                                 <button
-                                    onClick={() => document.getElementById('specify')?.scrollIntoView({ behavior: 'smooth' })}
+                                    onClick={() => setBoxOpen(true)}
                                     className="btn-link-dotted text-xs font-bold uppercase tracking-widest px-4 cursor-pointer"
                                 >
                                     Speak to Consultant
@@ -278,7 +279,11 @@ export default function PillarPageTemplate({
                                 { title: "BIM / Revit Library", format: "RFA", type: "3D Digital Twins", icon: Layers },
                                 { title: "Specification BOQ", format: "DOCS", type: "Bidding Reference", icon: FileText }
                             ].map((item, i) => (
-                                <button key={i} className="flex items-center gap-4 p-5 bg-[var(--background)] border border-[var(--line)] rounded-2xl hover:border-[var(--terracotta)] transition-all group text-left shadow-sm">
+                                <button 
+                                    key={i} 
+                                    onClick={() => setBoxOpen(true)}
+                                    className="flex items-center gap-4 p-5 bg-[var(--background)] border border-[var(--line)] rounded-2xl hover:border-[var(--terracotta)] transition-all group text-left shadow-sm active:scale-95"
+                                >
                                     <div className="w-10 h-10 rounded-lg bg-[var(--sand)] flex items-center justify-center text-[var(--terracotta)] group-hover:bg-[var(--terracotta)] group-hover:text-white transition-colors">
                                         <item.icon className="w-5 h-5" />
                                     </div>
@@ -375,8 +380,8 @@ export default function PillarPageTemplate({
                                 <span className="text-[11px] font-serif font-bold text-[var(--ink)]">Technical Support Ready</span>
                             </div>
                             <button
-                                onClick={() => document.getElementById('specify')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center"
+                                onClick={() => setBoxOpen(true)}
+                                className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center active:scale-95"
                             >
                                 Request Sample Kit
                             </button>
@@ -472,4 +477,4 @@ export default function PillarPageTemplate({
     );
 }
 
-import QuoteForm from '@/components/QuoteForm';
+

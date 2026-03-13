@@ -27,9 +27,12 @@ export default defineConfig({
                 description: 'Product belonging to a specific category',
                 schemaType: 'product',
                 parameters: [{ name: 'categoryId', type: 'string' }],
-                value: ({ categoryId }: { categoryId: string }) => ({
-                    category: { _type: 'reference', _ref: categoryId }
-                })
+                value: ({ categoryId }: { categoryId: string }) => {
+                    if (!categoryId) return {};
+                    return {
+                        category: { _type: 'reference', _ref: categoryId }
+                    };
+                }
             }
         ]
     },

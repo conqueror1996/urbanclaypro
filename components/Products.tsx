@@ -281,23 +281,25 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                                     <div className="absolute inset-0 bg-gray-200" />
                                                                 )}
 
-                                                                {/* Hover Actions */}
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        e.stopPropagation();
-                                                                        addToBox({
-                                                                            id: variant.slug + '-' + variant.name,
-                                                                            name: variant.name,
-                                                                            color: variant.color,
-                                                                            texture: variant.imageUrl ? `url('${variant.imageUrl}')` : variant.color
-                                                                        });
-                                                                    }}
-                                                                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-[var(--ink)] shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center z-20"
-                                                                    title="Add Sample"
-                                                                >
-                                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                                                                </button>
+                                                                 {/* Hover Actions */}
+                                                                {!(variant.categorySlug === 'facades' || variant.tag === 'Terracotta Panels') && (
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            e.stopPropagation();
+                                                                            addToBox({
+                                                                                id: variant.slug + '-' + variant.name,
+                                                                                name: variant.name,
+                                                                                color: variant.color,
+                                                                                texture: variant.imageUrl ? `url('${variant.imageUrl}')` : variant.color
+                                                                            });
+                                                                        }}
+                                                                        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-[var(--ink)] shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center z-20"
+                                                                        title="Add Sample"
+                                                                    >
+                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                                    </button>
+                                                                )}
                                                             </div>
 
                                                             {/* Details */}

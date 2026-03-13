@@ -63,10 +63,24 @@ export async function sendLeadAlertEmail(lead: any) {
             
             <div style="background-color: #fdfcfb; padding: 24px; border-radius: 16px; border: 1px solid #f5eeee; margin-top: 24px;">
                 <table style="width: 100%; border-collapse: collapse;">
-                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Customer</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${lead.contact}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Product</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${lead.product}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Location</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${lead.city}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Customer</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${lead.name || 'Inquiry'}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Contact</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${lead.contact || lead.email || 'N/A'}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Product</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${lead.product || 'Facade System'}</td></tr>
+                    <tr><td style="padding: 8px 0; color: #9ca3af; font-size: 12px; font-weight: bold; text-transform: uppercase;">Location</td><td style="padding: 8px 0; text-align: right; font-weight: 600;">${lead.city || lead.country || 'N/A'}</td></tr>
                 </table>
+                
+                ${lead.sampleItems && lead.sampleItems.length > 0 ? `
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #eeeeee;">
+                        <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: bold; color: #b45a3c; text-transform: uppercase; letter-spacing: 1px;">Requested Samples</p>
+                        <ul style="margin: 0; padding: 0; list-style: none;">
+                            ${lead.sampleItems.map((item: string) => `
+                                <li style="font-size: 14px; font-weight: 600; color: #2A1E16; margin-bottom: 4px; display: flex; align-items: center;">
+                                    <span style="color: #b45a3c; margin-right: 8px;">•</span> ${item}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
             </div>
 
             <div style="margin-top: 32px; text-align: center;">
@@ -77,7 +91,7 @@ export async function sendLeadAlertEmail(lead: any) {
         const mailOptions = {
             from: `"UrbanClay CRM" <${process.env.SMTP_USER}>`,
             to: process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'urbanclay@claytile.in',
-            subject: `${isSerious ? '🔥 Serious' : '📩 New'} Lead: ${lead.role} | ${lead.city}`,
+            subject: `${isSerious ? '🔥 Serious' : '📩 New'} Lead: ${lead.role || 'Inquiry'} | ${lead.city || lead.country || 'N/A'}`,
             html: wrapEmailTemplate(content)
         };
 
@@ -151,7 +165,7 @@ export async function sendUserConfirmationEmail(order: any) {
                 <h4 style="margin: 0 0 16px; font-size: 11px; font-weight: bold; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Delivery Metadata</h4>
                 <p style="margin: 8px 0; font-size: 14px; color: #2A1E16;"><strong>Shipping To:</strong><br>${order.address || 'Project Site Address on File'}</p>
                 <div style="margin-top: 16px; font-size: 11px; color: #9ca3af; font-family: monospace;">
-                    ${order.notes.replace(/\n/g, '<br>')}
+                    ${(order.notes || '').replace(/\n/g, '<br>')}
                 </div>
             </div>
 

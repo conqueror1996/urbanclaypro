@@ -19,6 +19,7 @@ interface ProductPageAnimateProps {
 
 export default function ProductPageAnimate({ product, relatedProducts, quoteUrl, variantName }: ProductPageAnimateProps) {
     const { addToBox } = useSampleBox();
+    const isSampleDisabled = product.category?.slug === 'facades' || product.tag === 'Terracotta Panels';
     const { scrollY } = useScroll();
 
     // Parallax Logic moved below with isMobile check
@@ -271,12 +272,14 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         {product.priceRange && <span className="text-xs text-white/40">/ sq.ft</span>}
                                     </div>
 
-                                    <button
-                                        onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
-                                        className="hidden lg:flex w-full py-4 bg-transparent hover:bg-white/5 text-white border border-white/20 hover:border-[var(--terracotta)] rounded-xl font-bold uppercase tracking-widest text-xs transition-all items-center justify-center gap-2 group"
-                                    >
-                                        <span className="group-hover:text-[var(--terracotta)] transition-colors">+ Add Sample</span>
-                                    </button>
+                                    {!isSampleDisabled && (
+                                        <button
+                                            onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
+                                            className="hidden lg:flex w-full py-4 bg-transparent hover:bg-white/5 text-white border border-white/20 hover:border-[var(--terracotta)] rounded-xl font-bold uppercase tracking-widest text-xs transition-all items-center justify-center gap-2 group"
+                                        >
+                                            <span className="group-hover:text-[var(--terracotta)] transition-colors">+ Add Sample</span>
+                                        </button>
+                                    )}
 
                                     <a
                                         href={`https://wa.me/918080081951?text=Inquiry for ${product.title}`}
@@ -374,12 +377,14 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
             {/* --- MOBILE STICKY DOCK (Items hidden on desktop) --- */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#1a1512]/80 backdrop-blur-xl border-t border-white/10 z-50 flex items-center gap-3 safe-area-pb">
-                <button
-                    onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
-                    className="flex-1 py-3.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform"
-                >
-                    + Sample
-                </button>
+                {!isSampleDisabled && (
+                    <button
+                        onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
+                        className="flex-1 py-3.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform"
+                    >
+                        + Sample
+                    </button>
+                )}
                 <a
                     href={quoteUrl}
                     className="flex-[2] py-3.5 bg-[var(--terracotta)] text-white rounded-xl text-center font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform shadow-lg shadow-orange-900/20 relative overflow-hidden"

@@ -45,15 +45,14 @@ export async function submitLead(formData: any) {
             country: formData.country,
             quantity: formData.quantity,
             timeline: formData.timeline,
-            contact: formData.contact,
-            email: formData.email, // Save email if schema supports it
+            contact: formData.contact || formData.phone || formData.email,
+            email: formData.email,
             notes: formData.notes,
             requirement: formData.notes,
             seriousness: seriousness,
             isSerious: isSerious,
             status: 'new',
             submittedAt: new Date().toISOString(),
-            // New Fields for Sample Logistics
             address: formData.address,
             isSampleRequest: formData.isSampleRequest,
             sampleItems: formData.sampleItems,
@@ -70,16 +69,13 @@ export async function submitLead(formData: any) {
         // A. Admin Alert (Send for ALL leads now)
         console.log('🚀 New Lead Saved:', result._id);
 
-        // We await these now to return status to the caller (useful for testing/debugging)
-        const adminEmailPromise = sendLeadAlertEmail({ ...doc, _id: result._id });
-        const userEmailPromise = (doc.email && doc.email.includes('@'))
-            ? sendUserConfirmationEmail({ ...doc, _id: result._id })
-            : Promise.resolve({ success: false, error: 'No valid email' });
+        // A. Admin Alert & User Confirmation (Run in background to avoid blocking UI)
+        sendLeadAlertEmail({ ...doc, _id: result._id }).catch(err => console.error('Admin Alert Failed', err));
+        
+        if (doc.email && doc.email.includes('@')) {
+            sendUserConfirmationEmail({ ...doc, _id: result._id }).catch(err => console.error('Auto-Reply Failed', err));
+        }
 
-        const [adminEmailRes, userEmailRes] = await Promise.all([adminEmailPromise, userEmailPromise]);
-
-        if (!adminEmailRes.success) console.error('Admin Alert Failed', adminEmailRes.error);
-        if (!userEmailRes.success && doc.email) console.error('Auto-Reply Failed', userEmailRes.error);
 
         // 4. Send to Zoho CRM
         // We do this asynchronously so we don't block the UI response too much (emails are fast enough)
@@ -92,11 +88,7 @@ export async function submitLead(formData: any) {
         return {
             success: true,
             id: result._id,
-            isSerious,
-            emailStatus: {
-                admin: adminEmailRes,
-                user: userEmailRes
-            }
+            isSerious
         }
     } catch (error) {
         console.error('Error submitting lead:', error)

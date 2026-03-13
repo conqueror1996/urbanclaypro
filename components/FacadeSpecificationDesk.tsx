@@ -115,6 +115,7 @@ export default function FacadeSpecificationDesk() {
     const [leadData, setLeadData] = useState({
         name: "",
         email: "",
+        phone: "",
         firmName: "",
         location: "", // city
         area: "",     // quantity
@@ -184,9 +185,11 @@ export default function FacadeSpecificationDesk() {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            await submitLead({
+            const res = await submitLead({
                 name: leadData.name,
                 email: leadData.email,
+                contact: leadData.phone,
+                phone: leadData.phone,
                 firmName: leadData.firmName,
                 city: leadData.location,
                 quantity: leadData.area,
@@ -194,10 +197,14 @@ export default function FacadeSpecificationDesk() {
                 product: recommendation?.name || "Facade Desk General",
                 notes: `Facade Desk Spec: ${projectType} | ${wallCondition} | ${performancePriority}`
             });
-            setIsSubmitted(true);
+            if (res.success) {
+                setIsSubmitted(true);
+            } else {
+                throw new Error("Failed to submit");
+            }
         } catch (error) {
-            console.error(error);
-            alert("Something went wrong. Please try again.");
+            console.error('Submission failed:', error);
+            alert("Submission error. Please check your connection or contact us directly on WhatsApp.");
         } finally {
             setIsSubmitting(false);
         }
@@ -211,7 +218,7 @@ export default function FacadeSpecificationDesk() {
         setIsSubmitted(false);
         setShowMobileLeadForm(false);
         setLeadData({
-            name: "", email: "", firmName: "", location: "", area: "", role: "Architect"
+            name: "", email: "", phone: "", firmName: "", location: "", area: "", role: "Architect"
         });
         setStep(1);
         setIsMobileOpen(false);
@@ -408,6 +415,7 @@ export default function FacadeSpecificationDesk() {
                                                 <input required type="text" placeholder="Full Name" value={leadData.name} onChange={e => setLeadData({ ...leadData, name: e.target.value })} className="w-full bg-white border border-[var(--line)] rounded-xl px-4 py-4 text-base focus:ring-2 focus:ring-[var(--terracotta)] focus:border-transparent outline-none" />
                                                 <input required type="email" placeholder="Email Address" value={leadData.email} onChange={e => setLeadData({ ...leadData, email: e.target.value })} className="w-full bg-white border border-[var(--line)] rounded-xl px-4 py-4 text-base focus:ring-2 focus:ring-[var(--terracotta)] focus:border-transparent outline-none" />
                                                 <input required type="text" placeholder="Firm/Company Name" value={leadData.firmName} onChange={e => setLeadData({ ...leadData, firmName: e.target.value })} className="w-full bg-white border border-[var(--line)] rounded-xl px-4 py-4 text-base focus:ring-2 focus:ring-[var(--terracotta)] focus:border-transparent outline-none" />
+                                                <input required type="tel" placeholder="Phone Number (WhatsApp)" value={leadData.phone} onChange={e => setLeadData({ ...leadData, phone: e.target.value })} className="w-full bg-white border border-[var(--line)] rounded-xl px-4 py-4 text-base focus:ring-2 focus:ring-[var(--terracotta)] focus:border-transparent outline-none" />
 
                                                 <div className="grid grid-cols-2 gap-3">
                                                     <input required type="text" placeholder="Project City" value={leadData.location} onChange={e => setLeadData({ ...leadData, location: e.target.value })} className="w-full bg-white border border-[var(--line)] rounded-xl px-4 py-4 text-base focus:ring-2 focus:ring-[var(--terracotta)] focus:border-transparent outline-none" />
@@ -429,7 +437,7 @@ export default function FacadeSpecificationDesk() {
                                                     </div>
                                                 </div>
 
-                                                <button type="submit" disabled={isSubmitting} className="w-full bg-[var(--terracotta)] hover:bg-[#c25e3b] text-white rounded-xl px-4 py-4 text-sm font-bold uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mt-6 shadow-xl shadow-[var(--terracotta)]/20">
+                                                <button type="submit" disabled={isSubmitting} className="w-full bg-[var(--terracotta)] hover:bg-[#c25e3b] text-white rounded-xl px-4 py-4 text-sm font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 mt-6 shadow-xl shadow-[var(--terracotta)]/20 active:scale-95 disabled:opacity-50">
                                                     {isSubmitting ? "Processing..." : "Get Technical Package"}
                                                     {!isSubmitting && <ArrowRight className="w-4 h-4" />}
                                                 </button>
@@ -614,6 +622,7 @@ export default function FacadeSpecificationDesk() {
                                                             <input required type="email" placeholder="Email" value={leadData.email} onChange={e => setLeadData({ ...leadData, email: e.target.value })} className="w-full bg-[var(--sand)] border-0 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--terracotta)]" />
                                                         </div>
                                                         <input required type="text" placeholder="Firm/Company Name" value={leadData.firmName} onChange={e => setLeadData({ ...leadData, firmName: e.target.value })} className="w-full bg-[var(--sand)] border-0 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--terracotta)]" />
+                                                        <input required type="tel" placeholder="Phone/WhatsApp" value={leadData.phone} onChange={e => setLeadData({ ...leadData, phone: e.target.value })} className="w-full bg-[var(--sand)] border-0 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--terracotta)]" />
 
                                                         <div className="grid grid-cols-2 gap-4">
                                                             <input required type="text" placeholder="Project Location" value={leadData.location} onChange={e => setLeadData({ ...leadData, location: e.target.value })} className="w-full bg-[var(--sand)] border-0 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--terracotta)]" />
@@ -627,7 +636,7 @@ export default function FacadeSpecificationDesk() {
                                                             <option value="Developer">Developer</option>
                                                         </select>
 
-                                                        <button type="submit" disabled={isSubmitting} className="w-full bg-[var(--terracotta)] hover:bg-[#c25e3b] text-white rounded-lg px-4 py-4 text-xs font-bold uppercase tracking-widest transition-colors flex items-center justify-center gap-2 mt-4 shadow-lg shadow-[var(--terracotta)]/20">
+                                                        <button type="submit" disabled={isSubmitting} className="w-full bg-[var(--terracotta)] hover:bg-[#c25e3b] text-white rounded-lg px-4 py-4 text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 mt-4 shadow-lg shadow-[var(--terracotta)]/20 active:scale-95 disabled:opacity-50">
                                                             {isSubmitting ? "Processing..." : "Get Technical Package"}
                                                             {!isSubmitting && <ChevronRight className="w-4 h-4" />}
                                                         </button>
@@ -643,7 +652,10 @@ export default function FacadeSpecificationDesk() {
                                                         </p>
 
                                                         <div className="space-y-3">
-                                                            <button className="w-full flex items-center justify-center gap-2 bg-[var(--sand)] hover:bg-[var(--line)] text-[var(--ink)] px-4 py-3 rounded-lg text-sm font-semibold transition-colors">
+                                                            <button 
+                                                                onClick={() => window.open('https://claytile.in/technical-package-preview.pdf', '_blank')}
+                                                                className="w-full flex items-center justify-center gap-2 bg-[var(--sand)] hover:bg-[var(--line)] text-[var(--ink)] px-4 py-3 rounded-lg text-sm font-semibold transition-colors active:scale-95"
+                                                            >
                                                                 <Download className="w-4 h-4" />
                                                                 Download Datasheet
                                                             </button>

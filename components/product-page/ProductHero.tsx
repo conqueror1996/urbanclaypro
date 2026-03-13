@@ -17,6 +17,7 @@ interface ProductHeroProps {
 export default function ProductHero({ product, quoteUrl, otherVariants, selectedVariantName }: ProductHeroProps) {
     const { addToBox } = useSampleBox();
     const [activeIndex, setActiveIndex] = useState(0);
+    const isSampleDisabled = product.category?.slug === 'facades' || product.tag === 'Terracotta Panels';
 
     // Determines active gallery images based on variant selection
     const activeVariant = selectedVariantName
@@ -215,17 +216,19 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                                 <span className="text-[10px] text-gray-400 font-medium">Typically responds within 4 hours</span>
                             </div>
 
-                            <button
-                                onClick={() => addToBox({
-                                    id: product.slug,
-                                    name: product.title,
-                                    color: '#b45a3c',
-                                    texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c'
-                                })}
-                                className="w-full py-3.5 bg-white border border-[#EBE5E0] text-[#2A1E16] rounded-xl font-bold hover:bg-[#F2F0ED] hover:border-[#d6cbb8] transition-all flex items-center justify-center gap-2"
-                            >
-                                <span>Order Sample</span>
-                            </button>
+                            {!isSampleDisabled && (
+                                <button
+                                    onClick={() => addToBox({
+                                        id: product.slug,
+                                        name: product.title,
+                                        color: '#b45a3c',
+                                        texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c'
+                                    })}
+                                    className="w-full py-3.5 bg-white border border-[#EBE5E0] text-[#2A1E16] rounded-xl font-bold hover:bg-[#F2F0ED] hover:border-[#d6cbb8] transition-all flex items-center justify-center gap-2"
+                                >
+                                    <span>Order Sample</span>
+                                </button>
+                            )}
                         </div>
                     </div>
 

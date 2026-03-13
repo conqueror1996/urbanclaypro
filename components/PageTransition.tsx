@@ -9,6 +9,9 @@ export default function PageTransition({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+    const isStudio = pathname?.startsWith('/studio');
+    
+    if (isStudio) return <>{children}</>;
 
     return (
         <motion.div

@@ -26,6 +26,7 @@ interface ProductPageStudioProps {
 
 export default function ProductPageStudio({ product, relatedProducts, quoteUrl, variantName }: ProductPageStudioProps) {
     const { addToBox } = useSampleBox();
+    const isSampleDisabled = product.category?.slug === 'facades' || product.tag === 'Terracotta Panels';
     const { scrollY } = useScroll();
 
     // Determine initial active variant & image
@@ -266,18 +267,20 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                             </div>
 
                             <div className="flex flex-col gap-3">
-                                <a
-                                    href={`https://wa.me/918080081951?text=I'm interested in ${product.title}`}
-                                    className="w-full py-4 bg-[var(--terracotta)] text-white rounded-xl font-bold text-center hover:bg-[#a85638] transition-colors"
-                                >
-                                    Get Quote
-                                </a>
-                                <button
-                                    onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
-                                    className="w-full py-4 border border-white/10 text-white/80 rounded-xl font-bold text-center hover:bg-white/5 transition-colors"
-                                >
-                                    Add to Sample Box
-                                </button>
+                                    <a
+                                        href={`https://wa.me/918080081951?text=I'm interested in ${product.title}`}
+                                        className="w-full py-4 bg-[var(--terracotta)] text-white rounded-xl font-bold text-center hover:bg-[#a85638] transition-colors"
+                                    >
+                                        Get Quote
+                                    </a>
+                                    {!isSampleDisabled && (
+                                        <button
+                                            onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
+                                            className="w-full py-4 border border-white/10 text-white/80 rounded-xl font-bold text-center hover:bg-white/5 transition-colors"
+                                        >
+                                            Add to Sample Box
+                                        </button>
+                                    )}
                             </div>
                         </div>
 

@@ -96,13 +96,18 @@ export default function QuoteForm({ mode = 'default', isEmbedded = false }: Quot
         setIsSubmitting(true);
 
         try {
-            await submitLead(formData);
+            const res = await submitLead(formData);
+            if (!res.success) throw new Error("Submission failed");
+            
+            setIsSubmitted(true);
         } catch (error) {
             console.error('Lead submission error:', error);
+            alert("Something went wrong. Please try again.");
+            setIsSubmitting(false);
+            return;
         }
 
         setIsSubmitting(false);
-        setIsSubmitted(true);
 
         // WhatsApp Redirect
         const message = `*New Quote Request*

@@ -18,6 +18,7 @@ interface UnifiedProductCardProps {
 export default function UnifiedProductCard({ product, variant, index }: UnifiedProductCardProps) {
     const { addToBox, box, isInBox, setBoxOpen } = useSampleBox();
     const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const isSampleDisabled = product.category?.slug === 'facades' || product.tag === 'Terracotta Panels';
 
     // Utility to clean strings for slugs
     const toSlug = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
@@ -120,13 +121,15 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
             {/* Action Palette (Floating over the card) */}
             <div className="absolute bottom-20 left-4 right-4 flex items-center justify-between md:opacity-0 md:group-hover:opacity-100 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-500 z-30 opacity-100 translate-y-0 text-white">
                 <div className="flex items-center gap-2">
-                    <button
-                        onClick={handleAddSample}
-                        className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--terracotta)] hover:text-white hover:border-[var(--terracotta)] transition-all active:scale-95 group/btn shadow-xl"
-                        title="Add to Sample Tray"
-                    >
-                        <Plus className="w-5 h-5 group-hover/btn:rotate-90 transition-transform duration-300" />
-                    </button>
+                    {!isSampleDisabled && (
+                        <button
+                            onClick={handleAddSample}
+                            className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--terracotta)] hover:text-white hover:border-[var(--terracotta)] transition-all active:scale-95 group/btn shadow-xl"
+                            title="Add to Sample Tray"
+                        >
+                            <Plus className="w-5 h-5 group-hover/btn:rotate-90 transition-transform duration-300" />
+                        </button>
+                    )}
                     <button
                         onClick={handleWhatsAppShare}
                         className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all active:scale-95 shadow-xl"
