@@ -4,10 +4,21 @@ import { writeClient } from '@/sanity/lib/write-client'
 import { sendLeadAlertEmail, sendUserConfirmationEmail } from '@/lib/email'
 import { createZohoLead } from '@/lib/zoho'
 import { headers } from 'next/headers'
+import { LeadSchema, LeadInput } from '@/lib/validations/lead'
 
-export async function submitLead(formData: any) {
+export async function submitLead(rawFormData: any) {
     try {
-        // 1. Calculate Seriousness Algorithm
+        // 1. Validate Input
+        const validatedFields = LeadSchema.safeParse(rawFormData);
+        
+        if (!validatedFields.success) {
+            console.error('Validation Error:', validatedFields.error.flatten().fieldErrors);
+            return { success: false, error: 'Invalid form data. Please check all fields.' };
+        }
+
+        const formData = validatedFields.data;
+
+        // 2. Calculate Seriousness Algorithm
         let seriousness = 'low'
         let isSerious = false
 
@@ -34,7 +45,7 @@ export async function submitLead(formData: any) {
             isSerious = true
         }
 
-        // 2. Save to Sanity
+        // 3. Save to Sanity
         const doc = {
             _type: 'lead',
             name: formData.name,
@@ -53,10 +64,8 @@ export async function submitLead(formData: any) {
             isSerious: isSerious,
             status: 'new',
             submittedAt: new Date().toISOString(),
-            address: formData.address,
             isSampleRequest: formData.isSampleRequest,
             sampleItems: formData.sampleItems,
-            fulfillmentStatus: formData.fulfillmentStatus || (formData.isSampleRequest ? 'pending' : undefined),
             shippingInfo: formData.shippingInfo,
             ip,
         }
