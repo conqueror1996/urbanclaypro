@@ -13,14 +13,10 @@ export const LeadSchema = z.object({
     quantity: z.string().optional().or(z.literal("")),
     timeline: z.string().optional().or(z.literal("")),
     notes: z.string().optional().or(z.literal("")),
+    address: z.string().optional().or(z.literal("")),
     isSampleRequest: z.boolean().optional().default(false),
     sampleItems: z.array(z.any()).optional(),
-    shippingInfo: z.object({
-        address: z.string().optional(),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        pincode: z.string().optional(),
-    }).optional(),
+    shippingInfo: z.any().optional(),
 });
 
 export type LeadInput = z.infer<typeof LeadSchema>;

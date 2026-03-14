@@ -64,8 +64,10 @@ export async function submitLead(rawFormData: any) {
             isSerious: isSerious,
             status: 'new',
             submittedAt: new Date().toISOString(),
+            address: formData.address,
             isSampleRequest: formData.isSampleRequest,
             sampleItems: formData.sampleItems,
+            fulfillmentStatus: formData.isSampleRequest ? 'pending' : undefined,
             shippingInfo: formData.shippingInfo,
             ip,
         }
