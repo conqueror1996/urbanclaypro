@@ -12,6 +12,15 @@ export const transporter = nodemailer.createTransport({
     },
 });
 
+// Verify connection configuration
+transporter.verify(function (error, success) {
+    if (error) {
+        console.error('❌ SMTP Connection Error:', error);
+    } else {
+        console.log('✅ SMTP Server is ready to take messages');
+    }
+});
+
 function wrapEmailTemplate(content: string, title: string = 'Update from UrbanClay') {
     return `
         <!DOCTYPE html>
@@ -96,12 +105,65 @@ export async function sendLeadAlertEmail(lead: any) {
         };
 
         await transporter.sendMail(mailOptions);
+        console.log(`✅ Admin Alert dispatched: ${lead.role} | ${mailOptions.to}`);
         return { success: true };
     } catch (error) {
         console.error('❌ Error sending admin mail:', error);
         return { success: false, error };
     }
 }
+
+export async function sendLeadConfirmationEmail(lead: any) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) return { success: false, error: 'Missing credentials or email' };
+
+    try {
+        const isFacadeDesk = lead.product?.includes('Facade') || lead.notes?.includes('Facade Desk');
+        const subject = isFacadeDesk 
+            ? `Your Facade Specification Technical Package | UrbanClay`
+            : `Thank you for your inquiry | UrbanClay`;
+
+        const content = `
+            <div style="text-align: center; margin-bottom: 32px;">
+                <h2 style="color: #2A1E16; margin: 0; font-family: 'Playfair Display', serif; font-size: 28px; letter-spacing: -0.5px;">Requirement Received</h2>
+                <p style="color: #6b7280; font-size: 15px; margin-top: 8px;">Our technical team is reviewing your specification.</p>
+            </div>
+
+            <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">Hello ${lead.name ? lead.name.split(' ')[0] : 'there'},</p>
+            <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">Thank you for reaching out to UrbanClay. We have received your inquiry for <strong>${lead.product || 'Architectural Clay Systems'}</strong>.</p>
+            
+            <div style="background-color: #fdfcfb; padding: 24px; border-radius: 16px; border: 1px solid #f5eeee; margin: 32px 0;">
+                <p style="margin: 0; font-size: 13px; color: #9ca3af; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Project Details</p>
+                <p style="margin: 8px 0 0; font-size: 16px; font-weight: 700; color: #2A1E16;">${lead.product}</p>
+                <p style="margin: 4px 0 0; font-size: 14px; color: #6b7280;">Location: ${lead.city || lead.country || 'N/A'}</p>
+                ${lead.quantity ? `<p style="margin: 4px 0 0; font-size: 14px; color: #6b7280;">Estimated Area: ${lead.quantity}</p>` : ''}
+            </div>
+
+            <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">What happens next?</p>
+            <ul style="font-size: 14px; line-height: 1.8; color: #4B5563; padding-left: 20px;">
+                <li><strong>Technical Review:</strong> Our facade engineers will cross-examine your requirements.</li>
+                <li><strong>Specification Package:</strong> We will prepare relevant CAD drawings and technical datasheets.</li>
+                <li><strong>Logistics Quote:</strong> A detailed estimate including port-to-port logistics will be provided.</li>
+            </ul>
+
+            <p style="margin-top: 32px; font-size: 13px; color: #6b7280; line-height: 1.6;">A specialist from our ${lead.country ? 'International' : 'Regional'} desk will reach out via WhatsApp/Email within 24 hours.</p>
+        `;
+
+        const mailOptions = {
+            from: `"UrbanClay Support" <${process.env.SMTP_USER}>`,
+            to: lead.email,
+            subject: subject,
+            html: wrapEmailTemplate(content)
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`✅ Lead Confirmation dispatched to ${lead.email}`);
+        return { success: true };
+    } catch (error: any) {
+        console.error('❌ Nodemailer Lead Error:', error.message);
+        return { success: false, error: error.message };
+    }
+}
+
 
 export async function sendUserConfirmationEmail(order: any) {
     if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !order.email) return { success: false, error: 'Missing credentials or email' };

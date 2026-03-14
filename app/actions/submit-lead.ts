@@ -1,7 +1,7 @@
 'use server'
 
 import { writeClient } from '@/sanity/lib/write-client'
-import { sendLeadAlertEmail, sendUserConfirmationEmail } from '@/lib/email'
+import { sendLeadAlertEmail, sendLeadConfirmationEmail } from '@/lib/email'
 import { createZohoLead } from '@/lib/zoho'
 import { headers } from 'next/headers'
 import { LeadSchema, LeadInput } from '@/lib/validations/lead'
@@ -84,7 +84,7 @@ export async function submitLead(rawFormData: any) {
         sendLeadAlertEmail({ ...doc, _id: result._id }).catch(err => console.error('Admin Alert Failed', err));
         
         if (doc.email && doc.email.includes('@')) {
-            sendUserConfirmationEmail({ ...doc, _id: result._id }).catch(err => console.error('Auto-Reply Failed', err));
+            sendLeadConfirmationEmail({ ...doc, _id: result._id }).catch(err => console.error('Auto-Reply Failed', err));
         }
 
 
