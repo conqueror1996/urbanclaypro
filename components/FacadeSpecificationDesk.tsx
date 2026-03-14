@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, CheckCircle2, ChevronRight, FileText, Download, Building2, Home, Landmark, Hotel, Building, LayoutTemplate, Layers, Frame, Cuboid, ChevronLeft } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ChevronRight, Download, Building2, Home, Landmark, Hotel, Building, LayoutTemplate, Layers, Frame, Cuboid, ChevronLeft } from 'lucide-react';
 import { submitLead } from '@/app/actions/submit-lead';
 import Image from 'next/image';
 
