@@ -376,7 +376,7 @@ export default function PillarPageTemplate({
                             className="bg-white/80 backdrop-blur-2xl border border-[var(--line)] rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl"
                         >
                             <div className="hidden md:flex px-4 py-2 flex-col leading-none border-r border-[var(--line)]">
-                                <span className="text-[9px] font-black uppercase text-[var(--foreground)]/40 mb-1">Pillar Inquiry</span>
+                                <span className="text-[9px] font-black uppercase text-[var(--foreground)]/40 mb-1">{title} Inquiry</span>
                                 <span className="text-[11px] font-serif font-bold text-[var(--ink)]">Technical Support Ready</span>
                             </div>
                             <button
