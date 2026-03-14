@@ -15,7 +15,7 @@ interface ProductHeroProps {
 }
 
 export default function ProductHero({ product, quoteUrl, otherVariants, selectedVariantName }: ProductHeroProps) {
-    const { addToBox } = useSampleBox();
+    const { addToBox, isInBox, setBoxOpen } = useSampleBox();
     const [activeIndex, setActiveIndex] = useState(0);
     const isSampleDisabled = product.category?.slug === 'facades' || product.tag === 'Terracotta Panels';
 
@@ -218,15 +218,18 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
 
                             {!isSampleDisabled && (
                                 <button
-                                    onClick={() => addToBox({
-                                        id: product.slug,
-                                        name: product.title,
-                                        color: '#b45a3c',
-                                        texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c'
-                                    })}
+                                    onClick={() => {
+                                        addToBox({
+                                            id: activeVariant ? `${product.slug}-${activeVariant.name}` : product.slug,
+                                            name: activeVariant ? `${product.title} - ${activeVariant.name}` : product.title,
+                                            color: '#b45a3c',
+                                            texture: activeVariant?.imageUrl ? `url('${activeVariant.imageUrl}')` : (product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c')
+                                        });
+                                        setBoxOpen(true);
+                                    }}
                                     className="w-full py-3.5 bg-white border border-[#EBE5E0] text-[#2A1E16] rounded-xl font-bold hover:bg-[#F2F0ED] hover:border-[#d6cbb8] transition-all flex items-center justify-center gap-2"
                                 >
-                                    <span>Order Sample</span>
+                                    <span>{isInBox(activeVariant ? `${product.slug}-${activeVariant.name}` : product.slug) ? 'In Sample Box' : 'Order Sample'}</span>
                                 </button>
                             )}
                         </div>

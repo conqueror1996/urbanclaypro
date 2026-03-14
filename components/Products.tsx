@@ -31,7 +31,7 @@ interface DisplayItem {
 }
 
 export default function Products({ products, featuredOnly }: ProductsProps) {
-    const { addToBox } = useSampleBox();
+    const { addToBox, setBoxOpen } = useSampleBox();
     const searchParams = useSearchParams();
 
     // Use the custom filter hook
@@ -281,7 +281,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                                     <div className="absolute inset-0 bg-gray-200" />
                                                                 )}
 
-                                                                 {/* Hover Actions */}
+                                                                {/* Hover Actions */}
                                                                 {!(variant.categorySlug === 'facades' || variant.tag === 'Terracotta Panels') && (
                                                                     <button
                                                                         onClick={(e) => {
@@ -293,6 +293,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                                                 color: variant.color,
                                                                                 texture: variant.imageUrl ? `url('${variant.imageUrl}')` : variant.color
                                                                             });
+                                                                            setBoxOpen(true);
                                                                         }}
                                                                         className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-[var(--ink)] shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 hover:bg-[var(--terracotta)] hover:text-white flex items-center justify-center z-20"
                                                                         title="Add Sample"

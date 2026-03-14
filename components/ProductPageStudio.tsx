@@ -25,7 +25,7 @@ interface ProductPageStudioProps {
 }
 
 export default function ProductPageStudio({ product, relatedProducts, quoteUrl, variantName }: ProductPageStudioProps) {
-    const { addToBox } = useSampleBox();
+    const { addToBox, setBoxOpen, isInBox } = useSampleBox();
     const isSampleDisabled = product.category?.slug === 'facades' || product.tag === 'Terracotta Panels';
     const { scrollY } = useScroll();
 
@@ -275,10 +275,18 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                     </a>
                                     {!isSampleDisabled && (
                                         <button
-                                            onClick={() => addToBox({ id: product.slug, name: product.title, color: '#b45a3c', texture: product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c' })}
+                                            onClick={() => {
+                                                addToBox({
+                                                    id: selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug,
+                                                    name: selectedVariant ? `${product.title} - ${selectedVariant.name}` : product.title,
+                                                    color: '#b45a3c',
+                                                    texture: selectedVariant?.imageUrl ? `url('${selectedVariant.imageUrl}')` : (product.imageUrl ? `url('${product.imageUrl}')` : '#b45a3c')
+                                                });
+                                                setBoxOpen(true);
+                                            }}
                                             className="w-full py-4 border border-white/10 text-white/80 rounded-xl font-bold text-center hover:bg-white/5 transition-colors"
                                         >
-                                            Add to Sample Box
+                                            {isInBox(selectedVariant ? `${product.slug}-${selectedVariant.name}` : product.slug) ? 'In Sample Box' : 'Add to Sample Box'}
                                         </button>
                                     )}
                             </div>

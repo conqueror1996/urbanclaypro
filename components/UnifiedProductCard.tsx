@@ -27,7 +27,7 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
         e.preventDefault();
         e.stopPropagation();
 
-        const uniqueId = `${product.slug}-${toSlug(variant.name)}`;
+        const uniqueId = `${product.slug}-${variant.name}`;
 
         if (isInBox(uniqueId)) {
             setBoxOpen(true);
