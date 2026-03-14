@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle2, ChevronRight, FileText, Download, Building2, Home, Landmark, Hotel, Building, LayoutTemplate, Layers, Frame, Cuboid, ChevronLeft } from 'lucide-react';
 import { submitLead } from '@/app/actions/submit-lead';
+import Image from 'next/image';
 
 // Types
 type ProjectType = "Commercial" | "Residential" | "Hospitality" | "Institutional" | "High Rise" | "";
@@ -16,6 +17,7 @@ interface RecommendedSystem {
     description: string;
     specs: string[];
     link: string;
+    image: string;
 }
 
 const SYSTEMS: Record<string, RecommendedSystem> = {
@@ -23,37 +25,43 @@ const SYSTEMS: Record<string, RecommendedSystem> = {
         name: "AirBrick Ventilated System",
         description: "Rear-ventilated clay brick facade engineered for thermal performance and moisture control.",
         specs: ["System Depth: 90–110 mm", "Fire Rating: A1 Non-Combustible", "Water Absorption: <3%"],
-        link: "/products/airbrick-ventilated-system"
+        link: "/products/airbrick-ventilated-system",
+        image: "/images/premium-terracotta-facade.png"
     },
     airbrick2: {
         name: "AirBrick II Ventilated System",
         description: "Advanced ventilated facade system designed for high wind load resistance and high-rise applications.",
         specs: ["System Depth: 120–150 mm", "Wind Load: 2.5 kPa", "Fire Rating: A1 Non-Combustible"],
-        link: "/products/airbrick-2-ventilated-system"
+        link: "/products/airbrick-2-ventilated-system",
+        image: "/images/commercial-facade-cladding.png"
     },
     hp10: {
         name: "HP-10 Structural Brick",
         description: "High-performance load-bearing clay brick ensuring superior structural integrity.",
         specs: ["Compressive Strength: >35 MPa", "Thermal Conductivity: 0.6 W/mK", "100% Recyclable"],
-        link: "/products/hp-10-structural-brick"
+        link: "/products/hp-10-structural-brick",
+        image: "/images/brick-raw.png"
     },
     flexible: {
         name: "Flexible Brick Tile System",
         description: "Ultra-lightweight, bendable clay tiles perfect for retrofits and curved surfaces.",
         specs: ["Weight: 4-5 kg/sqm", "Thickness: 2-3 mm", "Installation: Dry/Wet adhesive"],
-        link: "/products/flexible-brick-tiles"
+        link: "/products/flexible-brick-tiles",
+        image: "/images/flexible-brick-showcase.png"
     },
     jali: {
         name: "Terracotta Jali System",
         description: "Architectural decorative screens for natural ventilation, shading, and aesthetic facades.",
         specs: ["Open Area: Custom 30-60%", "Finish: Natural/Glazed", "Installation: Mortar/Dry"],
-        link: "/products/terracotta-jali"
+        link: "/products/terracotta-jali",
+        image: "/images/breeze-block-interior.png"
     },
     panels: {
         name: "Terracotta Rainscreen Panels",
         description: "Large format, highly durable terracotta facade panels for commercial thermal performance.",
         specs: ["Format: Up to 1500x600mm", "Weight: ~32 kg/sqm", "Frost Resistance: 100 Cycles"],
-        link: "/products/terracotta-panels"
+        link: "/products/terracotta-panels",
+        image: "/images/technical-detail.png"
     }
 };
 
@@ -582,13 +590,21 @@ export default function FacadeSpecificationDesk() {
                                             initial={{ opacity: 0, scale: 0.95 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.95 }}
-                                            className="bg-white rounded-2xl p-8 border border-[var(--line)] shadow-sm h-full min-h-[500px] flex flex-col items-center justify-center text-center"
+                                            className="bg-white rounded-2xl p-8 border border-[var(--line)] shadow-sm h-full min-h-[500px] flex flex-col items-center justify-center text-center relative overflow-hidden group"
                                         >
-                                            <div className="w-16 h-16 rounded-full bg-[var(--sand)] flex items-center justify-center mb-6">
-                                                <FileText className="w-6 h-6 text-[var(--ink)]/30" />
-                                            </div>
-                                            <h4 className="text-xl font-serif text-[var(--ink)] mb-2">Facade System Preview</h4>
-                                            <p className="text-sm text-[var(--ink)]/50">Awaiting project specifications...</p>
+                                            <div className="absolute inset-0 bg-[var(--sand)] opacity-50 transition-opacity duration-1000 group-hover:opacity-70" />
+                                            <div className="absolute inset-0 bg-[url('/images/clay-texture.png')] bg-cover opacity-[0.03] mix-blend-multiply" />
+                                            <motion.div
+                                                animate={{ y: [0, -10, 0] }}
+                                                transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                                                className="relative z-10 w-24 h-24 rounded-full bg-white flex items-center justify-center mb-8 shadow-2xl shadow-[var(--terracotta)]/10 ring-1 ring-[var(--line)]"
+                                            >
+                                                <Layers className="w-10 h-10 text-[var(--ink)]/30 group-hover:text-[var(--terracotta)] transition-colors duration-500" />
+                                            </motion.div>
+                                            <h4 className="text-2xl font-serif text-[var(--ink)] mb-3 relative z-10">Facade Engineering Desk</h4>
+                                            <p className="text-sm text-[var(--ink)]/60 relative z-10 max-w-[80%] mx-auto leading-relaxed">
+                                                Select your project parameters on the left to generate customized structural recommendations.
+                                            </p>
                                         </motion.div>
                                     ) : (
                                         <motion.div
@@ -597,20 +613,28 @@ export default function FacadeSpecificationDesk() {
                                             animate={{ opacity: 1, y: 0 }}
                                             className="bg-white rounded-2xl border border-[var(--line)] shadow-xl overflow-hidden"
                                         >
-                                            <div className="bg-[var(--ink)] text-white p-6 md:p-8 relative overflow-hidden">
-                                                <div className="absolute -right-10 -top-10 text-white/5 pointer-events-none">
-                                                    <Layers className="w-48 h-48" />
+                                            <div className="bg-[var(--ink)] text-white p-6 md:p-8 relative overflow-hidden min-h-[360px] flex flex-col justify-end group">
+                                                <div className="absolute inset-0 opacity-50 group-hover:opacity-60 transition-all duration-1000 group-hover:scale-105">
+                                                    <Image src={recommendation.image} alt={recommendation.name} fill className="object-cover" />
                                                 </div>
-                                                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--terracotta)] block mb-3 relative z-10">Recommended System</span>
-                                                <h3 className="text-2xl font-serif leading-tight mb-4 relative z-10">{recommendation.name}</h3>
-                                                <p className="text-sm text-white/70 leading-relaxed mb-6 relative z-10">{recommendation.description}</p>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)] via-[var(--ink)]/80 to-[var(--ink)]/10" />
+                                                
+                                                <div className="relative z-10 mt-12">
+                                                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--terracotta)] block mb-3">Recommended System</span>
+                                                    <h3 className="text-3xl font-serif leading-tight mb-4">{recommendation.name}</h3>
+                                                    <p className="text-sm text-white/80 leading-relaxed mb-6 max-w-[85%]">{recommendation.description}</p>
 
-                                                <div className="space-y-3 relative z-10">
-                                                    {recommendation.specs.map((spec, i) => (
-                                                        <div key={i} className="flex flex-col border-l-2 border-[var(--terracotta)] pl-3">
-                                                            <span className="text-xs text-white/90 font-medium">{spec}</span>
-                                                        </div>
-                                                    ))}
+                                                    <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                                                        {recommendation.specs.map((spec, i) => {
+                                                            const [label, val] = spec.split(': ');
+                                                            return (
+                                                                <div key={i} className="flex flex-col border-l-2 border-[var(--terracotta)] pl-3">
+                                                                    <span className="text-[10px] text-white/50 uppercase tracking-widest mb-1">{label}</span>
+                                                                    <span className="text-xs text-white/95 font-bold">{val}</span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -643,24 +667,25 @@ export default function FacadeSpecificationDesk() {
                                                     </form>
                                                 ) : (
                                                     <div className="text-center py-8">
-                                                        <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-                                                            <CheckCircle2 className="w-8 h-8 text-green-500" />
+                                                        <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-6 relative overflow-hidden ring-1 ring-green-100">
+                                                            <div className="absolute inset-0 bg-green-500/10 mix-blend-multiply" />
+                                                            <CheckCircle2 className="w-10 h-10 text-green-600 relative z-10" />
                                                         </div>
-                                                        <h4 className="text-xl font-serif text-[var(--ink)] mb-2">Request Received</h4>
-                                                        <p className="text-sm text-[var(--ink)]/60 mb-8 border-b border-[var(--line)] pb-8">
-                                                            Thank you. Our technical team will respond within 24 hours.
+                                                        <h4 className="text-2xl font-serif text-[var(--ink)] mb-3">Request Received</h4>
+                                                        <p className="text-sm text-[var(--ink)]/60 mb-8 border-b border-[var(--line)] pb-8 max-w-[85%] mx-auto leading-relaxed">
+                                                            Thank you. Our technical engineering team will review your requirements and respond within 24 hours.
                                                         </p>
 
-                                                        <div className="space-y-3">
+                                                        <div className="space-y-4">
                                                             <button 
                                                                 onClick={() => window.open('https://claytile.in/technical-package-preview.pdf', '_blank')}
-                                                                className="w-full flex items-center justify-center gap-2 bg-[var(--sand)] hover:bg-[var(--line)] text-[var(--ink)] px-4 py-3 rounded-lg text-sm font-semibold transition-colors active:scale-95"
+                                                                className="w-full flex items-center justify-center gap-2 bg-[var(--sand)] hover:bg-[var(--line)] text-[var(--ink)] px-4 py-4 rounded-xl text-sm font-bold transition-all active:scale-95 border border-[var(--line)]"
                                                             >
                                                                 <Download className="w-4 h-4" />
-                                                                Download Datasheet
+                                                                Download Standard Datasheet
                                                             </button>
-                                                            <button onClick={startOver} className="w-full text-xs font-semibold text-[var(--ink)]/40 hover:text-[var(--ink)] uppercase tracking-wider py-2">
-                                                                Start Over
+                                                            <button onClick={startOver} className="w-full text-xs font-bold text-[var(--ink)]/40 hover:text-[var(--ink)] uppercase tracking-widest py-3 transition-colors">
+                                                                Configure Another System
                                                             </button>
                                                         </div>
                                                     </div>
