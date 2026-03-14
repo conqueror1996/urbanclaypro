@@ -79,7 +79,11 @@ export function generateOrganizationSchema() {
             areaServed: [
                 'Maharashtra', 'Karnataka', 'Tamil Nadu', 'Kerala', 'Telangana', 'Andhra Pradesh',
                 'Gujarat', 'Rajasthan', 'Delhi', 'Uttar Pradesh', 'West Bengal', 'Punjab', 'Haryana'
-            ],
+            ].map(state => ({
+                '@type': 'AdministrativeArea',
+                name: state,
+                addressCountry: 'IN'
+            })),
             geo: {
                 '@type': 'GeoCoordinates',
                 latitude: '19.1130',

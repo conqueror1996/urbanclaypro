@@ -287,40 +287,41 @@ export default async function Home({ searchParams }: Props) {
             <FAQSchema />
             <Header />
 
-            {/* 1. IDENTITY HERO - System vs. Product Positioning */}
-            <Hero data={homePageData} injectedKeyword={injectedKeyword} />
+            <main>
+                {/* 1. IDENTITY HERO - System vs. Product Positioning */}
+                <Hero data={homePageData} injectedKeyword={injectedKeyword} />
 
-            {/* 2. THE FAILURE PROTOCOL - Eliminating Architectural Pain Points */}
-            {/* Strategic placement: Solving for Efflorescence/Warpage before browsing collection */}
-            <ScrollReveal>
-                <TechnicalEdge imageUrl={homePageData?.technicalEdgeImageUrl} />
-            </ScrollReveal>
+                {/* 2. THE FAILURE PROTOCOL - Eliminating Architectural Pain Points */}
+                {/* Strategic placement: Solving for Efflorescence/Warpage before browsing collection */}
+                <ScrollReveal>
+                    <TechnicalEdge imageUrl={homePageData?.technicalEdgeImageUrl} />
+                </ScrollReveal>
 
-            {/* 3. PEER VALIDATION - National Scale & Trusted Partnerships */}
-            <TrustBar firms={homePageData?.trustedFirms} />
+                {/* 3. PEER VALIDATION - National Scale & Trusted Partnerships */}
+                <TrustBar firms={homePageData?.trustedFirms} />
 
-            {/* 4. SYSTEM ARCHITECTURES - Application-Based Discovery */}
-            <ScrollReveal>
-                <SignatureCollection products={products} />
-            </ScrollReveal>
+                {/* 4. SYSTEM ARCHITECTURES - Application-Based Discovery */}
+                <ScrollReveal>
+                    <SignatureCollection products={products} />
+                </ScrollReveal>
 
-            {/* 2.5 TECHNICAL DEEP DIVE - Knowledge for Specifiers */}
-            <ScrollReveal>
-                <TechnicalFAQ />
-            </ScrollReveal>
+                {/* 2.5 TECHNICAL DEEP DIVE - Knowledge for Specifiers */}
+                <ScrollReveal>
+                    <TechnicalFAQ />
+                </ScrollReveal>
 
-            {/* 5. PROJECT ARCHIVE - Commercial & Luxury Residential Evidence */}
-            <ScrollReveal>
-                <Projects projects={recentProjects} />
-            </ScrollReveal>
+                {/* 5. PROJECT ARCHIVE - Commercial & Luxury Residential Evidence */}
+                <ScrollReveal>
+                    <Projects projects={recentProjects} />
+                </ScrollReveal>
 
 
 
-            {/* 6. FACADE SPECIFICATION DESK */}
-            <ScrollReveal id="specify">
-                <FacadeSpecificationDesk />
-            </ScrollReveal>
-
+                {/* 6. FACADE SPECIFICATION DESK */}
+                <ScrollReveal id="specify">
+                    <FacadeSpecificationDesk />
+                </ScrollReveal>
+            </main>
 
             {/* FOOTER & LOGISTICS BADGE */}
             <ScrollReveal>

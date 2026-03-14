@@ -156,9 +156,10 @@ export default function SamplesDashboard() {
 
                                     if (result.success) {
                                         let msg = "✅ Test Order Created!";
-                                        if (result.emailStatus) {
-                                            const adminStatus = result.emailStatus.admin.success ? "✅ Sent" : `❌ Failed (${JSON.stringify(result.emailStatus.admin.error)})`;
-                                            const userStatus = result.emailStatus.user.success ? "✅ Sent" : `❌ Failed (${JSON.stringify(result.emailStatus.user.error)})`;
+                                        const resAny = result as any;
+                                        if (resAny.emailStatus) {
+                                            const adminStatus = resAny.emailStatus.admin.success ? "✅ Sent" : `❌ Failed (${JSON.stringify(resAny.emailStatus.admin.error)})`;
+                                            const userStatus = resAny.emailStatus.user.success ? "✅ Sent" : `❌ Failed (${JSON.stringify(resAny.emailStatus.user.error)})`;
                                             msg += `\n\nAdmin Alert: ${adminStatus}\nUser Email: ${userStatus}`;
                                         }
                                         alert(msg);
