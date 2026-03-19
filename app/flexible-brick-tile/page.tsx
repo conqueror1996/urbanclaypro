@@ -51,7 +51,7 @@ export default function FlexibleBrickLaunch() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <span className="inline-block py-1.5 px-4 rounded-full border border-[var(--terracotta)]/20 bg-[var(--terracotta)]/[0.03] text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-8 md:mb-12">
+                        <span className="inline-block py-1.5 px-4 rounded-full border border-[var(--terracotta)]/20 bg-[var(--terracotta)]/[0.03] text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-8 md:mb-12">
                             Material Innovation
                         </span>
                     </motion.div>

@@ -97,7 +97,7 @@ export default function SeoManagerPage() {
             <header className="flex justify-between items-end mb-10">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
-                        <Link href="/dashboard" className="text-gray-400 hover:text-[var(--terracotta)] transition-colors text-sm">
+                        <Link href="/dashboard" className="text-gray-600 hover:text-[var(--terracotta)] transition-colors text-sm">
                             ← Back to Dashboard
                         </Link>
                     </div>
@@ -132,7 +132,7 @@ export default function SeoManagerPage() {
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
                                             <h3 className="font-bold text-lg group-hover:text-[var(--terracotta)] transition-colors">{doc.title}</h3>
-                                            <code className="text-[10px] text-gray-400 bg-gray-50 px-2 py-1 rounded">/products/{doc.slug?.current}</code>
+                                            <code className="text-[10px] text-gray-600 bg-gray-50 px-2 py-1 rounded">/products/{doc.slug?.current}</code>
                                         </div>
                                         <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-4 ${score > 80 ? 'border-emerald-100 text-emerald-600' :
                                                 score > 50 ? 'border-orange-100 text-orange-600' : 'border-red-100 text-red-600'
@@ -149,14 +149,14 @@ export default function SeoManagerPage() {
                                                     score > 50 ? 'bg-orange-400' : 'bg-red-400'
                                                 }`} />
                                         </div>
-                                        <span className="text-xs font-bold text-gray-400 group-hover:text-[var(--terracotta)] opacity-0 group-hover:opacity-100 transition-opacity">Edit →</span>
+                                        <span className="text-xs font-bold text-gray-600 group-hover:text-[var(--terracotta)] opacity-0 group-hover:opacity-100 transition-opacity">Edit →</span>
                                     </div>
                                 </div>
                             );
                         })}
 
                         {/* New Collection Placeholder info - redirect to Sanity */}
-                        <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-center text-gray-400 hover:border-gray-300 transition-colors">
+                        <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-center text-gray-600 hover:border-gray-300 transition-colors">
                             <span className="text-2xl mb-2">✨</span>
                             <p className="text-sm">Create new collections in<br /><a href="/studio" target="_blank" className="underline hover:text-[var(--terracotta)]">Sanity Studio</a></p>
                         </div>
@@ -171,11 +171,11 @@ export default function SeoManagerPage() {
                     >
                         {/* LEFT: PREVIEW & ASSISTANT */}
                         <div className="w-full md:w-5/12 bg-gray-50 p-8 border-r border-gray-100 flex flex-col">
-                            <button onClick={() => setSelectedDoc(null)} className="text-gray-400 hover:text-gray-900 self-start mb-8 flex items-center gap-2 text-sm font-bold">
+                            <button onClick={() => setSelectedDoc(null)} className="text-gray-600 hover:text-gray-900 self-start mb-8 flex items-center gap-2 text-sm font-bold">
                                 ← Close Editor
                             </button>
 
-                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Live Preview</h3>
+                            <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Live Preview</h3>
 
                             {/* Google Card */}
                             <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-8">
@@ -190,7 +190,7 @@ export default function SeoManagerPage() {
                                     {formData.metaTitle || formData.title || 'Untitled Page'}
                                 </h4>
                                 <p className="text-sm text-[#4d5156] leading-snug line-clamp-2">
-                                    <span className="text-gray-400">{new Date().toLocaleDateString()} — </span>
+                                    <span className="text-gray-600">{new Date().toLocaleDateString()} — </span>
                                     {formData.metaDescription || formData.description || 'No description provided.'}
                                 </p>
                             </div>
@@ -229,7 +229,7 @@ export default function SeoManagerPage() {
                             <div className="flex justify-between items-center mb-8">
                                 <div>
                                     <h2 className="text-2xl font-serif font-bold text-[var(--ink)]">Edit Content</h2>
-                                    <p className="text-sm text-gray-400">Make changes to improve search ranking.</p>
+                                    <p className="text-sm text-gray-600">Make changes to improve search ranking.</p>
                                 </div>
                                 <button
                                     onClick={handleSave}
@@ -244,7 +244,7 @@ export default function SeoManagerPage() {
                                 {/* Section: Core */}
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-xs font-bold uppercase text-gray-400 mb-1 block">Page Title (H1)</label>
+                                        <label className="text-xs font-bold uppercase text-gray-600 mb-1 block">Page Title (H1)</label>
                                         <input
                                             type="text"
                                             value={formData.title}
@@ -254,7 +254,7 @@ export default function SeoManagerPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-bold uppercase text-gray-400 mb-1 block">Short Description</label>
+                                        <label className="text-xs font-bold uppercase text-gray-600 mb-1 block">Short Description</label>
                                         <textarea
                                             value={formData.description}
                                             onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -272,7 +272,7 @@ export default function SeoManagerPage() {
                                     <div>
                                         <div className="flex justify-between mb-1">
                                             <label className="text-xs font-bold uppercase text-blue-600">Google Link Title</label>
-                                            <span className={`text-[10px] ${formData.metaTitle.length > 60 ? 'text-red-500' : 'text-gray-400'}`}>
+                                            <span className={`text-[10px] ${formData.metaTitle.length > 60 ? 'text-red-500' : 'text-gray-600'}`}>
                                                 {formData.metaTitle.length}/60
                                             </span>
                                         </div>
@@ -288,7 +288,7 @@ export default function SeoManagerPage() {
                                     <div>
                                         <div className="flex justify-between mb-1">
                                             <label className="text-xs font-bold uppercase text-gray-500">Google Snippet (Meta Desc)</label>
-                                            <span className={`text-[10px] ${formData.metaDescription.length > 160 ? 'text-red-500' : 'text-gray-400'}`}>
+                                            <span className={`text-[10px] ${formData.metaDescription.length > 160 ? 'text-red-500' : 'text-gray-600'}`}>
                                                 {formData.metaDescription.length}/160
                                             </span>
                                         </div>
@@ -302,7 +302,7 @@ export default function SeoManagerPage() {
                                     </div>
 
                                     <div>
-                                        <label className="text-xs font-bold uppercase text-gray-400 mb-1 block">Focus Keywords (Comma Sep)</label>
+                                        <label className="text-xs font-bold uppercase text-gray-600 mb-1 block">Focus Keywords (Comma Sep)</label>
                                         <input
                                             type="text"
                                             value={formData.keywords}

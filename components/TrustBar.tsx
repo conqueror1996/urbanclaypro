@@ -21,7 +21,7 @@ export default function TrustBar({ firms }: TrustBarProps) {
     return (
         <section className="section-padding border-y border-[var(--line)] overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <p className="text-center text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] text-[#777] font-semibold mb-6 md:mb-12">
+                <p className="text-center text-[10px] uppercase tracking-[0.2em] md:tracking-[0.2em] text-[#777] font-semibold mb-6 md:mb-12">
                     Trusted by India&apos;s leading Architectural Firms
                 </p>
 

@@ -49,14 +49,14 @@ export default function TechnicalDetails({ product }: TechnicalDetailsProps) {
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-[#2A1E16] text-sm mb-1">Detailed Spec Sheet</h4>
-                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-3">PDF • 2.4 MB</p>
+                                    <p className="text-[10px] text-gray-600 uppercase tracking-widest mb-3">PDF • 2.4 MB</p>
                                     <span className="text-xs font-bold text-[var(--terracotta)] underline decoration-2 underline-offset-4 group-hover:text-[#a85638]">Download Now</span>
                                 </div>
                             </div>
                         </a>
                     ) : (
                         <div className="bg-gray-50 border border-dashed border-gray-200 rounded-xl p-6 text-center">
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Spec Sheet Coming Soon</span>
+                            <span className="text-xs font-bold text-gray-600 uppercase tracking-wide">Spec Sheet Coming Soon</span>
                         </div>
                     )}
                 </div>
@@ -71,7 +71,7 @@ export default function TechnicalDetails({ product }: TechnicalDetailsProps) {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === tab.id ? 'bg-white text-[#2A1E16] shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === tab.id ? 'bg-white text-[#2A1E16] shadow-sm' : 'text-gray-600 hover:text-gray-600'}`}
                             >
                                 <svg className={`w-4 h-4 ${activeTab === tab.id ? 'text-[var(--terracotta)]' : 'opacity-50'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} /></svg>
                                 {tab.label}
@@ -92,7 +92,7 @@ export default function TechnicalDetails({ product }: TechnicalDetailsProps) {
                                 >
                                     {Object.entries(product.specs || {}).map(([key, value]) => (
                                         <div key={key} className="flex items-baseline justify-between border-b border-[#F0EBE6] py-3">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2 shrink-0">
+                                            <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest flex items-center gap-2 shrink-0">
                                                 <span className="w-1 h-1 rounded-full bg-[var(--terracotta)]/40"></span>
                                                 {key.replace(/([A-Z])/g, ' $1').trim()}
                                             </span>
@@ -103,7 +103,7 @@ export default function TechnicalDetails({ product }: TechnicalDetailsProps) {
                                     ))}
                                     {(!product.specs || Object.keys(product.specs).length === 0) && (
                                         <div className="col-span-full py-12 text-center bg-gray-50 rounded-2xl">
-                                            <p className="text-gray-400 italic">Technical data is being updated.</p>
+                                            <p className="text-gray-600 italic">Technical data is being updated.</p>
                                         </div>
                                     )}
                                 </motion.div>

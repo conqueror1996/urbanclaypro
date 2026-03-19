@@ -76,7 +76,7 @@ export default function GuidePageAnimate() {
                         <div className="flex justify-center mb-6 opacity-60">
                             <Breadcrumbs />
                         </div>
-                        <span className="text-[var(--terracotta)] font-bold tracking-[0.3em] uppercase text-xs mb-6 block">
+                        <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
                             Curator's Guide
                         </span>
                         <h1 className="text-5xl md:text-8xl font-serif text-[#EBE5E0] mb-8 leading-tight">

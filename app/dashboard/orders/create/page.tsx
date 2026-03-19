@@ -287,8 +287,8 @@ export default function CreateOrderPage() {
                                             </div>
                                             {(formData.gstNumber || formData.panNumber) && (
                                                 <div className="flex gap-2 mt-4">
-                                                    {formData.gstNumber && <span className="text-[10px] font-mono bg-white border border-gray-100 px-2.5 py-1 rounded-lg text-gray-400 font-bold">GST: {formData.gstNumber.toUpperCase()}</span>}
-                                                    {formData.panNumber && <span className="text-[10px] font-mono bg-white border border-gray-100 px-2.5 py-1 rounded-lg text-gray-400 font-bold">PAN: {formData.panNumber.toUpperCase()}</span>}
+                                                    {formData.gstNumber && <span className="text-[10px] font-mono bg-white border border-gray-100 px-2.5 py-1 rounded-lg text-gray-600 font-bold">GST: {formData.gstNumber.toUpperCase()}</span>}
+                                                    {formData.panNumber && <span className="text-[10px] font-mono bg-white border border-gray-100 px-2.5 py-1 rounded-lg text-gray-600 font-bold">PAN: {formData.panNumber.toUpperCase()}</span>}
                                                 </div>
                                             )}
                                         </div>
@@ -305,9 +305,9 @@ export default function CreateOrderPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="md:col-span-2 relative">
                                         <div className="flex justify-between items-center mb-2">
-                                            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest">Zoho CRM Quick Lookup</label>
+                                            <label className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest">Zoho CRM Quick Lookup</label>
                                             {formData.clientName && (
-                                                <button type="button" onClick={() => setIsClientEditing(false)} className="text-[10px] font-bold text-gray-400 hover:text-black transition-colors">← Back to Profile</button>
+                                                <button type="button" onClick={() => setIsClientEditing(false)} className="text-[10px] font-bold text-gray-600 hover:text-black transition-colors">← Back to Profile</button>
                                             )}
                                         </div>
                                         <div className="relative">
@@ -318,7 +318,7 @@ export default function CreateOrderPage() {
                                                 value={searchQuery}
                                                 onChange={(e) => handleZohoSearch(e.target.value)}
                                             />
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 opacity-50 text-xl">🔍</span>
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 opacity-50 text-xl">🔍</span>
                                         </div>
                                         <AnimatePresence>
                                             {zohoResults.length > 0 && (
@@ -327,7 +327,7 @@ export default function CreateOrderPage() {
                                                         <button key={lead.id} type="button" onClick={() => selectLead(lead)} className="w-full p-4 text-left hover:bg-gray-50 border-b border-gray-50 last:border-0 flex justify-between group transition-colors">
                                                             <div>
                                                                 <div className="font-bold text-[#2a1e16] group-hover:text-[var(--terracotta)] transition-colors">{lead.name}</div>
-                                                                <div className="text-[10px] text-gray-400 uppercase tracking-tighter">{lead.email} • {lead.phone}</div>
+                                                                <div className="text-[10px] text-gray-600 uppercase tracking-tighter">{lead.email} • {lead.phone}</div>
                                                             </div>
                                                             <span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md font-bold self-center shadow-sm">CRM MATCH</span>
                                                         </button>
@@ -339,33 +339,33 @@ export default function CreateOrderPage() {
 
                                     <div className="space-y-4">
                                         <div>
-                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Company / Display Name</label>
+                                            <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">Company / Display Name</label>
                                             <input name="clientName" required value={formData.clientName} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                         </div>
                                         <div>
-                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Email ID</label>
+                                            <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">Email ID</label>
                                             <input name="clientEmail" required type="email" value={formData.clientEmail} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                         </div>
                                         <div>
-                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Primary Phone</label>
+                                            <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">Primary Phone</label>
                                             <input name="clientPhone" required value={formData.clientPhone} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                         </div>
                                     </div>
 
                                     <div className="space-y-4">
                                         <div className="relative">
-                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1 flex justify-between">
+                                            <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1 flex justify-between">
                                                 <span>GST Number</span>
                                                 <button type="button" onClick={handleGSTVerify} className="text-[var(--terracotta)] hover:underline font-bold tracking-tighter">Verify & Auto-fill</button>
                                             </label>
                                             <input name="gstNumber" value={formData.gstNumber} onChange={handleInputChange} placeholder="e.g. 29AAAAA0000A1Z5" className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 uppercase font-mono focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                         </div>
                                         <div>
-                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">PAN Card #</label>
+                                            <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">PAN Card #</label>
                                             <input name="panNumber" value={formData.panNumber} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 uppercase font-mono focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                         </div>
                                         <div>
-                                            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Expiry Date</label>
+                                            <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">Expiry Date</label>
                                             <input name="expiryDate" type="date" value={formData.expiryDate} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                         </div>
                                     </div>
@@ -373,7 +373,7 @@ export default function CreateOrderPage() {
                             )}     {/* UNIFIED ADDRESS SECTION */}
                             <div className="md:col-span-2 pt-4 border-t border-gray-50">
                                 <div className="flex justify-between items-center mb-4">
-                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                    <h4 className="text-xs font-bold text-gray-600 uppercase tracking-widest flex items-center gap-2">
                                         Address Details
                                     </h4>
                                     <label className="flex items-center gap-2 cursor-pointer select-none group">
@@ -386,7 +386,7 @@ export default function CreateOrderPage() {
                                             />
                                             <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all shadow-sm ${shippingSameAsBilling ? 'left-6' : 'left-1'}`} />
                                         </div>
-                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${shippingSameAsBilling ? 'text-[var(--terracotta)]' : 'text-gray-400'}`}>Shipping same as Billing</span>
+                                        <span className={`text-[10px] font-bold uppercase tracking-widest ${shippingSameAsBilling ? 'text-[var(--terracotta)]' : 'text-gray-600'}`}>Shipping same as Billing</span>
                                     </label>
                                 </div>
 
@@ -394,7 +394,7 @@ export default function CreateOrderPage() {
                                     {/* Billing Address */}
                                     <div className="bg-gray-50/30 p-4 rounded-2xl border border-gray-100 space-y-3 hover:border-black/10 transition-colors">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase">Billing Address</span>
+                                            <span className="text-[10px] font-bold text-gray-600 uppercase">Billing Address</span>
                                         </div>
                                         <input name="billingAttention" value={formData.billingAttention} onChange={handleInputChange} placeholder="Attention / Department (Optional)" className="w-full p-2 bg-transparent text-sm border-b border-gray-200 focus:border-black focus:ring-0 rounded-none placeholder-gray-400 font-medium" />
                                         <textarea name="billingStreet" value={formData.billingStreet} onChange={handleInputChange} placeholder="Street Address / Area" rows={2} className="w-full p-2 bg-transparent text-sm border-b border-gray-200 focus:border-black focus:ring-0 rounded-none placeholder-gray-400 resize-none font-medium" />
@@ -413,7 +413,7 @@ export default function CreateOrderPage() {
                                                 <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300 text-[10px]">▼</div>
                                             </div>
                                             <input name="billingZip" value={formData.billingZip} onChange={handleInputChange} placeholder="Zip" className="w-full p-2 bg-transparent text-sm border-b border-gray-200 focus:border-black focus:ring-0 rounded-none placeholder-gray-400" />
-                                            <input name="billingCountry" value={formData.billingCountry} onChange={handleInputChange} placeholder="IN" className="w-full p-2 bg-gray-50/50 text-sm border-b border-gray-200 text-gray-400 cursor-not-allowed rounded-none" readOnly />
+                                            <input name="billingCountry" value={formData.billingCountry} onChange={handleInputChange} placeholder="IN" className="w-full p-2 bg-gray-50/50 text-sm border-b border-gray-200 text-gray-600 cursor-not-allowed rounded-none" readOnly />
                                         </div>
                                     </div>
 
@@ -421,7 +421,7 @@ export default function CreateOrderPage() {
                                     {!shippingSameAsBilling && (
                                         <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="bg-gray-50/30 p-4 rounded-2xl border border-gray-100 space-y-3 hover:border-black/10 transition-colors">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-[10px] font-bold text-gray-400 uppercase">Shipping Address</span>
+                                                <span className="text-[10px] font-bold text-gray-600 uppercase">Shipping Address</span>
                                             </div>
                                             <input name="shippingAttention" value={formData.shippingAttention} onChange={handleInputChange} placeholder="Attention / Contact Person" className="w-full p-2 bg-transparent text-sm border-b border-gray-200 focus:border-black focus:ring-0 rounded-none placeholder-gray-400 font-medium" />
                                             <textarea name="shippingStreet" value={formData.shippingStreet} onChange={handleInputChange} placeholder="Street Address / Site Location" rows={2} className="w-full p-2 bg-transparent text-sm border-b border-gray-200 focus:border-black focus:ring-0 rounded-none placeholder-gray-400 resize-none font-medium" />
@@ -440,7 +440,7 @@ export default function CreateOrderPage() {
                                                     <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300 text-[10px]">▼</div>
                                                 </div>
                                                 <input name="shippingZip" value={formData.shippingZip} onChange={handleInputChange} placeholder="Zip" className="w-full p-2 bg-transparent text-sm border-b border-gray-200 focus:border-black focus:ring-0 rounded-none placeholder-gray-400" />
-                                                <input name="shippingCountry" value={formData.shippingCountry} onChange={handleInputChange} placeholder="IN" className="w-full p-2 bg-gray-50/50 text-sm border-b border-gray-200 text-gray-400 cursor-not-allowed rounded-none" readOnly />
+                                                <input name="shippingCountry" value={formData.shippingCountry} onChange={handleInputChange} placeholder="IN" className="w-full p-2 bg-gray-50/50 text-sm border-b border-gray-200 text-gray-600 cursor-not-allowed rounded-none" readOnly />
                                             </div>
                                         </motion.div>
                                     )}
@@ -457,7 +457,7 @@ export default function CreateOrderPage() {
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                     <thead>
-                                        <tr className="text-[10px] text-gray-400 uppercase tracking-widest border-b border-gray-50 text-left bg-gray-50/30">
+                                        <tr className="text-[10px] text-gray-600 uppercase tracking-widest border-b border-gray-50 text-left bg-gray-50/30">
                                             <th className="px-4 lg:px-8 py-3 lg:w-[45%] lg:pl-8">Item Details</th>
                                             <th className="px-4 py-3 w-[15%] text-center hidden lg:table-cell">Qty</th>
                                             <th className="px-4 py-3 w-[15%] text-right hidden lg:table-cell">Rate (₹)</th>
@@ -570,7 +570,7 @@ export default function CreateOrderPage() {
                                                             <div className="flex flex-wrap gap-4 items-end pr-8">
                                                                 {/* Qty & Unit */}
                                                                 <div className="flex flex-col gap-1 w-[100px]">
-                                                                    <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Qty</label>
+                                                                    <label className="text-[10px] text-gray-600 uppercase font-bold tracking-wider">Qty</label>
                                                                     <div className="flex items-center justify-center bg-white border border-gray-200 rounded-lg overflow-hidden h-9 w-full shadow-sm">
                                                                         <input type="number" value={item.quantity} onChange={(e) => updateLineItem(idx, 'quantity', Number(e.target.value))} className="w-full h-full text-center border-none p-0 focus:ring-0 text-xs font-bold" min="0" />
                                                                         <div className="h-full border-l border-gray-100 bg-gray-50/50 px-1 flex items-center">
@@ -583,7 +583,7 @@ export default function CreateOrderPage() {
 
                                                                 {/* Rate */}
                                                                 <div className="flex flex-col gap-1 flex-1 min-w-[100px]">
-                                                                    <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Rate (₹)</label>
+                                                                    <label className="text-[10px] text-gray-600 uppercase font-bold tracking-wider">Rate (₹)</label>
                                                                     <input type="number" value={item.rate} onChange={(e) => updateLineItem(idx, 'rate', Number(e.target.value))} className="w-full bg-transparent border-b-2 border-gray-300 p-0 text-sm font-bold text-gray-800 focus:ring-0 focus:border-[#b45a3c]" placeholder="0.00" min="0" />
                                                                 </div>
                                                             </div>
@@ -591,18 +591,18 @@ export default function CreateOrderPage() {
                                                             <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-200">
                                                                 <div className="flex items-center gap-3">
                                                                     <div className="flex flex-col">
-                                                                        <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Disc %</label>
+                                                                        <label className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Disc %</label>
                                                                         <input type="number" value={item.discount} onChange={(e) => updateLineItem(idx, 'discount', Number(e.target.value))} className="w-14 text-xs font-bold text-orange-600 bg-white border border-gray-200 rounded-md p-1 focus:ring-0 focus:border-[#b45a3c]" max="100" min="0" />
                                                                     </div>
                                                                     <div className="flex flex-col">
-                                                                        <label className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Tax</label>
+                                                                        <label className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Tax</label>
                                                                         <select value={item.taxRate} onChange={(e) => updateLineItem(idx, 'taxRate', Number(e.target.value))} className="text-xs font-bold text-gray-600 bg-white border border-gray-200 rounded-md py-1 pr-6 pl-2 focus:ring-0 cursor-pointer appearance-none">
                                                                             {[0, 5, 12, 18, 28].map(r => <option key={r} value={r}>{r}%</option>)}
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div className="text-right">
-                                                                    <div className="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-1">Net Total</div>
+                                                                    <div className="text-[10px] text-gray-600 uppercase font-bold tracking-wider mb-1">Net Total</div>
                                                                     <div className="text-lg font-bold text-[#b45a3c]">₹{((item.rate * item.quantity) * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
                                                                 </div>
                                                             </div>
@@ -633,7 +633,7 @@ export default function CreateOrderPage() {
                                                     <td className="px-4 py-6 align-top text-right hidden lg:table-cell">
                                                         <div className="flex flex-col items-end gap-2">
                                                             <div className="relative">
-                                                                <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                                                                <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 text-sm">₹</span>
                                                                 <input
                                                                     type="number"
                                                                     min="0"
@@ -644,7 +644,7 @@ export default function CreateOrderPage() {
                                                                 />
                                                             </div>
                                                             <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
-                                                                <label className="text-[10px] text-gray-400 uppercase font-bold">Disc %</label>
+                                                                <label className="text-[10px] text-gray-600 uppercase font-bold">Disc %</label>
                                                                 <input
                                                                     type="number"
                                                                     min="0"
@@ -691,7 +691,7 @@ export default function CreateOrderPage() {
                                                 <button
                                                     type="button"
                                                     onClick={addLineItem}
-                                                    className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-[var(--terracotta)] transition-colors group"
+                                                    className="flex items-center gap-2 text-xs font-bold text-gray-600 hover:text-[var(--terracotta)] transition-colors group"
                                                 >
                                                     <div className="w-5 h-5 rounded-full border border-gray-300 group-hover:border-[var(--terracotta)] flex items-center justify-center transition-colors">
                                                         <span className="leading-none mb-0.5">+</span>
@@ -707,11 +707,11 @@ export default function CreateOrderPage() {
                             {/* Items Summary Footer */}
                             <div className="bg-gray-50/50 p-6 border-t border-gray-100 flex justify-end items-center gap-12">
                                 <div className="text-right">
-                                    <p className="text-[10px] uppercase font-bold text-gray-400 mb-1">Total Qty</p>
+                                    <p className="text-[10px] uppercase font-bold text-gray-600 mb-1">Total Qty</p>
                                     <p className="font-bold text-gray-700">{formData.lineItems.reduce((acc: any, i: any) => acc + Number(i.quantity), 0)}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-[10px] uppercase font-bold text-gray-400 mb-1">Subtotal (Excl. Tax)</p>
+                                    <p className="text-[10px] uppercase font-bold text-gray-600 mb-1">Subtotal (Excl. Tax)</p>
                                     <p className="font-bold text-xl text-[#2a1e16]">₹{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
                                 </div>
                             </div>
@@ -725,15 +725,15 @@ export default function CreateOrderPage() {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Standard Delivery Timeline</label>
+                                    <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">Standard Delivery Timeline</label>
                                     <input name="deliveryTimeline" value={formData.deliveryTimeline} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-lg bg-gray-50/50 focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                 </div>
                                 <div>
-                                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Customer Notes (Printed on Invoice)</label>
+                                    <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">Customer Notes (Printed on Invoice)</label>
                                     <input name="customerNotes" value={formData.customerNotes} onChange={handleInputChange} placeholder="e.g. Please call before unloading" className="w-full p-4 border border-gray-100 rounded-lg bg-gray-50/50 focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Public Terms & Disclaimer</label>
+                                    <label className="block text-[10px] font-bold text-gray-600 uppercase mb-1">Public Terms & Disclaimer</label>
                                     <textarea name="terms" rows={3} value={formData.terms} onChange={handleInputChange} className="w-full p-4 border border-gray-100 rounded-2xl bg-gray-50/50 text-[11px] font-mono leading-relaxed focus:bg-white focus:border-black focus:ring-0 outline-none transition-all" />
                                 </div>
                             </div>
@@ -907,8 +907,8 @@ export default function CreateOrderPage() {
                                                 <h2 className="text-4xl font-serif font-bold text-[#1a1c1e] tracking-tight">PROFORMA</h2>
                                                 <p className="text-sm font-bold text-[var(--terracotta)] mt-2">{generatedOrderId || 'DRAFT'}</p>
                                                 <div className="mt-4 text-xs space-y-1 text-gray-500 text-right">
-                                                    <p><span className="text-gray-400 mr-2">Date:</span> {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-                                                    {formData.expiryDate && <p><span className="text-gray-400 mr-2">Valid Until:</span> <span className="text-[var(--terracotta)] font-bold">{new Date(formData.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span></p>}
+                                                    <p><span className="text-gray-600 mr-2">Date:</span> {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                                                    {formData.expiryDate && <p><span className="text-gray-600 mr-2">Valid Until:</span> <span className="text-[var(--terracotta)] font-bold">{new Date(formData.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span></p>}
                                                 </div>
                                             </div>
                                         </div>
@@ -918,7 +918,7 @@ export default function CreateOrderPage() {
                                         {/* CLIENT & INFO GRID */}
                                         <div className="grid grid-cols-2 gap-16 mb-16">
                                             <div>
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Billed To</p>
+                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-4">Billed To</p>
                                                 <h4 className="text-xl font-serif font-bold text-[#1a1c1e] mb-2">{formData.clientName || 'Valued Client'}</h4>
                                                 <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap max-w-sm font-medium">{formData.billingAddress || 'No address provided'}</p>
 
@@ -937,7 +937,7 @@ export default function CreateOrderPage() {
                                                 {/* Optional: Add Delivery/Logistics info here if needed, keeping minimal for visual match */}
                                                 {formData.deliveryTimeline && (
                                                     <div className="mb-6">
-                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Logistics</p>
+                                                        <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-2">Logistics</p>
                                                         <p className="text-sm font-medium text-[#1a1c1e]">{formData.deliveryTimeline}</p>
                                                     </div>
                                                 )}
@@ -969,7 +969,7 @@ export default function CreateOrderPage() {
                                                                 <td className="px-4 py-5 text-center text-gray-500 align-top">{item.unit === 'sqft' ? 'Sq.ft' : 'Pcs'}</td>
                                                                 <td className="px-4 py-5 text-center font-medium text-[#1a1c1e] align-top">{item.quantity}</td>
                                                                 <td className="px-4 py-5 text-right text-gray-600 align-top">₹{Number(item.rate).toLocaleString('en-IN')}</td>
-                                                                <td className="px-4 py-5 text-center text-gray-400 align-top">{item.discount > 0 ? `${item.discount}%` : '-'}</td>
+                                                                <td className="px-4 py-5 text-center text-gray-600 align-top">{item.discount > 0 ? `${item.discount}%` : '-'}</td>
                                                                 <td className="px-6 py-5 text-right font-bold text-[#1a1c1e] align-top">
                                                                     ₹{amt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                                                                 </td>
@@ -1026,7 +1026,7 @@ export default function CreateOrderPage() {
                                                     {formData.terms}
                                                 </div>
                                             </div>
-                                            <div className="text-right text-[10px] text-gray-400 space-y-2">
+                                            <div className="text-right text-[10px] text-gray-600 space-y-2">
                                                 <p className="font-bold text-[#1a1c1e] text-xs">urbanclay</p>
                                                 <p>203 Anurag Business Center<br />Chembur<br />Mumbai, Maharashtra 400071<br />India</p>
                                                 <p>GSTIN 27CTNPP3943D1Z</p>

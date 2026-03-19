@@ -229,10 +229,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     ${isCollapsed ? 'justify-center p-3' : 'px-4 py-3'}
                                 `}
                             >
-                                <Search className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                                <Search className="w-4 h-4 text-gray-600 group-hover:text-white" />
                                 {(!isCollapsed || isMobileMenuOpen) && (
                                     <div className="flex flex-1 justify-between items-center text-sm">
-                                        <span className="text-gray-400 group-hover:text-gray-200">Search...</span>
+                                        <span className="text-gray-600 group-hover:text-gray-200">Search...</span>
                                         <div className="flex gap-1">
                                             <span className="bg-white/10 text-gray-500 rounded px-1.5 text-[10px] font-mono">⌘</span>
                                             <span className="bg-white/10 text-gray-500 rounded px-1.5 text-[10px] font-mono">K</span>

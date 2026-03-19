@@ -166,7 +166,7 @@ export default function JournalManagerPage() {
                         {/* TITLE & DATE */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Title</label>
+                                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Title</label>
                                 <input
                                     type="text"
                                     value={newTitle}
@@ -176,7 +176,7 @@ export default function JournalManagerPage() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Publish Date</label>
+                                <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Publish Date</label>
                                 <input
                                     type="date"
                                     value={newDate}
@@ -188,11 +188,11 @@ export default function JournalManagerPage() {
 
                         {/* IMAGE SECTION */}
                         <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Cover Image</label>
+                            <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-4">Cover Image</label>
 
                             <div className="flex gap-4 mb-4">
-                                <button type="button" onClick={() => setImageMode('upload')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${imageMode === 'upload' ? 'bg-white shadow-sm text-[var(--ink)]' : 'text-gray-400 hover:text-gray-600'}`}>Upload File</button>
-                                <button type="button" onClick={() => setImageMode('ai')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${imageMode === 'ai' ? 'bg-white shadow-sm text-[var(--ink)]' : 'text-gray-400 hover:text-gray-600'}`}>Generate with AI</button>
+                                <button type="button" onClick={() => setImageMode('upload')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${imageMode === 'upload' ? 'bg-white shadow-sm text-[var(--ink)]' : 'text-gray-600 hover:text-gray-600'}`}>Upload File</button>
+                                <button type="button" onClick={() => setImageMode('ai')} className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${imageMode === 'ai' ? 'bg-white shadow-sm text-[var(--ink)]' : 'text-gray-600 hover:text-gray-600'}`}>Generate with AI</button>
                             </div>
 
                             {imageMode === 'upload' ? (
@@ -237,7 +237,7 @@ export default function JournalManagerPage() {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Excerpt (Short Summary)</label>
+                            <label className="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-2">Excerpt (Short Summary)</label>
                             <textarea
                                 value={newExcerpt}
                                 onChange={(e) => setNewExcerpt(e.target.value)}
@@ -261,7 +261,7 @@ export default function JournalManagerPage() {
             {/* JOURNAL LIST */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
                 <table className="w-full text-left">
-                    <thead className="bg-gray-50/50 text-gray-400 font-medium uppercase text-[10px] tracking-widest font-sans">
+                    <thead className="bg-gray-50/50 text-gray-600 font-medium uppercase text-[10px] tracking-widest font-sans">
                         <tr>
                             <th className="px-8 py-4">Article</th>
                             <th className="px-6 py-4">Published</th>
@@ -291,7 +291,7 @@ export default function JournalManagerPage() {
                                     <td className="px-6 py-6 text-sm text-gray-500 font-mono">
                                         {new Date(entry.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                                     </td>
-                                    <td className="px-6 py-6 text-xs text-gray-400 font-mono">
+                                    <td className="px-6 py-6 text-xs text-gray-600 font-mono">
                                         /{entry.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 20)}...
                                     </td>
                                     <td className="px-6 py-6 text-right">
@@ -299,14 +299,14 @@ export default function JournalManagerPage() {
                                             <Link
                                                 href="/studio"
                                                 target="_blank"
-                                                className="text-gray-400 hover:text-[var(--terracotta)] p-2 rounded-full hover:bg-orange-50 transition-colors"
+                                                className="text-gray-600 hover:text-[var(--terracotta)] p-2 rounded-full hover:bg-orange-50 transition-colors"
                                                 title="Edit in Studio"
                                             >
                                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                             </Link>
                                             <button
                                                 onClick={() => handleDelete(entry._id, entry.title)}
-                                                className="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors"
+                                                className="text-gray-600 hover:text-red-500 p-2 rounded-full hover:bg-red-50 transition-colors"
                                                 title="Delete"
                                             >
                                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
@@ -317,7 +317,7 @@ export default function JournalManagerPage() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={4} className="text-center py-12 text-gray-400">
+                                <td colSpan={4} className="text-center py-12 text-gray-600">
                                     No journal entries found. Start writing your first story.
                                 </td>
                             </tr>

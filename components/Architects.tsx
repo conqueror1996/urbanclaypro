@@ -30,7 +30,7 @@ export default function Architects() {
                         <h2 className="text-[var(--foreground)] mb-4 md:mb-6 leading-tight text-center lg:text-left">
                             For Architects & <br className="hidden md:block" /> Designers
                         </h2>
-                        <p className="text-sm md:text-lg text-[var(--foreground)]/60 mb-8 md:mb-10 leading-relaxed max-w-md mx-auto lg:mx-0">
+                        <p className="text-sm md:text-lg text-[var(--foreground)]/70 mb-8 md:mb-10 leading-relaxed max-w-md mx-auto lg:mx-0">
                             Streamline your workflow with our comprehensive technical library. Download high-res textures, BIM objects, and detailed specification sheets.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -77,7 +77,7 @@ export default function Architects() {
                                     <div className="h-1.5 w-full bg-gray-100 rounded"></div>
                                     <div className="h-1.5 w-3/4 bg-gray-100 rounded"></div>
                                 </div>
-                                <div className="absolute bottom-4 right-4 text-[10px] font-bold text-gray-400">PDF</div>
+                                <div className="absolute bottom-4 right-4 text-[10px] font-bold text-gray-600">PDF</div>
                             </motion.div>
 
                             {/* Card 2: DWG (Middle) */}
@@ -114,7 +114,7 @@ export default function Architects() {
                                 <div className="bg-gray-50 rounded-lg p-2 border border-gray-100 mb-2">
                                     <div className="w-full h-16 bg-gray-200 rounded animate-pulse"></div>
                                 </div>
-                                <div className="absolute bottom-4 right-4 text-[10px] font-bold text-gray-400">BIM</div>
+                                <div className="absolute bottom-4 right-4 text-[10px] font-bold text-gray-600">BIM</div>
                             </motion.div>
 
                         </div>

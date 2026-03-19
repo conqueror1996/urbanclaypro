@@ -67,7 +67,7 @@ export default function ProductTools({ category, productTitle, productImageUrl, 
                                         onChange={(e) => setArea(e.target.value)}
                                         className="w-full bg-[#faf9f8] border border-gray-200 p-3 rounded-xl text-sm font-medium focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/10 transition-all placeholder:text-gray-300"
                                     />
-                                    <span className="absolute right-3 top-3 text-xs font-medium text-gray-400 pointer-events-none">sq.ft</span>
+                                    <span className="absolute right-3 top-3 text-xs font-medium text-gray-600 pointer-events-none">sq.ft</span>
                                 </div>
                             </div>
                             <div className="group">
@@ -80,7 +80,7 @@ export default function ProductTools({ category, productTitle, productImageUrl, 
                                         onChange={(e) => setTileBox(e.target.value)}
                                         className="w-full bg-[#faf9f8] border border-gray-200 p-3 rounded-xl text-sm font-medium focus:outline-none focus:border-[var(--terracotta)] focus:ring-2 focus:ring-[var(--terracotta)]/10 transition-all placeholder:text-gray-300"
                                     />
-                                    <span className="absolute right-3 top-3 text-xs font-medium text-gray-400 pointer-events-none">sq.ft</span>
+                                    <span className="absolute right-3 top-3 text-xs font-medium text-gray-600 pointer-events-none">sq.ft</span>
                                 </div>
                             </div>
                         </div>

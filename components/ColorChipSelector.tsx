@@ -44,7 +44,7 @@ export default function ColorChipSelector({ variants = [], collections = [] }: C
     const [activeTabId, setActiveTabId] = useState<string>(tabs[0]?.id || '');
 
     if (tabs.length === 0) {
-        return <p className="text-xs text-gray-400 italic">Variations available upon request.</p>;
+        return <p className="text-xs text-gray-600 italic">Variations available upon request.</p>;
     }
 
     const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
@@ -64,7 +64,7 @@ export default function ColorChipSelector({ variants = [], collections = [] }: C
                             onClick={() => setActiveTabId(tab.id)}
                             className={`text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap pb-1 transition-colors ${activeTabId === tab.id
                                 ? 'text-[var(--terracotta)] border-b-2 border-[var(--terracotta)]'
-                                : 'text-gray-400 hover:text-gray-600 border-b-2 border-transparent'
+                                : 'text-gray-600 hover:text-gray-600 border-b-2 border-transparent'
                                 }`}
                         >
                             {tab.label}

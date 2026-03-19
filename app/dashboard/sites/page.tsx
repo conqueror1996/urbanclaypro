@@ -67,15 +67,15 @@ export default function SitesDashboard() {
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div>
-                                        <label className="text-[10px] uppercase font-bold text-gray-400">Client</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-600">Client</label>
                                         <p className="font-medium text-[var(--ink)]">{site.client || '--'}</p>
                                     </div>
                                     <div className="col-span-2">
-                                        <label className="text-[10px] uppercase font-bold text-gray-400">Location</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-600">Location</label>
                                         <p className="font-medium text-[var(--ink)]">{site.location || '--'}</p>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] uppercase font-bold text-gray-400">Timeline</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-600">Timeline</label>
                                         <p className="text-xs text-gray-500">
                                             {site.startDate ? new Date(site.startDate).toLocaleDateString() : '??'} → {site.expectedCompletion ? new Date(site.expectedCompletion).toLocaleDateString() : '??'}
                                         </p>

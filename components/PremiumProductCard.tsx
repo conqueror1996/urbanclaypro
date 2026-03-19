@@ -112,7 +112,7 @@ export default function PremiumProductCard({ product, variant, index }: PremiumP
                 {/* Info Text */}
                 <div className="relative z-10 p-2 transition-transform duration-500 group-hover:-translate-y-1">
                     <h4 className="text-base font-serif text-[var(--foreground)] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{variant.name}</h4>
-                    <p className="text-[10px] text-[var(--foreground)]/40 font-bold uppercase tracking-[0.2em]">
+                    <p className="text-[10px] text-[var(--foreground)]/70 font-bold uppercase tracking-[0.2em]">
                         {product.title}
                     </p>
                 </div>

@@ -82,7 +82,7 @@ export default function WikiHubClient({ initialArticles, categories }: WikiHubCl
                         placeholder="Search for 'Efflorescence', 'Bonding Patterns'..."
                         className="w-full pl-12 pr-4 py-4 rounded-full border border-gray-200 focus:border-[var(--terracotta)] focus:ring-1 focus:ring-[var(--terracotta)] outline-none shadow-lg text-lg transition-all"
                     />
-                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl">🔍</span>
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 text-xl">🔍</span>
                 </div>
 
                 {/* Category Pills */}
@@ -155,7 +155,7 @@ export default function WikiHubClient({ initialArticles, categories }: WikiHubCl
                                     </li>
                                 ))}
                             </ul>
-                            <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between text-xs text-gray-400">
+                            <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between text-xs text-gray-600">
                                 <span>{grouped[cat].length} Articles</span>
                                 <Link
                                     href={`/wiki/category/${cat}`}
@@ -168,7 +168,7 @@ export default function WikiHubClient({ initialArticles, categories }: WikiHubCl
                     ))
                 ) : (
                     <div className="col-span-full py-20 text-center">
-                        <p className="text-gray-400 text-lg">No articles found matching "{searchTerm}"</p>
+                        <p className="text-gray-600 text-lg">No articles found matching "{searchTerm}"</p>
                         <button
                             onClick={() => { setSearchTerm(''); setActiveCategory('All'); }}
                             className="mt-4 text-[var(--terracotta)] font-bold underline"

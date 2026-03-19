@@ -50,7 +50,7 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
                             viewport={{ once: true }}
                             transition={{ duration: 0.6 }}
                         >
-                            <span className="inline-flex items-center gap-2 text-[var(--terracotta)] text-[10px] font-bold tracking-[0.4em] uppercase mb-4">
+                            <span className="inline-flex items-center gap-2 text-[var(--terracotta)] text-[10px] font-bold tracking-[0.2em] uppercase mb-4">
                                 <span className="w-6 h-px bg-[var(--terracotta)]" />
                                 Engineering
                             </span>

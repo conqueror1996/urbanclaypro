@@ -4,11 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import QuoteForm from '@/components/QuoteForm';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+const QuoteForm = dynamic(() => import('@/components/QuoteForm'), { ssr: false });
 import Link from 'next/link';
 import { Product, Project, getHomePageData } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
 import PremiumProductCard from '@/components/PremiumProductCard';
+import RelatedArticles from '@/components/RelatedArticles';
 import JsonLd from '@/components/JsonLd';
 import { ShieldCheck, FileText, Maximize2, Layers, MessageCircle, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
 
@@ -22,6 +26,7 @@ interface PillarPageTemplateProps {
     slug: string;
     products: Product[];
     projects?: Project[];
+    journals?: any[];
     faqs: { q: string, a: string }[];
     metrics?: { label: string, val: string, detail: string }[];
 }
@@ -36,6 +41,7 @@ export default function PillarPageTemplate({
     slug,
     products,
     projects = [],
+    journals = [],
     faqs,
     metrics = [
         { label: "Fire Rating", val: "Non-Combustible", detail: "A1 Certified" },
@@ -148,7 +154,7 @@ export default function PillarPageTemplate({
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
                         >
-                            <span className="inline-flex items-center gap-2 py-2 px-5 border border-[var(--terracotta)]/40 bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-[10px] md:text-xs font-black tracking-[0.4em] uppercase mb-8 backdrop-blur-sm rounded-full">
+                            <span className="inline-flex items-center gap-2 py-2 px-5 border border-[var(--terracotta)]/40 bg-[var(--terracotta)]/10 text-[var(--terracotta)] text-[10px] md:text-xs font-black tracking-[0.2em] uppercase mb-8 backdrop-blur-sm rounded-full">
                                 <span className="w-2 h-2 rounded-full bg-[var(--terracotta)] animate-pulse" />
                                 {keyword} Engineering
                             </span>
@@ -161,7 +167,7 @@ export default function PillarPageTemplate({
                                 {description}
                             </p>
 
-                            <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto mb-16">
+                            <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
                                 <motion.button
                                     onClick={() => document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' })}
                                     className="group relative w-full sm:w-auto px-12 py-5 bg-[var(--ink)] text-white font-bold text-sm tracking-widest uppercase overflow-hidden transition-all shadow-xl hover:bg-[var(--terracotta)]"
@@ -180,12 +186,15 @@ export default function PillarPageTemplate({
                                     Speak to Consultant
                                 </button>
                             </div>
+                            <p className="text-[10px] md:text-xs text-[var(--foreground)]/70 mt-4 mb-16 font-medium tracking-wide">
+                                <span className="text-[var(--terracotta)] font-bold">✓</span> Ships in 24 hours. <span className="font-bold">No commitment required.</span>
+                            </p>
 
                             {/* Rapid Metrics - Scannable */}
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-[var(--line)] w-full max-w-3xl">
                                 {metrics.map((stat, i) => (
                                     <div key={i} className="flex flex-col">
-                                        <span className="text-[9px] uppercase tracking-widest font-black text-[var(--foreground)]/40 mb-1">{stat.label}</span>
+                                        <span className="text-[9px] uppercase tracking-widest font-black text-[var(--foreground)]/70 mb-1">{stat.label}</span>
                                         <span className="text-base font-serif font-bold text-[var(--foreground)]">{stat.val}</span>
                                         <span className="text-[10px] uppercase font-bold text-[var(--terracotta)]/70">{stat.detail}</span>
                                     </div>
@@ -202,10 +211,13 @@ export default function PillarPageTemplate({
                             transition={{ duration: 1.5, ease: "easeOut" }}
                             className="h-full w-full rounded-[40px] overflow-hidden shadow-2xl relative border-8 border-white/5"
                         >
-                            <img
+                            <Image
                                 src={heroImage || "/images/engineered-facade-masterpiece.png"}
                                 alt={`${keyword} System - UrbanClay India`}
-                                className="w-full h-full object-cover transition-transform duration-[3s] hover:scale-105"
+                                fill
+                                priority
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                className="object-cover transition-transform duration-[3s] hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)]/40 to-transparent" />
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-10">
@@ -221,7 +233,7 @@ export default function PillarPageTemplate({
                 <div className="max-w-[1800px] mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-6">
                         <div className="max-w-2xl">
-                            <span className="text-[var(--terracotta)] font-black tracking-[0.3em] uppercase text-[10px] mb-4 block">Specifiable Library</span>
+                            <span className="text-[var(--terracotta)] font-black tracking-[0.2em] uppercase text-[10px] mb-4 block">Specifiable Library</span>
                             <h2 className="text-4xl md:text-6xl font-serif text-[var(--foreground)] tracking-tight">Available Systems <br /> & Finishes</h2>
                         </div>
                         <div className="flex items-center gap-4">
@@ -249,8 +261,8 @@ export default function PillarPageTemplate({
                         </div>
                     ) : (
                         <div className="py-32 text-center border border-[var(--line)] rounded-3xl">
-                            <h3 className="text-2xl font-serif text-[var(--foreground)]/40 italic">Technical Library Syncing...</h3>
-                            <p className="text-[var(--foreground)]/30 mt-2 uppercase tracking-widest text-[10px] font-black">Updating Specification Documentation</p>
+                            <h3 className="text-2xl font-serif text-[var(--foreground)]/70 italic">Technical Library Syncing...</h3>
+                            <p className="text-[var(--foreground)]/70 mt-2 uppercase tracking-widest text-[10px] font-black">Updating Specification Documentation</p>
                         </div>
                     )}
                 </div>
@@ -260,17 +272,19 @@ export default function PillarPageTemplate({
             <section id="downloads" className="py-24 bg-[var(--sand)] border-y border-[var(--line)] px-6">
                 <div className="max-w-[1800px] mx-auto grid lg:grid-cols-2 gap-20 items-center">
                     <div className="relative aspect-square lg:aspect-video bg-[var(--background)] rounded-3xl p-12 flex items-center justify-center shadow-inner overflow-hidden border border-[var(--line)]">
-                        <img
+                        <Image
                             src={specifierImage}
                             alt="Terracotta Rainscreen System Details"
-                            className="w-full h-full object-contain mix-blend-multiply opacity-80"
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                            className="object-contain mix-blend-multiply opacity-80"
                         />
                         <div className="absolute inset-0 bg-[var(--terracotta)]/5 pointer-events-none" />
                     </div>
 
                     <div className="flex flex-col">
-                        <span className="text-[var(--terracotta)] font-black tracking-[0.3em] uppercase text-[10px] mb-4 block">Specifier Toolkit</span>
-                        <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-8 leading-tight">Fast-Track Your <br /> Technical Specification</h2>
+                        <span className="text-[var(--terracotta)] font-black tracking-[0.2em] uppercase text-[10px] mb-4 block">Specifier Toolkit</span>
+                        <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] tracking-tight mb-8 leading-tight">Fast-Track Your <br /> Technical Specification</h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
                             {[
@@ -288,7 +302,7 @@ export default function PillarPageTemplate({
                                         <item.icon className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <p className="text-[9px] font-black uppercase tracking-widest text-[var(--foreground)]/40">{item.format} | {item.type}</p>
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-[var(--foreground)]/70">{item.format} | {item.type}</p>
                                         <h4 className="text-sm font-bold leading-tight group-hover:text-[var(--terracotta)] transition-colors">{item.title}</h4>
                                     </div>
                                 </button>
@@ -296,8 +310,8 @@ export default function PillarPageTemplate({
                         </div>
 
                         <div className="flex gap-4">
-                            <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/40"><ShieldCheck className="w-4 h-4" /> ASTM Tested</span>
-                            <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/40"><Layers className="w-4 h-4" /> IGBC Compliant</span>
+                            <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/70"><ShieldCheck className="w-4 h-4" /> ASTM Tested</span>
+                            <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/70"><Layers className="w-4 h-4" /> IGBC Compliant</span>
                         </div>
                     </div>
                 </div>
@@ -312,7 +326,7 @@ export default function PillarPageTemplate({
                             <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] italic tracking-tight">Built Across India.</h2>
                         </div>
                         <div className="flex flex-col items-end gap-2">
-                            <p className="text-[var(--foreground)]/40 max-w-sm text-sm uppercase font-bold tracking-widest">High-rise & large-scale implementations.</p>
+                            <p className="text-[var(--foreground)]/70 max-w-sm text-sm uppercase font-bold tracking-widest">High-rise & large-scale implementations.</p>
                             {projects.length > 0 && (
                                 <Link href="/projects" className="text-[10px] font-black uppercase tracking-widest text-[var(--terracotta)] hover:underline underline-offset-4">
                                     View All Projects →
@@ -327,10 +341,12 @@ export default function PillarPageTemplate({
                                 <Link key={i} href={`/projects/${project.slug}`} className="group cursor-pointer">
                                     <div className="aspect-[16/10] overflow-hidden rounded-[32px] mb-6 border border-[var(--line)] group-hover:border-[var(--terracotta)]/40 transition-all duration-700 bg-[var(--sand)] relative">
                                         {project.imageUrl ? (
-                                            <img
+                                            <Image
                                                 src={project.imageUrl}
                                                 alt={project.title}
-                                                className="w-full h-full object-cover grayscale brightness-90 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-100"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 33vw"
+                                                className="object-cover grayscale brightness-90 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 group-hover:brightness-100"
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
@@ -349,7 +365,7 @@ export default function PillarPageTemplate({
                                     </div>
                                     <div className="px-2">
                                         <h4 className="text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors font-serif text-2xl mb-1 leading-tight">{project.title}</h4>
-                                        <p className="text-[var(--foreground)]/40 text-[10px] font-black uppercase tracking-[0.2em]">
+                                        <p className="text-[var(--foreground)]/70 text-[10px] font-black uppercase tracking-[0.2em]">
                                             {project.location}{project.type ? ` | ${project.type}` : ''}
                                         </p>
                                     </div>
@@ -358,8 +374,7 @@ export default function PillarPageTemplate({
                         </div>
                     ) : (
                         <div className="py-24 text-center border border-dashed border-[var(--line)] rounded-3xl">
-                            <p className="text-[var(--foreground)]/30 text-sm uppercase tracking-widest font-bold">Projects Coming Soon</p>
-                            <p className="text-[var(--foreground)]/20 text-xs mt-2">Tag projects with the "{keyword}" category in Sanity Studio.</p>
+                            <p className="text-[var(--foreground)]/70 text-sm uppercase tracking-widest font-bold">Projects Coming Soon</p>
                         </div>
                     )}
                 </div>
@@ -376,19 +391,24 @@ export default function PillarPageTemplate({
                             className="bg-white/80 backdrop-blur-2xl border border-[var(--line)] rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl"
                         >
                             <div className="hidden md:flex px-4 py-2 flex-col leading-none border-r border-[var(--line)]">
-                                <span className="text-[9px] font-black uppercase text-[var(--foreground)]/40 mb-1">{title} Inquiry</span>
+                                <span className="text-[9px] font-black uppercase text-[var(--foreground)]/70 mb-1">{title} Inquiry</span>
                                 <span className="text-[11px] font-serif font-bold text-[var(--ink)]">Technical Support Ready</span>
                             </div>
-                            <button
-                                onClick={() => setBoxOpen(true)}
-                                className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center active:scale-95"
-                            >
-                                Request Sample Kit
-                            </button>
+                            <div className="flex flex-col items-center">
+                                <button
+                                    onClick={() => setBoxOpen(true)}
+                                    className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center active:scale-95"
+                                >
+                                    Request Sample Kit
+                                </button>
+                                <span className="absolute -bottom-5 text-[8px] font-bold text-[var(--foreground)]/70 uppercase tracking-widest hidden md:block">
+                                    ✓ Ships free in 24 hrs
+                                </span>
+                            </div>
                             <a
                                 href="https://wa.me/918080081951"
                                 target="_blank"
-                                className="w-12 h-12 md:w-auto md:px-6 bg-[#25D366] text-white rounded-full flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-all shadow-lg"
+                                className="w-12 h-12 md:w-auto md:px-6 bg-[#25D366] text-white rounded-full flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-all shadow-lg relative"
                             >
                                 <MessageCircle className="w-5 h-5" />
                                 <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em]">WhatsApp Expert</span>
@@ -402,30 +422,51 @@ export default function PillarPageTemplate({
             <section className="py-24 bg-[var(--background)] px-6">
                 <div className="max-w-4xl mx-auto space-y-12">
                     <div className="text-center">
-                        <span className="text-[var(--terracotta)] font-black tracking-[0.3em] uppercase text-[10px] mb-4 block">Specification Guidance</span>
-                        <h2 className="text-3xl md:text-5xl font-serif">Why Architects Switch to UrbanClay</h2>
+                        <span className="text-[var(--terracotta)] font-black tracking-[0.2em] uppercase text-[10px] mb-4 block">Specification Guidance</span>
+                        <h2 className="text-3xl md:text-5xl font-serif tracking-tight">Why Architects Switch to UrbanClay</h2>
                     </div>
 
                     <div className="overflow-hidden border border-[var(--line)] rounded-3xl bg-[var(--sand)]">
                         <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="border-b border-[var(--line)] bg-[var(--ink)]/5">
-                                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/40">Performance Factor</th>
-                                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/40">Standard Brick</th>
+                            {/* Header Row (Desktop Only) */}
+                            <thead className="hidden lg:table-header-group bg-[var(--ink)]/5 border-b border-[var(--line)]">
+                                <tr>
+                                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/70">Performance Factor</th>
+                                    <th className="p-6 text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/70">Standard Brick</th>
                                     <th className="p-6 text-[10px] font-black uppercase tracking-widest text-[var(--terracotta)]">UrbanClay {keyword}</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-sm font-medium">
+
+                            {/* Data Rows */}
+                            <tbody className="divide-y divide-[var(--line)]">
                                 {[
                                     { factor: "Installation Speed", std: "Slow (Wet Bind)", uc: "3x Faster (Dry Mechanical)" },
                                     { factor: "Dead Load", std: "Heavy (Structural Strain)", uc: "Lightweight (Facade Only)" },
                                     { factor: "Water Absorption", std: "High (Efflorescence)", uc: "Near Zero (Glazed/Dense)" },
                                     { factor: "Thermal Buffer", std: "None (Heat Sink)", uc: "Advanced (Ventilated)" }
                                 ].map((row, i) => (
-                                    <tr key={i} className="border-b border-[var(--line)] last:border-0 hover:bg-white/50 transition-colors">
-                                        <td className="p-6 font-bold">{row.factor}</td>
-                                        <td className="p-6 text-[var(--foreground)]/40">{row.std}</td>
-                                        <td className="p-6 text-[var(--terracotta)] font-black">{row.uc}</td>
+                                    <tr key={i} className="flex flex-col lg:table-row group hover:bg-white/50 transition-colors">
+                                        {/* Mobile Header (Visually Hidden on Desktop) */}
+                                        <td className="lg:hidden bg-[var(--ink)]/5 p-4 border-b border-[var(--line)]">
+                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/70">{row.factor}</h4>
+                                        </td>
+                                        
+                                        {/* Performance Factor (Desktop View) */}
+                                        <td className="hidden lg:table-cell p-6 text-sm font-bold border-r border-[var(--line)]">
+                                            {row.factor}
+                                        </td>
+
+                                        {/* Standard Brick Column */}
+                                        <td className="flex flex-col lg:table-cell p-4 lg:p-6 border-b lg:border-b-0 lg:border-r border-[var(--line)]">
+                                            <span className="lg:hidden text-[9px] font-black uppercase tracking-widest text-[var(--foreground)]/70 mb-2">Standard Brick</span>
+                                            <span className="text-sm font-medium text-[var(--foreground)]/70">{row.std}</span>
+                                        </td>
+
+                                        {/* UrbanClay Column */}
+                                        <td className="flex flex-col lg:table-cell p-4 lg:p-6 bg-[var(--terracotta)]/5 lg:bg-transparent">
+                                            <span className="lg:hidden text-[9px] font-black uppercase tracking-widest text-[var(--terracotta)]/60 mb-2">UrbanClay {keyword}</span>
+                                            <span className="text-sm font-black text-[var(--terracotta)]">{row.uc}</span>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -438,8 +479,8 @@ export default function PillarPageTemplate({
             <section className="py-24 px-6 max-w-4xl mx-auto border-t border-[var(--line)]">
                 <div className="grid md:grid-cols-3 gap-12">
                     <div className="md:col-span-1">
-                        <h2 className="text-3xl font-serif text-[var(--foreground)]">Technical <br /> Verification</h2>
-                        <p className="mt-4 text-[var(--foreground)]/40 text-xs font-bold uppercase tracking-widest">Rapid Q&A for Lead Architects.</p>
+                        <h2 className="text-3xl font-serif tracking-tight text-[var(--foreground)]">Technical <br /> Verification</h2>
+                        <p className="mt-4 text-[var(--foreground)]/70 text-xs font-bold uppercase tracking-widest">Rapid Q&A for Lead Architects.</p>
                     </div>
 
                     <div className="md:col-span-2 space-y-6">
@@ -449,7 +490,7 @@ export default function PillarPageTemplate({
                                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]" />
                                     {faq.q}
                                 </h4>
-                                <p className="text-[var(--foreground)]/60 text-sm leading-relaxed pl-4 border-l border-[var(--line)]">
+                                <p className="text-[var(--foreground)]/70 text-sm leading-relaxed pl-4 border-l border-[var(--line)]">
                                     {faq.a}
                                 </p>
                             </div>
@@ -462,15 +503,20 @@ export default function PillarPageTemplate({
             <section id="specify" className="py-24 bg-[var(--sand)] px-6 border-t border-[var(--line)]">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <span className="text-[var(--terracotta)] text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Direct Project Inquiry</span>
-                        <h2 className="font-serif text-4xl md:text-5xl text-[var(--foreground)] mb-6">Specify {keyword}</h2>
-                        <p className="text-[var(--foreground)]/60 max-w-2xl mx-auto">Get technical support, custom quotes, or arrange for sample delivery for your current project.</p>
+                        <span className="text-[var(--terracotta)] text-[10px] font-black tracking-[0.2em] uppercase mb-4 block">Direct Project Inquiry</span>
+                        <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-[var(--foreground)] mb-6">Specify {keyword}</h2>
+                        <p className="text-[var(--foreground)]/70 max-w-2xl mx-auto">Get technical support, custom quotes, or arrange for sample delivery for your current project.</p>
                     </div>
 
                     {/* Embedded form - we pass a prop to clean up its internal padding/border */}
                     <QuoteForm isEmbedded={true} />
                 </div>
             </section>
+
+            {/* RELATED JOURNAL ARTICLES - Semantic Topical Authority */}
+            {journals && journals.length > 0 && (
+                <RelatedArticles posts={journals} />
+            )}
 
             <Footer />
         </main>

@@ -174,7 +174,7 @@ export default function SamplesDashboard() {
                                 }
                             }
                         }}
-                        className="text-xs font-bold text-gray-400 hover:text-[var(--terracotta)] border border-gray-200 hover:border-[var(--terracotta)] px-3 py-1.5 rounded-lg transition-colors"
+                        className="text-xs font-bold text-gray-600 hover:text-[var(--terracotta)] border border-gray-200 hover:border-[var(--terracotta)] px-3 py-1.5 rounded-lg transition-colors"
                     >
                         + Test Order
                     </button>
@@ -204,7 +204,7 @@ export default function SamplesDashboard() {
                                     >
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-bold text-[var(--ink)]">{order.contact}</h4>
-                                            <span className="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded uppercase">{order.role}</span>
+                                            <span className="text-[10px] text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded uppercase">{order.role}</span>
                                         </div>
 
                                         <div className="text-xs text-gray-500 space-y-1 mb-3">
@@ -288,7 +288,7 @@ export default function SamplesDashboard() {
                                     </motion.div>
                                 ))}
                                 {orders.filter(o => o.fulfillmentStatus === col.id).length === 0 && (
-                                    <div className="h-20 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-400">
+                                    <div className="h-20 border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-600">
                                         Empty
                                     </div>
                                 )}

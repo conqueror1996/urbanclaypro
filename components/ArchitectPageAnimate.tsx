@@ -83,7 +83,7 @@ export default function ArchitectPageAnimate() {
                         <div className="flex justify-center mb-8 opacity-60">
                             <Breadcrumbs />
                         </div>
-                        <span className="text-[var(--terracotta)] font-medium tracking-[0.4em] uppercase text-xs mb-6 block">
+                        <span className="text-[var(--terracotta)] font-medium tracking-[0.2em] uppercase text-xs mb-6 block">
                             UrbanClay Studio
                         </span>
                         <h1 className="text-5xl md:text-8xl font-serif text-white leading-[1.1] mb-8">
@@ -119,11 +119,11 @@ export default function ArchitectPageAnimate() {
                     <div className="flex items-end justify-between mb-20 border-b border-[var(--line)] pb-8">
                         <div>
                             <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">Material Library</h2>
-                            <p className="text-[var(--foreground)]/40 max-w-md">Everything you need to specify UrbanClay products with confidence.</p>
+                            <p className="text-[var(--foreground)]/70 max-w-md">Everything you need to specify UrbanClay products with confidence.</p>
                         </div>
                         <div className="hidden md:block text-right">
                             <div className="text-[var(--terracotta)] text-5xl font-serif">03</div>
-                            <div className="text-xs uppercase tracking-widest text-[var(--foreground)]/40 mt-1">Resource Categories</div>
+                            <div className="text-xs uppercase tracking-widest text-[var(--foreground)]/70 mt-1">Resource Categories</div>
                         </div>
                     </div>
 
@@ -149,11 +149,11 @@ export default function ArchitectPageAnimate() {
                                     </div>
                                     <div className="md:col-span-5">
                                         <h3 className="text-2xl font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--Ink)] transition-colors">{resource.title}</h3>
-                                        <p className="text-[var(--foreground)]/40 text-sm leading-relaxed">{resource.description}</p>
+                                        <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">{resource.description}</p>
                                     </div>
                                     <div className="md:col-span-6 flex flex-wrap gap-3 justify-start md:justify-end">
                                         {resource.files.map((file, i) => (
-                                            <span key={i} className="px-4 py-2 bg-[var(--line)]/50 rounded-lg text-xs font-medium text-[var(--foreground)]/60 border border-[var(--line)] group-hover:border-[var(--line)] transition-colors">
+                                            <span key={i} className="px-4 py-2 bg-[var(--line)]/50 rounded-lg text-xs font-medium text-[var(--foreground)]/70 border border-[var(--line)] group-hover:border-[var(--line)] transition-colors">
                                                 {file}
                                             </span>
                                         ))}
@@ -254,7 +254,7 @@ export default function ArchitectPageAnimate() {
                                 </div>
                                 <div className="w-full h-px bg-[var(--line)] mb-4" />
                                 <div className="text-sm font-bold uppercase tracking-widest opacity-90 mb-2">Partnered Firms</div>
-                                <p className="text-xs text-[var(--foreground)]/50 leading-relaxed font-light">
+                                <p className="text-xs text-[var(--foreground)]/70 leading-relaxed font-light">
                                     Empowering India's leading architects with precision-crafted terracotta solutions since 2006.
                                 </p>
                             </motion.div>

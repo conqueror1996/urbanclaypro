@@ -269,7 +269,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     <h4 className="font-serif text-lg md:text-xl text-[#2A1E16] font-bold">Your Selection</h4>
                                                     <div className="flex items-baseline gap-1 mt-0.5">
                                                         <span className="text-xl md:text-2xl font-bold text-[var(--terracotta)]">₹999</span>
-                                                        <span className="text-xs text-gray-400 line-through">₹1,500</span>
+                                                        <span className="text-xs text-gray-600 line-through">₹1,500</span>
                                                     </div>
                                                 </div>
 
@@ -317,7 +317,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     <h4 className="font-serif text-lg md:text-xl text-[#2A1E16] font-bold">Curated Set</h4>
                                                     <div className="flex items-baseline gap-1 mt-0.5">
                                                         <span className="text-xl md:text-2xl font-bold text-[#2A1E16]">₹2,000</span>
-                                                        <span className="text-xs text-gray-400 line-through">₹3,500</span>
+                                                        <span className="text-xs text-gray-600 line-through">₹3,500</span>
                                                     </div>
                                                 </div>
 
@@ -351,7 +351,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                         </div>
 
                                         {/* REFUND POLICY FOOTNOTE */}
-                                        <p className="text-[10px] text-center text-gray-400 mt-4 mb-6">
+                                        <p className="text-[10px] text-center text-gray-600 mt-4 mb-6">
                                             *Sample cost is fully adjusted in your final order invoice (Orders above ₹50,000)
                                         </p>
 
@@ -389,7 +389,7 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                         onClick={() => setFormData(p => ({ ...p, role: r }))}
                                                         className={`flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${formData.role === r
                                                             ? 'bg-white shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1)] text-[#b45a3c]'
-                                                            : 'text-gray-400 hover:text-gray-600'
+                                                            : 'text-gray-600 hover:text-gray-600'
                                                             }`}
                                                     >
                                                         {r}
@@ -399,30 +399,30 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
 
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div className="space-y-1 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Name</label>
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-focus-within:text-[#b45a3c] transition-colors">Name</label>
                                                     <input name="name" value={formData.name} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Full Name" required />
                                                 </div>
                                                 <div className="space-y-1 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Firm / Project Name</label>
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-focus-within:text-[#b45a3c] transition-colors">Firm / Project Name</label>
                                                     <input name="firm" value={formData.firm} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder={formData.role === 'Home Owner' ? 'Project Name (Optional)' : 'Firm Name'} required={formData.role !== 'Home Owner'} />
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div className="space-y-1 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Phone</label>
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-focus-within:text-[#b45a3c] transition-colors">Phone</label>
                                                     <input name="phone" value={formData.phone} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Contact Number" required />
                                                 </div>
                                                 <div className="space-y-1 group">
-                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Email</label>
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-focus-within:text-[#b45a3c] transition-colors">Email</label>
                                                     <input name="email" value={formData.email} onChange={handleChange} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all placeholder-gray-400" placeholder="Email Address" required />
                                                 </div>
                                             </div>
                                             <div className="space-y-1 group">
-                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Project Location</label>
+                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-focus-within:text-[#b45a3c] transition-colors">Project Location</label>
                                                 <textarea name="address" value={formData.address} onChange={handleChange} rows={2} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all resize-none placeholder-gray-400" placeholder="City / Site Address" required />
                                             </div>
                                             <div className="space-y-1 group">
-                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-focus-within:text-[#b45a3c] transition-colors">Project Requirements</label>
+                                                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-focus-within:text-[#b45a3c] transition-colors">Project Requirements</label>
                                                 <textarea name="requirements" value={formData.requirements} onChange={handleChange} rows={2} className="w-full py-3 px-4 bg-[#faf9f8] rounded-xl border border-gray-200 focus:bg-white focus:border-[#b45a3c] focus:ring-1 focus:ring-[#b45a3c] outline-none text-sm text-[#2A1E16] font-medium transition-all resize-none placeholder-gray-400" placeholder="Briefly describe your project needs..." />
                                             </div>
 

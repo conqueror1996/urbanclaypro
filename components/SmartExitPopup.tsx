@@ -120,7 +120,7 @@ export default function SmartExitPopup() {
 
                         <button
                             onClick={handleDismiss}
-                            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-[var(--ink)] transition-colors rounded-full hover:bg-gray-100"
+                            className="absolute top-4 right-4 p-2 text-gray-600 hover:text-[var(--ink)] transition-colors rounded-full hover:bg-gray-100"
                         >
                             <X size={20} />
                         </button>
@@ -149,7 +149,7 @@ export default function SmartExitPopup() {
                                         </button>
                                         <button
                                             onClick={handleDismiss}
-                                            className="text-sm text-gray-400 hover:text-gray-600 underline decoration-1 underline-offset-4"
+                                            className="text-sm text-gray-600 hover:text-gray-600 underline decoration-1 underline-offset-4"
                                         >
                                             I'll do it later
                                         </button>
@@ -182,7 +182,7 @@ export default function SmartExitPopup() {
                                                         value={email}
                                                         onChange={(e) => setEmail(e.target.value)}
                                                         placeholder="architect@firm.com" // Suggestive placeholder
-                                                        className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[var(--ink)] placeholder:text-gray-400"
+                                                        className="w-full px-4 py-3 rounded-xl bg-[#f9f9f9] border border-transparent focus:bg-white focus:border-[var(--terracotta)] focus:ring-0 transition-all outline-none text-[var(--ink)] placeholder:text-gray-600"
                                                         required
                                                     />
                                                 </div>
@@ -198,7 +198,7 @@ export default function SmartExitPopup() {
                                             </form>
 
                                             <div className="mt-6 pt-6 border-t border-gray-100">
-                                                <div className="flex items-center gap-3 text-xs text-gray-400">
+                                                <div className="flex items-center gap-3 text-xs text-gray-600">
                                                     <div className="flex -space-x-2">
                                                         {[1, 2, 3].map(i => (
                                                             <div key={i} className="w-6 h-6 rounded-full border border-white bg-gray-200" style={{ backgroundColor: `hsl(30, ${10 + i * 10}%, ${80 - i * 10}%)` }} />

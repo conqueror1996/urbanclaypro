@@ -62,7 +62,7 @@ export default function LabourDashboard() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--terracotta)] focus:ring-1 focus:ring-[var(--terracotta)] w-64 transition-all"
                         />
-                        <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <svg className="w-4 h-4 text-gray-600 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </div>
                 </div>
             </div>
@@ -90,17 +90,17 @@ export default function LabourDashboard() {
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-[var(--ink)]">{labour.name}</h3>
-                                    <p className="text-xs text-gray-400 uppercase tracking-widest font-bold">{labour.trade}</p>
+                                    <p className="text-xs text-gray-600 uppercase tracking-widest font-bold">{labour.trade}</p>
                                 </div>
                             </div>
 
                             <div className="space-y-3">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">Daily Rate:</span>
+                                    <span className="text-gray-600">Daily Rate:</span>
                                     <span className="font-mono font-bold text-[var(--ink)]">₹{labour.dailyRate || '--'}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">Status:</span>
+                                    <span className="text-gray-600">Status:</span>
                                     <span className={`capitalize font-medium ${labour.status === 'available' ? 'text-emerald-600' : 'text-orange-600'
                                         }`}>{labour.status.replace('_', ' ')}</span>
                                 </div>

@@ -21,19 +21,19 @@ export default function CampaignsPage() {
                 <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-100 flex items-center gap-1">
                     <button
                         onClick={() => setActiveTab('scrape')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'scrape' ? 'bg-[var(--ink)] text-white shadow-md' : 'text-gray-400 hover:bg-gray-50'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'scrape' ? 'bg-[var(--ink)] text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
                         Find Leads
                     </button>
                     <button
                         onClick={() => setActiveTab('leads')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'leads' ? 'bg-[var(--ink)] text-white shadow-md' : 'text-gray-400 hover:bg-gray-50'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'leads' ? 'bg-[var(--ink)] text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
                         Manage Database
                     </button>
                     <button
                         onClick={() => setActiveTab('email')}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'email' ? 'bg-[var(--ink)] text-white shadow-md' : 'text-gray-400 hover:bg-gray-50'}`}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'email' ? 'bg-[var(--ink)] text-white shadow-md' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
                         Compose Email
                     </button>

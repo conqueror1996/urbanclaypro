@@ -50,7 +50,7 @@ export default function ContactPage() {
                     <div className="absolute right-0 top-0 w-[800px] h-[800px] bg-[var(--terracotta)]/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
 
                     <div className="max-w-7xl mx-auto relative z-10 text-center">
-                        <span className="inline-block py-1.5 px-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-8">
+                        <span className="inline-block py-1.5 px-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-8">
                             Get in Touch
                         </span>
                         <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-8 tracking-tight">

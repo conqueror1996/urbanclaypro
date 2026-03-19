@@ -81,13 +81,13 @@ export default function EmailComposer({ initialRecipients = [] }: { initialRecip
                 {/* Email Header */}
                 <div className="bg-gray-50 p-6 border-b border-gray-200 space-y-4">
                     <div className="flex items-center gap-4">
-                        <span className="text-xs font-bold uppercase text-gray-400 w-16 text-right">To:</span>
+                        <span className="text-xs font-bold uppercase text-gray-600 w-16 text-right">To:</span>
                         <div className="flex-1 bg-white border border-gray-200 px-3 py-2 rounded-lg text-sm text-gray-600">
                             {initialRecipients.length > 0 ? `${initialRecipients.length} Selected Recipients` : 'No recipients selected (Select from Database)'}
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <span className="text-xs font-bold uppercase text-gray-400 w-16 text-right">Subject:</span>
+                        <span className="text-xs font-bold uppercase text-gray-600 w-16 text-right">Subject:</span>
                         <input
                             type="text"
                             value={subject}
@@ -132,8 +132,8 @@ export default function EmailComposer({ initialRecipients = [] }: { initialRecip
                             <div className="w-12 h-12 bg-[var(--terracotta)] rounded-full text-white flex items-center justify-center font-serif font-bold text-xl">U</div>
                             <div>
                                 <p className="font-bold text-[var(--ink)]">UrbanClay Team</p>
-                                <p className="text-xs text-gray-400 mb-2">Mumbai Experience Center</p>
-                                <div className="flex gap-3 text-[10px] text-gray-400 uppercase tracking-wider">
+                                <p className="text-xs text-gray-600 mb-2">Mumbai Experience Center</p>
+                                <div className="flex gap-3 text-[10px] text-gray-600 uppercase tracking-wider">
                                     <span>claytile.in</span>
                                     <span>•</span>
                                     <span>+91 80800 81951</span>
@@ -143,10 +143,10 @@ export default function EmailComposer({ initialRecipients = [] }: { initialRecip
 
                         {/* Anti-Spam Footer */}
                         <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-                            <p className="text-[10px] text-gray-400">
+                            <p className="text-[10px] text-gray-600">
                                 You received this email because your firm is listed in the public architecture directory for India.
                             </p>
-                            <a href="#" className="text-[10px] text-gray-400 underline hover:text-gray-600 mt-1 inline-block">Unsubscribe from future updates</a>
+                            <a href="#" className="text-[10px] text-gray-600 underline hover:text-gray-600 mt-1 inline-block">Unsubscribe from future updates</a>
                         </div>
                     </div>
                 </div>

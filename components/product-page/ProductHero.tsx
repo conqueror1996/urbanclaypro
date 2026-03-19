@@ -104,7 +104,7 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                             </span>
                             {/* Badges */}
                             <div className="flex gap-2">
-                                <span className="flex items-center gap-1 text-[10px] uppercase font-bold text-gray-400">
+                                <span className="flex items-center gap-1 text-[10px] uppercase font-bold text-gray-600">
                                     <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
                                     ISO Certified
                                 </span>
@@ -121,19 +121,19 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                     {/* 2. Key Specs Grid */}
                     <div className="grid grid-cols-2 gap-y-4 border-t border-b border-[#EBE5E0] py-6">
                         <div className="pr-4 border-r border-[#EBE5E0]">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Dimensions</span>
+                            <span className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Dimensions</span>
                             <span className="font-serif text-lg text-[#2A1E16] block">{product.specs?.size || 'Custom sizes'}</span>
                         </div>
                         <div className="pl-4">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Finish</span>
+                            <span className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Finish</span>
                             <span className="font-serif text-lg text-[#2A1E16] block">{activeVariant ? activeVariant.name : 'Matte / Natural'}</span>
                         </div>
                         <div className="pr-4 border-r border-[#EBE5E0]">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Material</span>
+                            <span className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Material</span>
                             <span className="font-serif text-lg text-[#2A1E16] block">Natural Clay</span>
                         </div>
                         <div className="pl-4">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Lead Time</span>
+                            <span className="block text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-1">Lead Time</span>
                             <span className="font-serif text-lg text-[#2A1E16] block">7-10 Days</span>
                         </div>
                     </div>
@@ -191,7 +191,7 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                                     {product.priceRange && product.priceRange !== 'On Request' ? product.priceRange.split('/')[0] : 'Price on Request'}
                                 </span>
                                 {product.priceRange && product.priceRange !== 'On Request' && (
-                                    <span className="text-sm text-gray-400 font-medium">/ sq.ft</span>
+                                    <span className="text-sm text-gray-600 font-medium">/ sq.ft</span>
                                 )}
                                 {/* Tooltip */}
                                 <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 w-48 bg-black text-white text-xs p-2 rounded hidden group-hover:block z-10">
@@ -213,7 +213,7 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                                 <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                             </Link>
                             <div className="text-center">
-                                <span className="text-[10px] text-gray-400 font-medium">Typically responds within 4 hours</span>
+                                <span className="text-[10px] text-gray-600 font-medium">Typically responds within 4 hours</span>
                             </div>
 
                             {!isSampleDisabled && (

@@ -75,7 +75,7 @@ export default function SeoWritingAssistant({ title, excerpt, keyword = '' }: Se
 
             {/* Google Preview */}
             <div className="mb-6 bg-white p-3 rounded-lg border border-gray-100 shadow-inner">
-                <p className="text-[10px] uppercase text-gray-400 font-bold mb-2 tracking-wider">Google Search Preview</p>
+                <p className="text-[10px] uppercase text-gray-600 font-bold mb-2 tracking-wider">Google Search Preview</p>
                 <div className="font-sans">
                     <div className="flex items-center gap-1 mb-1">
                         <div className="w-6 h-6 bg-gray-200 rounded-full text-[8px] flex items-center justify-center text-gray-500">UC</div>
@@ -88,7 +88,7 @@ export default function SeoWritingAssistant({ title, excerpt, keyword = '' }: Se
                         {title || 'Your Title Here...'}
                     </h3>
                     <p className="text-sm text-[#4d5156] mt-1 leading-snug line-clamp-2">
-                        <span className="text-gray-400">{new Date().toLocaleDateString()} — </span>
+                        <span className="text-gray-600">{new Date().toLocaleDateString()} — </span>
                         {excerpt || 'Your article description/excerpt will appear here. Make it catchy to improve click-through rates.'}
                     </p>
                 </div>
@@ -113,7 +113,7 @@ export default function SeoWritingAssistant({ title, excerpt, keyword = '' }: Se
 
             {/* Keyword Input Helper */}
             {(!keyword) && (
-                <p className="text-[10px] text-gray-400 mt-4 text-center">
+                <p className="text-[10px] text-gray-600 mt-4 text-center">
                     * Tip: Define a focus keyword to get better suggestions.
                 </p>
             )}

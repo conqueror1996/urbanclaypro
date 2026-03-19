@@ -239,7 +239,7 @@ export default function OperationsHub() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div className="space-y-4">
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Issued To (Client Name)</label>
+                                        <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Issued To (Client Name)</label>
                                         <input
                                             type="text"
                                             value={warrantyData.recipient}
@@ -248,7 +248,7 @@ export default function OperationsHub() {
                                         />
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Warranty Period (Years)</label>
+                                        <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Warranty Period (Years)</label>
                                         <input
                                             type="number"
                                             value={warrantyData.years}
@@ -257,7 +257,7 @@ export default function OperationsHub() {
                                         />
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Authorized Signatory</label>
+                                        <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Authorized Signatory</label>
                                         <input
                                             type="text"
                                             value={warrantyData.signatory}
@@ -278,7 +278,7 @@ export default function OperationsHub() {
                                 </div>
 
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Context / Note</label>
+                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Context / Note</label>
                                     <textarea
                                         value={warrantyData.message}
                                         onChange={e => setWarrantyData({ ...warrantyData, message: e.target.value })}
@@ -369,7 +369,7 @@ export default function OperationsHub() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm outline-none focus:border-[var(--terracotta)] focus:ring-4 focus:ring-[var(--terracotta)]/5 w-full md:w-64 transition-all shadow-sm"
                         />
-                        <svg className="w-5 h-5 text-gray-400 absolute left-3.5 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <svg className="w-5 h-5 text-gray-600 absolute left-3.5 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </div>
                 </div>
             </div>
@@ -448,7 +448,7 @@ export default function OperationsHub() {
 
                                 {entity._type === 'manufacturer' && entity.products && entity.products.length > 0 && (
                                     <div className="mt-4 space-y-2">
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Manufacturer Product Catalog</p>
+                                        <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest pl-1">Manufacturer Product Catalog</p>
                                         <div className="bg-indigo-50/30 rounded-2xl border border-indigo-100/50 overflow-hidden">
                                             {entity.products.map((item, i) => (
                                                 <div key={i} className={`flex justify-between items-center p-3 ${i !== entity.products!.length - 1 ? 'border-b border-indigo-100/30' : ''}`}>
@@ -488,7 +488,7 @@ export default function OperationsHub() {
 
                                         {(entity as any).startDate && (entity as any).expectedCompletion && (
                                             <div className="space-y-2">
-                                                <div className="flex justify-between text-[10px] uppercase font-bold text-gray-400 tracking-wider">
+                                                <div className="flex justify-between text-[10px] uppercase font-bold text-gray-600 tracking-wider">
                                                     <span>Progression</span>
                                                     <span>
                                                         {(() => {
@@ -598,7 +598,7 @@ export default function OperationsHub() {
                     {filtered.length === 0 && (
                         <div className="col-span-full text-center py-32 bg-white rounded-[3rem] border border-dashed border-gray-200">
                             <div className="text-5xl mb-4 text-gray-200">🔍</div>
-                            <h3 className="text-xl font-serif text-gray-400">No matching operations found</h3>
+                            <h3 className="text-xl font-serif text-gray-600">No matching operations found</h3>
                             <p className="text-sm text-gray-300">Try adjusting your search or filters.</p>
                         </div>
                     )}
@@ -636,7 +636,7 @@ export default function OperationsHub() {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="space-y-4">
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Display Name</label>
+                                        <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Display Name</label>
                                         <input
                                             required
                                             type="text"
@@ -649,7 +649,7 @@ export default function OperationsHub() {
 
                                     {modalType === 'manufacturer' && (
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Product Catalog & Purchase Rates (₹)</label>
+                                            <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Product Catalog & Purchase Rates (₹)</label>
                                             <div className="space-y-2">
                                                 {formData.products?.map((item: any, i: number) => (
                                                     <div key={i} className="flex flex-col gap-2 bg-gray-50 p-3 rounded-xl">
@@ -724,7 +724,7 @@ export default function OperationsHub() {
                                     {modalType === 'vendor' && (
                                         <>
                                             <div className="space-y-1">
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Company Name</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Company Name</label>
                                                 <input
                                                     type="text"
                                                     placeholder="Lulu Tiles..."
@@ -734,7 +734,7 @@ export default function OperationsHub() {
                                                 />
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Category</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Category</label>
                                                 <select
                                                     value={formData.category || ''}
                                                     onChange={e => setFormData({ ...formData, category: e.target.value })}
@@ -752,7 +752,7 @@ export default function OperationsHub() {
                                     {modalType === 'labour' && (
                                         <>
                                             <div className="space-y-1">
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Trade/Specialization</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Trade/Specialization</label>
                                                 <input
                                                     type="text"
                                                     placeholder="Mason, Tiler, etc."
@@ -763,7 +763,7 @@ export default function OperationsHub() {
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Exp. (Years)</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Exp. (Years)</label>
                                                     <input
                                                         type="number"
                                                         placeholder="5"
@@ -773,7 +773,7 @@ export default function OperationsHub() {
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Job Cost (₹)</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Job Cost (₹)</label>
                                                     <input
                                                         type="number"
                                                         placeholder="25000"
@@ -784,7 +784,7 @@ export default function OperationsHub() {
                                                 </div>
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Upload Documents / Work</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Upload Documents / Work</label>
                                                 <div className="relative group/upload">
                                                     <input
                                                         type="file"
@@ -824,7 +824,7 @@ export default function OperationsHub() {
                                         <div className="space-y-4">
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Client Name</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Client Name</label>
                                                     <input
                                                         required
                                                         type="text"
@@ -835,7 +835,7 @@ export default function OperationsHub() {
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Client Profession</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Client Profession</label>
                                                     <input
                                                         type="text"
                                                         placeholder="Architect, Owner, etc."
@@ -848,7 +848,7 @@ export default function OperationsHub() {
 
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Client Email</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Client Email</label>
                                                     <input
                                                         type="email"
                                                         placeholder="email@example.com"
@@ -858,7 +858,7 @@ export default function OperationsHub() {
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Client Contact</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Client Contact</label>
                                                     <input
                                                         type="text"
                                                         placeholder="+91..."
@@ -871,7 +871,7 @@ export default function OperationsHub() {
 
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Start Date</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Start Date</label>
                                                     <input
                                                         type="date"
                                                         value={formData.startDate || ''}
@@ -880,7 +880,7 @@ export default function OperationsHub() {
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Expected Completion</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Expected Completion</label>
                                                     <input
                                                         type="date"
                                                         value={formData.expectedCompletion || ''}
@@ -891,7 +891,7 @@ export default function OperationsHub() {
                                             </div>
 
                                             <div className="space-y-1">
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Site Engineer/Contractor Contact</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Site Engineer/Contractor Contact</label>
                                                 <input
                                                     type="text"
                                                     placeholder="Supervisor Number..."
@@ -902,7 +902,7 @@ export default function OperationsHub() {
                                             </div>
 
                                             <div className="space-y-1">
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Client Profile / Notes</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Client Profile / Notes</label>
                                                 <textarea
                                                     placeholder="Detailed client profile or project background..."
                                                     value={formData.clientProfile || ''}
@@ -914,7 +914,7 @@ export default function OperationsHub() {
                                     )}
 
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Location / Address</label>
+                                        <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Location / Address</label>
                                         <input
                                             type="text"
                                             placeholder="City, State..."
@@ -958,7 +958,7 @@ export default function OperationsHub() {
                                     )}
 
                                     <div className="space-y-1">
-                                        <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Phone / Contact</label>
+                                        <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Phone / Contact</label>
                                         <input
                                             type="text"
                                             placeholder="+91..."
@@ -1009,7 +1009,7 @@ export default function OperationsHub() {
 
                             <div className="space-y-4">
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Completion Date</label>
+                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Completion Date</label>
                                     <input
                                         type="date"
                                         value={completionDate}
@@ -1019,7 +1019,7 @@ export default function OperationsHub() {
                                 </div>
 
                                 <div className="space-y-1">
-                                    <label className="text-[10px] font-bold text-gray-400 uppercase ml-2 tracking-widest">Send Feedback Request To</label>
+                                    <label className="text-[10px] font-bold text-gray-600 uppercase ml-2 tracking-widest">Send Feedback Request To</label>
                                     <input
                                         type="email"
                                         placeholder="Client Email..."
@@ -1065,7 +1065,7 @@ export default function OperationsHub() {
                                 </button>
                                 <button
                                     onClick={() => setCompletionModalOpen(false)}
-                                    className="w-full text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-gray-600 p-2"
+                                    className="w-full text-xs font-bold text-gray-600 uppercase tracking-widest hover:text-gray-600 p-2"
                                 >
                                     Cancel
                                 </button>

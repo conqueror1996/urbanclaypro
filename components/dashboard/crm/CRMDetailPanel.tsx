@@ -739,7 +739,7 @@ export function CRMDetailPanel({
                                                             {l.name}
                                                         </div>
                                                     )) : (
-                                                        <div className="text-[10px] text-gray-400 italic">No labour units assigned.</div>
+                                                        <div className="text-[10px] text-gray-600 italic">No labour units assigned.</div>
                                                     )}
                                                 </div>
                                             </div>

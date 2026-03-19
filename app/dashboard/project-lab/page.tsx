@@ -184,7 +184,7 @@ export default function ProjectLab() {
                     {step !== 'upload' && (
                         <button
                             onClick={() => { setStep('upload'); setResult(null); setDiscovery(null); }}
-                            className="px-6 py-3 text-sm font-bold text-gray-400 hover:text-[var(--terracotta)] transition-colors"
+                            className="px-6 py-3 text-sm font-bold text-gray-600 hover:text-[var(--terracotta)] transition-colors"
                         >
                             ← Start New Project
                         </button>
@@ -226,7 +226,7 @@ export default function ProjectLab() {
                                         </div>
                                         <div>
                                             <p className="text-xs font-bold text-[var(--ink)]">Product Photo</p>
-                                            <p className="text-[10px] text-gray-400 uppercase tracking-widest">{files.product ? 'Image Detected' : 'Upload SKU/Style'}</p>
+                                            <p className="text-[10px] text-gray-600 uppercase tracking-widest">{files.product ? 'Image Detected' : 'Upload SKU/Style'}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -238,7 +238,7 @@ export default function ProjectLab() {
                                         </div>
                                         <div>
                                             <p className="text-xs font-bold text-[var(--ink)]">Site Photo</p>
-                                            <p className="text-[10px] text-gray-400 uppercase tracking-widest">{files.site ? 'Site Detected' : 'Installation Area'}</p>
+                                            <p className="text-[10px] text-gray-600 uppercase tracking-widest">{files.site ? 'Site Detected' : 'Installation Area'}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -247,7 +247,7 @@ export default function ProjectLab() {
                             {/* Client Name, Location & Area */}
                             <div className="space-y-6">
                                 <div>
-                                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 mb-3 block">Client Name / Context</label>
+                                    <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest ml-1 mb-3 block">Client Name / Context</label>
                                     <div className="relative">
                                         <input
                                             type="text"
@@ -260,7 +260,7 @@ export default function ProjectLab() {
                                 </div>
 
                                 <div>
-                                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 mb-3 block text-emerald-600">Site Location (Contextual)</label>
+                                    <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest ml-1 mb-3 block text-emerald-600">Site Location (Contextual)</label>
                                     <div className="relative">
                                         <input
                                             type="text"
@@ -273,7 +273,7 @@ export default function ProjectLab() {
                                 </div>
 
                                 <div>
-                                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 mb-3 block">Execution Area</label>
+                                    <label className="text-[10px] font-bold text-gray-600 uppercase tracking-widest ml-1 mb-3 block">Execution Area</label>
                                     <div className="relative">
                                         <input
                                             type="number"
@@ -319,7 +319,7 @@ export default function ProjectLab() {
                                 <div className="absolute inset-0 rounded-full border-4 border-dashed border-[var(--terracotta)]/20 animate-[spin_30s_linear_infinite]"></div>
                             </div>
                             <h4 className="text-3xl font-serif text-[var(--ink)] mb-6 italic">&quot;Show me what you are building...&quot;</h4>
-                            <p className="text-gray-400 max-w-md mt-2 leading-relaxed text-lg italic">
+                            <p className="text-gray-600 max-w-md mt-2 leading-relaxed text-lg italic">
                                 &quot;Upload a photo of your product SKU and the installation site. I will identify the patterns and measure the engineering needs.&quot;
                             </p>
                         </div>
@@ -329,7 +329,7 @@ export default function ProjectLab() {
                         <div className="h-[750px] bg-white rounded-[4rem] border border-gray-100 p-20 flex flex-col items-center justify-center space-y-10 text-center shadow-xl">
                             <div className="w-32 h-32 border-[6px] border-gray-50 border-t-[var(--terracotta)] rounded-full animate-spin"></div>
                             <h4 className="text-3xl font-serif text-[var(--ink)]">Consulting Master Logic...</h4>
-                            <p className="text-gray-400 max-w-lg mx-auto leading-relaxed italic">
+                            <p className="text-gray-600 max-w-lg mx-auto leading-relaxed italic">
                                 &quot;Analyzing clay density, surface tension, and architectural symmetry targets...&quot;
                             </p>
                         </div>
@@ -384,7 +384,7 @@ export default function ProjectLab() {
                                     <Shield className="w-24 h-24 rotate-12" />
                                 </div>
                                 <div className="relative z-10 space-y-6">
-                                    <h4 className="text-[10px] font-black text-white/50 uppercase tracking-[0.4em] mb-4">Master Consultant&apos;s Strategic Vision</h4>
+                                    <h4 className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-4">Master Consultant&apos;s Strategic Vision</h4>
                                     <p className="text-3xl font-serif italic leading-snug">
                                         &quot;{result.strategicVision}&quot;
                                     </p>
@@ -399,13 +399,13 @@ export default function ProjectLab() {
                                 {/* Solutions */}
                                 <div className="bg-white p-10 rounded-[3rem] border-2 border-[var(--terracotta)] shadow-xl relative overflow-hidden">
                                     <div className="absolute top-4 right-6 bg-[var(--terracotta)] text-white text-[9px] font-black px-3 py-1 rounded-full uppercase">Primary Choice</div>
-                                    <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.3em] mb-8">Selected Material Path</h4>
+                                    <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-8">Selected Material Path</h4>
                                     <div className="space-y-6">
                                         <div className="text-2xl font-serif text-[var(--ink)] leading-tight">{result.primarySolution.product}</div>
                                         <div className="text-sm font-black text-[var(--terracotta)] uppercase tracking-widest">{result.primarySolution.method}</div>
                                         <p className="text-xs text-gray-500 leading-relaxed italic">&quot;{result.primarySolution.reasoning}&quot;</p>
                                         <div className="p-3 bg-gray-50 rounded-xl flex justify-between">
-                                            <span className="text-[9px] uppercase font-bold text-gray-400">Esc. Quantity</span>
+                                            <span className="text-[9px] uppercase font-bold text-gray-600">Esc. Quantity</span>
                                             <span className="text-sm font-bold text-[var(--terracotta)]">{result.primarySolution.quantity}</span>
                                         </div>
                                     </div>
@@ -414,16 +414,16 @@ export default function ProjectLab() {
                                 <div className="bg-gray-50/50 p-10 rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all relative overflow-hidden">
                                     <h4 className="text-[10px] font-black text-gray-300 uppercase mb-8">Strategic Alternative</h4>
                                     <div className="space-y-4">
-                                        <div className="text-2xl font-serif text-gray-400">{result.alternativeSolution.product}</div>
-                                        <div className="text-sm font-black text-gray-400 uppercase tracking-widest">{result.alternativeSolution.method}</div>
-                                        <p className="text-xs text-gray-400 leading-relaxed italic">&quot;{result.alternativeSolution.reasoning}&quot;</p>
+                                        <div className="text-2xl font-serif text-gray-600">{result.alternativeSolution.product}</div>
+                                        <div className="text-sm font-black text-gray-600 uppercase tracking-widest">{result.alternativeSolution.method}</div>
+                                        <p className="text-xs text-gray-600 leading-relaxed italic">&quot;{result.alternativeSolution.reasoning}&quot;</p>
                                     </div>
                                 </div>
 
                                 {/* Financial Forecast */}
                                 <div className="bg-[var(--ink)] text-white p-10 rounded-[3rem] shadow-xl md:col-span-2">
                                     <div className="flex justify-between items-center mb-12">
-                                        <h4 className="text-[10px] font-black text-[var(--sand)] uppercase tracking-[0.4em]">Investment Forecasting</h4>
+                                        <h4 className="text-[10px] font-black text-[var(--sand)] uppercase tracking-[0.2em]">Investment Forecasting</h4>
                                         <span className="text-[var(--sand)] font-mono text-[10px] border border-[var(--sand)]/20 px-3 py-1 rounded-full uppercase tracking-widest">Confidence Level: 98%</span>
                                     </div>
                                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
@@ -453,7 +453,7 @@ export default function ProjectLab() {
 
                                 {/* Engineering Mastery */}
                                 <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-xl md:col-span-2">
-                                    <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.3em] mb-8">Engineering Mastery</h4>
+                                    <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-8">Engineering Mastery</h4>
                                     <div className="grid md:grid-cols-2 gap-8">
                                         <div className="space-y-6">
                                             <div className="space-y-3">
@@ -484,7 +484,7 @@ export default function ProjectLab() {
                                 {/* Roadmap */}
                                 <div className="bg-white p-12 rounded-[4rem] border border-gray-100 shadow-xl md:col-span-2 overflow-hidden relative">
                                     <div className="absolute top-0 right-10 w-px h-full bg-gray-50"></div>
-                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-12">Step-By-Step Engineering Roadmap</h4>
+                                    <h4 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-12">Step-By-Step Engineering Roadmap</h4>
                                     <div className="space-y-10">
                                         {result.stepByStepExecution.map((step, i) => (
                                             <div key={i} className="relative flex gap-10 group">
@@ -498,7 +498,7 @@ export default function ProjectLab() {
                                                             <h5 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-1">{step.phase}</h5>
                                                             <h6 className="text-xl font-serif text-[var(--ink)]">{step.whatToDo}</h6>
                                                         </div>
-                                                        <div className="px-4 py-2 bg-gray-50 rounded-xl text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                        <div className="px-4 py-2 bg-gray-50 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest">
                                                             {step.estimatedDays} Days
                                                         </div>
                                                     </div>

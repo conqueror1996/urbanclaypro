@@ -126,10 +126,10 @@ export default function StockDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
                     <div>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Total SKUs</p>
+                        <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-1">Total SKUs</p>
                         <h3 className="text-3xl font-serif text-[var(--ink)]">{totalItems}</h3>
                     </div>
-                    <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-400">
+                    <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-600">
                         <Package className="w-6 h-6" />
                     </div>
                 </div>
@@ -150,7 +150,7 @@ export default function StockDashboard() {
 
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
                     <div>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Est. Valuation</p>
+                        <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-1">Est. Valuation</p>
                         <h3 className="text-3xl font-serif text-[var(--ink)]">₹{(totalValuation / 100000).toFixed(2)}L</h3>
                     </div>
                     <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">
@@ -176,7 +176,7 @@ export default function StockDashboard() {
                     </button>
                 </div>
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-600" />
                     <input
                         type="text"
                         placeholder="Search products..."
@@ -197,11 +197,11 @@ export default function StockDashboard() {
                     <table className="w-full text-left">
                         <thead>
                             <tr className="bg-gray-50/50 border-b border-gray-100">
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Product Details</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400 text-center">Available Qty</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Status</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Location</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400 text-right">Actions</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Product Details</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600 text-center">Available Qty</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Status</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Location</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -221,13 +221,13 @@ export default function StockDashboard() {
                                                 </div>
                                                 <div>
                                                     <span className="font-bold text-[var(--ink)] block">{stock.product.title}</span>
-                                                    <span className="text-[10px] text-gray-400 uppercase tracking-wider">{stock._id.slice(0, 8)}</span>
+                                                    <span className="text-[10px] text-gray-600 uppercase tracking-wider">{stock._id.slice(0, 8)}</span>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             <div className="font-mono text-lg font-bold text-[var(--ink)]">
-                                                {stock.quantity.toLocaleString()} <span className="text-xs text-gray-400 font-sans font-normal">{stock.unit}</span>
+                                                {stock.quantity.toLocaleString()} <span className="text-xs text-gray-600 font-sans font-normal">{stock.unit}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
@@ -251,7 +251,7 @@ export default function StockDashboard() {
                                                 <button
                                                     onClick={() => handleQuickUpdate(stock, -50)}
                                                     disabled={isUpdating}
-                                                    className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-red-50 hover:text-red-500 text-gray-400 transition-colors"
+                                                    className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-red-50 hover:text-red-500 text-gray-600 transition-colors"
                                                     title="-50 Qty"
                                                 >
                                                     <ArrowDownRight className="w-4 h-4" />
@@ -259,7 +259,7 @@ export default function StockDashboard() {
                                                 <button
                                                     onClick={() => handleQuickUpdate(stock, 50)}
                                                     disabled={isUpdating}
-                                                    className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-emerald-50 hover:text-emerald-500 text-gray-400 transition-colors"
+                                                    className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-emerald-50 hover:text-emerald-500 text-gray-600 transition-colors"
                                                     title="+50 Qty"
                                                 >
                                                     <ArrowUpRight className="w-4 h-4" />
@@ -304,17 +304,17 @@ export default function StockDashboard() {
                             <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
                                 <div>
                                     <h3 className="font-serif text-xl text-[var(--ink)]">Adjust Stock</h3>
-                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{editingStock.product.title}</p>
+                                    <p className="text-xs text-gray-600 font-bold uppercase tracking-wider">{editingStock.product.title}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-[10px] text-gray-400 uppercase">Current</p>
+                                    <p className="text-[10px] text-gray-600 uppercase">Current</p>
                                     <p className="font-mono font-bold">{editingStock.quantity}</p>
                                 </div>
                             </div>
 
                             <div className="p-8 space-y-6">
                                 <div>
-                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">New Quantity</label>
+                                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-2 block">New Quantity</label>
                                     <div className="flex items-center gap-4">
                                         <button
                                             onClick={() => setEditQty(Math.max(0, editQty - 100))}
@@ -338,7 +338,7 @@ export default function StockDashboard() {
                                 </div>
 
                                 <div>
-                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">Reason for Adjustment</label>
+                                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-2 block">Reason for Adjustment</label>
                                     <select
                                         value={editReason}
                                         onChange={e => setEditReason(e.target.value)}
@@ -355,7 +355,7 @@ export default function StockDashboard() {
                                 <div className="pt-4 flex gap-3">
                                     <button
                                         onClick={() => setEditingStock(null)}
-                                        className="flex-1 py-3 text-sm font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest"
+                                        className="flex-1 py-3 text-sm font-bold text-gray-600 hover:text-gray-600 uppercase tracking-widest"
                                     >
                                         Cancel
                                     </button>

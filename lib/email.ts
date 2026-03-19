@@ -131,21 +131,52 @@ export async function sendLeadConfirmationEmail(lead: any) {
             <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">Hello ${lead.name ? lead.name.split(' ')[0] : 'there'},</p>
             <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">Thank you for reaching out to UrbanClay. We have received your inquiry for <strong>${lead.product || 'Architectural Clay Systems'}</strong>.</p>
             
-            <div style="background-color: #fdfcfb; padding: 24px; border-radius: 16px; border: 1px solid #f5eeee; margin: 32px 0;">
-                <p style="margin: 0; font-size: 13px; color: #9ca3af; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Project Details</p>
-                <p style="margin: 8px 0 0; font-size: 16px; font-weight: 700; color: #2A1E16;">${lead.product}</p>
-                <p style="margin: 4px 0 0; font-size: 14px; color: #6b7280;">Location: ${lead.city || lead.country || 'N/A'}</p>
-                ${lead.quantity ? `<p style="margin: 4px 0 0; font-size: 14px; color: #6b7280;">Estimated Area: ${lead.quantity}</p>` : ''}
+            <div style="background-color: #fcfaf9; padding: 32px; border-radius: 24px; border: 1px solid #f0f0f0; margin: 32px 0;">
+                <p style="margin: 0 0 16px; font-size: 11px; font-weight: 800; color: #b45a3c; text-transform: uppercase; letter-spacing: 2px;">Inquiry Metadata</p>
+                <div style="font-size: 24px; font-weight: 700; color: #2A1E16; font-family: 'Playfair Display', serif; margin-bottom: 24px; border-bottom: 1px solid #f0f0f0; padding-bottom: 24px; line-height: 1.2;">
+                    ${lead.product || 'Architectural Facade System'}
+                </div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 50%; vertical-align: top; padding-right: 16px;">
+                            <p style="margin: 0 0 4px; font-size: 11px; color: #9ca3af; font-weight: bold; text-transform: uppercase;">Project Location</p>
+                            <p style="margin: 0; font-size: 15px; font-weight: 700; color: #2A1E16;">${lead.city || lead.country || 'N/A'}</p>
+                        </td>
+                        ${lead.quantity ? `
+                        <td style="width: 50%; vertical-align: top;">
+                            <p style="margin: 0 0 4px; font-size: 11px; color: #9ca3af; font-weight: bold; text-transform: uppercase;">Estimated Area</p>
+                            <p style="margin: 0; font-size: 15px; font-weight: 700; color: #2A1E16;">${lead.quantity}</p>
+                        </td>
+                        ` : ''}
+                    </tr>
+                </table>
             </div>
 
-            <p style="font-size: 15px; line-height: 1.6; color: #4B5563;">What happens next?</p>
-            <ul style="font-size: 14px; line-height: 1.8; color: #4B5563; padding-left: 20px;">
-                <li><strong>Technical Review:</strong> Our facade engineers will cross-examine your requirements.</li>
-                <li><strong>Specification Package:</strong> We will prepare relevant CAD drawings and technical datasheets.</li>
-                <li><strong>Logistics Quote:</strong> A detailed estimate including port-to-port logistics will be provided.</li>
-            </ul>
+            <p style="font-size: 16px; font-weight: 700; color: #2A1E16; margin-top: 40px; margin-bottom: 24px;">What happens next?</p>
+            
+            <div style="border-left: 2px solid #b45a3c; padding-left: 24px; margin-left: 4px;">
+                <div style="margin-bottom: 24px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #b45a3c; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Phase 01</div>
+                    <div style="font-size: 15px; font-weight: 700; color: #2A1E16;">Technical Review</div>
+                    <div style="font-size: 14px; color: #6b7280; margin-top: 4px; line-height: 1.5;">Our facade engineers will cross-examine your technical requirements and structural loads.</div>
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #b45a3c; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Phase 02</div>
+                    <div style="font-size: 15px; font-weight: 700; color: #2A1E16;">Specification Package</div>
+                    <div style="font-size: 14px; color: #6b7280; margin-top: 4px; line-height: 1.5;">We will prepare relevant CAD drawings, technical datasheets, and system details for your project.</div>
+                </div>
+                
+                <div style="margin-bottom: 8px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #b45a3c; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;">Phase 03</div>
+                    <div style="font-size: 15px; font-weight: 700; color: #2A1E16;">Logistics & Commercials</div>
+                    <div style="font-size: 14px; color: #6b7280; margin-top: 4px; line-height: 1.5;">A detailed estimate including ${(!lead.country || lead.country === 'India') ? 'factory-to-site' : 'port-to-port'} logistics will be provided.</div>
+                </div>
+            </div>
 
-            <p style="margin-top: 32px; font-size: 13px; color: #6b7280; line-height: 1.6;">A specialist from our ${lead.country ? 'International' : 'Regional'} desk will reach out via WhatsApp/Email within 24 hours.</p>
+            <p style="margin-top: 40px; font-size: 14px; color: #2A1E16; font-weight: 600;">
+                A specialist from our ${(!lead.country || lead.country === 'India') ? 'Domestic' : 'International'} desk will reach out via WhatsApp/Email within 24 hours.
+            </p>
         `;
 
         const mailOptions = {

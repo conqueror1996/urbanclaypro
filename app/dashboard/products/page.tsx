@@ -109,7 +109,7 @@ export default function ProductDashboardPage() {
                 <div className="p-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
                     <div>
                         <h2 className="font-bold text-[#1a1512] font-serif text-xl">Catalog Hierarchy</h2>
-                        <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-wider">Category → Series → Variant</p>
+                        <p className="text-[10px] text-gray-600 mt-1 uppercase tracking-wider">Category → Series → Variant</p>
                     </div>
                     <button
                         onClick={() => { setSelectedProduct(null); setViewMode('create'); }}
@@ -129,7 +129,7 @@ export default function ProductDashboardPage() {
                             <div key={category}>
                                 {/* Category Header */}
                                 <div className="flex justify-between items-center pr-2 mb-3 bg-gray-50/50 py-1 rounded-lg">
-                                    <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 flex items-center gap-2">
+                                    <h3 className="text-[10px] font-bold text-gray-600 uppercase tracking-widest px-2 flex items-center gap-2">
                                         <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]"></span>
                                         {category}
                                     </h3>
@@ -209,12 +209,12 @@ export default function ProductDashboardPage() {
                                                                     <h4 className={`font-bold text-sm truncate ${selectedProduct?._id === product._id ? 'text-[#2A1E16]' : 'text-gray-700'}`}>
                                                                         {product.title}
                                                                     </h4>
-                                                                    <p className="text-[10px] text-gray-400 truncate mt-0.5">
+                                                                    <p className="text-[10px] text-gray-600 truncate mt-0.5">
                                                                         Series • {(product as any).variants?.length || 0} variants
                                                                     </p>
                                                                 </div>
                                                                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                                    <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -269,7 +269,7 @@ export default function ProductDashboardPage() {
                                 <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                             </div>
                             <h3 className="font-serif text-2xl text-gray-300">Select a Range</h3>
-                            <p className="text-gray-400 mt-2">Manage your Product Ranges and their individual Sub-variants.</p>
+                            <p className="text-gray-600 mt-2">Manage your Product Ranges and their individual Sub-variants.</p>
                         </motion.div>
                     )}
 
@@ -337,7 +337,7 @@ function CreateProductWizard({ onCancel, onCreate }: { onCancel: () => void, onC
                         {!isCreatingCategory ? (
                             <button onClick={() => setIsCreatingCategory(true)} className="text-[10px] font-bold text-[var(--terracotta)] hover:underline uppercase">+ New Category</button>
                         ) : (
-                            <button onClick={() => setIsCreatingCategory(false)} className="text-[10px] font-bold text-gray-400 hover:text-gray-600 uppercase">Cancel</button>
+                            <button onClick={() => setIsCreatingCategory(false)} className="text-[10px] font-bold text-gray-600 hover:text-gray-600 uppercase">Cancel</button>
                         )}
                     </div>
 
@@ -352,7 +352,7 @@ function CreateProductWizard({ onCancel, onCreate }: { onCancel: () => void, onC
                                 {Array.from(new Set(categories)).map(c => <option key={c} value={c}>{c}</option>)}
                             </select>
                             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                             </div>
                         </div>
                     ) : (
@@ -629,7 +629,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                 <div className="flex items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-serif text-[#1a1512]">{form.title}</h1>
-                        <div className="flex gap-4 mt-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+                        <div className="flex gap-4 mt-2 text-xs font-bold uppercase tracking-wider text-gray-600">
                             <span>Range: {(form as any).tag}</span>
                             <span>•</span>
                             <span>{(form as any).slug?.current || form.slug}</span>
@@ -676,7 +676,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                         onClick={() => setActiveTab(tab as any)}
                         className={`px-6 py-4 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors ${activeTab === tab
                             ? 'border-[var(--terracotta)] text-[var(--terracotta)]'
-                            : 'border-transparent text-gray-400 hover:text-gray-600'
+                            : 'border-transparent text-gray-600 hover:text-gray-600'
                             }`}
                     >
                         {tab === 'products' ? 'Sub-variants' : tab === 'seo' ? 'SEO (AI)' : tab}
@@ -738,7 +738,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                                     ))}
                                     <button
                                         onClick={() => setShowVariantModal(true)}
-                                        className="aspect-square border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-400 hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] hover:bg-[var(--terracotta)]/5 transition-all"
+                                        className="aspect-square border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center text-gray-600 hover:border-[var(--terracotta)] hover:text-[var(--terracotta)] hover:bg-[var(--terracotta)]/5 transition-all"
                                     >
                                         <svg className="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                                         <span className="text-[10px] font-bold uppercase">AI Add Product</span>
@@ -807,7 +807,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                                         </div>
                                         <div className="text-xs text-gray-500 flex-1 pt-2">
                                             <p className="mb-2">Upload a high-quality main image for this product range. This will be shown on the catalog and dashboard list.</p>
-                                            <p className="text-gray-400">Supported: JPG, PNG, WEBP. Max 5MB.</p>
+                                            <p className="text-gray-600">Supported: JPG, PNG, WEBP. Max 5MB.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -984,7 +984,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                                 <div className="grid md:grid-cols-2 gap-8">
                                     {/* Current Data */}
                                     <div className="space-y-6">
-                                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b pb-2">Current Metadata</h3>
+                                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest border-b pb-2">Current Metadata</h3>
                                         <div>
                                             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Meta Title <span className="text-gray-300 font-normal">({(form.seo?.metaTitle || '').length}/60)</span></label>
                                             <input
@@ -1085,7 +1085,7 @@ export function ProductEditor({ product, existingProducts, onRefresh }: { produc
                                             </>
                                         ) : (
                                             <div className="h-full flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-gray-100 rounded-xl">
-                                                <p className="text-gray-400 text-sm">Click "Generate Suggestion" to see AI recommendations here.</p>
+                                                <p className="text-gray-600 text-sm">Click "Generate Suggestion" to see AI recommendations here.</p>
                                             </div>
                                         )}
                                     </div>
@@ -1153,7 +1153,7 @@ function CategoryEditor({ category, onRefresh }: { category: Category, onRefresh
                         {form.title}
                         <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded-full uppercase tracking-widest font-bold">Category Level</span>
                     </h1>
-                    <p className="text-xs text-gray-400 mt-2 uppercase tracking-widest font-bold">Manage Pillar Page Content & Assets</p>
+                    <p className="text-xs text-gray-600 mt-2 uppercase tracking-widest font-bold">Manage Pillar Page Content & Assets</p>
                 </div>
                 <div className="flex gap-4">
                     <button
@@ -1174,7 +1174,7 @@ function CategoryEditor({ category, onRefresh }: { category: Category, onRefresh
                             <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                             Architectural Pillar Background
                         </h3>
-                        <p className="text-xs text-gray-400 mt-1 uppercase tracking-widest font-bold">Used as the immersive hero background on the landing page</p>
+                        <p className="text-xs text-gray-600 mt-1 uppercase tracking-widest font-bold">Used as the immersive hero background on the landing page</p>
                     </div>
 
                     <div className="flex gap-8 items-start">
@@ -1213,7 +1213,7 @@ function CategoryEditor({ category, onRefresh }: { category: Category, onRefresh
                 {/* Text Content */}
                 <div className="grid grid-cols-1 gap-6">
                     <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Category Description</label>
+                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-2">Category Description</label>
                         <textarea
                             rows={3}
                             value={form.description || ''}
@@ -1222,7 +1222,7 @@ function CategoryEditor({ category, onRefresh }: { category: Category, onRefresh
                         />
                     </div>
                     <div>
-                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Bottom SEO Content (Pillar Page Only)</label>
+                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-2">Bottom SEO Content (Pillar Page Only)</label>
                         <textarea
                             rows={10}
                             value={form.bottomContent || ''}

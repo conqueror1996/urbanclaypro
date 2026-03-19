@@ -68,7 +68,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className="inline-block text-[var(--terracotta)] font-extrabold tracking-[0.3em] uppercase text-xs md:text-sm mb-6 bg-black/20 px-3 py-1 rounded-sm backdrop-blur-sm"
+                            className="inline-block text-[var(--terracotta)] font-extrabold tracking-[0.2em] uppercase text-xs md:text-sm mb-6 bg-black/20 px-3 py-1 rounded-sm backdrop-blur-sm"
                         >
                             {project.type}
                         </motion.span>
@@ -101,7 +101,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                     transition={{ delay: 1.2, duration: 1 }}
                     className="absolute bottom-12 right-12 hidden lg:flex flex-col items-center gap-4 z-20"
                 >
-                    <span className="text-[10px] text-white/50 font-bold uppercase tracking-[0.3em] [writing-mode:vertical-lr] rotate-180">Scroll to Explore</span>
+                    <span className="text-[10px] text-white/50 font-bold uppercase tracking-[0.2em] [writing-mode:vertical-lr] rotate-180">Scroll to Explore</span>
                     <div className="w-[1px] h-16 bg-white/20 relative overflow-hidden">
                         <motion.div
                             className="w-full h-full bg-[var(--terracotta)] origin-top"
@@ -253,7 +253,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
 
                                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-white/10 pb-8 gap-6 relative z-10">
                                     <h2 className="text-4xl md:text-5xl lg:text-7xl font-serif leading-none">Studio <br className="hidden md:block" /><span className="text-[var(--terracotta)] italic font-light">Palette</span></h2>
-                                    <span className="text-xs font-bold uppercase tracking-[0.3em] opacity-50 flex items-center gap-3">
+                                    <span className="text-xs font-bold uppercase tracking-[0.2em] opacity-50 flex items-center gap-3">
                                         <span className="w-8 h-[1px] bg-white/50"></span>
                                         Curated Materials
                                     </span>
@@ -302,7 +302,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                                 ))}
                             </div>
 
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/70 relative z-10 flex items-center gap-3">
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70 relative z-10 flex items-center gap-3">
                                 <span className="w-4 h-4 border border-white/40 rounded-full flex items-center justify-center"><div className="w-1 h-1 bg-white/70 rounded-full" /></span>
                                 Next Chapter
                             </span>

@@ -622,7 +622,7 @@ export default function KilnAnimation() {
                         className="absolute bottom-32 flex flex-col items-center gap-2 animate-bounce pointer-events-none"
                     >
                         <span className="text-xs tracking-widest uppercase text-gray-500">Scroll to Fire</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600">
                             <path d="M7 13L12 18L17 13M7 6L12 11L17 6" />
                         </svg>
                     </motion.div>

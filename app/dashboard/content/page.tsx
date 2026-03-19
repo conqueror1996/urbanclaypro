@@ -187,14 +187,14 @@ export default function ContentEnginePage() {
             <div className="flex gap-4 mb-8">
                 <button
                     onClick={() => setActiveTab('blog')}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${activeTab === 'blog' ? 'bg-[#2A1E16] text-white shadow-lg' : 'bg-white text-gray-400 border border-gray-100 hover:border-gray-200'}`}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${activeTab === 'blog' ? 'bg-[#2A1E16] text-white shadow-lg' : 'bg-white text-gray-600 border border-gray-100 hover:border-gray-200'}`}
                 >
                     <Sparkles size={14} />
                     Blog AI
                 </button>
                 <button
                     onClick={() => setActiveTab('home')}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${activeTab === 'home' ? 'bg-[#2A1E16] text-white shadow-lg' : 'bg-white text-gray-400 border border-gray-100 hover:border-gray-200'}`}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-all ${activeTab === 'home' ? 'bg-[#2A1E16] text-white shadow-lg' : 'bg-white text-gray-600 border border-gray-100 hover:border-gray-200'}`}
                 >
                     <Home size={14} />
                     Homepage Assets
@@ -270,7 +270,7 @@ export default function ContentEnginePage() {
                                 <div>
                                     <div className="flex items-center gap-3 mb-6">
                                         <span className="bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Draft Ready</span>
-                                        <span className="text-gray-400 text-sm">Review before publishing</span>
+                                        <span className="text-gray-600 text-sm">Review before publishing</span>
                                     </div>
 
                                     <h2 className="text-2xl font-serif text-[#2A1E16] mb-4">{draftRequest.title}</h2>
@@ -388,7 +388,7 @@ export default function ContentEnginePage() {
 
                         {firms.length === 0 && (
                             <div className="text-center py-12 border border-dashed border-gray-200 rounded-2xl">
-                                <p className="text-gray-400 text-sm">No firms added yet.</p>
+                                <p className="text-gray-600 text-sm">No firms added yet.</p>
                                 <button onClick={addFirm} className="mt-2 text-[var(--terracotta)] font-bold text-xs uppercase tracking-widest">Add First Firm</button>
                             </div>
                         )}
@@ -408,7 +408,7 @@ export default function ContentEnginePage() {
                                 ) : technicalEdgeImage ? (
                                     <img src={technicalEdgeImage} alt="Existing" className="w-full h-full object-contain bg-white" />
                                 ) : (
-                                    <div className="text-center text-gray-400 p-4">
+                                    <div className="text-center text-gray-600 p-4">
                                         <p className="text-xs uppercase font-bold">No Image Set</p>
                                     </div>
                                 )}
@@ -454,7 +454,7 @@ export default function ContentEnginePage() {
                                 ) : specifierToolkitImage ? (
                                     <img src={specifierToolkitImage} alt="Existing" className="w-full h-full object-contain bg-white" />
                                 ) : (
-                                    <div className="text-center text-gray-400 p-4">
+                                    <div className="text-center text-gray-600 p-4">
                                         <p className="text-xs uppercase font-bold">No Image Set</p>
                                     </div>
                                 )}

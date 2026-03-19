@@ -199,7 +199,7 @@ export default function TerracottaTilesIndia() {
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-lg">Pan-India Delivery</h4>
-                                            <p className="text-gray-400 text-sm mt-1">From Kashmir to Kanyakumari, our logistics network ensures timely delivery to your site.</p>
+                                            <p className="text-gray-600 text-sm mt-1">From Kashmir to Kanyakumari, our logistics network ensures timely delivery to your site.</p>
                                         </div>
                                     </li>
                                     <li className="flex items-start gap-4">
@@ -208,7 +208,7 @@ export default function TerracottaTilesIndia() {
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-lg">Batch Consistency</h4>
-                                            <p className="text-gray-400 text-sm mt-1">Automated firing processes ensure uniform color and texture across large orders, crucial for large-scale facades.</p>
+                                            <p className="text-gray-600 text-sm mt-1">Automated firing processes ensure uniform color and texture across large orders, crucial for large-scale facades.</p>
                                         </div>
                                     </li>
                                     <li className="flex items-start gap-4">
@@ -217,7 +217,7 @@ export default function TerracottaTilesIndia() {
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-lg">Eco-Friendly Manufacturing</h4>
-                                            <p className="text-gray-400 text-sm mt-1">We use natural clay and sustainable firing methods to minimize carbon footprint.</p>
+                                            <p className="text-gray-600 text-sm mt-1">We use natural clay and sustainable firing methods to minimize carbon footprint.</p>
                                         </div>
                                     </li>
                                 </ul>

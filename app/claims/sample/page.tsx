@@ -56,7 +56,7 @@ export default function ClaimSamplePage() {
                 >
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Delivery Address</label>
+                            <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-2">Delivery Address</label>
                             <textarea
                                 required
                                 value={address}
@@ -66,7 +66,7 @@ export default function ClaimSamplePage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Contact Number</label>
+                            <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-2">Contact Number</label>
                             <input
                                 required
                                 type="tel"
@@ -84,7 +84,7 @@ export default function ClaimSamplePage() {
                             {status === 'loading' ? 'Processing...' : 'Request Shipment'}
                         </button>
 
-                        <p className="text-[10px] text-gray-400 text-center">
+                        <p className="text-[10px] text-gray-600 text-center">
                             By requesting, you agree to our privacy policy. Kits are subject to availability in your region.
                         </p>
                     </form>

@@ -187,7 +187,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                             {post.excerpt}
                         </p>
 
-                        <div className="flex items-center gap-4 text-sm font-medium text-gray-400 uppercase tracking-widest border-t border-b border-gray-200 py-4 w-full justify-center max-w-md">
+                        <div className="flex items-center gap-4 text-sm font-medium text-gray-600 uppercase tracking-widest border-t border-b border-gray-200 py-4 w-full justify-center max-w-md">
                             <span>{post.date}</span>
                             <span className="w-1 h-1 bg-[var(--terracotta)] rounded-full"></span>
                             <span>{post.readTime}</span>
@@ -236,7 +236,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                                         </div>
                                         <div>
                                             <h4 className="font-serif text-lg text-[#2A1E16] group-hover:text-[var(--terracotta)] transition-colors">{p.title}</h4>
-                                            <span className="text-xs uppercase tracking-widest text-gray-400">View Details →</span>
+                                            <span className="text-xs uppercase tracking-widest text-gray-600">View Details →</span>
                                         </div>
                                     </Link>
                                 ))}

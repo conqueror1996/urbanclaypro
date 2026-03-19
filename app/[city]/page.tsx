@@ -372,7 +372,7 @@ export default async function CityPage({ params }: PageProps) {
                 {/* Areas List (SEO Keyword Juice) */}
                 <section className="bg-gray-50 py-16 border-t border-gray-200">
                     <div className="max-w-7xl mx-auto px-6">
-                        <p className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-8 text-center">Delivering to all areas in {data.name}</p>
+                        <p className="text-sm font-bold uppercase tracking-widest text-gray-600 mb-8 text-center">Delivering to all areas in {data.name}</p>
                         <div className="flex flex-wrap justify-center gap-3 text-center">
                             {areas.map((area: string) => (
                                 <span key={area} className="text-sm text-gray-500 bg-white px-4 py-2 rounded-full border border-gray-100 shadow-sm">
@@ -385,7 +385,7 @@ export default async function CityPage({ params }: PageProps) {
 
                 {/* Nearby Locations (Internal Linking) */}
                 <section className="py-12 max-w-7xl mx-auto px-6 text-center">
-                    <p className="text-sm text-gray-400 mb-6">Explore other locations in {data.region} India</p>
+                    <p className="text-sm text-gray-600 mb-6">Explore other locations in {data.region} India</p>
                     <div className="flex justify-center flex-wrap gap-6 text-[var(--terracotta)] underline decoration-[var(--terracotta)]/30 underline-offset-4">
                         {regionCities
                             .filter((c: string) => c !== data.slug)

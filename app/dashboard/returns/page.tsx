@@ -54,17 +54,17 @@ export default function ReturnsDashboard() {
                     <table className="w-full text-left">
                         <thead>
                             <tr className="bg-gray-50 border-b border-gray-100">
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Date</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Customer</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Product</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Reason</th>
-                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-400">Status</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Date</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Customer</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Product</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Reason</th>
+                                <th className="px-6 py-4 text-[10px] uppercase font-bold text-gray-600">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {returns.map((r) => (
                                 <tr key={r._id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4 text-xs font-mono text-gray-400">
+                                    <td className="px-6 py-4 text-xs font-mono text-gray-600">
                                         {r.date}
                                     </td>
                                     <td className="px-6 py-4 font-bold text-[var(--ink)]">

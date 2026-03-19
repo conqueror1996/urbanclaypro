@@ -67,7 +67,7 @@ export function CRMFilters({
                             onClick={() => setSearchTerm('')}
                             className="absolute right-0 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
                         >
-                            <X className="w-3 h-3 text-gray-400" />
+                            <X className="w-3 h-3 text-gray-600" />
                         </button>
                     )}
                 </div>

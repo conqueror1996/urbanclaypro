@@ -96,7 +96,7 @@ export default function MobileMenu({
 
                     <nav className="flex flex-col gap-2">
                         <div className="py-2">
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Products</h4>
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-600 mb-4">Products</h4>
                             <div className="pl-2 flex flex-col gap-2 border-l-2 border-gray-100">
                                 {PRODUCT_CATEGORIES.map((cat, idx) => {
                                     const isActive = pathname === cat.href || (cat.href.includes('?') && pathname === cat.href.split('?')[0] && searchParams.toString() === cat.href.split('?')[1]);
@@ -110,7 +110,7 @@ export default function MobileMenu({
                                             <span className={`text-base font-serif transition-colors ${isActive ? 'text-[var(--terracotta)] font-bold' : 'text-[#2A1E16] group-hover:text-[var(--terracotta)]'}`}>
                                                 {cat.title}
                                             </span>
-                                            <span className="text-[10px] uppercase tracking-wider text-gray-400">{cat.subtitle}</span>
+                                            <span className="text-[10px] uppercase tracking-wider text-gray-600">{cat.subtitle}</span>
                                         </Link>
                                     );
                                 })}
@@ -136,7 +136,7 @@ export default function MobileMenu({
                                     className={`min-h-[52px] py-4 text-lg font-serif font-medium flex justify-between items-center border-b border-gray-50 last:border-0 active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2 ${isActive ? 'text-[var(--terracotta)] font-bold bg-gray-50' : 'text-[#2A1E16]'}`}
                                 >
                                     {link.label}
-                                    <svg className={`w-4 h-4 ${isActive ? 'text-[var(--terracotta)]' : 'text-gray-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                    <svg className={`w-4 h-4 ${isActive ? 'text-[var(--terracotta)]' : 'text-gray-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                 </Link>
                             );
                         })}
@@ -155,7 +155,7 @@ export default function MobileMenu({
                             Get Samples {boxLength > 0 && <span className="bg-white text-[var(--terracotta)] w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">{boxLength}</span>}
                         </button>
                         <div className="text-center pt-2">
-                            <p className="text-xs text-gray-400 mb-2">Need help?</p>
+                            <p className="text-xs text-gray-600 mb-2">Need help?</p>
                             <a href="tel:+918080081951" className="text-base font-medium text-[#2A1E16] block min-h-[44px] flex items-center justify-center hover:text-[var(--terracotta)] transition-colors">+91 80800 81951</a>
                         </div>
                     </div>

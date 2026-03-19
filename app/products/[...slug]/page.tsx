@@ -438,7 +438,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                                 {title}
                             </h1>
                             {/* SEO Power Text */}
-                            <p className="max-w-2xl text-[var(--foreground)]/60 text-lg font-light leading-relaxed">
+                            <p className="max-w-2xl text-[var(--foreground)]/70 text-lg font-light leading-relaxed">
                                 {description}
                             </p>
                         </div>
@@ -460,7 +460,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                                     <div className="flex items-center gap-4 mb-8">
                                         <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></div>
                                         <h3 className="text-2xl font-serif text-[var(--foreground)]">
-                                            {product.title} <span className="text-[var(--foreground)]/40 text-lg font-sans font-light italic ml-2">Series</span>
+                                            {product.title} <span className="text-[var(--foreground)]/70 text-lg font-sans font-light italic ml-2">Series</span>
                                         </h3>
                                         <div className="h-px bg-[var(--line)] flex-1" />
                                         <Link href={`/products/${product.category?.slug || 'collection'}/${product.slug}`} className="text-xs uppercase tracking-widest text-[var(--terracotta)] hover:text-[var(--foreground)] transition-colors">
@@ -492,7 +492,7 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
                     {/* SEO Power Text (Bottom Content) */}
                     {collection.bottomContent && (
                         <div className="mt-32 pt-20 border-t border-[var(--line)] max-w-4xl mx-auto">
-                            <div className="prose prose-invert prose-lg text-[var(--foreground)]/50 leading-loose whitespace-pre-wrap font-light">
+                            <div className="prose prose-invert prose-lg text-[var(--foreground)]/70 leading-loose whitespace-pre-wrap font-light">
                                 <h2 className="text-2xl font-serif text-[var(--foreground)] mb-8">More about {title}</h2>
                                 {collection.bottomContent}
                             </div>

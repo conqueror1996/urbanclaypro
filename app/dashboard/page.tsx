@@ -117,7 +117,7 @@ export default function DashboardPage() {
             {/* QUICK ACTIONS ROW */}
             {/* QUICK ACTIONS GRID */}
             <div>
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Quick Operations</h3>
+                <h3 className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">Quick Operations</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <Link
                         href="/dashboard/orders/create"
@@ -128,7 +128,7 @@ export default function DashboardPage() {
                         </div>
                         <div>
                             <span className="font-bold text-[var(--ink)] block text-sm">Payment Link</span>
-                            <span className="text-[10px] text-gray-400">Create & Share</span>
+                            <span className="text-[10px] text-gray-600">Create & Share</span>
                         </div>
                     </Link>
 
@@ -141,7 +141,7 @@ export default function DashboardPage() {
                         </div>
                         <div>
                             <span className="font-bold text-[var(--ink)] block text-sm">Add Product</span>
-                            <span className="text-[10px] text-gray-400">Update Catalog</span>
+                            <span className="text-[10px] text-gray-600">Update Catalog</span>
                         </div>
                     </Link>
 
@@ -154,7 +154,7 @@ export default function DashboardPage() {
                         </div>
                         <div>
                             <span className="font-bold text-[var(--ink)] block text-sm">New Campaign</span>
-                            <span className="text-[10px] text-gray-400">Marketing Blast</span>
+                            <span className="text-[10px] text-gray-600">Marketing Blast</span>
                         </div>
                     </Link>
 
@@ -176,28 +176,28 @@ export default function DashboardPage() {
             {/* REAL SALES STATS */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 font-sans">Total Leads</p>
+                    <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-2 font-sans">Total Leads</p>
                     <div className="flex justify-between items-end">
                         <h3 className="text-4xl font-serif text-[var(--ink)]">{stats.total}</h3>
                         <span className="text-[var(--ink)] bg-gray-100 text-xs px-2 py-1 rounded-full font-bold">All Time</span>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 font-sans">Serious Clients</p>
+                    <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-2 font-sans">Serious Clients</p>
                     <div className="flex justify-between items-end">
                         <h3 className="text-4xl font-serif text-[var(--ink)]">{stats.serious}</h3>
                         <span className="text-[var(--terracotta)] bg-[var(--terracotta)]/10 text-xs px-2 py-1 rounded-full font-bold">High Value</span>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 font-sans">Unread / New</p>
+                    <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-2 font-sans">Unread / New</p>
                     <div className="flex justify-between items-end">
                         <h3 className="text-4xl font-serif text-[var(--ink)]">{stats.new}</h3>
                         <span className="text-red-600 bg-red-50 text-xs px-2 py-1 rounded-full font-bold">Action Needed</span>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 font-sans">Deals Won</p>
+                    <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-2 font-sans">Deals Won</p>
                     <div className="flex justify-between items-end">
                         <h3 className="text-4xl font-serif text-[var(--ink)]">{stats.converted}</h3>
                         <span className="text-emerald-700 bg-emerald-50 text-xs px-2 py-1 rounded-full font-bold">Converted</span>
@@ -235,19 +235,19 @@ export default function DashboardPage() {
 
                 <Link href="/dashboard/vendors" className="bg-[var(--sand)]/20 hover:bg-[var(--sand)]/40 p-4 rounded-xl border border-[var(--sand)]/50 transition-all group">
                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Vendors</span>
+                        <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Vendors</span>
                         <span className="text-lg font-serif text-[var(--ink)]">{stats.vendors}</span>
                     </div>
                 </Link>
                 <Link href="/dashboard/labours" className="bg-[var(--sand)]/20 hover:bg-[var(--sand)]/40 p-4 rounded-xl border border-[var(--sand)]/50 transition-all group">
                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Labour Force</span>
+                        <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Labour Force</span>
                         <span className="text-lg font-serif text-[var(--ink)]">{stats.labours}</span>
                     </div>
                 </Link>
                 <Link href="/dashboard/stocks" className="bg-[var(--sand)]/20 hover:bg-[var(--sand)]/40 p-4 rounded-xl border border-[var(--sand)]/50 transition-all group">
                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Inventory</span>
+                        <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">Inventory</span>
                         <span className="text-lg font-serif text-[var(--ink)]">{stats.stocks}</span>
                     </div>
                 </Link>
@@ -324,7 +324,7 @@ export default function DashboardPage() {
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col justify-between">
                     <div>
                         <h3 className="text-lg font-bold text-[var(--ink)] mb-1">Wholesale Estimator</h3>
-                        <p className="text-xs text-gray-400 mb-6">Quick quote for bulk inquiries (Tier 2 Pricing)</p>
+                        <p className="text-xs text-gray-600 mb-6">Quick quote for bulk inquiries (Tier 2 Pricing)</p>
 
                         <div className="bg-gray-50/50 rounded-xl p-4 space-y-4 border border-gray-100">
                             <div className="flex justify-between items-center">
@@ -342,7 +342,7 @@ export default function DashboardPage() {
                                 <span className="text-sm font-bold text-[var(--terracotta)]">Estimate</span>
                                 <div className="text-right">
                                     <div className="text-xl font-serif text-[var(--ink)]" id="calc-res">₹0</div>
-                                    <div className="text-[10px] text-gray-400" id="calc-rate">@ Base Rate</div>
+                                    <div className="text-[10px] text-gray-600" id="calc-rate">@ Base Rate</div>
                                 </div>
                             </div>
                         </div>
@@ -362,12 +362,12 @@ export default function DashboardPage() {
                     <div className="px-8 py-6 border-b border-gray-100/50 flex justify-between items-center bg-gray-50/30">
                         <div>
                             <h3 className="font-bold text-[var(--ink)] text-lg">Recent Inquiries</h3>
-                            <p className="text-xs text-gray-400 mt-1">Latest activity from the website</p>
+                            <p className="text-xs text-gray-600 mt-1">Latest activity from the website</p>
                         </div>
                         <Link href="/dashboard/leads" className="text-xs text-[var(--terracotta)] font-bold uppercase tracking-wider hover:underline">View All Leads</Link>
                     </div>
                     <table className="w-full text-sm text-left">
-                        <thead className="bg-gray-50/50 text-gray-400 font-medium uppercase text-[10px] tracking-widest font-sans">
+                        <thead className="bg-gray-50/50 text-gray-600 font-medium uppercase text-[10px] tracking-widest font-sans">
                             <tr>
                                 <th className="px-8 py-4">Customer</th>
                                 <th className="px-6 py-4">Product</th>
@@ -382,10 +382,10 @@ export default function DashboardPage() {
                                         <td className="px-8 py-4 font-bold text-[var(--ink)]">
                                             {lead.contact}
                                             {lead.isSerious && <span className="ml-2 text-xs">🔥</span>}
-                                            <div className="text-[10px] text-gray-400 font-normal">{lead.role}</div>
+                                            <div className="text-[10px] text-gray-600 font-normal">{lead.role}</div>
                                         </td>
                                         <td className="px-6 py-4 text-gray-500 max-w-[150px] truncate" title={lead.product}>{lead.product}</td>
-                                        <td className="px-6 py-4 text-gray-400 text-xs font-mono">
+                                        <td className="px-6 py-4 text-gray-600 text-xs font-mono">
                                             {new Date(lead.submittedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                         </td>
                                         <td className="px-6 py-4">
@@ -397,7 +397,7 @@ export default function DashboardPage() {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={4} className="text-center py-8 text-gray-400">
+                                    <td colSpan={4} className="text-center py-8 text-gray-600">
                                         No leads found yet.
                                     </td>
                                 </tr>

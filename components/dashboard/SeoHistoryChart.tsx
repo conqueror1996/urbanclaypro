@@ -13,7 +13,7 @@ export default function SeoHistoryChart({ data }: SEOChartProps) {
 
     if (!sortedData || sortedData.length < 2) {
         return (
-            <div className="h-32 flex items-center justify-center text-xs text-gray-400 font-mono border border-dashed border-gray-200 rounded-lg">
+            <div className="h-32 flex items-center justify-center text-xs text-gray-600 font-mono border border-dashed border-gray-200 rounded-lg">
                 Not enough history yet
             </div>
         );
@@ -39,7 +39,7 @@ export default function SeoHistoryChart({ data }: SEOChartProps) {
 
     return (
         <div className="w-full">
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-3">30-Day Health Trend</h4>
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-600 mb-3">30-Day Health Trend</h4>
             <div className="relative h-[80px] w-full">
                 <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                     {/* Gradient Defs */}
@@ -75,7 +75,7 @@ export default function SeoHistoryChart({ data }: SEOChartProps) {
                     ))}
                 </svg>
             </div>
-            <div className="flex justify-between mt-2 text-[9px] text-gray-400 font-mono">
+            <div className="flex justify-between mt-2 text-[9px] text-gray-600 font-mono">
                 <span>{new Date(sortedData[0].date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                 <span>{new Date(sortedData[sortedData.length - 1].date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
             </div>

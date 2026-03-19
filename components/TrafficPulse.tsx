@@ -36,7 +36,7 @@ export default function TrafficPulse() {
             `}
         >
             <div className="relative z-10">
-                <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${highlight ? 'text-white/80' : 'text-gray-400'}`}>
+                <p className={`text-xs font-bold uppercase tracking-wider mb-2 ${highlight ? 'text-white/80' : 'text-gray-600'}`}>
                     {label}
                 </p>
                 <div className="flex items-baseline gap-2">
@@ -50,7 +50,7 @@ export default function TrafficPulse() {
                         </span>
                     )}
                 </div>
-                {subtext && <p className={`text-[10px] mt-1 ${highlight ? 'text-white/60' : 'text-gray-400'}`}>{subtext}</p>}
+                {subtext && <p className={`text-[10px] mt-1 ${highlight ? 'text-white/60' : 'text-gray-600'}`}>{subtext}</p>}
             </div>
 
             {/* Decorative */}
@@ -96,7 +96,7 @@ export default function TrafficPulse() {
                 <div className="lg:col-span-2 bg-white border border-[#e9e2da] rounded-2xl p-6 flex flex-col items-center justify-center relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-transparent" />
                     <div className="relative z-10 text-center">
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-4">Site Health Score</p>
+                        <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-4">Site Health Score</p>
                         <div className="relative inline-flex items-center justify-center">
                             <svg className="w-32 h-32 transform -rotate-90">
                                 <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-gray-100" />
@@ -110,7 +110,7 @@ export default function TrafficPulse() {
                                 {stats.healthScore}
                             </span>
                         </div>
-                        <p className="text-xs text-gray-400 mt-4">
+                        <p className="text-xs text-gray-600 mt-4">
                             Based on Performance (LCP) & Stability
                         </p>
                     </div>

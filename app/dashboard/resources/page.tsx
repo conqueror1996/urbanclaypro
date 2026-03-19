@@ -83,7 +83,7 @@ export default function ResourcesDashboardPage() {
                                 </div>
                                 <div className="overflow-hidden flex-1">
                                     <h4 className={`font-bold text-sm truncate ${selectedResource?._id === res._id ? 'text-[#2A1E16]' : 'text-gray-900'}`}>{res.title}</h4>
-                                    <p className="text-[10px] text-gray-400 mt-0.5 uppercase tracking-wider">
+                                    <p className="text-[10px] text-gray-600 mt-0.5 uppercase tracking-wider">
                                         {res.type} • {res.size || 'Unknown Size'}
                                     </p>
                                 </div>
@@ -107,7 +107,7 @@ export default function ResourcesDashboardPage() {
                                 <svg className="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                             </div>
                             <h3 className="font-serif text-2xl text-gray-300">Select a Resource</h3>
-                            <p className="text-gray-400 mt-2">Manage technical sheets, BIM files, and brochures.</p>
+                            <p className="text-gray-600 mt-2">Manage technical sheets, BIM files, and brochures.</p>
                         </motion.div>
                     )}
 
@@ -181,7 +181,7 @@ function ResourceEditor({ resource, onSave, onCancel, onDelete }: { resource: Re
             <div className="flex justify-between items-start mb-8 border-b border-gray-100 pb-6">
                 <div>
                     <h2 className="text-2xl font-serif text-[#1a1512]">{resource ? 'Edit Resource' : 'New Resource'}</h2>
-                    <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">Upload Documents</p>
+                    <p className="text-xs text-gray-600 mt-1 uppercase tracking-wider">Upload Documents</p>
                 </div>
                 <div className="flex gap-3">
                     {resource && (
@@ -235,7 +235,7 @@ function ResourceEditor({ resource, onSave, onCancel, onDelete }: { resource: Re
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                             </div>
                             <p className="font-bold text-gray-900">{file ? file.name : "Click to Upload File"}</p>
-                            <p className="text-xs text-gray-400 mt-1">PDF, ZIP, DWG supported</p>
+                            <p className="text-xs text-gray-600 mt-1">PDF, ZIP, DWG supported</p>
                             {resource?.url && !file && (
                                 <p className="text-xs text-green-600 font-bold mt-2">✓ Current file active</p>
                             )}

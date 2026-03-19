@@ -106,7 +106,7 @@ export default function PillarPage() {
                 {/* Sidebar: Table of Contents */}
                 <aside className="lg:col-span-3 hidden lg:block">
                     <div className="sticky top-32 space-y-2 text-sm">
-                        <p className="font-bold uppercase tracking-widest text-gray-400 mb-6">Contents</p>
+                        <p className="font-bold uppercase tracking-widest text-gray-600 mb-6">Contents</p>
                         <nav className="space-y-4 border-l-2 border-gray-100 pl-4">
                             <a href="#why-clay" className="block text-gray-500 hover:text-[var(--terracotta)] hover:pl-2 transition-all">1. Why Clay Returns</a>
                             <a href="#facade-systems" className="block text-gray-500 hover:text-[var(--terracotta)] hover:pl-2 transition-all">2. Facade Systems</a>
@@ -116,7 +116,7 @@ export default function PillarPage() {
                         </nav>
 
                         <div className="pt-12">
-                            <p className="font-bold uppercase tracking-widest text-gray-400 mb-4">Share</p>
+                            <p className="font-bold uppercase tracking-widest text-gray-600 mb-4">Share</p>
                             <SocialShare
                                 url="https://claytile.in/journal/architects-guide-terracotta-cladding-bricks"
                                 title="The Architect's Guide to Architectural Clay"

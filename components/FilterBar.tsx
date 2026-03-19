@@ -161,7 +161,7 @@ export default function FilterBar({ filters, options, actions, categories, produ
                                                 <option key={s} value={s}>{s}</option>
                                             ))}
                                         </select>
-                                        <svg className="w-3 h-3 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className="w-3 h-3 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>
@@ -180,7 +180,7 @@ export default function FilterBar({ filters, options, actions, categories, produ
                                                 <option key={s} value={s}>{s}</option>
                                             ))}
                                         </select>
-                                        <svg className="w-3 h-3 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className="w-3 h-3 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>
@@ -193,26 +193,26 @@ export default function FilterBar({ filters, options, actions, categories, produ
                 {/* Active Filters Summary (Chips to remove) */}
                 {(filters.colors.length > 0 || filters.applications.length > 0 || filters.series || filters.size) && (
                     <div className="flex gap-2 flex-wrap items-center animate-fade-in-up">
-                        <span className="text-xs text-gray-400 mr-2">Calculated:</span>
+                        <span className="text-xs text-gray-600 mr-2">Calculated:</span>
 
                         {filters.colors.map(c => (
                             <button key={c} onClick={() => actions.toggleColor(c)} className="flex items-center text-[10px] uppercase font-bold bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 transition-colors">
-                                {c} <span className="ml-1 text-gray-400">×</span>
+                                {c} <span className="ml-1 text-gray-600">×</span>
                             </button>
                         ))}
                         {filters.applications.map(a => (
                             <button key={a} onClick={() => actions.toggleApplication(a)} className="flex items-center text-[10px] uppercase font-bold bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 transition-colors">
-                                {a} <span className="ml-1 text-gray-400">×</span>
+                                {a} <span className="ml-1 text-gray-600">×</span>
                             </button>
                         ))}
                         {filters.series && (
                             <button onClick={() => actions.setSeries(null)} className="flex items-center text-[10px] uppercase font-bold bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 transition-colors">
-                                {filters.series} <span className="ml-1 text-gray-400">×</span>
+                                {filters.series} <span className="ml-1 text-gray-600">×</span>
                             </button>
                         )}
                         {filters.size && (
                             <button onClick={() => actions.setSize(null)} className="flex items-center text-[10px] uppercase font-bold bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 transition-colors">
-                                {filters.size} <span className="ml-1 text-gray-400">×</span>
+                                {filters.size} <span className="ml-1 text-gray-600">×</span>
                             </button>
                         )}
                     </div>

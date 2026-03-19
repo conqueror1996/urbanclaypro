@@ -378,7 +378,7 @@ export default function ProjectLabInterface() {
                             {/* Report Header */}
                             <div className="bg-[#1a1512] text-[#EBE5D9] p-6 md:p-10 text-center border-b border-white/10 relative overflow-hidden">
                                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--terracotta)] to-transparent opacity-50" />
-                                <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[var(--terracotta)] mb-4">Final Execution Directive</h3>
+                                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--terracotta)] mb-4">Final Execution Directive</h3>
                                 <p className="text-xl md:text-3xl font-serif leading-relaxed max-w-3xl mx-auto">
                                     "{report.strategicVision.replace('EXECUTION DIRECTIVE:', '')}"
                                 </p>
@@ -391,11 +391,11 @@ export default function ProjectLabInterface() {
                                     {/* Primary */}
                                     <div className="p-6 md:p-10 border border-[var(--ink)]/10 rounded-xl bg-white shadow-sm relative overflow-hidden group">
                                         <div className="absolute top-0 left-0 w-1 h-full bg-[var(--terracotta)]" />
-                                        <h4 className="font-bold text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-6">Computational Selection</h4>
+                                        <h4 className="font-bold text-[10px] uppercase tracking-[0.2em] text-gray-600 mb-6">Computational Selection</h4>
                                         <h3 className="text-2xl md:text-3xl font-serif text-[var(--ink)] mb-3 group-hover:text-[var(--terracotta)] transition-colors">{report.primarySolution?.product}</h3>
                                         <p className="text-sm text-gray-600 mb-6 font-light leading-relaxed">{report.primarySolution?.reasoning}</p>
                                         <div className="flex flex-wrap gap-2 text-[10px] font-mono uppercase bg-gray-50 p-4 rounded border border-gray-100">
-                                            <span className="text-gray-400">Methodology:</span>
+                                            <span className="text-gray-600">Methodology:</span>
                                             <span className="font-bold">{report.primarySolution?.method}</span>
                                         </div>
                                     </div>
@@ -446,7 +446,7 @@ export default function ProjectLabInterface() {
                                                 <span className="font-mono text-gray-600">{report.financialForecasting?.wastageBuffer || '0'}%</span>
                                             </div>
                                             <p className="mt-8 text-sm font-light text-gray-500 italic border border-gray-200 p-4 rounded bg-white">
-                                                <span className="block text-[9px] uppercase tracking-wider mb-2 text-gray-400">ROI Insight</span>
+                                                <span className="block text-[9px] uppercase tracking-wider mb-2 text-gray-600">ROI Insight</span>
                                                 "{report.financialForecasting?.roiInsight}"
                                             </p>
                                         </div>

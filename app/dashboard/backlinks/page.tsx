@@ -104,7 +104,7 @@ export default function BacklinkManager() {
             {/* Pipeline Board */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <table className="w-full text-left">
-                    <thead className="bg-gray-50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-400">
+                    <thead className="bg-gray-50 border-b border-gray-100 text-xs uppercase tracking-wider text-gray-600">
                         <tr>
                             <th className="px-6 py-4">Target Website</th>
                             <th className="px-6 py-4">Status</th>
@@ -139,7 +139,7 @@ export default function BacklinkManager() {
                             </tr>
                         )) : (
                             <tr>
-                                <td colSpan={4} className="text-center py-12 text-gray-400">No outreach targets yet. Add competitors or magazines!</td>
+                                <td colSpan={4} className="text-center py-12 text-gray-600">No outreach targets yet. Add competitors or magazines!</td>
                             </tr>
                         )}
                     </tbody>

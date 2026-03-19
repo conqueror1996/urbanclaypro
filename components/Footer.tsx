@@ -171,7 +171,7 @@ function SocialLink({ href, label, icon }: { href: string; label: string; icon: 
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#d8b09a] hover:text-[#1c1917] transition-all duration-300"
+            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-600 hover:bg-[#d8b09a] hover:text-[#1c1917] transition-all duration-300"
             aria-label={label}
         >
             {icon === 'instagram' && (

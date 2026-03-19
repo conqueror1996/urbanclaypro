@@ -186,7 +186,7 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                 <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                     <div>
                         <h3 className="text-2xl font-serif font-bold text-[#1a1512]">Edit Variant</h3>
-                        <p className="text-xs text-gray-400 mt-1 uppercase tracking-wider">Update photos and details</p>
+                        <p className="text-xs text-gray-600 mt-1 uppercase tracking-wider">Update photos and details</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
@@ -194,7 +194,7 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                             className="hover:bg-red-50 p-2 rounded-full transition-colors group"
                             title="Delete Variant"
                         >
-                            <svg className="w-5 h-5 text-gray-400 group-hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            <svg className="w-5 h-5 text-gray-600 group-hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </button>
                         <button onClick={onClose} className="hover:bg-gray-200 p-2 rounded-full transition-colors">
                             <svg className="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -253,7 +253,7 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                                 {mainImagePreview ? (
                                     <Image src={mainImagePreview} alt="Main" fill className="object-cover" />
                                 ) : (
-                                    <div className="flex items-center justify-center w-full h-full text-gray-400">No Image</div>
+                                    <div className="flex items-center justify-center w-full h-full text-gray-600">No Image</div>
                                 )}
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span className="text-white text-sm font-bold bg-black/20 backdrop-blur-md px-3 py-1 rounded-full">Change Photo</span>
@@ -336,7 +336,7 @@ export default function VariantEditor({ variant, onClose, onSave, onDelete }: Va
                                 ))}
                                 <button
                                     onClick={() => galleryFileInputRef.current?.click()}
-                                    className="aspect-square bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)]/5 transition-all text-center p-2"
+                                    className="aspect-square bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-600 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)]/5 transition-all text-center p-2"
                                 >
 
                                     <div className="flex flex-col items-center gap-1">

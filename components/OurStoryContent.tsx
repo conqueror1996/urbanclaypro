@@ -56,7 +56,7 @@ export default function OurStoryContent({ data }: OurStoryContentProps) {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                         >
-                            <span className="text-[var(--terracotta)] font-medium tracking-[0.3em] uppercase text-xs md:text-sm mb-6 block">
+                            <span className="text-[var(--terracotta)] font-medium tracking-[0.2em] uppercase text-xs md:text-sm mb-6 block">
                                 {estYear}
                             </span>
                             <h1 className="text-5xl md:text-8xl font-serif font-medium text-[#2A1E16] mb-8 leading-[1.1]">
@@ -197,7 +197,7 @@ function HorizontalTimeline({ events }: { events?: { year: string, title: string
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full pt-32 px-8 md:px-24">
                     <div className="relative z-10 pointer-events-none">
-                        <span className="text-[var(--terracotta)] font-medium tracking-[0.3em] uppercase text-xs md:text-sm block mb-2">
+                        <span className="text-[var(--terracotta)] font-medium tracking-[0.2em] uppercase text-xs md:text-sm block mb-2">
                             Our Journey
                         </span>
                         <h2 className="text-4xl md:text-6xl font-serif text-white">Milestones</h2>

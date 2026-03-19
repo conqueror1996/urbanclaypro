@@ -97,13 +97,13 @@ export default function SeoAuditWidget() {
                             </span>
                         )}
                     </h3>
-                    <p className="text-xs text-gray-400 mt-1">Live recommendations engine</p>
+                    <p className="text-xs text-gray-600 mt-1">Live recommendations engine</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${progress}%` }}></div>
                     </div>
-                    <span className="text-xs font-bold text-gray-400">{progress}% Fixed</span>
+                    <span className="text-xs font-bold text-gray-600">{progress}% Fixed</span>
                 </div>
             </div>
 
@@ -140,7 +140,7 @@ export default function SeoAuditWidget() {
                                 </div>
                                 <h4 className="font-bold text-[var(--ink)] text-sm mb-1">{item.issue}</h4>
                                 <p className="text-xs text-gray-500 leading-relaxed mb-3">
-                                    <span className="font-semibold text-gray-400">Page: {item.page}</span> — {item.action}
+                                    <span className="font-semibold text-gray-600">Page: {item.page}</span> — {item.action}
                                 </p>
                                 <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                                     <Link href={item.page.startsWith('/') ? item.page : '/'} target="_blank" className="text-[10px] font-bold text-[var(--terracotta)] uppercase tracking-wider hover:underline flex items-center gap-1">

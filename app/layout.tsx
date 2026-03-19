@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Epilogue, Inter } from "next/font/google";
+import { Space_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import dynamic from "next/dynamic";
@@ -9,15 +9,15 @@ import PageTransition from "@/components/PageTransition";
 import ResourceHints from "@/components/ResourceHints";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const epilogue = Epilogue({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-epilogue",
+  variable: "--font-space-grotesk",
   display: "swap",
 });
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -125,7 +125,7 @@ export default function RootLayout({
       <head>
         <ResourceHints />
       </head>
-      <body className={`${inter.variable} ${epilogue.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${manrope.variable} ${spaceGrotesk.variable} font-sans antialiased`} suppressHydrationWarning>
         <SecurityProvider>
           <SampleProvider>
             <GlobalClientFeatures />

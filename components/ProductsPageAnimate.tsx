@@ -308,7 +308,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                                             setActiveTab('All');
                                             router.push(pathname, { scroll: false });
                                         }}
-                                        className="ml-4 p-2 text-[var(--foreground)]/30 hover:text-[var(--terracotta)] transition-all"
+                                        className="ml-4 p-2 text-[var(--foreground)]/70 hover:text-[var(--terracotta)] transition-all"
                                         title="Reset Filters"
                                     >
                                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -327,7 +327,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
 
                             {/* 1. Categories Block */}
                             <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/70 mb-1">
                                     Categories
                                 </label>
                                 <div className="relative">
@@ -352,7 +352,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
 
                             {/* 2. Budget Block */}
                             <div className="flex-shrink-0 min-w-[160px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/70 mb-1">
                                     Budget Range
                                 </label>
                                 <div className="relative">
@@ -373,7 +373,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
 
                             {/* 3. Color Block */}
                             <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/70 mb-1">
                                     Color
                                 </label>
                                 <div className="relative">
@@ -395,7 +395,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
 
                             {/* 4. Series Block */}
                             <div className="flex-shrink-0 min-w-[140px] px-5 py-3 border-r border-[var(--line)] relative group active:bg-[var(--sand)] transition-colors [-webkit-tap-highlight-color:transparent]">
-                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-1">
+                                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/70 mb-1">
                                     Series
                                 </label>
                                 <div className="relative">
@@ -447,7 +447,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                                 <div key={category} className="section-category">
                                     {/* CATEGORY HEADER */}
                                     <div className="flex flex-col mb-12 border-b border-[var(--line)] pb-8 pt-4 relative">
-                                        <span className="text-[var(--terracotta)] font-black tracking-[0.3em] uppercase text-[10px] mb-4 block">
+                                        <span className="text-[var(--terracotta)] font-black tracking-[0.2em] uppercase text-[10px] mb-4 block">
                                             {category}
                                         </span>
                                         <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-[var(--foreground)] font-bold uppercase tracking-tighter leading-[0.8] select-none opacity-[0.03] absolute -mt-4 pointer-events-none">
@@ -465,12 +465,12 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                                                 <div className="flex items-center gap-4 mb-8">
                                                     <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></div>
                                                     <h3 className="text-2xl md:text-3xl font-serif text-[var(--foreground)]">
-                                                        {product.title} <span className="text-[var(--foreground)]/30 text-lg font-sans font-light italic ml-2">Series</span>
+                                                        {product.title} <span className="text-[var(--foreground)]/70 text-lg font-sans font-light italic ml-2">Series</span>
                                                     </h3>
                                                     <div className="h-px bg-[var(--line)] flex-1 ml-4" />
                                                     <Link
                                                         href={`/products/${product.category?.slug || 'collection'}/${product.slug}`}
-                                                        className="text-[var(--foreground)]/30 text-[10px] font-bold uppercase tracking-widest hover:text-[var(--terracotta)] transition-colors"
+                                                        className="text-[var(--foreground)]/70 text-[10px] font-bold uppercase tracking-widest hover:text-[var(--terracotta)] transition-colors"
                                                     >
                                                         View Details
                                                     </Link>
@@ -508,7 +508,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
                                     {/* SERIES HEADER */}
                                     <div className="flex items-center gap-4 mb-8">
                                         <h3 className="text-2xl font-serif text-[var(--foreground)]">
-                                            {product.title} <span className="text-[var(--foreground)]/30 text-lg font-sans font-light italic ml-2">Series</span>
+                                            {product.title} <span className="text-[var(--foreground)]/70 text-lg font-sans font-light italic ml-2">Series</span>
                                         </h3>
                                         <div className="h-px bg-[var(--line)] flex-1 ml-4" />
                                     </div>
@@ -530,7 +530,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
 
                         {matchingProducts.length === 0 && (
                             <div className="col-span-full py-32 text-center border-t border-[var(--line)]">
-                                <span className="text-[var(--foreground)]/30 text-lg font-serif italic">No architectural pieces found in this collection.</span>
+                                <span className="text-[var(--foreground)]/70 text-lg font-serif italic">No architectural pieces found in this collection.</span>
                             </div>
                         )}
                     </motion.div>

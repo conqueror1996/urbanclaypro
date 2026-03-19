@@ -205,7 +205,7 @@ export default async function WikiArticlePage({ params }: PageProps) {
             <main className="pt-32 pb-20 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
 
                 {/* Breadcrumbs */}
-                <div className="flex items-center text-xs md:text-sm text-gray-400 mb-8 border-b border-gray-100 pb-4">
+                <div className="flex items-center text-xs md:text-sm text-gray-600 mb-8 border-b border-gray-100 pb-4">
                     <Link href="/wiki" className="hover:text-[var(--terracotta)] font-medium">Wiki</Link>
                     <span className="mx-2">/</span>
                     <Link href={`/wiki?category=${article.category}`} className="hover:text-[var(--terracotta)] capitalize">{article.category}</Link>
@@ -233,7 +233,7 @@ export default async function WikiArticlePage({ params }: PageProps) {
                                             'bg-red-100 text-red-800'}`}>
                                     {article.difficulty} Level
                                 </span>
-                                <span className="text-xs text-gray-400 font-mono">
+                                <span className="text-xs text-gray-600 font-mono">
                                     Last Updated: {new Date(article._updatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                                 </span>
                             </div>
@@ -269,14 +269,14 @@ export default async function WikiArticlePage({ params }: PageProps) {
                                                     <div className="w-8 h-8 flex items-center justify-center bg-red-50 text-red-500 rounded text-xs font-bold">PDF</div>
                                                     <div className="flex-1 min-w-0">
                                                         <div className="text-sm font-medium text-gray-900 group-hover:text-[var(--terracotta)] truncate">{doc.title}</div>
-                                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider">{doc.size}</div>
+                                                        <div className="text-[10px] text-gray-600 uppercase tracking-wider">{doc.size}</div>
                                                     </div>
                                                 </a>
                                             </li>
                                         ))}
                                     </ul>
                                 ) : (
-                                    <p className="text-sm text-gray-400 italic">No downloadable assets available.</p>
+                                    <p className="text-sm text-gray-600 italic">No downloadable assets available.</p>
                                 )}
                             </div>
 
@@ -292,7 +292,7 @@ export default async function WikiArticlePage({ params }: PageProps) {
                                                 </div>
                                                 <div>
                                                     <h4 className="text-sm font-bold text-gray-900 group-hover:text-[var(--terracotta)] leading-tight mb-1">{prod.title}</h4>
-                                                    <span className="text-xs text-gray-400 group-hover:underline">View Specs →</span>
+                                                    <span className="text-xs text-gray-600 group-hover:underline">View Specs →</span>
                                                 </div>
                                             </Link>
                                         ))}

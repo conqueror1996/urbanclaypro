@@ -53,7 +53,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                             <div className="cursor-default">
                                 <div className="flex items-center gap-3 mb-6">
                                     <span className="h-[1px] w-8 bg-[var(--terracotta)]" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--terracotta)]">Global Specification Grade</span>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--terracotta)]">Global Specification Grade</span>
                                 </div>
                                 <h1 className="font-serif leading-[0.95] text-[#111] tracking-tighter flex flex-col mb-8">
                                     <span className="text-[52px] md:text-[88px] font-extrabold text-balance">

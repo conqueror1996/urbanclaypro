@@ -87,7 +87,7 @@ export default function CollectionVariants({ variants, title }: CollectionVarian
                                         {variant.name}
                                     </h3>
                                     {variant.priceRange && (
-                                        <p className="text-xs text-gray-400 font-medium mt-1">
+                                        <p className="text-xs text-gray-600 font-medium mt-1">
                                             {variant.priceRange.split('/')[0]} / sq.ft
                                         </p>
                                     )}

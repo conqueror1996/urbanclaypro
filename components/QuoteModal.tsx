@@ -159,9 +159,9 @@ Sent from UrbanClay Website`;
                 <div className="flex justify-between items-center mb-6 border-b border-[var(--line)] pb-4">
                     <div>
                         <h3 className="text-xl font-serif text-[var(--foreground)]">Request Quote</h3>
-                        <p className="text-[var(--foreground)]/40 text-xs mt-1">Get pricing for {productName}</p>
+                        <p className="text-[var(--foreground)]/70 text-xs mt-1">Get pricing for {productName}</p>
                     </div>
-                    <button onClick={onClose} className="p-2 bg-[var(--line)]/50 rounded-full text-[var(--foreground)]/60 hover:text-[var(--foreground)]">
+                    <button onClick={onClose} className="p-2 bg-[var(--line)]/50 rounded-full text-[var(--foreground)]/70 hover:text-[var(--foreground)]">
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
@@ -184,7 +184,7 @@ Sent from UrbanClay Website`;
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Your Name</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/70 mb-2 block">Your Name</label>
                                     <input
                                         type="text"
                                         name="name"
@@ -196,7 +196,7 @@ Sent from UrbanClay Website`;
                                     {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">I am a...</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/70 mb-2 block">I am a...</label>
                                     <select
                                         name="role"
                                         value={formData.role}
@@ -211,7 +211,7 @@ Sent from UrbanClay Website`;
                                 </div>
                                 <div className="p-4 bg-[var(--terracotta)]/5 rounded-xl border border-[var(--terracotta)]/10">
                                     <p className="text-[var(--terracotta)] text-sm mb-1 font-medium">Why we ask?</p>
-                                    <p className="text-[var(--foreground)]/60 text-xs">We customize pricing based on project type and volume.</p>
+                                    <p className="text-[var(--foreground)]/70 text-xs">We customize pricing based on project type and volume.</p>
                                 </div>
                                 <button type="button" onClick={nextStep} className="w-full py-4 bg-[var(--terracotta)] text-white font-bold uppercase tracking-widest text-xs rounded-xl mt-4">
                                     Next
@@ -228,7 +228,7 @@ Sent from UrbanClay Website`;
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Project City</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/70 mb-2 block">Project City</label>
                                     <input
                                         type="text"
                                         name="city"
@@ -239,7 +239,7 @@ Sent from UrbanClay Website`;
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Quantity (Approx)</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/70 mb-2 block">Quantity (Approx)</label>
                                     <input
                                         type="text"
                                         name="quantity"
@@ -250,7 +250,7 @@ Sent from UrbanClay Website`;
                                     />
                                 </div>
                                 <div className="flex gap-3 mt-4">
-                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-[var(--line)]/50 text-[var(--foreground)]/60 font-bold uppercase tracking-widest text-xs rounded-xl">
+                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-[var(--line)]/50 text-[var(--foreground)]/70 font-bold uppercase tracking-widest text-xs rounded-xl">
                                         Back
                                     </button>
                                     <button type="button" onClick={nextStep} className="flex-[2] py-4 bg-[var(--terracotta)] text-white font-bold uppercase tracking-widest text-xs rounded-xl">
@@ -269,7 +269,7 @@ Sent from UrbanClay Website`;
                                 className="space-y-4"
                             >
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Mobile Number</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/70 mb-2 block">Mobile Number</label>
                                     <input
                                         type="tel"
                                         name="contact"
@@ -280,7 +280,7 @@ Sent from UrbanClay Website`;
                                     />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 mb-2 block">Notes (Optional)</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/70 mb-2 block">Notes (Optional)</label>
                                     <textarea
                                         name="notes"
                                         value={formData.notes}
@@ -291,7 +291,7 @@ Sent from UrbanClay Website`;
                                     />
                                 </div>
                                 <div className="flex gap-3 mt-4">
-                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-[var(--line)]/50 text-[var(--foreground)]/60 font-bold uppercase tracking-widest text-xs rounded-xl">
+                                    <button type="button" onClick={prevStep} className="flex-1 py-4 bg-[var(--line)]/50 text-[var(--foreground)]/70 font-bold uppercase tracking-widest text-xs rounded-xl">
                                         Back
                                     </button>
                                     <button

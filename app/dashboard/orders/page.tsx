@@ -51,7 +51,7 @@ export default function OrdersHistoryPage() {
                 {/* Search & Stats */}
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6 flex flex-col md:flex-row gap-4 items-center">
                     <div className="relative flex-1 w-full">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600">🔍</span>
                         <input
                             type="text"
                             placeholder="Search by client, order ID or product..."
@@ -75,7 +75,7 @@ export default function OrdersHistoryPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                <tr className="bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-600 uppercase tracking-widest">
                                     <th className="px-6 py-4">Order ID</th>
                                     <th className="px-6 py-4">Client</th>
                                     <th className="px-6 py-4">Product</th>
@@ -96,7 +96,7 @@ export default function OrdersHistoryPage() {
                                         <tr key={link._id} className="hover:bg-gray-50/50 transition-colors group">
                                             <td className="px-6 py-4">
                                                 <div className="text-sm font-mono font-bold text-gray-900">{link.orderId}</div>
-                                                <div className="text-[10px] text-gray-400">{new Date(link.createdAt).toLocaleDateString()}</div>
+                                                <div className="text-[10px] text-gray-600">{new Date(link.createdAt).toLocaleDateString()}</div>
                                             </td>
                                             <td className="px-6 py-4 text-sm">
                                                 <div className="font-medium text-gray-900">{link.clientName}</div>
@@ -104,7 +104,7 @@ export default function OrdersHistoryPage() {
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-600 max-w-[200px] truncate">
                                                 {link.lineItems?.[0]?.name || link.productName}
-                                                {link.lineItems?.length > 1 && <span className="text-[10px] text-gray-400 block">+ {link.lineItems.length - 1} more items</span>}
+                                                {link.lineItems?.length > 1 && <span className="text-[10px] text-gray-600 block">+ {link.lineItems.length - 1} more items</span>}
                                             </td>
                                             <td className="px-6 py-4 text-sm font-bold text-right text-gray-900">
                                                 ₹{link.amount?.toLocaleString('en-IN')}
@@ -121,7 +121,7 @@ export default function OrdersHistoryPage() {
                                                             const url = `${window.location.origin}/pay/${link.orderId}`;
                                                             navigator.clipboard.writeText(url);
                                                         }}
-                                                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-400 hover:text-[var(--terracotta)] transition-all"
+                                                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-600 hover:text-[var(--terracotta)] transition-all"
                                                         title="Copy Link"
                                                     >
                                                         📋
@@ -131,7 +131,7 @@ export default function OrdersHistoryPage() {
                                                         <a
                                                             href={`/api/invoice/${link.orderId}/pdf`}
                                                             target="_blank"
-                                                            className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-400 hover:text-green-600 transition-all font-bold"
+                                                            className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-600 hover:text-green-600 transition-all font-bold"
                                                             title="Download Invoice"
                                                         >
                                                             ⬇️
@@ -141,7 +141,7 @@ export default function OrdersHistoryPage() {
                                                     <Link
                                                         href={`/pay/${link.orderId}`}
                                                         target="_blank"
-                                                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-400 hover:text-blue-500 transition-all"
+                                                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-600 hover:text-blue-500 transition-all"
                                                         title="View Page"
                                                     >
                                                         👁️
@@ -150,7 +150,7 @@ export default function OrdersHistoryPage() {
                                                     <a
                                                         href={`/api/challan/${link.orderId}/pdf`}
                                                         target="_blank"
-                                                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-400 hover:text-orange-600 transition-all"
+                                                        className="p-2 hover:bg-white rounded-lg border border-transparent hover:border-gray-200 text-gray-600 hover:text-orange-600 transition-all"
                                                         title="Delivery Challan"
                                                     >
                                                         🚚
@@ -161,7 +161,7 @@ export default function OrdersHistoryPage() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={6} className="px-6 py-20 text-center text-gray-400 font-serif italic">
+                                        <td colSpan={6} className="px-6 py-20 text-center text-gray-600 font-serif italic">
                                             No orders found matching your search.
                                         </td>
                                     </tr>

@@ -38,7 +38,7 @@ export default function Breadcrumbs({ range }: { range?: string }) {
     };
 
     return (
-        <nav className="flex flex-nowrap items-center justify-start text-[10px] font-bold uppercase tracking-wide text-[var(--foreground)]/40 leading-none">
+        <nav className="flex flex-nowrap items-center justify-start text-[10px] font-bold uppercase tracking-wide text-[var(--foreground)]/70 leading-none">
             <JsonLd data={jsonLd} />
             <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center">Home</Link>
 
@@ -60,7 +60,7 @@ export default function Breadcrumbs({ range }: { range?: string }) {
                                 {range && idx === parts.length - 2 && (
                                     <>
                                         <span className="mx-2 text-[var(--line)] text-[10px] flex items-center">/</span>
-                                        <span className="text-[var(--foreground)]/60 cursor-default flex items-center whitespace-nowrap">{range}</span>
+                                        <span className="text-[var(--foreground)]/70 cursor-default flex items-center whitespace-nowrap">{range}</span>
                                     </>
                                 )}
                             </>

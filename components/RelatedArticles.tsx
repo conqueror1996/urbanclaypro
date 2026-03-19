@@ -27,7 +27,7 @@ export default function RelatedArticles({ posts = [] }: RelatedArticlesProps) {
                 {/* Minimal Header */}
                 <div className="flex items-end justify-between mb-16 px-2">
                     <div>
-                        <span className="block text-xs font-mono uppercase tracking-[0.3em] text-gray-400 mb-4">
+                        <span className="block text-xs font-mono uppercase tracking-[0.2em] text-gray-600 mb-4">
                             The Journal
                         </span>
                         <h2 className="text-3xl md:text-5xl font-serif text-[#2A1E16] leading-tight">
@@ -75,7 +75,7 @@ export default function RelatedArticles({ posts = [] }: RelatedArticlesProps) {
 
                                 {/* Content */}
                                 <div className="space-y-4 px-2">
-                                    <div className="flex items-center gap-4 text-xs font-medium uppercase tracking-[0.2em] text-gray-400">
+                                    <div className="flex items-center gap-4 text-xs font-medium uppercase tracking-[0.2em] text-gray-600">
                                         <span className="text-[var(--terracotta)]">{article.category || 'Architecture'}</span>
                                         <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                                         <span>{article.readTime || '5 min read'}</span>

@@ -57,7 +57,7 @@ export default function JournalLayout({ featured, posts }: JournalLayoutProps) {
                                     Featured Analysis
                                 </span>
                                 <span className="h-px w-8 bg-gray-300"></span>
-                                <span className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">
+                                <span className="text-gray-600 font-bold uppercase tracking-[0.2em] text-[10px]">
                                     {featured.category || 'Material Innovation'}
                                 </span>
                             </div>
@@ -87,7 +87,7 @@ export default function JournalLayout({ featured, posts }: JournalLayoutProps) {
                             onClick={() => setFilter(cat)}
                             className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all duration-300 relative py-2 ${filter === cat
                                 ? 'text-[var(--terracotta)]'
-                                : 'text-gray-400 hover:text-[#1a1512]'
+                                : 'text-gray-600 hover:text-[#1a1512]'
                                 }`}
                         >
                             {cat}
@@ -130,7 +130,7 @@ export default function JournalLayout({ featured, posts }: JournalLayoutProps) {
                                     <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-[var(--terracotta)]">
                                         {post.category || 'Article'}
                                     </span>
-                                    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-400">
+                                    <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-gray-600">
                                         {post.readTime}
                                     </span>
                                 </div>

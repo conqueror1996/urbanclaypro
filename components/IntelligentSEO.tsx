@@ -18,7 +18,7 @@ export default function IntelligentSEO() {
                                 <Link
                                     key={city}
                                     href={`/terracotta-tiles-india?city=${city.toLowerCase()}`}
-                                    className="text-[11px] text-[var(--foreground)]/40 hover:text-[var(--terracotta)] transition-colors"
+                                    className="text-[11px] text-[var(--foreground)]/70 hover:text-[var(--terracotta)] transition-colors"
                                 >
                                     Clay Tiles in {city} •
                                 </Link>
@@ -34,7 +34,7 @@ export default function IntelligentSEO() {
                                 <Link
                                     key={state}
                                     href={`/terracotta-tiles-india?state=${state.toLowerCase()}`}
-                                    className="text-[11px] text-[var(--foreground)]/40 hover:text-[var(--terracotta)] transition-colors"
+                                    className="text-[11px] text-[var(--foreground)]/70 hover:text-[var(--terracotta)] transition-colors"
                                 >
                                     Suppliers in {state} •
                                 </Link>
@@ -50,14 +50,14 @@ export default function IntelligentSEO() {
                                 <Link
                                     key={product}
                                     href={`/products`}
-                                    className="text-[11px] text-[var(--foreground)]/40 hover:text-[var(--terracotta)] transition-colors"
+                                    className="text-[11px] text-[var(--foreground)]/70 hover:text-[var(--terracotta)] transition-colors"
                                 >
                                     {product} Manufacturer •
                                 </Link>
                             ))}
-                            <span className="text-[11px] text-[var(--foreground)]/40">Custom Clay Facades •</span>
-                            <span className="text-[11px] text-[var(--foreground)]/40">Architectural Exposed Bricks •</span>
-                            <span className="text-[11px] text-[var(--foreground)]/40">Rainscreen Systems India •</span>
+                            <span className="text-[11px] text-[var(--foreground)]/70">Custom Clay Facades •</span>
+                            <span className="text-[11px] text-[var(--foreground)]/70">Architectural Exposed Bricks •</span>
+                            <span className="text-[11px] text-[var(--foreground)]/70">Rainscreen Systems India •</span>
                         </div>
                     </div>
 

@@ -62,7 +62,7 @@ export default function VendorsDashboard() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--terracotta)] focus:ring-1 focus:ring-[var(--terracotta)] w-64 transition-all"
                         />
-                        <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <svg className="w-4 h-4 text-gray-600 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </div>
                 </div>
             </div>
@@ -95,11 +95,11 @@ export default function VendorsDashboard() {
 
                             <div className="space-y-2 border-t pt-4">
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                                    <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                                     <span className="capitalize">{vendor.category?.replace('_', ' ') || 'Uncategorized'}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                                    <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                    <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                                     <span>{vendor.phone || 'No Phone'}</span>
                                 </div>
                             </div>
@@ -146,35 +146,35 @@ export default function VendorsDashboard() {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Category</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-600 block mb-1">Category</label>
                                         <p className="text-sm font-medium capitalize">{selectedVendor.category?.replace('_', ' ') || '-'}</p>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Status</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-600 block mb-1">Status</label>
                                         <p className="text-sm font-medium capitalize">{selectedVendor.status}</p>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Contact Person</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-600 block mb-1">Contact Person</label>
                                         <p className="text-sm font-medium">{selectedVendor.contactPerson || '-'}</p>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Phone</label>
+                                        <label className="text-[10px] uppercase font-bold text-gray-600 block mb-1">Phone</label>
                                         <p className="text-sm font-medium">{selectedVendor.phone || '-'}</p>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Email</label>
+                                    <label className="text-[10px] uppercase font-bold text-gray-600 block mb-1">Email</label>
                                     <p className="text-sm font-medium">{selectedVendor.email || '-'}</p>
                                 </div>
 
                                 <div>
-                                    <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Address</label>
+                                    <label className="text-[10px] uppercase font-bold text-gray-600 block mb-1">Address</label>
                                     <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border">{selectedVendor.address || 'No address provided.'}</p>
                                 </div>
 
                                 <div>
-                                    <label className="text-[10px] uppercase font-bold text-gray-400 block mb-1">Internal Notes</label>
+                                    <label className="text-[10px] uppercase font-bold text-gray-600 block mb-1">Internal Notes</label>
                                     <p className="text-sm text-gray-600 whitespace-pre-wrap">{selectedVendor.notes || 'No notes.'}</p>
                                 </div>
 

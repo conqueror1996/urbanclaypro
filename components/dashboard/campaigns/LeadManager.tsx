@@ -29,14 +29,14 @@ export default function LeadManager({ onCompose }: { onCompose: (ids: string[]) 
         else setSelected(new Set(leads.map(l => l._id)));
     };
 
-    if (loading) return <div className="p-20 text-center text-gray-400">Loading Database...</div>;
+    if (loading) return <div className="p-20 text-center text-gray-600">Loading Database...</div>;
 
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                 <div>
                     <h3 className="text-lg font-bold text-[var(--ink)]">Lead Database</h3>
-                    <p className="text-xs text-gray-400 mt-1">{leads.length} architects found</p>
+                    <p className="text-xs text-gray-600 mt-1">{leads.length} architects found</p>
                 </div>
                 <div className="flex gap-3">
                     {selected.size > 0 && (
@@ -52,7 +52,7 @@ export default function LeadManager({ onCompose }: { onCompose: (ids: string[]) 
 
             <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                    <thead className="bg-gray-50 text-gray-400 font-medium uppercase text-[10px] tracking-widest font-sans">
+                    <thead className="bg-gray-50 text-gray-600 font-medium uppercase text-[10px] tracking-widest font-sans">
                         <tr>
                             <th className="px-6 py-4 w-10">
                                 <input type="checkbox" checked={selected.size === leads.length && leads.length > 0} onChange={toggleAll} className="rounded border-gray-300 text-[var(--terracotta)] focus:ring-[var(--terracotta)]" />
@@ -72,7 +72,7 @@ export default function LeadManager({ onCompose }: { onCompose: (ids: string[]) 
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="font-bold text-[var(--ink)]">{lead.firmName}</div>
-                                    <div className="text-xs text-gray-400">{lead.name}</div>
+                                    <div className="text-xs text-gray-600">{lead.name}</div>
                                 </td>
                                 <td className="px-6 py-4">
                                     {lead.opens > 0 ? (
@@ -86,7 +86,7 @@ export default function LeadManager({ onCompose }: { onCompose: (ids: string[]) 
                                             Unopened
                                         </div>
                                     )}
-                                    {lead.lastOpenedAt && <div className="text-[10px] text-gray-400 mt-1">{new Date(lead.lastOpenedAt).toLocaleDateString()}</div>}
+                                    {lead.lastOpenedAt && <div className="text-[10px] text-gray-600 mt-1">{new Date(lead.lastOpenedAt).toLocaleDateString()}</div>}
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="font-mono text-xs">{lead.email}</div>
@@ -106,7 +106,7 @@ export default function LeadManager({ onCompose }: { onCompose: (ids: string[]) 
                         ))}
                         {leads.length === 0 && (
                             <tr>
-                                <td colSpan={6} className="text-center py-20 text-gray-400">
+                                <td colSpan={6} className="text-center py-20 text-gray-600">
                                     No leads found. Switch to the "Find Leads" tab to start scraping.
                                 </td>
                             </tr>

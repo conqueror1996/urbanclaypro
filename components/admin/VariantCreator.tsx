@@ -136,7 +136,7 @@ export default function VariantCreator({ onClose, onSave }: VariantCreatorProps)
                                     <p className="font-bold text-[#2A1E16] text-lg">
                                         {isDragging ? 'Drop to Upload' : 'Drop image here'}
                                     </p>
-                                    <p className="text-xs text-gray-400 mt-2 font-medium uppercase tracking-wider">or click to browse</p>
+                                    <p className="text-xs text-gray-600 mt-2 font-medium uppercase tracking-wider">or click to browse</p>
 
                                     {/* Decoration */}
                                     <div className={`absolute inset-0 bg-gradient-to-tr from-orange-50/50 to-transparent transition-opacity pointer-events-none ${isDragging ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
@@ -196,7 +196,7 @@ export default function VariantCreator({ onClose, onSave }: VariantCreatorProps)
                                                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                                                 AI Identified
                                             </span>
-                                            <span className="text-[10px] font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full border border-gray-100">
+                                            <span className="text-[10px] font-medium text-gray-600 bg-gray-50 px-2 py-1 rounded-full border border-gray-100">
                                                 {Math.round((analysis?.confidence || 0) * 100)}% Match
                                             </span>
                                         </div>
@@ -207,7 +207,7 @@ export default function VariantCreator({ onClose, onSave }: VariantCreatorProps)
                                                 <div className="w-8 h-8 rounded-lg shadow-sm border border-black/5 ring-2 ring-white" style={{ backgroundColor: analysis?.dominantColor || '#ccc' }} />
                                                 <div>
                                                     <span className="font-mono text-xs font-bold text-[#2A1E16] block">{analysis?.dominantColor}</span>
-                                                    <span className="text-[10px] text-gray-400">Hex Code</span>
+                                                    <span className="text-[10px] text-gray-600">Hex Code</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -216,21 +216,21 @@ export default function VariantCreator({ onClose, onSave }: VariantCreatorProps)
 
                                 <div className="space-y-4">
                                     <div className="space-y-1">
-                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Variant Name</label>
+                                        <label className="text-xs font-bold text-gray-600 uppercase tracking-wider ml-1">Variant Name</label>
                                         <input
                                             value={name}
                                             onChange={e => setName(e.target.value)}
                                             className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[var(--terracotta)] focus:ring-4 focus:ring-[var(--terracotta)]/10 font-medium text-[#1a1512] transition-all placeholder:text-gray-300"
                                             placeholder="e.g. Classic Red"
                                         />
-                                        <p className="text-[10px] text-gray-400 px-2 flex gap-1 items-center">
+                                        <p className="text-[10px] text-gray-600 px-2 flex gap-1 items-center">
                                             <svg className="w-3 h-3 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                                             Suggested: <span className="font-bold text-[var(--terracotta)]">{analysis?.tags?.join(', ')}</span>
                                         </p>
                                     </div>
 
                                     <div className="space-y-1">
-                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">Family Group (Optional)</label>
+                                        <label className="text-xs font-bold text-gray-600 uppercase tracking-wider ml-1">Family Group (Optional)</label>
                                         <input
                                             value={family}
                                             onChange={e => setFamily(e.target.value)}

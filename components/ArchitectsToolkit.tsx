@@ -144,7 +144,7 @@ export default function ArchitectsToolkit() {
                             {activeTab === 'grout' && (
                                 <motion.div key="grout" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="space-y-4">
                                     <div>
-                                        <div className="flex justify-between text-[10px] font-bold text-gray-400 mb-2"><span>Joint: {groutSize}mm</span></div>
+                                        <div className="flex justify-between text-[10px] font-bold text-gray-600 mb-2"><span>Joint: {groutSize}mm</span></div>
                                         <input type="range" min="0" max="15" step="5" value={groutSize} onChange={(e) => setGroutSize(Number(e.target.value) as GroutSize)} className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none accent-[var(--terracotta)]" />
                                     </div>
                                     <div className="flex gap-4">
@@ -203,7 +203,7 @@ export default function ArchitectsToolkit() {
                                     Mortar Specification
                                 </h3>
                                 <div className="space-y-6">
-                                    <div><div className="flex justify-between text-xs font-bold text-gray-400 mb-2"><span>Joint Size</span><span>{groutSize}mm</span></div><input type="range" min="0" max="15" step="5" value={groutSize} onChange={(e) => setGroutSize(Number(e.target.value) as GroutSize)} className="w-full h-2 bg-gray-100 rounded-lg appearance-none accent-[var(--terracotta)]" /></div>
+                                    <div><div className="flex justify-between text-xs font-bold text-gray-600 mb-2"><span>Joint Size</span><span>{groutSize}mm</span></div><input type="range" min="0" max="15" step="5" value={groutSize} onChange={(e) => setGroutSize(Number(e.target.value) as GroutSize)} className="w-full h-2 bg-gray-100 rounded-lg appearance-none accent-[var(--terracotta)]" /></div>
                                     <div className="flex gap-4">
                                         {groutColors.map((g) => (
                                             <button key={g.color} onClick={() => setGroutColor(g.color as GroutColor)} className={`w-10 h-10 rounded-full border-2 transition-all ${groutColor === g.color ? 'border-[#1a1512] scale-110' : 'border-transparent'}`} style={{ backgroundColor: g.color }} title={g.label} />

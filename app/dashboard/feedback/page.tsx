@@ -117,7 +117,7 @@ export default function FeedbackAnalytics() {
                     <p className="text-gray-500 mt-2">Feedback & Sentiment Analysis</p>
                 </div>
                 <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-3">
-                    <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Overall Success Score</span>
+                    <span className="text-sm font-bold text-gray-600 uppercase tracking-widest">Overall Success Score</span>
                     <span className="text-2xl font-bold text-[var(--terracotta)]">⭐ {overallRating}/5</span>
                 </div>
             </div>
@@ -141,7 +141,7 @@ export default function FeedbackAnalytics() {
                             </div>
                             <span className="text-3xl font-bold text-[var(--ink)]">{stat.value}</span>
                         </div>
-                        <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">{stat.label}</h3>
+                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-widest">{stat.label}</h3>
                         <div className="w-full bg-gray-100 h-1.5 rounded-full mt-4 overflow-hidden">
                             <div
                                 className={`h-full rounded-full transition-all duration-1000 ${stat.color.split(' ')[0].replace('50', '500')}`}
@@ -157,7 +157,7 @@ export default function FeedbackAnalytics() {
                 <h2 className="text-xl font-bold text-[var(--ink)] mb-6 font-serif">Recent Feedback</h2>
                 <div className="space-y-6">
                     {feedbacks.length === 0 ? (
-                        <div className="text-center py-10 text-gray-400 italic">No feedback received yet.</div>
+                        <div className="text-center py-10 text-gray-600 italic">No feedback received yet.</div>
                     ) : (
                         feedbacks.map((item, idx) => (
                             <motion.div
@@ -173,7 +173,7 @@ export default function FeedbackAnalytics() {
                                         <p className="text-sm text-gray-500">{item.site?.name} • {item.site?.location}</p>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-xs font-mono text-gray-400 mb-1">
+                                        <div className="text-xs font-mono text-gray-600 mb-1">
                                             {new Date(item._createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                                         </div>
                                         <div className="flex gap-1 text-[var(--terracotta)] text-sm">
@@ -189,7 +189,7 @@ export default function FeedbackAnalytics() {
                                 )}
 
                                 {/* Ratings Breakdown */}
-                                <div className="flex gap-4 text-xs font-mono text-gray-400 mb-4">
+                                <div className="flex gap-4 text-xs font-mono text-gray-600 mb-4">
                                     <span className="bg-white px-2 py-1 rounded border">🔨 Work: {item.workmanshipRating}/5</span>
                                     <span className="bg-white px-2 py-1 rounded border">🧱 Mat: {item.materialRating}/5</span>
                                     <span className="bg-white px-2 py-1 rounded border">🤝 Svc: {item.serviceRating}/5</span>
@@ -234,13 +234,13 @@ export default function FeedbackAnalytics() {
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95">
                         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                             <h3 className="font-bold text-[var(--ink)]">Reply to {selectedFeedback?.site?.client}</h3>
-                            <button onClick={() => setReplyModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+                            <button onClick={() => setReplyModalOpen(false)} className="text-gray-600 hover:text-gray-600">
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
                         </div>
                         <div className="p-6 space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Subject</label>
+                                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Subject</label>
                                 <input
                                     type="text"
                                     value={replySubject}
@@ -249,14 +249,14 @@ export default function FeedbackAnalytics() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Message</label>
+                                <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Message</label>
                                 <textarea
                                     value={replyMessage}
                                     onChange={(e) => setReplyMessage(e.target.value)}
                                     rows={6}
                                     className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[var(--terracotta)]"
                                 ></textarea>
-                                <p className="text-[10px] text-gray-400 mt-1">* Your official signature will be automatically appended.</p>
+                                <p className="text-[10px] text-gray-600 mt-1">* Your official signature will be automatically appended.</p>
                             </div>
                         </div>
                         <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">

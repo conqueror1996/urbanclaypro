@@ -59,7 +59,7 @@ export default function ExtrudedVsWirecutPage() {
                     Specification Guide
                 </span>
                 <h1 className="font-serif text-4xl md:text-6xl leading-[1.1] mb-8">
-                    Extruded vs. Handmade. <br /> <span className="italic text-gray-400">What are you really buying?</span>
+                    Extruded vs. Handmade. <br /> <span className="italic text-gray-600">What are you really buying?</span>
                 </h1>
                 <p className="text-xl text-gray-500 font-light leading-relaxed">
                     The method of shaping clay determines 90% of a brick's technical properties.

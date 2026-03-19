@@ -123,13 +123,13 @@ export default function ZohoSetupPage() {
                     <div className="mb-8 flex gap-4 border-b border-gray-100 pb-4">
                         <button
                             onClick={() => { setView('diagnostic'); setStatus('idle'); }}
-                            className={`pb-2 px-1 font-bold text-sm transition-colors ${view === 'diagnostic' ? 'text-[#b45a3c] border-b-2 border-[#b45a3c]' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`pb-2 px-1 font-bold text-sm transition-colors ${view === 'diagnostic' ? 'text-[#b45a3c] border-b-2 border-[#b45a3c]' : 'text-gray-600 hover:text-gray-600'}`}
                         >
                             1. Connection Diagnostic
                         </button>
                         <button
                             onClick={() => { setView('setup'); setStatus('idle'); }}
-                            className={`pb-2 px-1 font-bold text-sm transition-colors ${view === 'setup' ? 'text-[#b45a3c] border-b-2 border-[#b45a3c]' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`pb-2 px-1 font-bold text-sm transition-colors ${view === 'setup' ? 'text-[#b45a3c] border-b-2 border-[#b45a3c]' : 'text-gray-600 hover:text-gray-600'}`}
                         >
                             2. Generate Tokens
                         </button>
@@ -161,11 +161,11 @@ export default function ZohoSetupPage() {
                                         </div>
                                         <div className="grid grid-cols-2 gap-4 text-sm mt-4">
                                             <div className="bg-white p-3 rounded-lg shadow-sm border border-green-200">
-                                                <span className="block text-gray-400 text-xs uppercase font-bold mb-1">Organization</span>
+                                                <span className="block text-gray-600 text-xs uppercase font-bold mb-1">Organization</span>
                                                 <span className="text-[#2A1E16] font-bold">{result.orgName}</span>
                                             </div>
                                             <div className="bg-white p-3 rounded-lg shadow-sm border border-green-200">
-                                                <span className="block text-gray-400 text-xs uppercase font-bold mb-1">Currency</span>
+                                                <span className="block text-gray-600 text-xs uppercase font-bold mb-1">Currency</span>
                                                 <span className="text-[#2A1E16] font-bold">{result.currency}</span>
                                             </div>
                                         </div>
@@ -295,7 +295,7 @@ export default function ZohoSetupPage() {
                                         >
                                             Connect to Zoho
                                         </button>
-                                        <p className="text-xs text-center text-gray-400">You will be redirected to Zoho to approve access.</p>
+                                        <p className="text-xs text-center text-gray-600">You will be redirected to Zoho to approve access.</p>
                                     </div>
                                 </>
                             )}

@@ -95,7 +95,7 @@ export default function MetadataHealthWidget() {
             <div className="flex justify-between items-start mb-6">
                 <div>
                     <h3 className="font-bold text-[var(--ink)] text-lg">SEO Health</h3>
-                    <p className="text-xs text-gray-400 mt-1">Metadata completeness check</p>
+                    <p className="text-xs text-gray-600 mt-1">Metadata completeness check</p>
                 </div>
                 <div className={`text-2xl font-serif font-bold ${healthScore < 50 ? 'text-red-500' : healthScore < 80 ? 'text-orange-500' : 'text-emerald-500'}`}>
                     {healthScore}%
@@ -137,7 +137,7 @@ export default function MetadataHealthWidget() {
                 Make Edits in SEO Manager →
             </Link>
             <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-                <p className="text-[10px] text-gray-400">Scanning {totalProducts} products</p>
+                <p className="text-[10px] text-gray-600">Scanning {totalProducts} products</p>
             </div>
         </div>
     );

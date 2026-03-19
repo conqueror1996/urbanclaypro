@@ -92,7 +92,7 @@ export default function ProductExplorer({ product, initialVariant, quoteUrl }: P
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-[var(--foreground)]/60 uppercase tracking-wider mb-1">Size</p>
+                            <p className="text-xs font-semibold text-[var(--foreground)]/70 uppercase tracking-wider mb-1">Size</p>
                             <p className="text-sm font-medium text-[var(--foreground)]">{currentSpecs.size || 'N/A'}</p>
                         </div>
                     </div>
@@ -104,7 +104,7 @@ export default function ProductExplorer({ product, initialVariant, quoteUrl }: P
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-xs font-semibold text-[var(--foreground)]/60 uppercase tracking-wider mb-1">Thickness</p>
+                                <p className="text-xs font-semibold text-[var(--foreground)]/70 uppercase tracking-wider mb-1">Thickness</p>
                                 <p className="text-sm font-medium text-[var(--foreground)]">{currentSpecs.thickness}</p>
                             </div>
                         </div>
@@ -116,7 +116,7 @@ export default function ProductExplorer({ product, initialVariant, quoteUrl }: P
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-[var(--foreground)]/60 uppercase tracking-wider mb-1">Water Absorption</p>
+                            <p className="text-xs font-semibold text-[var(--foreground)]/70 uppercase tracking-wider mb-1">Water Absorption</p>
                             <p className="text-sm font-medium text-[var(--foreground)]">{currentSpecs.waterAbsorption || 'N/A'}</p>
                         </div>
                     </div>
@@ -127,7 +127,7 @@ export default function ProductExplorer({ product, initialVariant, quoteUrl }: P
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-[var(--foreground)]/60 uppercase tracking-wider mb-1">Compressive Strength</p>
+                            <p className="text-xs font-semibold text-[var(--foreground)]/70 uppercase tracking-wider mb-1">Compressive Strength</p>
                             <p className="text-sm font-medium text-[var(--foreground)]">{currentSpecs.compressiveStrength || 'N/A'}</p>
                         </div>
                     </div>
@@ -139,7 +139,7 @@ export default function ProductExplorer({ product, initialVariant, quoteUrl }: P
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" /></svg>
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-xs font-semibold text-[var(--foreground)]/60 uppercase tracking-wider mb-1">Firing Temperature</p>
+                                <p className="text-xs font-semibold text-[var(--foreground)]/70 uppercase tracking-wider mb-1">Firing Temperature</p>
                                 <p className="text-sm font-medium text-[var(--foreground)]">{currentSpecs.firingTemperature}</p>
                             </div>
                         </div>
@@ -153,7 +153,7 @@ export default function ProductExplorer({ product, initialVariant, quoteUrl }: P
                 */}
 
                 <div className="mt-6 pt-6 border-t border-[var(--line)]">
-                    <p className="text-xs font-semibold text-[var(--foreground)]/60 uppercase tracking-wider mb-2">Price Range</p>
+                    <p className="text-xs font-semibold text-[var(--foreground)]/70 uppercase tracking-wider mb-2">Price Range</p>
                     <p className="text-2xl text-[var(--terracotta)] font-bold tracking-tight">{currentPrice}</p>
                 </div>
 

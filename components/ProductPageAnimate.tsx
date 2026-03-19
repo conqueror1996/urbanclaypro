@@ -80,7 +80,7 @@ const CuratedProductCard = ({ product }: { product: Product }) => {
                 <h4 className="text-[var(--foreground)] font-bold text-lg leading-tight group-hover:text-[var(--terracotta)] transition-colors mb-2">
                     {product.title}
                 </h4>
-                <span className="block text-[10px] font-normal uppercase tracking-[0.2em] text-[var(--foreground)]/40 mb-2">
+                <span className="block text-[10px] font-normal uppercase tracking-[0.2em] text-[var(--foreground)]/70 mb-2">
                     {product.category?.title || 'Terracotta'}
                 </span>
                 {images.length > 1 && (
@@ -234,12 +234,12 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             </h1>
 
                             {/* Body: Breathable, High Readability */}
-                            <p className="text-base md:text-xl text-[var(--foreground)]/60 font-light leading-relaxed mb-6 lg:mb-10 max-w-xl border-l-[3px] border-[var(--terracotta)] pl-6">
+                            <p className="text-base md:text-xl text-[var(--foreground)]/70 font-light leading-relaxed mb-6 lg:mb-10 max-w-xl border-l-[3px] border-[var(--terracotta)] pl-6">
                                 {product.subtitle || 'Premium handcrafted clay for timeless architecture. Engineered for durability and designed for elegance.'}
                             </p>
 
                             {/* Micro: Origin Data */}
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[10px] lg:text-xs font-mono text-[var(--foreground)]/30 uppercase tracking-[0.15em] mb-4 lg:mb-8">
+                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[10px] lg:text-xs font-mono text-[var(--foreground)]/70 uppercase tracking-[0.15em] mb-4 lg:mb-8">
                                 <span className="flex items-center gap-2">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--line)]"></span>
                                     Est. 2024
@@ -264,7 +264,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 ].map((badge, i) => (
                                     <div key={i} className="flex flex-col items-center lg:items-start text-center lg:text-left gap-2">
                                         <span className="text-2xl mb-1">{badge.icon}</span>
-                                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/50 leading-none">{badge.label}</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--foreground)]/70 leading-none">{badge.label}</span>
                                     </div>
                                 ))}
                             </div>
@@ -303,7 +303,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="absolute z-20 pointer-events-none
                                 top-1/2 -left-[72px] w-[160px] -rotate-90
                                 md:top-2 md:left-0 md:right-0 md:w-auto md:rotate-0 md:text-center py-1">
-                                <p className="text-[7px] md:text-[8px] text-gray-400 font-medium uppercase tracking-widest leading-none whitespace-nowrap md:whitespace-normal">
+                                <p className="text-[7px] md:text-[8px] text-gray-600 font-medium uppercase tracking-widest leading-none whitespace-nowrap md:whitespace-normal">
                                     Note: Color & appearance may vary
                                 </p>
                             </div>
@@ -346,7 +346,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             {displayImages.length > 1 && (
                                 <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 md:gap-2 bg-[var(--background)]/80 backdrop-blur-md px-2 py-1 md:px-3 md:py-2 rounded-full border border-[var(--line)] transition-all">
                                     <button onClick={() => setActiveImageIndex((i) => (i - 1 + displayImages.length) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-[var(--line)] text-[var(--foreground)] transition-colors">←</button>
-                                    <span className="text-[9px] md:text-[10px] font-mono font-medium text-[var(--foreground)]/60 w-10 md:w-12 text-center">{activeImageIndex + 1} / {displayImages.length}</span>
+                                    <span className="text-[9px] md:text-[10px] font-mono font-medium text-[var(--foreground)]/70 w-10 md:w-12 text-center">{activeImageIndex + 1} / {displayImages.length}</span>
                                     <button onClick={() => setActiveImageIndex((i) => (i + 1) % displayImages.length)} className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center hover:bg-[var(--line)] text-[var(--foreground)] transition-colors">→</button>
                                 </div>
                             )}
@@ -447,7 +447,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                 {/* --- VARIANT CHIPS: DESKTOP (Full Width Grid) --- */}
                 <div className="mt-20 w-full hidden lg:flex flex-col items-center border-t border-[var(--line)] pt-12">
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/30 mb-8">Select Variant</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/70 mb-8">Select Variant</span>
                     {product.variants && product.variants.length > 0 && (
                         <div className="flex flex-wrap justify-center gap-6">
                             {product.variants.map((v, i) => (
@@ -544,7 +544,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         <div className="flex items-center gap-4 mb-8">
                             <span className="text-[var(--terracotta)] text-3xl font-serif">01</span>
                             <div className="h-px w-16 bg-[var(--line)]" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/60">The Narrative</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/70">The Narrative</span>
                         </div>
                         <h2 className="text-3xl md:text-5xl font-serif mb-8 text-[var(--foreground)] leading-tight">
                             Distinctive Character
@@ -559,7 +559,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         <div className="flex items-center gap-4 mb-8">
                             <span className="text-[var(--terracotta)] text-3xl font-serif">02</span>
                             <div className="h-px w-16 bg-[var(--line)]" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/60">Technical Profile</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/70">Technical Profile</span>
                         </div>
 
                         <div className="bg-[var(--background)] border border-[var(--line)] rounded-3xl overflow-hidden shadow-2xl relative">
@@ -567,7 +567,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="p-8 md:p-10 border-b border-[var(--line)] flex flex-col md:flex-row md:items-end justify-between gap-4">
                                 <div>
                                     <h2 className="text-2xl font-serif text-[var(--foreground)]">Specifications</h2>
-                                    <p className="text-[10px] mt-2 text-[var(--foreground)]/60 uppercase tracking-widest font-bold">ISO 10545 Certified</p>
+                                    <p className="text-[10px] mt-2 text-[var(--foreground)]/70 uppercase tracking-widest font-bold">ISO 10545 Certified</p>
                                 </div>
                                 <div className="px-3 py-1 bg-[var(--line)]/50 rounded text-[10px] font-bold text-[var(--terracotta)] tracking-widest border border-[var(--line)]">
                                     REF: {product.slug.toUpperCase().slice(0, 6)}
@@ -579,7 +579,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
                                     {generateLuxurySpecs(product, selectedVariant).map((spec, i) => (
                                         <div key={i} className="flex flex-col border-b border-[var(--line)] pb-4 last:border-0 hover:bg-[var(--line)]/20 transition-colors rounded-lg px-2 -mx-2">
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/50 block mb-2">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/70 block mb-2">
                                                 {spec.label}
                                             </span>
                                             <div>
@@ -613,7 +613,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             <svg className="w-5 h-5 text-[var(--terracotta)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                                             <div className="text-left">
                                                 <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wider">Spec Sheet</span>
-                                                <span className="block text-[9px] text-[var(--foreground)]/60">PDF</span>
+                                                <span className="block text-[9px] text-[var(--foreground)]/70">PDF</span>
                                             </div>
                                         </a>
                                     ))}
@@ -622,7 +622,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                                             <div className="text-left">
                                                 <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wider">Revit / BIM</span>
-                                                <span className="block text-[9px] text-[var(--foreground)]/60">RFA / IFC</span>
+                                                <span className="block text-[9px] text-[var(--foreground)]/70">RFA / IFC</span>
                                             </div>
                                         </a>
                                     ))}
@@ -631,7 +631,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                             <div className="text-left">
                                                 <span className="block text-xs font-bold text-[var(--foreground)] uppercase tracking-wider">4K Texture</span>
-                                                <span className="block text-[9px] text-[var(--foreground)]/60">JPG / MAPS</span>
+                                                <span className="block text-[9px] text-[var(--foreground)]/70">JPG / MAPS</span>
                                             </div>
                                         </a>
                                     )}
@@ -645,7 +645,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                         <div className="flex items-center gap-4 mb-8">
                             <span className="text-[var(--terracotta)] text-3xl font-serif">03</span>
                             <div className="h-px w-16 bg-[var(--line)]" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/30">Expert Inputs</span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/70">Expert Inputs</span>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-8">
@@ -675,7 +675,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                             {faq.q}
                                             <span className="text-[var(--terracotta)] text-xl group-open/faq:rotate-45 transition-transform">+</span>
                                         </summary>
-                                        <div className="px-4 pb-4 text-[var(--foreground)]/50 text-sm leading-relaxed">
+                                        <div className="px-4 pb-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
                                             {faq.a}
                                         </div>
                                     </details>
@@ -698,7 +698,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                                 ["Application", "Interior & Exterior"]
                                             ].map(([k, v], i) => (
                                                 <tr key={i} className="hover:bg-[var(--line)]/20">
-                                                    <th className="py-3 px-4 text-[var(--foreground)]/40 font-medium uppercase tracking-wider text-[10px] w-1/2">{k}</th>
+                                                    <th className="py-3 px-4 text-[var(--foreground)]/70 font-medium uppercase tracking-wider text-[10px] w-1/2">{k}</th>
                                                     <td className="py-3 px-4 text-[var(--foreground)] font-mono">{v}</td>
                                                 </tr>
                                             ))}
@@ -765,9 +765,9 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     return raw;
                                 })()}
                             </span>
-                            {product.priceRange && <span className="text-[10px] md:text-xs text-[var(--foreground)]/40 font-light lowercase">/ sq.ft</span>}
+                            {product.priceRange && <span className="text-[10px] md:text-xs text-[var(--foreground)]/70 font-light lowercase">/ sq.ft</span>}
                         </div>
-                        <span className="text-[8px] md:text-[9px] text-[var(--foreground)]/40 font-bold tracking-widest uppercase">*Quantity based pricing</span>
+                        <span className="text-[8px] md:text-[9px] text-[var(--foreground)]/70 font-bold tracking-widest uppercase">*Quantity based pricing</span>
                     </div>
 
                     {/* Buttons Container */}

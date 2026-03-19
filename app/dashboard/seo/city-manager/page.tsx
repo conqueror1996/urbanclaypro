@@ -52,7 +52,7 @@ export default function CityManagerPage() {
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <h3 className="text-xl font-bold font-serif">{city.name}</h3>
-                                <div className="text-xs font-bold uppercase tracking-wider text-gray-400 mt-1">{city.region} Region</div>
+                                <div className="text-xs font-bold uppercase tracking-wider text-gray-600 mt-1">{city.region} Region</div>
                             </div>
                             <span className={`px-2 py-1 rounded text-xs font-bold ${city.metaDescription ? 'bg-green-100 text-green-700' : 'bg-red-50 text-red-500'}`}>
                                 {city.metaDescription ? 'Optimized' : 'Missing Meta'}
@@ -61,18 +61,18 @@ export default function CityManagerPage() {
 
                         <div className="space-y-3 mb-6">
                             <div className="text-sm">
-                                <span className="text-gray-400 text-xs uppercase font-bold block mb-1">Target Keywords</span>
+                                <span className="text-gray-600 text-xs uppercase font-bold block mb-1">Target Keywords</span>
                                 <div className="flex flex-wrap gap-2">
                                     {city.areasServed?.slice(0, 3).map((area: string) => (
                                         <span key={area} className="bg-gray-50 border border-gray-100 px-2 py-0.5 rounded text-xs text-gray-600">{area}</span>
                                     ))}
-                                    {city.areasServed?.length > 3 && <span className="text-xs text-gray-400">+{city.areasServed.length - 3} more</span>}
+                                    {city.areasServed?.length > 3 && <span className="text-xs text-gray-600">+{city.areasServed.length - 3} more</span>}
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex justify-between items-center pt-4 border-t border-gray-50">
-                            <a href={`/${city.slug}`} target="_blank" className="text-gray-400 hover:text-black text-sm font-medium">View Live →</a>
+                            <a href={`/${city.slug}`} target="_blank" className="text-gray-600 hover:text-black text-sm font-medium">View Live →</a>
                             <button
                                 onClick={() => setEditingCity(city)}
                                 className="text-[var(--terracotta)] font-bold text-sm hover:underline bg-orange-50 px-3 py-1.5 rounded-lg hover:bg-orange-100 transition-colors"

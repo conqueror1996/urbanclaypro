@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCategory } from '@/lib/products';
+import { getJournalPosts } from '@/lib/journal';
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
@@ -10,12 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default async function TerracottaPanelsPillar() {
-    const [products, heroImage, specifierToolkitImage, projects] = await Promise.all([
+    const [products, heroImage, specifierToolkitImage, projects, allJournals] = await Promise.all([
         getProducts(),
         getPillarHeroImage('terracotta-panels', 'terracotta-panel').then(img => img || "/images/failure-free-facade.jpg"),
         getPillarToolkitImage('terracotta-panels', 'terracotta-panel'),
         getProjectsByCategory('terracotta-panels'),
+        getJournalPosts(),
     ]);
+
+    // Keep top 3 most recent journal articles to build topical authority
+    const panelJournals = allJournals.slice(0, 3);
 
     // Filter logic: In real-world, we'd add tags, but here we can just do broad matching or mock an array.
     const panelProducts = products.filter(p => {
@@ -35,13 +40,14 @@ export default async function TerracottaPanelsPillar() {
         <PillarPageTemplate
             title="India’s Most Engineered Terracotta Facade System"
             subtitle="Designed for architects who refuse site failures."
-            description="Our architectural-grade terracotta panels are engineered for mission-critical facades. Delivering advanced thermal regulation, A1 fire rating, and precision engineering for perfectly ventilated high-rise systems."
+            description="India’s fastest-install rainscreen system. 3x faster than brick, 40% lighter structural load, and engineered for zero-failure performance. The ultimate high-rise facade."
             heroImage={heroImage}
             specifierToolkitImage={specifierToolkitImage}
             keyword="Terracotta Panel"
             slug="terracotta-panels"
             products={panelProducts}
             projects={projects}
+            journals={panelJournals}
             metrics={[
                 { label: "Fire Rating", val: "Non-Combustible (A1)", detail: "ASTM E84 Tested" },
                 { label: "Durability", val: "100+ Years", detail: "Zero-Fade Tech" },

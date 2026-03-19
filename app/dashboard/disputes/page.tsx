@@ -72,7 +72,7 @@ export default function DisputesDashboard() {
                                     <h3 className="font-bold text-[var(--ink)]">{d.title}</h3>
                                     <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-mono uppercase">#{d._id.slice(-4)}</span>
                                 </div>
-                                <p className="text-sm text-gray-400">
+                                <p className="text-sm text-gray-600">
                                     Related to: <span className="text-gray-600 font-medium">
                                         {d.relatedTo?.name || d.relatedTo?.contact || d.relatedTo?.title || 'General'}
                                     </span>

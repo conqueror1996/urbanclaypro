@@ -84,7 +84,7 @@ export default function MonsoonFailurePage() {
                         </div>
                     </div>
                 </div>
-                <p className="text-center text-sm text-gray-400 mt-4 italic">Common failures seen in standard 'Export Quality' bricks after 2 monsoon cycles.</p>
+                <p className="text-center text-sm text-gray-600 mt-4 italic">Common failures seen in standard 'Export Quality' bricks after 2 monsoon cycles.</p>
             </div>
 
             {/* 3. Article Content */}

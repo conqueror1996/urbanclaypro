@@ -59,15 +59,15 @@ export default function ManufacturersDashboard() {
                                 </div>
                             </div>
                             <h3 className="text-lg font-bold text-[var(--ink)] mb-1">{m.name}</h3>
-                            <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-4">{m.location || 'Location Not Set'}</p>
+                            <p className="text-xs text-gray-600 uppercase tracking-widest font-bold mb-4">{m.location || 'Location Not Set'}</p>
 
                             <div className="space-y-2 border-t pt-4">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">Monthly Capacity:</span>
+                                    <span className="text-gray-600">Monthly Capacity:</span>
                                     <span className="font-medium text-[var(--ink)]">{m.capacity || '--'}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">Contact:</span>
+                                    <span className="text-gray-600">Contact:</span>
                                     <span className="font-medium text-[var(--ink)]">{m.phone || 'N/A'}</span>
                                 </div>
                             </div>

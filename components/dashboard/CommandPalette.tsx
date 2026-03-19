@@ -184,7 +184,7 @@ export default function CommandPalette({ isOpen, onClose }: CommandPaletteProps)
                                                                 w-full flex items-center justify-between px-3 py-3 rounded-xl text-left transition-all
                                                                 ${isSelected
                                                                     ? 'bg-[var(--terracotta)] text-white shadow-lg shadow-orange-900/20'
-                                                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                                                    : 'text-gray-600 hover:text-white hover:bg-white/5'
                                                                 }
                                                             `}
                                                         >

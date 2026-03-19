@@ -15,7 +15,7 @@ export default async function BlogGrid() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {posts.length === 0 ? (
-                        <div className="col-span-3 text-center text-gray-400 py-12">No articles published yet.</div>
+                        <div className="col-span-3 text-center text-gray-600 py-12">No articles published yet.</div>
                     ) : (
                         posts.map((post: any) => (
                             <Link

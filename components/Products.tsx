@@ -196,7 +196,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                         if (variantsToShow.length === 0) {
                             return (
                                 <div className="col-span-full text-center py-20 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                                    <p className="text-gray-400 text-lg">No materials match your criteria.</p>
+                                    <p className="text-gray-600 text-lg">No materials match your criteria.</p>
                                     <button onClick={() => actions.setCategory('All')} className="mt-4 text-[var(--terracotta)] hover:underline">Clear Filters</button>
                                 </div>
                             );

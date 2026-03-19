@@ -238,7 +238,7 @@ export default function LeadsDashboard() {
         switch (lead.seriousness) {
             case 'high': return <span className="bg-red-50 text-red-700 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">🔥 Hot</span>;
             case 'medium': return <span className="bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full text-xs font-medium uppercase tracking-wider">Medium</span>;
-            default: return <span className="text-gray-400 text-xs uppercase tracking-wider">Low</span>;
+            default: return <span className="text-gray-600 text-xs uppercase tracking-wider">Low</span>;
         }
     };
 
@@ -368,7 +368,7 @@ export default function LeadsDashboard() {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-lg text-sm outline-none focus:border-[var(--terracotta)] focus:ring-1 focus:ring-[var(--terracotta)] w-40 transition-all focus:w-64"
                             />
-                            <svg className="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            <svg className="w-4 h-4 text-gray-600 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </div>
                         <div className="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
                             <button
@@ -423,7 +423,7 @@ export default function LeadsDashboard() {
                 {/* Business Pulse Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider font-sans">Website Footfall 👣</p>
+                        <p className="text-xs font-bold text-gray-600 uppercase tracking-wider font-sans">Website Footfall 👣</p>
                         <p className="text-3xl font-serif text-[var(--ink)] mt-1">{loading ? '...' : stats.traffic.toLocaleString()}</p>
                     </div>
                     <div className="bg-gradient-to-br from-orange-50 to-white p-5 rounded-xl border border-orange-100 shadow-sm">
@@ -490,29 +490,29 @@ export default function LeadsDashboard() {
                                                     <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                                                     <span>{lead.city}</span>
                                                     <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                                                    <span className="font-mono text-xs text-gray-400">{new Date(lead.submittedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                                                    <span className="font-mono text-xs text-gray-600">{new Date(lead.submittedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50/50 rounded-lg border border-gray-100 group-hover:bg-[var(--sand)]/30 transition-colors">
                                             <div>
-                                                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Product</label>
+                                                <label className="text-[10px] uppercase tracking-wider text-gray-600 font-bold">Product</label>
                                                 <p className="font-medium text-sm text-[var(--ink)]">{lead.product}</p>
                                             </div>
                                             <div>
-                                                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Quantity</label>
+                                                <label className="text-[10px] uppercase tracking-wider text-gray-600 font-bold">Quantity</label>
                                                 <p className="font-medium text-sm text-[var(--ink)]">{lead.quantity}</p>
                                             </div>
                                             <div>
-                                                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Timeline</label>
+                                                <label className="text-[10px] uppercase tracking-wider text-gray-600 font-bold">Timeline</label>
                                                 <p className="font-medium text-sm text-[var(--ink)]">{lead.timeline || '-'}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Mini Actions */}
-                                    <div className="flex flex-col justify-center items-end gap-3 text-gray-400">
+                                    <div className="flex flex-col justify-center items-end gap-3 text-gray-600">
                                         {lead.fulfillmentStatus === 'delivered' ? (
                                             <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-bold">Delivered</span>
                                         ) : null}
@@ -615,7 +615,7 @@ export default function LeadsDashboard() {
                                 {/* Status Bar */}
                                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-wrap gap-4 items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Current Status</label>
+                                        <label className="text-xs font-bold uppercase tracking-wider text-gray-600">Current Status</label>
                                         <select
                                             value={selectedLead.status || ''}
                                             onChange={(e) => handleStatusChange(selectedLead._id, e.target.value)}
@@ -709,27 +709,27 @@ export default function LeadsDashboard() {
 
                                     {/* SECTION 1: CONTACT CARD */}
                                     <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Contact Profile</h3>
+                                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-4">Contact Profile</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
                                             <div>
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase">Full Name</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase">Full Name</label>
                                                 <p className="font-bold text-[var(--ink)]">{selectedLead.contact}</p>
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase">Firm / Company</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase">Firm / Company</label>
                                                 <p className="font-bold text-[var(--ink)]">{selectedLead.firmName || '-'}</p>
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase">Email Address</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase">Email Address</label>
                                                 <p className="text-sm font-medium text-[var(--ink)] break-all">{selectedLead.email || '-'}</p>
                                             </div>
                                             <div>
-                                                <label className="text-[10px] font-bold text-gray-400 uppercase">City</label>
+                                                <label className="text-[10px] font-bold text-gray-600 uppercase">City</label>
                                                 <p className="font-medium text-[var(--ink)]">{selectedLead.city}</p>
                                             </div>
                                             {selectedLead.address && (
                                                 <div className="col-span-2">
-                                                    <label className="text-[10px] font-bold text-gray-400 uppercase">Shipping Address</label>
+                                                    <label className="text-[10px] font-bold text-gray-600 uppercase">Shipping Address</label>
                                                     <p className="text-sm text-gray-600 bg-white p-2 rounded border border-gray-200 mt-1">{selectedLead.address}</p>
                                                 </div>
                                             )}
@@ -761,11 +761,11 @@ export default function LeadsDashboard() {
                                                 </div>
                                                 <div className="p-4 grid grid-cols-2 gap-4">
                                                     <div>
-                                                        <label className="text-[10px] text-gray-400 font-bold uppercase">Quantity</label>
+                                                        <label className="text-[10px] text-gray-600 font-bold uppercase">Quantity</label>
                                                         <p className="font-bold text-[var(--ink)]">{selectedLead.quantity}</p>
                                                     </div>
                                                     <div>
-                                                        <label className="text-[10px] text-gray-400 font-bold uppercase">Timeline</label>
+                                                        <label className="text-[10px] text-gray-600 font-bold uppercase">Timeline</label>
                                                         <p className="font-bold text-[var(--ink)]">{selectedLead.timeline || 'N/A'}</p>
                                                     </div>
                                                 </div>
@@ -793,7 +793,7 @@ export default function LeadsDashboard() {
                                                     <div className="space-y-2">
                                                         {leadHistory.map((h: any, i: number) => (
                                                             <div key={i} className="flex gap-2 text-xs border-b border-gray-50 last:border-0 pb-1.5 last:pb-0">
-                                                                <span className="text-gray-400 font-mono shrink-0">
+                                                                <span className="text-gray-600 font-mono shrink-0">
                                                                     {new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                                 </span>
                                                                 <a
@@ -833,14 +833,14 @@ export default function LeadsDashboard() {
                                                     selectedLead.adminNotes.map((note) => (
                                                         <div key={note._key} className="bg-white p-3 rounded-lg shadow-sm text-sm border border-gray-100 relative group">
                                                             <p className="text-gray-800 whitespace-pre-wrap">{note.note}</p>
-                                                            <div className="flex justify-between mt-2 text-[10px] text-gray-400 uppercase tracking-wider items-center">
+                                                            <div className="flex justify-between mt-2 text-[10px] text-gray-600 uppercase tracking-wider items-center">
                                                                 <div className="flex gap-2">
                                                                     <span>{note.author}</span>
                                                                     <span>{new Date(note.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                                                                 </div>
                                                                 <button
                                                                     onClick={() => navigator.clipboard.writeText(note.note)}
-                                                                    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-blue-500 transition-opacity"
+                                                                    className="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-blue-500 transition-opacity"
                                                                     title="Copy to clipboard"
                                                                 >
                                                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
@@ -849,7 +849,7 @@ export default function LeadsDashboard() {
                                                         </div>
                                                     ))
                                                 ) : (
-                                                    <div className="text-center text-gray-400 text-sm py-10">
+                                                    <div className="text-center text-gray-600 text-sm py-10">
                                                         No logs yet. Add your first note below.
                                                     </div>
                                                 )}

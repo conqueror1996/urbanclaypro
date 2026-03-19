@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { getProducts, getProjects } from '@/lib/products';
+import { getJournalPosts } from '@/lib/journal';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://claytile.in';
@@ -45,5 +46,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
     }));
 
-    return [...routes, ...productRoutes, ...projectRoutes];
+    // Dynamic Journals
+    const journals = await getJournalPosts();
+    const journalRoutes = journals.map((post) => ({
+        url: `${baseUrl}/journal/${post.slug}`,
+        lastModified: post.publishedAt || new Date().toISOString(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+    }));
+
+    return [...routes, ...productRoutes, ...projectRoutes, ...journalRoutes];
 }

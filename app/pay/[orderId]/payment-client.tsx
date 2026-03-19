@@ -115,15 +115,15 @@ export default function PaymentPageClient({ order }: { order: any }) {
 
                 <div className="space-y-6 mb-10">
                     <div className="flex justify-between text-sm py-2 border-b border-gray-50">
-                        <span className="text-gray-400">Order ID</span>
+                        <span className="text-gray-600">Order ID</span>
                         <span className="font-mono text-gray-900 font-bold">{order.orderId}</span>
                     </div>
                     <div className="flex justify-between text-sm py-2 border-b border-gray-50">
-                        <span className="text-gray-400">Transaction ID</span>
-                        <span className="font-mono text-gray-400">{order.paymentId}</span>
+                        <span className="text-gray-600">Transaction ID</span>
+                        <span className="font-mono text-gray-600">{order.paymentId}</span>
                     </div>
                     <div className="flex justify-between text-sm py-2 border-b border-gray-50">
-                        <span className="text-gray-400">Payment Date</span>
+                        <span className="text-gray-600">Payment Date</span>
                         <span className="text-gray-900">{new Date(order.paidAt || new Date()).toLocaleDateString(undefined, { dateStyle: 'long' })}</span>
                     </div>
                     <div className="pt-4 mt-4 border-t-2 border-gray-100">
@@ -152,7 +152,7 @@ export default function PaymentPageClient({ order }: { order: any }) {
                     </button>
                 </div>
 
-                <p className="mt-12 text-center text-xs text-gray-400 uppercase tracking-widest leading-relaxed">
+                <p className="mt-12 text-center text-xs text-gray-600 uppercase tracking-widest leading-relaxed">
                     Official Document issued by UrbanClay Solutions Pvt Ltd.
                     <br />Digital Verification ID: {order.orderId.split('-').pop()}
                 </p>

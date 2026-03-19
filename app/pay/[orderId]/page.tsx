@@ -67,9 +67,9 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                 </div>
                             </div>
                             <div className="md:text-right md:w-1/2">
-                                <p className="text-[var(--terracotta)] font-bold uppercase tracking-[0.3em] text-[10px] mb-2">Secure Payment Portal</p>
+                                <p className="text-[var(--terracotta)] font-bold uppercase tracking-[0.2em] text-[10px] mb-2">Secure Payment Portal</p>
                                 <h1 className="text-3xl font-serif font-bold text-[#2A1E16]">Tax Invoice & Settlement</h1>
-                                <p className="text-gray-400 text-[10px] mt-2 font-mono tracking-widest uppercase">REF: {order.orderId}</p>
+                                <p className="text-gray-600 text-[10px] mt-2 font-mono tracking-widest uppercase">REF: {order.orderId}</p>
                             </div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                 <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-4">Invoice Metadata</p>
                                 <div className="space-y-3">
                                     <div>
-                                        <p className="text-[10px] text-gray-400 uppercase font-bold">Status</p>
+                                        <p className="text-[10px] text-gray-600 uppercase font-bold">Status</p>
                                         <span className={`inline-block mt-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${order.status === 'paid' ? 'bg-emerald-50 text-emerald-600' :
                                             order.status === 'expired' ? 'bg-red-50 text-red-600' :
                                                 'bg-orange-50 text-orange-600 animate-pulse'
@@ -111,23 +111,23 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                     </div>
                                     {order.status === 'paid' && order.paidAt ? (
                                         <div>
-                                            <p className="text-[10px] text-gray-400 uppercase font-bold">Paid On</p>
+                                            <p className="text-[10px] text-gray-600 uppercase font-bold">Paid On</p>
                                             <p className="text-emerald-700 font-bold">
                                                 {new Date(order.paidAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                                                <span className="text-[10px] text-gray-400 ml-1 block font-mono">
+                                                <span className="text-[10px] text-gray-600 ml-1 block font-mono">
                                                     {new Date(order.paidAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
                                             </p>
                                         </div>
                                     ) : (
                                         <div>
-                                            <p className="text-[10px] text-gray-400 uppercase font-bold">Created</p>
+                                            <p className="text-[10px] text-gray-600 uppercase font-bold">Created</p>
                                             <p className="text-gray-900 font-bold">{new Date(order.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
                                         </div>
                                     )}
                                     {order.expiryDate && (
                                         <div>
-                                            <p className="text-[10px] text-gray-400 uppercase font-bold">Valid Until</p>
+                                            <p className="text-[10px] text-gray-600 uppercase font-bold">Valid Until</p>
                                             <p className="text-red-500 font-bold">{new Date(order.expiryDate).toLocaleDateString()}</p>
                                         </div>
                                     )}
@@ -138,7 +138,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                         {/* Line Items Table */}
                         <div className="mb-12 border border-gray-100 rounded-2xl overflow-hidden bg-white">
                             <table className="w-full text-left">
-                                <thead className="bg-gray-50/50 text-gray-400 text-[10px] font-bold uppercase tracking-wider border-b border-gray-100">
+                                <thead className="bg-gray-50/50 text-gray-600 text-[10px] font-bold uppercase tracking-wider border-b border-gray-100">
                                     <tr>
                                         <th className="px-8 py-4 w-[40%]">Item & Description</th>
                                         <th className="px-4 py-4 text-center w-[15%]">Qty</th>
@@ -164,7 +164,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                             <td className="px-4 py-5 text-right font-mono text-xs text-gray-600 align-top">
                                                 ₹{item.rate.toLocaleString('en-IN')}
                                             </td>
-                                            <td className="px-4 py-5 text-right font-mono text-xs text-gray-400 align-top">
+                                            <td className="px-4 py-5 text-right font-mono text-xs text-gray-600 align-top">
                                                 {item.taxRate}%
                                             </td>
                                             <td className="px-8 py-5 text-right font-medium text-[#2A1E16] text-sm align-top">
@@ -235,7 +235,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
                                     <a
                                         href={`/api/invoice/${order.orderId}/pdf`}
                                         target="_blank"
-                                        className="text-xs font-bold text-gray-400 hover:text-[var(--terracotta)] underline decoration-dotted underline-offset-4 transition-colors uppercase tracking-widest"
+                                        className="text-xs font-bold text-gray-600 hover:text-[var(--terracotta)] underline decoration-dotted underline-offset-4 transition-colors uppercase tracking-widest"
                                     >
                                         Download Proforma Invoice (PDF)
                                     </a>
@@ -257,7 +257,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ orderI
             </main>
 
             {/* Minimal Footer */}
-            <footer className="text-center py-8 text-[10px] text-gray-400 uppercase tracking-widest">
+            <footer className="text-center py-8 text-[10px] text-gray-600 uppercase tracking-widest">
                 &copy; {new Date().getFullYear()} UrbanClay Architecture Pvt Ltd. All rights reserved.
             </footer>
         </div>

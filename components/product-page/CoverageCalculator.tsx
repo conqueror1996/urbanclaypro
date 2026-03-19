@@ -51,7 +51,7 @@ export default function CoverageCalculator({ productDimensions }: CoverageCalcul
         <div className="h-full flex flex-col">
             <div className="flex items-center justify-between mb-8 border-b border-gray-100 pb-4">
                 <div>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Estimator</span>
+                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest block mb-1">Estimator</span>
                     <h3 className="font-serif text-2xl text-[#2A1E16]">Quantity Calculator</h3>
                 </div>
                 <span className="text-[10px] font-bold bg-[#EBE5E0] text-[#5d554f] px-3 py-1.5 rounded-full uppercase tracking-wider">
@@ -74,7 +74,7 @@ export default function CoverageCalculator({ productDimensions }: CoverageCalcul
                                 onChange={(e) => setArea(e.target.value)}
                                 className="w-full bg-[#FAF7F5] border border-transparent hover:border-[#e9e2da] focus:border-[var(--terracotta)] focus:bg-white p-4 pr-16 rounded-xl text-xl font-medium focus:outline-none transition-all placeholder:text-gray-300"
                             />
-                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 pointer-events-none uppercase bg-white/50 px-2 py-1 rounded">sq.ft</span>
+                            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-600 pointer-events-none uppercase bg-white/50 px-2 py-1 rounded">sq.ft</span>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@ export default function CoverageCalculator({ productDimensions }: CoverageCalcul
                     <button
                         onClick={calculateCoverage}
                         disabled={!area || !productDimensions}
-                        className="w-full py-4 bg-[var(--terracotta)] disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold tracking-wide hover:bg-[#a85638] transition-all shadow-md mt-2"
+                        className="w-full py-4 bg-[var(--terracotta)] disabled:bg-gray-200 disabled:text-gray-600 text-white rounded-xl font-bold tracking-wide hover:bg-[#a85638] transition-all shadow-md mt-2"
                     >
                         Calculate Quantity
                     </button>

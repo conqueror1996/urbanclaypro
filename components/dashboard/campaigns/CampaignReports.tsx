@@ -21,7 +21,7 @@ export default function CampaignReports() {
         fetchReports();
     }, []);
 
-    if (loading) return <div className="p-20 text-center text-gray-400">Loading Analytics...</div>;
+    if (loading) return <div className="p-20 text-center text-gray-600">Loading Analytics...</div>;
 
     const totalOpens = reports.reduce((acc, curr) => acc + (curr.opens || 0), 0);
     const uniqueOpens = reports.filter(r => r.opens > 0).length;
@@ -32,25 +32,25 @@ export default function CampaignReports() {
             {/* KPI Cards */}
             <div className="grid grid-cols-4 gap-6">
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]">
-                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider">Total Sent</h4>
+                    <h4 className="text-xs font-bold uppercase text-gray-600 tracking-wider">Total Sent</h4>
                     <p className="text-4xl font-serif mt-2 text-[var(--ink)]">{reports.length}</p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]">
-                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider">Unique Opens</h4>
+                    <h4 className="text-xs font-bold uppercase text-gray-600 tracking-wider">Unique Opens</h4>
                     <p className="text-4xl font-serif mt-2 text-green-600">{uniqueOpens}</p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                         {reports.length > 0 ? Math.round((uniqueOpens / reports.length) * 100) : 0}% Open Rate
                     </p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm border-b-4 border-b-[var(--terracotta)]">
-                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider">Sample Orders</h4>
+                    <h4 className="text-xs font-bold uppercase text-gray-600 tracking-wider">Sample Orders</h4>
                     <p className="text-4xl font-serif mt-2 text-[var(--terracotta)]">{totalConversions}</p>
-                    <p className="text-xs text-gray-400 mt-1 font-bold">
+                    <p className="text-xs text-gray-600 mt-1 font-bold">
                         {reports.length > 0 ? ((totalConversions / reports.length) * 100).toFixed(1) : 0}% Conversion
                     </p>
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                    <h4 className="text-xs font-bold uppercase text-gray-400 tracking-wider">Interactions</h4>
+                    <h4 className="text-xs font-bold uppercase text-gray-600 tracking-wider">Interactions</h4>
                     <p className="text-4xl font-serif mt-2 text-blue-600">{totalOpens}</p>
                 </div>
             </div>
@@ -62,7 +62,7 @@ export default function CampaignReports() {
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
-                        <thead className="bg-gray-50 text-gray-400 font-medium uppercase text-[10px] tracking-widest font-sans">
+                        <thead className="bg-gray-50 text-gray-600 font-medium uppercase text-[10px] tracking-widest font-sans">
                             <tr>
                                 <th className="px-6 py-4">Recipient</th>
                                 <th className="px-6 py-4">Engagement Status</th>
@@ -75,7 +75,7 @@ export default function CampaignReports() {
                                 <tr key={lead._id} className={`hover:bg-gray-50/80 transition-colors ${lead.opens > 0 ? 'bg-orange-50/10' : ''}`}>
                                     <td className="px-6 py-4">
                                         <div className="font-bold text-[var(--ink)]">{lead.firmName}</div>
-                                        <div className="font-mono text-xs text-gray-400">{lead.email}</div>
+                                        <div className="font-mono text-xs text-gray-600">{lead.email}</div>
                                     </td>
                                     <td className="px-6 py-4">
                                         {lead.opens > 0 ? (
@@ -87,7 +87,7 @@ export default function CampaignReports() {
                                                 <span className="text-green-700 font-bold">Opened {lead.opens} times</span>
                                             </div>
                                         ) : (
-                                            <span className="text-gray-400">Delivered (Unopened)</span>
+                                            <span className="text-gray-600">Delivered (Unopened)</span>
                                         )}
                                         {lead.hasRequestedSample && (
                                             <div className="mt-2 text-[10px] bg-orange-100 text-[var(--terracotta)] font-bold px-2 py-1 rounded inline-flex items-center gap-1 uppercase tracking-tighter shadow-sm border border-orange-200">
@@ -107,7 +107,7 @@ export default function CampaignReports() {
                             ))}
                             {reports.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="text-center py-20 text-gray-400">
+                                    <td colSpan={4} className="text-center py-20 text-gray-600">
                                         No active campaigns found. Send your first blast!
                                     </td>
                                 </tr>

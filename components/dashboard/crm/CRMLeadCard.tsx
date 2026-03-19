@@ -53,7 +53,7 @@ export function CRMLeadCard({ lead, onClick, isOverdue, getDealHealth, stages }:
                 {lead.potentialValue > 0 ? (
                     <span className="font-mono text-sm text-[#2a1e16]">₹{lead.potentialValue.toLocaleString('en-IN')}</span>
                 ) : (
-                    <span className="text-xs text-gray-400 italic">No Value</span>
+                    <span className="text-xs text-gray-600 italic">No Value</span>
                 )}
             </div>
 

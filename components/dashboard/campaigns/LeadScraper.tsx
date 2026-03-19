@@ -59,7 +59,7 @@ export default function LeadScraper({ onLeadsAdded }: { onLeadsAdded: () => void
 
                 <div className="space-y-4">
                     <div>
-                        <label className="text-xs font-bold uppercase text-gray-400 tracking-wider mb-2 block">Target City</label>
+                        <label className="text-xs font-bold uppercase text-gray-600 tracking-wider mb-2 block">Target City</label>
                         <input
                             type="text"
                             value={city}
@@ -71,7 +71,7 @@ export default function LeadScraper({ onLeadsAdded }: { onLeadsAdded: () => void
                     <button
                         onClick={startScrape}
                         disabled={isScraping || !city}
-                        className={`w-full py-4 rounded-xl font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${isScraping ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-[var(--terracotta)] text-white hover:bg-[#a85638] shadow-lg shadow-orange-900/20'
+                        className={`w-full py-4 rounded-xl font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${isScraping ? 'bg-gray-100 text-gray-600 cursor-not-allowed' : 'bg-[var(--terracotta)] text-white hover:bg-[#a85638] shadow-lg shadow-orange-900/20'
                             }`}
                     >
                         {isScraping ? 'Bot Running...' : 'Start Scraping'}

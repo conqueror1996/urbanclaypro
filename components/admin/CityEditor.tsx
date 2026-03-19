@@ -55,7 +55,7 @@ export default function CityEditor({ city, onClose, onSave }: CityEditorProps) {
                         <h3 className="text-xl font-serif font-bold text-[#1a1512]">Edit Content: {city.name}</h3>
                         <p className="text-xs text-gray-500 mt-1">Add rich SEO text to boost rankings in {city.name}.</p>
                     </div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-black">✕</button>
+                    <button onClick={onClose} className="text-gray-600 hover:text-black">✕</button>
                 </div>
 
                 <div className="p-6 flex-1 overflow-y-auto">

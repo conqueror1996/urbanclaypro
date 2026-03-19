@@ -41,19 +41,19 @@ export default function TechnicalFAQ() {
 
                     {/* Sticky Side Content */}
                     <div className="lg:col-span-4 lg:sticky lg:top-32 h-fit">
-                        <span className="text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-2 md:mb-6 block">
+                        <span className="text-[var(--terracotta)] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-2 md:mb-6 block">
                             Knowledge Base
                         </span>
                         <h2 className="text-[var(--foreground)] leading-[1.1] mb-3 md:mb-8">
                             Technical <br />
-                            <span className="italic text-[var(--foreground)]/50 text-xl md:text-3xl">Specifications & FAQs</span>
+                            <span className="italic text-[var(--foreground)]/70 text-xl md:text-3xl">Specifications & FAQs</span>
                         </h2>
-                        <p className="text-[var(--foreground)]/60 text-[13px] md:text-base leading-relaxed mb-4 md:mb-8 max-w-sm md:max-w-none">
+                        <p className="text-[var(--foreground)]/70 text-[13px] md:text-base leading-relaxed mb-4 md:mb-8 max-w-sm md:max-w-none">
                             Detailed insights into material science, installation protocols, and performance metrics for architects and specifiers.
                         </p>
                         <div className="flex flex-wrap gap-2 mb-4 md:mb-0">
                             {['Thermal', 'Structural', 'Acoustics', 'LEED'].map(tag => (
-                                <span key={tag} className="px-2 py-0.5 border border-[var(--line)] bg-[var(--sand)] rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/50">
+                                <span key={tag} className="px-2 py-0.5 border border-[var(--line)] bg-[var(--sand)] rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[var(--foreground)]/70">
                                     {tag}
                                 </span>
                             ))}
@@ -94,7 +94,7 @@ export default function TechnicalFAQ() {
                                             className="overflow-hidden"
                                         >
                                             <div className="px-4 md:px-6 pt-0 pb-4 md:pb-6 ml-8 md:ml-12">
-                                                <p className="text-sm md:text-lg text-[var(--foreground)]/60 leading-relaxed max-w-2xl font-light">
+                                                <p className="text-sm md:text-lg text-[var(--foreground)]/70 leading-relaxed max-w-2xl font-light">
                                                     {faq.answer}
                                                 </p>
                                                 <div className="mt-6 md:mt-8 flex flex-wrap items-center gap-3">
