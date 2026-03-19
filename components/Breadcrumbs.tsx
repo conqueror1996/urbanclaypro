@@ -2,79 +2,73 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
-import JsonLd from './JsonLd';
+import { ChevronRight, Home } from 'lucide-react';
 
-export default function Breadcrumbs({ range }: { range?: string }) {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+interface BreadcrumbItem {
+    name: string;
+    href: string;
+}
 
-    const parts = pathname.split('/').filter(p => p);
+interface BreadcrumbsProps {
+    items?: BreadcrumbItem[];
+    range?: string;
+}
 
-    // Custom label mapping for slug
-    const formatLabel = (slug: string) => {
-        return slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    };
+export default function Breadcrumbs({ items, range }: BreadcrumbsProps) {
+    // Legacy support: If range is provided but items are not, build a default path
+    const breadcrumbItems = React.useMemo(() => {
+        if (items && items.length > 0) return items;
+        
+        if (range) {
+            return [
+                { name: 'Archive', href: '/products' },
+                { name: range, href: `/products?search=${encodeURIComponent(range)}` }
+            ];
+        }
+        
+        return [];
+    }, [items, range]);
 
-    const variantName = searchParams.get('variant');
-
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        'itemListElement': [
-            {
-                '@type': 'ListItem',
-                'position': 1,
-                'name': 'Home',
-                'item': 'https://claytile.in'
-            },
-            ...parts.map((part, idx) => ({
-                '@type': 'ListItem',
-                'position': idx + 2,
-                'name': formatLabel(part),
-                'item': `https://claytile.in/${parts.slice(0, idx + 1).join('/')}`
-            }))
-        ]
-    };
+    if (breadcrumbItems.length === 0) {
+        return (
+            <nav className="flex mb-8 overflow-x-auto no-scrollbar whitespace-nowrap" aria-label="Breadcrumb">
+                <ol className="flex items-center space-x-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40">
+                    <li className="flex items-center">
+                        <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center gap-1">
+                            <Home className="w-3 h-3" />
+                            <span>Home</span>
+                        </Link>
+                    </li>
+                </ol>
+            </nav>
+        );
+    }
 
     return (
-        <nav className="flex flex-nowrap items-center justify-start text-[10px] font-bold uppercase tracking-wide text-[var(--foreground)]/70 leading-none">
-            <JsonLd data={jsonLd} />
-            <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center">Home</Link>
-
-            {parts.map((part, idx) => {
-                const path = `/${parts.slice(0, idx + 1).join('/')}`;
-                const isLast = idx === parts.length - 1 && !variantName;
-
-                return (
-                    <React.Fragment key={path}>
-                        <span className="mx-2 text-[var(--line)] text-[10px] flex items-center">/</span>
-                        {isLast ? (
-                            <span className="text-[var(--terracotta)] flex items-center whitespace-nowrap">{formatLabel(part)}</span>
+        <nav className="flex mb-8 overflow-x-auto no-scrollbar whitespace-nowrap" aria-label="Breadcrumb">
+            <ol className="flex items-center space-x-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40">
+                <li className="flex items-center">
+                    <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center gap-1">
+                        <Home className="w-3 h-3" />
+                        <span>Home</span>
+                    </Link>
+                </li>
+                
+                {breadcrumbItems.map((item, index) => (
+                    <li key={index} className="flex items-center space-x-2">
+                        <ChevronRight className="w-3 h-3 text-[var(--foreground)]/20" />
+                        {index === breadcrumbItems.length - 1 ? (
+                            <span className="text-[var(--terracotta)]" aria-current="page">
+                                {item.name}
+                            </span>
                         ) : (
-                            <>
-                                <Link href={path} className="hover:text-[var(--terracotta)] transition-colors flex items-center whitespace-nowrap">
-                                    {formatLabel(part)}
-                                </Link>
-                                {/* Insert Range if present and we just rendered the category (second to last item) */}
-                                {range && idx === parts.length - 2 && (
-                                    <>
-                                        <span className="mx-2 text-[var(--line)] text-[10px] flex items-center">/</span>
-                                        <span className="text-[var(--foreground)]/70 cursor-default flex items-center whitespace-nowrap">{range}</span>
-                                    </>
-                                )}
-                            </>
+                            <Link href={item.href} className="hover:text-[var(--terracotta)] transition-colors">
+                                {item.name}
+                            </Link>
                         )}
-                    </React.Fragment>
-                );
-            })}
-
-            {variantName && (
-                <>
-                    <span className="mx-2 text-[var(--line)] text-[10px] flex items-center">/</span>
-                    <span className="text-[var(--terracotta)] flex items-center whitespace-nowrap">{variantName}</span>
-                </>
-            )}
+                    </li>
+                ))}
+            </ol>
         </nav>
     );
 }

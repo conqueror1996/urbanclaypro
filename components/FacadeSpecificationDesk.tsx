@@ -6,6 +6,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle2, ChevronRight, Download, Building2, Home, Landmark, Hotel, Building, LayoutTemplate, Layers, Frame, Cuboid, ChevronLeft } from 'lucide-react';
 import { submitLead } from '@/app/actions/submit-lead';
 import Image from 'next/image';
+import JsonLd from './JsonLd';
+
+const FACADE_TOOL_SCHEMA = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Facade Specification Desk",
+    "operatingSystem": "All",
+    "applicationCategory": "DesignApplication",
+    "description": "Interactive facade engineering tool for specifying terracotta and clay brick systems based on project requirements.",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "INR"
+    }
+};
 
 // Types
 type ProjectType = "Commercial" | "Residential" | "Hospitality" | "Institutional" | "High Rise" | "";
@@ -253,6 +268,7 @@ export default function FacadeSpecificationDesk() {
 
     return (
         <>
+            <JsonLd data={FACADE_TOOL_SCHEMA} />
             {/* MOBILE VIEW PORTAL */}
             {isMobileOpen && typeof document !== 'undefined' && createPortal(
                 <div className="fixed inset-0 bg-[#FAF9F6] z-[150] flex flex-col overflow-hidden text-[var(--ink)]">
@@ -621,7 +637,7 @@ export default function FacadeSpecificationDesk() {
                                                 
                                                 <div className="relative z-10 mt-12">
                                                     <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--terracotta)] block mb-3">Recommended System</span>
-                                                    <h3 className="text-3xl font-serif leading-tight mb-4">{recommendation.name}</h3>
+                                                    <h3 className="text-3xl font-serif leading-tight mb-4 text-white">{recommendation.name}</h3>
                                                     <p className="text-sm text-white/80 leading-relaxed mb-6 max-w-[85%]">{recommendation.description}</p>
 
                                                     <div className="grid grid-cols-2 gap-y-4 gap-x-6">

@@ -194,7 +194,7 @@ export default function ProductsPageAnimate({ products, initialCategory, initial
 
             <main className="max-w-[1800px] mx-auto min-h-screen pt-32 pb-20 px-0 md:px-6">
                 <div className="px-6 md:px-0 mb-8">
-                    <Breadcrumbs />
+                    <Breadcrumbs items={[{ name: 'Archive', href: '/products' }]} />
                 </div>
 
                 {/* --- CATALOG HEADER --- */}

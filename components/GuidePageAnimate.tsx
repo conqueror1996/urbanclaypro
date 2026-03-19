@@ -74,7 +74,7 @@ export default function GuidePageAnimate() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                     >
                         <div className="flex justify-center mb-6 opacity-60">
-                            <Breadcrumbs />
+                            <Breadcrumbs items={[{ name: 'Selection Guide', href: '/guide' }]} />
                         </div>
                         <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
                             Curator's Guide

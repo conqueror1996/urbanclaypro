@@ -14,7 +14,8 @@ import { useSampleBox } from '@/context/SampleContext';
 import PremiumProductCard from '@/components/PremiumProductCard';
 import RelatedArticles from '@/components/RelatedArticles';
 import JsonLd from '@/components/JsonLd';
-import { ShieldCheck, FileText, Maximize2, Layers, MessageCircle, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import { ShieldCheck, FileText, Maximize2, Layers, MessageCircle, ArrowRight, CheckCircle2, ChevronDown, Phone } from 'lucide-react';
 
 interface PillarPageTemplateProps {
     title: string;
@@ -68,53 +69,100 @@ export default function PillarPageTemplate({
 
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'CollectionPage',
-        'name': title,
-        'description': description,
-        'url': `https://claytile.in/${slug}`,
-        'mainEntity': {
-            '@type': 'ItemList',
-            'itemListElement': products.slice(0, 10).map((p, i) => ({
-                '@type': 'ListItem',
-                'position': i + 1,
-                'url': `https://claytile.in/products/${p.category?.slug || 'collection'}/${p.slug}`
-            }))
-        }
-    };
-
-    const faqToRender = faqs.slice(0, 3);
-
-    const faqJsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        'mainEntity': faqToRender.map(faq => ({
-            '@type': 'Question',
-            'name': faq.q,
-            'acceptedAnswer': {
-                '@type': 'Answer',
-                'text': faq.a
-            }
-        }))
-    };
-
-    const breadcrumbJsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        'itemListElement': [
+        '@graph': [
             {
-                '@type': 'ListItem',
-                'position': 1,
-                'name': 'Home',
-                'item': 'https://claytile.in'
+                '@type': 'CollectionPage',
+                '@id': `https://claytile.in/${slug}/#page`,
+                'name': `${title} Systems & Engineering Hub | UrbanClay`,
+                'description': description,
+                'url': `https://claytile.in/${slug}`,
+                'publisher': { '@id': 'https://claytile.in/#organization' },
+                'mainEntity': {
+                    '@type': 'ItemList',
+                    'name': `${title} Product Collection`,
+                    'numberOfItems': products.length,
+                    'itemListElement': products.slice(0, 12).map((p, i) => ({
+                        '@type': 'ListItem',
+                        'position': i + 1,
+                        'item': {
+                            '@type': 'Product',
+                            'name': p.title,
+                            'url': `https://claytile.in/products/${p.category?.slug || 'collection'}/${p.slug}`,
+                            'image': p.imageUrl || (p.variants?.[0]?.imageUrl)
+                        }
+                    }))
+                }
             },
             {
-                '@type': 'ListItem',
-                'position': 2,
-                'name': title,
-                'item': `https://claytile.in/${slug}`
+                '@type': 'FAQPage',
+                '@id': `https://claytile.in/${slug}/#faq`,
+                'mainEntity': faqs.map(faq => ({
+                    '@type': 'Question',
+                    'name': faq.q,
+                    'acceptedAnswer': {
+                        '@type': 'Answer',
+                        'text': faq.a
+                    }
+                }))
+            },
+            {
+                '@type': 'BreadcrumbList',
+                '@id': `https://claytile.in/${slug}/#breadcrumb`,
+                'itemListElement': [
+                    {
+                        '@type': 'ListItem',
+                        'position': 1,
+                        'name': 'Home',
+                        'item': 'https://claytile.in'
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 2,
+                        'name': title,
+                        'item': `https://claytile.in/${slug}`
+                    }
+                ]
+            },
+            {
+                '@type': 'HowTo',
+                'name': `How to install ${title} Systems`,
+                'description': `Engineering guide for the correct installation of UrbanClay ${title} systems for zero-failure performance.`,
+                'step': [
+                    {
+                        '@type': 'HowToStep',
+                        'name': 'Surface Preparation',
+                        'text': 'Ensure the substrate (Concrete/Brick) is clean, dry, and structurally sound.'
+                    },
+                    {
+                        '@type': 'HowToStep',
+                        'name': 'Layout & Marking',
+                        'text': 'Mark benchmarks for horizontal and vertical alignment based on architectural drawings.'
+                    },
+                    {
+                        '@type': 'HowToStep',
+                        'name': 'System Fixing',
+                        'text': 'Fix brackets or apply high-performance adhesive as per specific system technical sheets.'
+                    },
+                    {
+                        '@type': 'HowToStep',
+                        'name': 'Anti-Efflorescence Treatment',
+                        'text': 'Apply clear breathable sealer to ensure long-term aesthetic integrity.'
+                    }
+                ],
+                'totalTime': 'PT24H',
+                'tool': [
+                    { '@type': 'HowToTool', 'name': 'Laser Level' },
+                    { '@type': 'HowToTool', 'name': 'Notched Trowel' }
+                ],
+                'supply': [
+                    { '@type': 'HowToSupply', 'name': 'Low-Alkali Grout' },
+                    { '@type': 'HowToSupply', 'name': 'Premium Polymer Adhesive' }
+                ]
             }
         ]
     };
+
+    const faqToRender = faqs.slice(0, 3);
 
     const [showDock, setShowDock] = useState(true);
 
@@ -141,7 +189,7 @@ export default function PillarPageTemplate({
 
     return (
         <main className="bg-[var(--background)] min-h-screen text-[var(--foreground)] selection:bg-[var(--terracotta)] selection:text-white font-sans overflow-x-hidden">
-            <JsonLd data={[jsonLd, faqJsonLd, breadcrumbJsonLd]} />
+            <JsonLd data={jsonLd} />
             <Header hideAnnouncement={true} />
 
             {/* HERO SECTION - Architectural Authority (Compact & Punchy) */}
@@ -149,6 +197,7 @@ export default function PillarPageTemplate({
                 <div className="max-w-[1800px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
                     {/* Left: Engineering Content */}
                     <div className="relative z-10 flex flex-col items-start lg:col-span-7 pr-4">
+                        <Breadcrumbs items={[{ name: title, href: `/${slug}` }]} />
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -339,7 +388,7 @@ export default function PillarPageTemplate({
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {projects.slice(0, 3).map((project, i) => (
                                 <Link key={i} href={`/projects/${project.slug}`} className="group cursor-pointer">
-                                    <div className="aspect-[16/10] overflow-hidden rounded-[32px] mb-6 border border-[var(--line)] group-hover:border-[var(--terracotta)]/40 transition-all duration-700 bg-[var(--sand)] relative">
+                                    <div className="aspect-[16/10] overflow-hidden rounded-[32px] mb-6 transition-all duration-700 bg-[var(--sand)] relative">
                                         {project.imageUrl ? (
                                             <Image
                                                 src={project.imageUrl}
@@ -383,35 +432,41 @@ export default function PillarPageTemplate({
             {/* PERSISTENT SALES HERO CTA DOCK */}
             <AnimatePresence>
                 {showDock && (
-                    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl md:w-auto">
+                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-fit max-w-[95%] md:max-w-2xl px-4 md:px-0">
                         <motion.div
                             initial={{ y: 100, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 100, opacity: 0 }}
-                            className="bg-white/80 backdrop-blur-2xl border border-[var(--line)] rounded-full px-4 py-2 flex items-center gap-2 shadow-2xl"
+                            className="bg-white/90 backdrop-blur-2xl border border-[var(--line)] rounded-full p-1.5 md:p-2 flex items-center gap-1.5 md:gap-3 shadow-2xl ring-1 ring-black/5"
                         >
                             <div className="hidden md:flex px-4 py-2 flex-col leading-none border-r border-[var(--line)]">
                                 <span className="text-[9px] font-black uppercase text-[var(--foreground)]/70 mb-1">{title} Inquiry</span>
                                 <span className="text-[11px] font-serif font-bold text-[var(--ink)]">Technical Support Ready</span>
                             </div>
-                            <div className="flex flex-col items-center">
-                                <button
-                                    onClick={() => setBoxOpen(true)}
-                                    className="flex-1 md:flex-none px-8 py-4 bg-[var(--terracotta)] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg text-center active:scale-95"
-                                >
-                                    Request Sample Kit
-                                </button>
-                                <span className="absolute -bottom-5 text-[8px] font-bold text-[var(--foreground)]/70 uppercase tracking-widest hidden md:block">
-                                    ✓ Ships free in 24 hrs
-                                </span>
-                            </div>
+
+                            <button
+                                onClick={() => setBoxOpen(true)}
+                                className="flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-4 bg-[var(--terracotta)] text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[var(--ink)] transition-all shadow-lg active:scale-95 whitespace-nowrap"
+                            >
+                                Request Sample Kit
+                            </button>
+
                             <a
                                 href="https://wa.me/918080081951"
                                 target="_blank"
-                                className="w-12 h-12 md:w-auto md:px-6 bg-[#25D366] text-white rounded-full flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-all shadow-lg relative"
+                                className="w-11 h-11 md:w-auto md:px-6 bg-[#25D366] text-white rounded-full flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-all shadow-lg"
+                                title="WhatsApp Expert"
                             >
                                 <MessageCircle className="w-5 h-5" />
-                                <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em]">WhatsApp Expert</span>
+                                <span className="hidden md:inline text-[10px] font-black uppercase tracking-[0.2em]">WhatsApp</span>
+                            </a>
+
+                            <a
+                                href="tel:+918080081951"
+                                className="w-11 h-11 bg-[var(--ink)] text-white rounded-full flex items-center justify-center hover:bg-[var(--terracotta)] transition-all shadow-lg md:hidden"
+                                title="Call Expert"
+                            >
+                                <Phone className="w-4 h-4" />
                             </a>
                         </motion.div>
                     </div>
@@ -484,7 +539,7 @@ export default function PillarPageTemplate({
                     </div>
 
                     <div className="md:col-span-2 space-y-6">
-                        {faqToRender.map((faq, i) => (
+                        {faqToRender.map((faq: { q: string, a: string }, i: number) => (
                             <div key={i} className="group">
                                 <h4 className="text-lg font-serif mb-2 text-[var(--ink)] flex items-center gap-3">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--terracotta)]" />

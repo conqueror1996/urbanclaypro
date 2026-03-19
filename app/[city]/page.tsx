@@ -11,6 +11,7 @@ import { urlForImage } from '@/sanity/lib/image';
 import { regions } from '@/lib/locations';
 
 import { truncate } from '@/lib/seo-utils';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -190,6 +191,7 @@ export default async function CityPage({ params }: PageProps) {
             <main className="pt-32 pb-20">
                 {/* Dynamic Hero */}
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+                    <Breadcrumbs items={[{ name: data.name, href: `/${data.slug}` }]} />
                     <div className="text-center mb-12">
                         <span className="inline-block px-4 py-1 mb-6 border border-[var(--terracotta)] text-[var(--terracotta)] text-[10px] font-bold uppercase tracking-[0.25em] rounded-full">
                             Serving {data.region} India

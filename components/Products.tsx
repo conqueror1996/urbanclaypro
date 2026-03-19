@@ -264,7 +264,7 @@ export default function Products({ products, featuredOnly }: ProductsProps) {
                                                     <div key={`${variant.slug}-${index}`} className="group block h-full">
                                                         <Link
                                                             href={`/products/${variant.categorySlug}/${variant.slug}${variant.variantName ? `?variant=${encodeURIComponent(variant.variantName)}` : ''}`}
-                                                            className="flex flex-col h-full bg-white rounded-[2rem] p-6 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] border border-transparent group-hover:border-[var(--line)]"
+                                                            className="flex flex-col h-full bg-transparent rounded-[2rem] p-0 transition-all duration-700 border-none hover:-translate-y-2"
                                                         >
                                                             {/* Image Card */}
                                                             <div className="aspect-[4/5] rounded-2xl mb-4 relative overflow-hidden bg-[#f4f1ee]">

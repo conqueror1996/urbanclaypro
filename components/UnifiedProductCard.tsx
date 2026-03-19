@@ -74,7 +74,7 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
                 className="block relative overflow-hidden"
             >
                 {/* Visual Card Container */}
-                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[var(--background)] mb-5 border border-[var(--line)] group-hover:border-[var(--terracotta)]/30 transition-all duration-700 shadow-[0_20px_40px_rgba(0,0,0,0.06)] group-hover:shadow-[0_20px_50px_rgba(180,90,60,0.12)]">
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-transparent mb-5 transition-all duration-700">
                     {variant.imageUrl ? (
                         <Image
                             src={variant.imageUrl}

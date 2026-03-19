@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getProducts, getProjects } from '@/lib/products';
 import { getJournalPosts } from '@/lib/journal';
+import { client } from '@/sanity/lib/client';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://claytile.in';
@@ -55,5 +56,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
     }));
 
-    return [...routes, ...productRoutes, ...projectRoutes, ...journalRoutes];
+    // Dynamic City Pages (Local SEO Hubs)
+    const cities = await client.fetch(`*[_type == "cityPage"]{ "slug": slug.current, "_updatedAt": _updatedAt }`);
+    const cityRoutes = cities.map((city: any) => ({
+        url: `${baseUrl}/${city.slug}`,
+        lastModified: city._updatedAt || new Date().toISOString(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.9, // High priority for local SEO
+    }));
+
+    return [
+        ...routes, 
+        ...productRoutes, 
+        ...projectRoutes, 
+        ...journalRoutes,
+        ...cityRoutes
+    ];
 }

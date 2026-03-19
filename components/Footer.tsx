@@ -21,71 +21,121 @@ export default function Footer() {
     return (
         <footer id="contact" className="bg-[var(--background)] text-[var(--foreground)] border-t border-[var(--line)]">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
-                    {/* Column 1: Brand (Always Visible) */}
-                    <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+                    {/* Column 1: Brand & Contact */}
+                    <div className="space-y-8">
                         <Link href="/" className="block" aria-label="UrbanClay Home">
                             <Image
                                 src="/urbanclay-logo.png"
                                 alt="UrbanClay"
-                                width={160}
-                                height={50}
-                                className="h-10 md:h-12 lg:h-14 w-auto opacity-90"
+                                width={140}
+                                height={44}
+                                className="h-8 md:h-10 w-auto opacity-90"
                             />
                         </Link>
 
-                        <p className="text-[var(--foreground)]/90 text-sm leading-relaxed max-w-xs font-light">
-                            India's premier manufacturer of sustainable terracotta tiles, brick cladding, and architectural facades.
+                        <p className="text-[var(--foreground)]/80 text-sm leading-relaxed max-w-xs font-light">
+                            India's premier manufacturer of high-precision clay facades and handcrafted architectural ceramics.
                         </p>
-                        <div className="flex items-center gap-4">
-                            <SocialLink href="https://www.instagram.com/urbanclay.in/" label="Instagram" icon="instagram" />
-                            <SocialLink href="https://linkedin.com/company/urbanclay" label="LinkedIn" icon="linkedin" />
-                            <SocialLink href="https://x.com/urbanclayindia" label="X (Twitter)" icon="twitter" />
-                            <SocialLink href="https://in.pinterest.com/urbanclayindia/" label="Pinterest" icon="pinterest" />
+
+                        <div className="space-y-4">
+                            <p className="text-[10px] uppercase tracking-widest text-[var(--foreground)]/50 font-bold">Connect with us</p>
+                            <div className="flex items-center gap-3">
+                                <SocialLink href="https://www.instagram.com/urbanclay.in/" label="Instagram" icon="instagram" />
+                                <SocialLink href="https://linkedin.com/company/urbanclay" label="LinkedIn" icon="linkedin" />
+                                <SocialLink href="https://x.com/urbanclayindia" label="X (Twitter)" icon="twitter" />
+                                <SocialLink href="https://in.pinterest.com/urbanclayindia/" label="Pinterest" icon="pinterest" />
+                            </div>
                         </div>
                     </div>
 
-                    {/* Column 2: Products (Accordion on Mobile) */}
-                    <FooterSection title="Products">
-                        <ul className="space-y-2 md:space-y-4 text-[13px] md:text-sm text-[var(--foreground)]/70">
+                    {/* Column 2: Products */}
+                    <FooterSection title="Collections">
+                        <ul className="space-y-3 text-[13px] md:text-sm text-[var(--foreground)]/70">
                             <li><FooterLink href="/flexible-brick-tiles">Flexible Brick Tiles</FooterLink></li>
                             <li><FooterLink href="/terracotta-panels">Terracotta Panels</FooterLink></li>
-                            <li><FooterLink href="/exposed-brick">Exposed Wirecut Bricks</FooterLink></li>
+                            <li><FooterLink href="/exposed-brick">Wirecut Bricks</FooterLink></li>
                             <li><FooterLink href="/handmade-brick-tiles">Handmade Brick Tiles</FooterLink></li>
                             <li><FooterLink href="/products?category=Terracotta Jali">Terracotta Jaali</FooterLink></li>
                             <li><FooterLink href="/products">View All Catalog</FooterLink></li>
                         </ul>
                     </FooterSection>
 
-                    {/* Column 3: Resources (Accordion on Mobile) */}
-                    <FooterSection title="Resources">
-                        <ul className="space-y-2 md:space-y-4 text-[13px] md:text-sm text-[var(--foreground)]/70">
-                            <li><FooterLink href="/journal">The Clay Journal</FooterLink></li>
-                            <li><FooterLink href="/resources">Installation Guides</FooterLink></li>
-                            <li><FooterLink href="/resources">Technical Data Sheets</FooterLink></li>
-                            <li><FooterLink href="/wiki">Technical Wiki</FooterLink></li>
-                            <li><FooterLink href="/projects">Project Showcase</FooterLink></li>
+                    {/* Column 3: Expertise */}
+                    <FooterSection title="Expertise">
+                        <ul className="space-y-3 text-[13px] md:text-sm text-[var(--foreground)]/70">
                             <li><FooterLink href="/architects">For Architects</FooterLink></li>
+                            <li><FooterLink href="/projects">Project Showcase</FooterLink></li>
                             <li><FooterLink href="/guide">Selection Guide</FooterLink></li>
+                            <li><FooterLink href="/resources">Technical Docs</FooterLink></li>
+                            <li><FooterLink href="/wiki">Knowledge Wiki</FooterLink></li>
+                            <li><FooterLink href="/journal">The Clay Journal</FooterLink></li>
                         </ul>
                     </FooterSection>
 
-                    {/* Column 4: Company (Accordion on Mobile) */}
+                    {/* Column 4: Company & Support */}
                     <FooterSection title="Company">
-                        <ul className="space-y-2 md:space-y-4 text-[13px] md:text-sm text-[var(--foreground)]/70">
+                        <ul className="space-y-3 text-[13px] md:text-sm text-[var(--foreground)]/70">
                             <li><FooterLink href="/our-story">Our Story</FooterLink></li>
-                            <li><FooterLink href="/terracotta-tiles-india">Pan-India Presence</FooterLink></li>
-                            <li><FooterLink href="/commercial">Commercial Projects</FooterLink></li>
+                            <li><FooterLink href="/commercial">Commercial Sales</FooterLink></li>
                             <li><FooterLink href="/export">Export Division</FooterLink></li>
-                            <li><FooterLink href="/#specify" onClick={handleQuoteClick}>Contact Us</FooterLink></li>
-                            <li><FooterLink href="/#specify" onClick={handleQuoteClick}><span className="text-[#ea580c] font-semibold">Request a Quote</span></FooterLink></li>
-                            <li className="pt-4 border-t border-white/5 mt-4">
-                                <p className="text-[10px] uppercase tracking-wider text-[var(--foreground)]/70 mb-2 font-normal">Sales & Support</p>
-                                <a href="tel:+918080081951" className="block text-[var(--foreground)] hover:text-[var(--terracotta)] transition-colors font-normal mb-1">+91 80800 81951</a>
-                                <a href="mailto:urbanclay@claytile.in" className="block text-[var(--foreground)] hover:text-[var(--terracotta)] transition-colors font-normal">urbanclay@claytile.in</a>
+                            <li><FooterLink href="/#specify" onClick={handleQuoteClick}><span className="text-[var(--terracotta)] font-bold">Request a Quote</span></FooterLink></li>
+                            <li className="pt-6 border-t border-[var(--line)] mt-6 space-y-3">
+                                <p className="text-[9px] uppercase tracking-widest text-[var(--foreground)]/50 font-black">Sales & Logistics</p>
+                                <a href="tel:+918080081951" className="block text-[var(--foreground)] text-sm hover:text-[var(--terracotta)] transition-colors font-medium">+91 80800 81951</a>
+                                <a href="mailto:urbanclay@claytile.in" className="block text-[var(--foreground)] text-xs hover:text-[var(--terracotta)] transition-colors font-light">urbanclay@claytile.in</a>
                             </li>
                         </ul>
                     </FooterSection>
+                </div>
+
+                {/* Presence: Horizontal SEO Cloud (Improved Alignment) */}
+                <div className="pt-12 border-t border-[var(--line)]">
+                    <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-16">
+                        <div className="shrink-0">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--terracotta)] mb-4">Local Destinations</h3>
+                            <p className="text-[10px] text-[var(--foreground)]/40 md:max-w-[120px] leading-relaxed uppercase tracking-widest">Architectural presence across India</p>
+                        </div>
+                        <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-8">
+                            <div>
+                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">West India</p>
+                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                    <li><FooterLink href="/mumbai">Mumbai</FooterLink></li>
+                                    <li><FooterLink href="/pune">Pune</FooterLink></li>
+                                    <li><FooterLink href="/goa">Goa</FooterLink></li>
+                                    <li><FooterLink href="/ahmedabad">Ahmedabad</FooterLink></li>
+                                    <li><FooterLink href="/surat">Surat</FooterLink></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">North India</p>
+                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                    <li><FooterLink href="/delhi">Delhi NCR</FooterLink></li>
+                                    <li><FooterLink href="/jaipur">Jaipur</FooterLink></li>
+                                    <li><FooterLink href="/lucknow">Lucknow</FooterLink></li>
+                                    <li><FooterLink href="/chandigarh">Chandigarh</FooterLink></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">South India</p>
+                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                    <li><FooterLink href="/bangalore">Bangalore</FooterLink></li>
+                                    <li><FooterLink href="/hyderabad">Hyderabad</FooterLink></li>
+                                    <li><FooterLink href="/chennai">Chennai</FooterLink></li>
+                                    <li><FooterLink href="/kochi">Kochi</FooterLink></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">State Hubs</p>
+                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                    <li><FooterLink href="/maharashtra">Maharashtra</FooterLink></li>
+                                    <li><FooterLink href="/karnataka">Karnataka</FooterLink></li>
+                                    <li><FooterLink href="/gujarat">Gujarat</FooterLink></li>
+                                    <li><FooterLink href="/kerala">Kerala</FooterLink></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="mt-12 md:mt-24 pt-8 border-t border-[var(--line)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--foreground)]/80 text-center md:text-left">

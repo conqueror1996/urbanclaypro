@@ -81,7 +81,7 @@ export default function ArchitectPageAnimate() {
                         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     >
                         <div className="flex justify-center mb-8 opacity-60">
-                            <Breadcrumbs />
+                            <Breadcrumbs items={[{ name: 'Architects', href: '/architects' }]} />
                         </div>
                         <span className="text-[var(--terracotta)] font-medium tracking-[0.2em] uppercase text-xs mb-6 block">
                             UrbanClay Studio

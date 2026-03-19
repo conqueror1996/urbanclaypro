@@ -315,7 +315,7 @@ function ProductCard({ product, index }: { product: DisplayProduct, index: numbe
         >
             <Link
                 href={`/products/${categorySlug || 'products'}/${slug}${variantName ? `?variant=${encodeURIComponent(variantName)}` : ''}`}
-                className="block h-full bg-[var(--background)] rounded-2xl md:rounded-3xl p-6 shadow-sm group-hover:shadow-xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] border border-[var(--line)] group-hover:border-[var(--terracotta)]/30"
+                className="block h-full bg-transparent rounded-3xl p-0 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] border-none hover:-translate-y-2"
             >
                 {/* Image Card - Increased Radius & Smaller Aspect */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-[var(--background)] mb-4 rounded-xl md:rounded-2xl">

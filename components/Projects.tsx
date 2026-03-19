@@ -33,13 +33,13 @@ const ParallaxProjectCard = ({ project, index, isMixed, isLarge }: { project: Pr
         >
             <motion.article
                 ref={ref}
-                className="group cursor-pointer h-full flex flex-col bg-[var(--background)] rounded-3xl p-6 shadow-sm group-hover:shadow-xl transition-all duration-700 border border-[var(--line)] group-hover:border-[var(--terracotta)]/30"
+                className="group cursor-pointer h-full flex flex-col bg-transparent rounded-3xl p-0 transition-all duration-700 border-none hover:-translate-y-2"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: index * 0.1, ease: [0.21, 0.47, 0.32, 0.98] }}
             >
-                <div className="aspect-[4/3] bg-[#e7dbd1] rounded-2xl overflow-hidden relative shadow-sm group-hover:shadow-md transition-all duration-500 transform-gpu">
+                <div className="aspect-[4/3] bg-[#e7dbd1] rounded-2xl overflow-hidden relative transition-all duration-500 transform-gpu">
                     {project.imageUrl ? (
                         <motion.div style={{ y, scale: 1.1 }} className="absolute inset-0 w-full h-full">
                             <Image
@@ -79,7 +79,7 @@ const ParallaxProjectCard = ({ project, index, isMixed, isLarge }: { project: Pr
                         {project.description}
                     </p>
 
-                    <div className="mt-4 pt-4 border-t border-[var(--line)] flex items-center text-sm font-semibold text-[var(--terracotta)] opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                    <div className="mt-6 flex items-center text-sm font-semibold text-[var(--terracotta)] opacity-0 group-hover:opacity-100 transition-all duration-300">
                         View Project <span className="ml-2">→</span>
                     </div>
                 </div>

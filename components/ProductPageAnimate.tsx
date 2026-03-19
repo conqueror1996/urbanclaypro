@@ -562,23 +562,23 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/70">Technical Profile</span>
                         </div>
 
-                        <div className="bg-[var(--background)] border border-[var(--line)] rounded-3xl overflow-hidden shadow-2xl relative">
+                        <div className="bg-white/50 backdrop-blur-sm rounded-[40px] overflow-hidden relative border-none shadow-none">
                             {/* Header */}
-                            <div className="p-8 md:p-10 border-b border-[var(--line)] flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <div className="p-8 md:p-12 border-b border-[var(--line)]/30 flex flex-col md:flex-row md:items-end justify-between gap-6">
                                 <div>
-                                    <h2 className="text-2xl font-serif text-[var(--foreground)]">Specifications</h2>
-                                    <p className="text-[10px] mt-2 text-[var(--foreground)]/70 uppercase tracking-widest font-bold">ISO 10545 Certified</p>
+                                    <h2 className="text-3xl font-serif text-[var(--foreground)]">System Specifications</h2>
+                                    <p className="text-[10px] mt-3 text-[var(--foreground)]/50 uppercase tracking-[0.3em] font-black">Performance Grade • ISO 10545 Certified</p>
                                 </div>
-                                <div className="px-3 py-1 bg-[var(--line)]/50 rounded text-[10px] font-bold text-[var(--terracotta)] tracking-widest border border-[var(--line)]">
-                                    REF: {product.slug.toUpperCase().slice(0, 6)}
+                                <div className="px-4 py-2 bg-[var(--line)]/20 rounded-full text-[9px] font-black text-[var(--foreground)]/40 tracking-[0.2em] uppercase border border-[var(--line)]/10">
+                                    REF CODE: {product.slug.toUpperCase().slice(0, 8)}
                                 </div>
                             </div>
 
                             {/* The Grid */}
-                            <div className="p-6 md:p-10">
-                                <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
+                            <div className="p-8 md:p-14">
+                                <div className="grid md:grid-cols-2 gap-x-16 gap-y-12">
                                     {generateLuxurySpecs(product, selectedVariant).map((spec, i) => (
-                                        <div key={i} className="flex flex-col border-b border-[var(--line)] pb-4 last:border-0 hover:bg-[var(--line)]/20 transition-colors rounded-lg px-2 -mx-2">
+                                        <div key={i} className="flex flex-col border-b border-[var(--line)]/20 pb-6 last:border-0 hover:bg-[var(--line)]/10 transition-all duration-500 rounded-2xl px-4 -mx-4 group/spec">
                                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--foreground)]/70 block mb-2">
                                                 {spec.label}
                                             </span>
