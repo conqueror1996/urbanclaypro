@@ -104,3 +104,36 @@ export async function updateSpecifierToolkitImage(assetId: string) {
         return { success: false, error: error.message || 'Failed to update image' };
     }
 }
+
+export async function updateGuideHeroImage(assetId: string) {
+    try {
+        let guide = await writeClient.fetch(`*[_type == "selectionGuide"][0] { _id }`);
+
+        const imagePatch = {
+            heroImage: {
+                _type: 'image',
+                asset: { _type: 'reference', _ref: assetId }
+            }
+        };
+
+        if (!guide?._id) {
+            await writeClient.create({
+                _type: 'selectionGuide',
+                title: 'Selection Guide',
+                ...imagePatch
+            });
+        } else {
+            await writeClient
+                .patch(guide._id)
+                .set(imagePatch)
+                .commit();
+        }
+
+        revalidatePath('/guide');
+        revalidatePath('/dashboard/content');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error updating Guide Hero image:', error);
+        return { success: false, error: error.message || 'Failed to update image' };
+    }
+}

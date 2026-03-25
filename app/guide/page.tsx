@@ -7,7 +7,7 @@ import { Metadata } from 'next';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GuidePageAnimate from '@/components/GuidePageAnimate';
 // import GuideContent from '@/components/GuideContent';
-// import { getGuideData } from '@/lib/products';
+import { getGuideData } from '@/lib/products';
 
 export const metadata: Metadata = {
     title: 'Selection Guide & Maintenance | UrbanClay',
@@ -44,12 +44,12 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function SelectionGuide() {
-    // const guideData = await getGuideData(); // Removed old data fetch as new component handles static editorial content
+    const guideData = await getGuideData(); // Removed old data fetch as new component handles static editorial content
 
     return (
         <div className="bg-[#1a1512]">
             <Header />
-            <GuidePageAnimate />
+            <GuidePageAnimate heroImage={guideData?.heroImageUrl} />
             <Footer />
         </div>
     );

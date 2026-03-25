@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getProjects, Project } from '@/lib/products';
+import { getDashboardProjects, Project } from '@/lib/products';
 import { authenticatedFetch } from '@/lib/auth-utils';
 
 type ViewMode = 'list' | 'create' | 'edit';
@@ -16,7 +16,7 @@ export default function ProjectDashboardPage() {
     const refresh = async () => {
         setIsLoading(true);
         try {
-            const data = await getProjects();
+            const data = await getDashboardProjects();
             setProjects(data);
             if (selectedProject) {
                 const updated = data.find(p => p.slug === selectedProject.slug); // Assuming slug stable or ID used
@@ -50,7 +50,10 @@ export default function ProjectDashboardPage() {
                 setViewMode('list');
                 alert("Project Started! Select it to add details.");
             }
-        } catch (e) { alert('Failed to create project'); }
+        } catch (e: any) { 
+            console.error("Project creation failed:", e);
+            alert(e.message || 'Failed to create project'); 
+        }
     };
 
     return (
@@ -237,7 +240,10 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
                 })
             });
             onRefresh();
-        } catch (e) { alert("Failed to save"); }
+        } catch (e: any) { 
+            console.error("Project save failed:", e);
+            alert(e.message || "Failed to save"); 
+        }
         finally { setIsSaving(false); }
     };
 
@@ -253,9 +259,9 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
                 })
             });
             window.location.reload();
-        } catch (e) {
-            console.error(e);
-            alert("Failed to delete project");
+        } catch (e: any) {
+            console.error("Project delete failed:", e);
+            alert(e.message || "Failed to delete project");
         }
     };
 
@@ -357,7 +363,10 @@ export function ProjectEditor({ project, onRefresh }: { project: Project, onRefr
             });
             if (!res.ok) throw new Error("Failed to remove image");
             onRefresh();
-        } catch (e) { alert("Could not remove image"); }
+        } catch (e: any) { 
+            console.error("Gallery image removal failed:", e);
+            alert(e.message || "Could not remove image"); 
+        }
     };
 
     return (

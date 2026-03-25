@@ -345,6 +345,20 @@ export async function getProjects(): Promise<Project[]> {
     }
 }
 
+export async function getDashboardProjects(): Promise<Project[]> {
+    try {
+        const adminClient = client.withConfig({ useCdn: false });
+        const rawProjects = await adminClient.fetch(projectsQuery, {}, {
+            next: { revalidate: 0 },
+            cache: 'no-store'
+        });
+        return rawProjects || [];
+    } catch (error) {
+        console.error('Error fetching dashboard projects:', error);
+        return [];
+    }
+}
+
 /**
  * Fetch projects that are tagged with a specific product category.
  * Used by Pillar Pages to show relevant "Field Evidence" projects.
@@ -420,6 +434,7 @@ export async function getHomePageData(): Promise<HomePageData | null> {
 }
 
 export interface GuideData {
+    heroImageUrl?: string;
     spectrumItems: {
         title: string;
         imageUrl: string;
@@ -442,6 +457,7 @@ export interface GuideData {
 }
 
 const guideQuery = groq`*[_type == "selectionGuide"][0] {
+  "heroImageUrl": heroImage.asset->url,
   "spectrumItems": spectrumItems[]{
     title,
     "imageUrl": image.asset->url,

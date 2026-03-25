@@ -29,19 +29,39 @@ export async function authenticatedFetch(url: string, options: RequestInit = {})
         throw new Error('Authentication required. Please log in again.');
     }
 
+    const headers: Record<string, string> = {
+        ...(options.headers as Record<string, string> || {}),
+    };
+
+    // Only set Content-Type to JSON if body is present and NOT FormData
+    if (options.body && !(options.body instanceof FormData)) {
+        if (!headers['Content-Type']) {
+            headers['Content-Type'] = 'application/json';
+        }
+    }
+
     // Make the request
     const response = await fetch(url, {
         ...options,
+        headers,
         credentials: 'include', // Ensure cookies are sent
     });
 
     // If unauthorized, try one more time after ensuring cookie
     if (response.status === 401) {
+        console.warn(`Authenticated fetch to ${url} failed with 401. Retrying once...`);
         ensureAuthCookie();
         return fetch(url, {
             ...options,
+            headers,
             credentials: 'include',
         });
+    }
+
+    if (!response.ok) {
+        const text = await response.text();
+        console.error(`Authenticated fetch to ${url} failed with status ${response.status}: ${text}`);
+        throw new Error(`Server Error (${response.status}): ${text || response.statusText}`);
     }
 
     return response;

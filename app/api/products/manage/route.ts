@@ -60,6 +60,7 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
         const { action, data } = body;
+        console.log(`[API/MANAGE] Action: ${action}`, data);
 
         // ==========================================
         // PRODUCTS
@@ -156,7 +157,7 @@ export async function POST(req: NextRequest) {
             };
 
             const result = await client.create(doc);
-            revalidatePath('/dashboard/products');
+            try { revalidatePath('/dashboard/products'); } catch (e) {}
             return NextResponse.json({ success: true, product: result });
         }
 
@@ -182,8 +183,8 @@ export async function POST(req: NextRequest) {
             Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key]);
 
             await client.patch(_id).set(fields).commit();
-            revalidatePath('/dashboard/products');
-            revalidatePath('/products');
+            try { revalidatePath('/dashboard/products'); } catch (e) {}
+            try { revalidatePath('/products'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -211,7 +212,7 @@ export async function POST(req: NextRequest) {
                 .append('variants', [newVariant])
                 .commit();
 
-            revalidatePath('/dashboard/products');
+            try { revalidatePath('/dashboard/products'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -251,8 +252,8 @@ export async function POST(req: NextRequest) {
                 .insert('replace', `variants[_key=="${variantKey}"]`, [variantUpdate])
                 .commit();
 
-            revalidatePath('/dashboard/products');
-            revalidatePath('/products');
+            try { revalidatePath('/dashboard/products'); } catch (e) {}
+            try { revalidatePath('/products'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -264,8 +265,8 @@ export async function POST(req: NextRequest) {
                 .unset([`variants[_key=="${variantKey}"]`])
                 .commit();
 
-            revalidatePath('/dashboard/products');
-            revalidatePath('/products');
+            try { revalidatePath('/dashboard/products'); } catch (e) {}
+            try { revalidatePath('/products'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -286,7 +287,7 @@ export async function POST(req: NextRequest) {
                 gallery: []
             };
             const result = await client.create(doc);
-            revalidatePath('/dashboard/projects');
+            try { revalidatePath('/dashboard/projects'); } catch (e) {}
             return NextResponse.json({ success: true, project: result });
         }
 
@@ -295,8 +296,8 @@ export async function POST(req: NextRequest) {
             Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key]);
 
             await client.patch(_id).set(fields).commit();
-            revalidatePath('/dashboard/projects');
-            revalidatePath('/projects');
+            try { revalidatePath('/dashboard/projects'); } catch (e) {}
+            try { revalidatePath('/projects'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -313,7 +314,7 @@ export async function POST(req: NextRequest) {
                 }])
                 .commit();
 
-            revalidatePath('/dashboard/projects');
+            try { revalidatePath('/dashboard/projects'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -337,7 +338,7 @@ export async function POST(req: NextRequest) {
                     .commit();
             }
 
-            revalidatePath('/dashboard/projects');
+            try { revalidatePath('/dashboard/projects'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -354,7 +355,7 @@ export async function POST(req: NextRequest) {
                 description: description || '',
             };
             const result = await client.create(doc);
-            revalidatePath('/dashboard/resources');
+            try { revalidatePath('/dashboard/resources'); } catch (e) {}
             return NextResponse.json({ success: true, resource: result });
         }
 
@@ -371,16 +372,16 @@ export async function POST(req: NextRequest) {
             Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key]);
 
             await client.patch(_id).set(fields).commit();
-            revalidatePath('/dashboard/resources');
-            revalidatePath('/resources'); // Revalidate public page
+            try { revalidatePath('/dashboard/resources'); } catch (e) {}
+            try { revalidatePath('/resources'); } catch (e) {} // Revalidate public page
             return NextResponse.json({ success: true });
         }
 
         if (action === 'delete_document') {
             const { id } = data;
             await client.delete(id);
-            revalidatePath('/dashboard/products');
-            revalidatePath('/products');
+            try { revalidatePath('/dashboard/products'); } catch (e) {}
+            try { revalidatePath('/products'); } catch (e) {}
             return NextResponse.json({ success: true });
         }
 
@@ -390,15 +391,19 @@ export async function POST(req: NextRequest) {
             Object.keys(fields).forEach(key => fields[key] === undefined && delete fields[key]);
 
             await client.patch(_id).set(fields).commit();
-            revalidatePath('/dashboard/seo/city-manager');
+            try { revalidatePath('/dashboard/seo/city-manager'); } catch (e) {}
             // Revalidate the specific city page (we don't know the slug here easily without fetch, but we can try generic)
             return NextResponse.json({ success: true });
         }
 
         return NextResponse.json({ error: 'Invalid Action' }, { status: 400 });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Manage API Error:", error);
-        return NextResponse.json({ error: 'Server Error', details: error }, { status: 500 });
+        return NextResponse.json({ 
+            error: 'Server Error', 
+            message: error.message || String(error),
+            details: error instanceof Error ? error.stack : undefined 
+        }, { status: 500 });
     }
 }
