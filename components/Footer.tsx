@@ -90,8 +90,55 @@ export default function Footer() {
                 </div>
 
                 {/* Presence: Horizontal SEO Cloud (Improved Alignment) */}
-                <div className="pt-12 border-t border-[var(--line)]">
-                    <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-16">
+                {/* Presence: Horizontal SEO Cloud (Improved Alignment) */}
+                <div className="pt-8 md:pt-12 border-[var(--line)] md:border-t">
+                    {/* Mobile View: Accordion */}
+                    <div className="md:hidden">
+                        <FooterSection title="Local Destinations">
+                            <div className="grid grid-cols-2 gap-6 pt-2 pb-4">
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">West India</p>
+                                    <ul className="flex flex-col gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/mumbai">Mumbai</FooterLink></li>
+                                        <li><FooterLink href="/pune">Pune</FooterLink></li>
+                                        <li><FooterLink href="/goa">Goa</FooterLink></li>
+                                        <li><FooterLink href="/ahmedabad">Ahmedabad</FooterLink></li>
+                                        <li><FooterLink href="/surat">Surat</FooterLink></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">North India</p>
+                                    <ul className="flex flex-col gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/delhi">Delhi NCR</FooterLink></li>
+                                        <li><FooterLink href="/jaipur">Jaipur</FooterLink></li>
+                                        <li><FooterLink href="/lucknow">Lucknow</FooterLink></li>
+                                        <li><FooterLink href="/chandigarh">Chandigarh</FooterLink></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">South India</p>
+                                    <ul className="flex flex-col gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/bangalore">Bangalore</FooterLink></li>
+                                        <li><FooterLink href="/hyderabad">Hyderabad</FooterLink></li>
+                                        <li><FooterLink href="/chennai">Chennai</FooterLink></li>
+                                        <li><FooterLink href="/kochi">Kochi</FooterLink></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">State Hubs</p>
+                                    <ul className="flex flex-col gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/maharashtra">Maharashtra</FooterLink></li>
+                                        <li><FooterLink href="/karnataka">Karnataka</FooterLink></li>
+                                        <li><FooterLink href="/gujarat">Gujarat</FooterLink></li>
+                                        <li><FooterLink href="/kerala">Kerala</FooterLink></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </FooterSection>
+                    </div>
+
+                    {/* Desktop View */}
+                    <div className="hidden md:flex flex-col md:flex-row md:items-start gap-8 md:gap-16">
                         <div className="shrink-0">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--terracotta)] mb-4">Local Destinations</h3>
                             <p className="text-[10px] text-[var(--foreground)]/40 md:max-w-[120px] leading-relaxed uppercase tracking-widest">Architectural presence across India</p>

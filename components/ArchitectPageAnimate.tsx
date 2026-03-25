@@ -92,11 +92,11 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                         <span className="text-[var(--terracotta)] font-medium tracking-[0.2em] uppercase text-xs mb-6 block">
                             UrbanClay Studio
                         </span>
-                        <h1 className="text-5xl md:text-8xl font-serif text-white leading-[1.1] mb-8">
+                        <h1 className="text-5xl md:text-8xl font-serif text-white leading-[1.1] mb-8 drop-shadow-md">
                             Designed for <br />
-                            <span className="italic font-light text-white/70">Visionaries</span>
+                            <span className="italic font-light text-white">Visionaries</span>
                         </h1>
-                        <p className="text-lg md:text-xl text-[#EBE5E0]/80 max-w-2xl mx-auto leading-relaxed font-light mb-12">
+                        <p className="text-lg md:text-xl text-white max-w-2xl mx-auto leading-relaxed font-light mb-12 drop-shadow-md">
                             A curated digital atelier for architects. Access high-fidelity assets, technical specifications, and bespoke manufacturing services.
                         </p>
 
