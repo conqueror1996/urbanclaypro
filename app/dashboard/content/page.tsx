@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createBlogDraft } from '@/app/actions/generate-blog';
 import { publishBlog } from '@/app/actions/publish-blog';
-import { getHomePageData, getGuideData } from '@/lib/products';
-import { updateHomePageFirms, updateTechnicalEdgeImage, updateSpecifierToolkitImage, updateGuideHeroImage } from '@/app/actions/manage-home';
+import { getHomePageData, getGuideData, getArchitectsGuideData } from '@/lib/products';
+import { updateHomePageFirms, updateTechnicalEdgeImage, updateSpecifierToolkitImage, updateGuideHeroImage, updateArchitectsHeroImage } from '@/app/actions/manage-home';
 import { authenticatedFetch } from '@/lib/auth-utils';
 import { Plus, Trash2, Save, Sparkles, Home, Box } from 'lucide-react';
 
@@ -26,6 +26,9 @@ export default function ContentEnginePage() {
     const [guideHeroImage, setGuideHeroImage] = useState<string | null>(null);
     const [guideHeroImageFile, setGuideHeroImageFile] = useState<{ file: File; preview: string } | null>(null);
     const [isSavingGuideHero, setIsSavingGuideHero] = useState(false);
+    const [architectsHeroImage, setArchitectsHeroImage] = useState<string | null>(null);
+    const [architectsHeroImageFile, setArchitectsHeroImageFile] = useState<{ file: File; preview: string } | null>(null);
+    const [isSavingArchitectsHero, setIsSavingArchitectsHero] = useState(false);
 
     // Draft Result State
     const [draftRequest, setDraftRequest] = useState<{
@@ -63,9 +66,16 @@ export default function ContentEnginePage() {
             if (data?.heroImageUrl) {
                 setGuideHeroImage(data.heroImageUrl);
             }
-        }
+        };
+        const loadArchitectsData = async () => {
+            const data = await getArchitectsGuideData();
+            if (data?.heroImageUrl) {
+                setArchitectsHeroImage(data.heroImageUrl);
+            }
+        };
         loadHomeData();
         loadGuideData();
+        loadArchitectsData();
     }, []);
 
     async function handleGenerate(formData: FormData) {
@@ -202,6 +212,35 @@ export default function ContentEnginePage() {
             alert('Error uploading guide hero image: ' + (err.message || String(err)));
         } finally {
             setIsSavingGuideHero(false);
+        }
+    };
+
+    const handleSaveArchitectsHeroImage = async () => {
+        if (!architectsHeroImageFile) return;
+        setIsSavingArchitectsHero(true);
+        try {
+            const formData = new FormData();
+            formData.append('file', architectsHeroImageFile.file);
+            const uploadRes = await authenticatedFetch('/api/upload', { method: 'POST', body: formData });
+            const uploadJson = await uploadRes.json();
+
+            if (uploadJson.success && uploadJson.asset._id) {
+                const res = await updateArchitectsHeroImage(uploadJson.asset._id);
+                if (res.success) {
+                    alert('Architects Hero Image updated successfully!');
+                    setArchitectsHeroImage(architectsHeroImageFile.preview);
+                    setArchitectsHeroImageFile(null);
+                } else {
+                    alert('Failed to update image reference in Sanity');
+                }
+            } else {
+                alert('Image upload failed');
+            }
+        } catch (err: any) {
+            console.error('Upload architects hero catch error:', err);
+            alert('Error uploading architects hero image: ' + (err.message || String(err)));
+        } finally {
+            setIsSavingArchitectsHero(false);
         }
     };
 
@@ -565,6 +604,52 @@ export default function ContentEnginePage() {
                                         className="px-6 py-3 bg-[var(--terracotta)] text-white rounded-xl font-bold uppercase tracking-widest shadow-lg hover:bg-[#a85638] transition-all disabled:opacity-50 text-xs w-full sm:w-auto"
                                     >
                                         {isSavingGuideHero ? 'Uploading...' : 'Upload & Save Image'}
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Image Section 4 */}
+                    <div className="pt-8 border-t border-gray-100 mb-8">
+                        <div className="mb-6">
+                            <h2 className="text-xl font-serif text-[#2A1E16]">Architects Hero Image</h2>
+                            <p className="text-sm text-gray-500 mt-1">The main image on the /architects page.</p>
+                        </div>
+
+                        <div className="flex gap-6 items-start">
+                            <div className="w-1/2 aspect-video max-w-[400px] bg-gray-100 rounded-2xl border-2 border-dashed border-gray-200 relative overflow-hidden flex items-center justify-center">
+                                {architectsHeroImageFile ? (
+                                    <img src={architectsHeroImageFile.preview} alt="Preview" className="w-full h-full object-cover bg-[#1a1512]" />
+                                ) : architectsHeroImage ? (
+                                    <img src={architectsHeroImage} alt="Existing" className="w-full h-full object-cover bg-[#1a1512]" />
+                                ) : (
+                                    <div className="text-center text-gray-600 p-4">
+                                        <p className="text-xs uppercase font-bold">No Image Set</p>
+                                    </div>
+                                )}
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="absolute inset-0 opacity-0 cursor-pointer"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) setArchitectsHeroImageFile({ file, preview: URL.createObjectURL(file) });
+                                    }}
+                                />
+                            </div>
+
+                            <div className="flex-1 space-y-4">
+                                <p className="text-sm text-gray-600">
+                                    Click the frame on the left to select a new image. Best format: <strong>JPG/WEBP</strong>, large landscape.
+                                </p>
+                                {architectsHeroImageFile && (
+                                    <button
+                                        onClick={handleSaveArchitectsHeroImage}
+                                        disabled={isSavingArchitectsHero}
+                                        className="px-6 py-3 bg-[var(--terracotta)] text-white rounded-xl font-bold uppercase tracking-widest shadow-lg hover:bg-[#a85638] transition-all disabled:opacity-50 text-xs w-full sm:w-auto"
+                                    >
+                                        {isSavingArchitectsHero ? 'Uploading...' : 'Upload & Save Image'}
                                     </button>
                                 )}
                             </div>

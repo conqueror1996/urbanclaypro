@@ -137,3 +137,36 @@ export async function updateGuideHeroImage(assetId: string) {
         return { success: false, error: error.message || 'Failed to update image' };
     }
 }
+
+export async function updateArchitectsHeroImage(assetId: string) {
+    try {
+        let guide = await writeClient.fetch(`*[_type == "architectsGuide"][0] { _id }`);
+
+        const imagePatch = {
+            heroImage: {
+                _type: 'image',
+                asset: { _type: 'reference', _ref: assetId }
+            }
+        };
+
+        if (!guide?._id) {
+            await writeClient.create({
+                _type: 'architectsGuide',
+                title: 'Architects Guide',
+                ...imagePatch
+            });
+        } else {
+            await writeClient
+                .patch(guide._id)
+                .set(imagePatch)
+                .commit();
+        }
+
+        revalidatePath('/architects');
+        revalidatePath('/dashboard/content');
+        return { success: true };
+    } catch (error: any) {
+        console.error('Error updating Architects Hero image:', error);
+        return { success: false, error: error.message || 'Failed to update image' };
+    }
+}

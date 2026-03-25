@@ -8,10 +8,16 @@ import AccessModal from '@/components/AccessModal';
 import SampleModal from '@/components/SampleModal';
 import ArchitectsToolkit from '@/components/ArchitectsToolkit';
 
-export default function ArchitectPageAnimate() {
+interface ArchitectPageAnimateProps {
+    heroImage?: string | null;
+}
+
+export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimateProps) {
     const { scrollY } = useScroll();
     const heroY = useTransform(scrollY, [0, 500], [0, 150]);
     const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.4]);
+
+    const defaultHeroImage = "/images/architect-hero-confidence.png";
 
     const [modalOpen, setModalOpen] = React.useState(false);
     const [sampleModalOpen, setSampleModalOpen] = React.useState(false);
@@ -66,7 +72,7 @@ export default function ArchitectPageAnimate() {
                     className="absolute inset-0 z-0"
                 >
                     <Image
-                        src="/images/architect-hero-confidence.png"
+                        src={heroImage || defaultHeroImage}
                         alt="Architectural Confidence - Delivered Project"
                         fill
                         className="object-cover object-center brightness-[0.4]"

@@ -478,6 +478,24 @@ export async function getGuideData(): Promise<GuideData | null> {
     }
 }
 
+export interface ArchitectsGuideData {
+    heroImageUrl?: string;
+}
+
+const architectsGuideQuery = groq`*[_type == "architectsGuide"][0] {
+  "heroImageUrl": heroImage.asset->url
+}`;
+
+export async function getArchitectsGuideData(): Promise<ArchitectsGuideData | null> {
+    try {
+        const data = await client.fetch(architectsGuideQuery, {}, { next: { revalidate: 60 } });
+        return data;
+    } catch (error) {
+        console.error('Error fetching architects guide data:', error);
+        return null;
+    }
+}
+
 export interface Resource {
     _id: string;
     title: string;

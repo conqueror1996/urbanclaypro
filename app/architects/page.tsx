@@ -6,8 +6,10 @@ import Footer from '@/components/Footer';
 import Breadcrumbs from '@/components/Breadcrumbs';
 /* Client Animation Wrapper */
 import ArchitectPageAnimate from '@/components/ArchitectPageAnimate';
+import { getArchitectsGuideData } from '@/lib/products';
 
 export const metadata: Metadata = {
+// ... existing metadata code ...
     title: 'For Architects | UrbanClay Studio',
     description: 'The digital atelier for architects. Access high-fidelity BIM assets, technical specifications, and bespoke manufacturing services.',
     keywords: [
@@ -39,11 +41,14 @@ export const metadata: Metadata = {
     }
 };
 
-export default function ArchitectsPage() {
+export const revalidate = 60;
+
+export default async function ArchitectsPage() {
+    const data = await getArchitectsGuideData();
     return (
         <div className="min-h-screen bg-[#1a1512] text-[#EBE5E0] selection:bg-[var(--terracotta)] selection:text-white">
             <Header />
-            <ArchitectPageAnimate />
+            <ArchitectPageAnimate heroImage={data?.heroImageUrl} />
             <Footer />
         </div>
     );
