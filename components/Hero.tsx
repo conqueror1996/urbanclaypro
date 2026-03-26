@@ -34,9 +34,9 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                 <div className="max-w-7xl mx-auto px-6 pt-[140px] pb-16 md:pt-[192px] lg:pt-[246px] lg:pb-24 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                         <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
                             className="flex flex-col justify-center"
                         >
 
@@ -82,9 +82,9 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
 
                             <motion.p
                                 className="text-lg md:text-[22px] font-light text-[#555] leading-snug max-w-lg mb-12"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1, duration: 0.6 }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.1, duration: 0.3 }}
                             >
                                 Purpose-built for the Indian climate. Zero efflorescence, zero maintenance, <span className="font-bold text-[var(--ink)]">infinite durability.</span>
                             </motion.p>
