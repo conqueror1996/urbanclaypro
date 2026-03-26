@@ -13,6 +13,7 @@ export interface TrafficReport {
     avgLcp: number;
     errorCount: number;
     growthRate: number;
+    conversionRate: number;
     topCities: { city: string, count: number }[];
     topProducts: { name: string, count: number }[];
     // SEO Metrics
@@ -34,38 +35,34 @@ export async function getTrafficData(): Promise<TrafficReport> {
         const today = new Date();
         const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
         const oneMonthAgo = new Date(today); oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        const threeMonthsAgo = new Date(today); threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-        const eightMonthsAgo = new Date(today); eightMonthsAgo.setMonth(eightMonthsAgo.getMonth() - 8);
 
         const params = {
             todayStart: getStartOfDay(today),
             yesterdayStart: getStartOfDay(yesterday),
             monthStart: getStartOfDay(oneMonthAgo),
-            monthEnd: new Date(new Date(oneMonthAgo).setHours(23, 59, 59, 999)).toISOString(),
-            threeStart: getStartOfDay(threeMonthsAgo),
-            threeEnd: new Date(new Date(threeMonthsAgo).setHours(23, 59, 59, 999)).toISOString(),
-            eightStart: getStartOfDay(eightMonthsAgo),
-            eightEnd: new Date(new Date(eightMonthsAgo).setHours(23, 59, 59, 999)).toISOString(),
         };
 
-        // 1. General Traffic Metrics
+        // 1. Unified Query for Traffic, Paths, Errors and LEADS (for Conversion Rate)
         const query = `{
             "today": count(array::unique(*[_type == "footprint" && timestamp >= $todayStart].ip)),
             "yesterday": count(array::unique(*[_type == "footprint" && timestamp >= $yesterdayStart && timestamp < $todayStart].ip)),
-            "lastMonth": count(array::unique(*[_type == "footprint" && timestamp >= $monthStart && timestamp < $monthEnd].ip)),
-            "threeMonths": count(array::unique(*[_type == "footprint" && timestamp >= $threeStart && timestamp < $threeEnd].ip)),
-            "eightMonths": count(array::unique(*[_type == "footprint" && timestamp >= $eightStart && timestamp < $eightEnd].ip)),
+            "lastMonth": count(array::unique(*[_type == "footprint" && timestamp >= $monthStart].ip)),
             "todayPaths": *[_type == "footprint" && timestamp >= $todayStart] { path },
+            "todayLeads": count(*[_type == "lead" && submittedAt >= $todayStart]),
+            "yesterdayLeads": count(*[_type == "lead" && submittedAt >= $yesterdayStart && submittedAt < $todayStart]),
             "errors": *[_type == "footprint" && defined(errors) && timestamp >= $todayStart] | order(timestamp desc) [0...5] { errors, timestamp },
             "referrers": *[_type == "footprint" && timestamp >= $monthStart] { referrer }
         }`;
 
         const result = await client.fetch(query, params);
 
-        // 2. Trend Calculation
+        // 2. Trend & Conversion Calculation
         const todayCount = result.today || 0;
         const yesterdayCount = result.yesterday || 0;
         const growthRate = yesterdayCount > 0 ? ((todayCount - yesterdayCount) / yesterdayCount) * 100 : 0;
+        
+        const todayLeads = result.todayLeads || 0;
+        const conversionRate = todayCount > 0 ? (todayLeads / todayCount) * 100 : 0;
 
         // 3. Geographic / Product Interest Extraction
         const paths = result.todayPaths?.map((p: any) => p.path) || [];
@@ -76,13 +73,9 @@ export async function getTrafficData(): Promise<TrafficReport> {
 
         paths.forEach((p: string) => {
             const lowP = p.toLowerCase();
-            // Check for cities
             citiesList.forEach(city => {
-                if (lowP.includes(city)) {
-                    cityCounts[city] = (cityCounts[city] || 0) + 1;
-                }
+                if (lowP.includes(city)) cityCounts[city] = (cityCounts[city] || 0) + 1;
             });
-            // Check for products
             if (lowP.includes('/products/')) {
                 const parts = lowP.split('/');
                 const productName = parts[parts.length - 1] || 'Unknown';
@@ -140,12 +133,13 @@ export async function getTrafficData(): Promise<TrafficReport> {
             today: todayCount,
             yesterday: yesterdayCount,
             lastMonth: result.lastMonth || 0,
-            threeMonthsAgo: result.threeMonths || 0,
-            eightMonthsAgo: result.eightMonths || 0,
+            threeMonthsAgo: 0,
+            eightMonthsAgo: 0,
             healthScore: avgLcp === 0 && filteredErrorCount === 0 ? 100 : score,
             avgLcp,
             errorCount: filteredErrorCount,
             growthRate,
+            conversionRate,
             topCities,
             topProducts,
             recentErrors,
@@ -158,8 +152,12 @@ export async function getTrafficData(): Promise<TrafficReport> {
         console.error('Sanity Analytics Error:', e);
         // Fallback to Healthy State in Dev/Error to avoid panic
         return {
-            today: 124, yesterday: 98, lastMonth: 3400, threeMonthsAgo: 9200, eightMonthsAgo: 24000,
-            healthScore: 98, avgLcp: 800, errorCount: 0, recentErrors: [],
+            today: 124, yesterday: 98, lastMonth: 3400, threeMonthsAgo: 0, eightMonthsAgo: 0,
+            healthScore: 98, avgLcp: 800, errorCount: 0,
+            growthRate: 26.5, conversionRate: 4.2, 
+            topCities: [{ city: 'Mumbai', count: 42 }, { city: 'Pune', count: 28 }],
+            topProducts: [{ name: 'Wirecut Bricks', count: 18 }],
+            recentErrors: [],
             seoScore: 95, organicCount: 45, isDemo: true,
             error: `Data Fetch Error: ${e.message}`
         };

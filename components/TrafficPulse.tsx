@@ -145,6 +145,15 @@ export default function TrafficPulse() {
                     subtext={stats.avgLcp < 2500 ? "Excellent Speed" : "Needs Optimization"}
                 />
 
+                {/* Conversion Rate Metric */}
+                <MetricCard
+                    label="Conversion Rate"
+                    value={`${stats.conversionRate.toFixed(1)}%`}
+                    delay={0.15}
+                    highlight={stats.conversionRate > 2}
+                    subtext={stats.conversionRate > 2 ? "High Engagement" : "Session Potential"}
+                />
+
                 {/* Error Metric */}
                 <MetricCard
                     label="Issues Detected"

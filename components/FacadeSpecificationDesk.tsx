@@ -163,6 +163,10 @@ export default function FacadeSpecificationDesk() {
                 recommendationRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
+
+        const handleOpenExternal = () => setIsMobileOpen(true);
+        window.addEventListener('openSpecDesk', handleOpenExternal);
+        return () => window.removeEventListener('openSpecDesk', handleOpenExternal);
     }, [step, isMobileOpen]);
 
     const handleProjectTypeSelect = (type: ProjectType) => {

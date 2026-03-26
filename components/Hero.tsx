@@ -91,7 +91,11 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
 
                             <div className="mt-8 md:mt-10 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4">
                                 <motion.button
-                                    onClick={() => setBoxOpen(true)}
+                                    onClick={() => {
+                                        const { toast } = require('sonner');
+                                        toast.success('Opening Sample Tray');
+                                        setBoxOpen(true);
+                                    }}
                                     className="bg-[var(--terracotta)] text-white h-[60px] px-12 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center font-serif italic"
                                     whileHover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
@@ -101,12 +105,18 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 </motion.button>
                                 <motion.button
                                     onClick={() => {
-                                        const el = document.getElementById('specify') || document.getElementById('facade-specification-desk');
-                                        if (el) {
-                                            el.scrollIntoView({ behavior: 'smooth' });
+                                        const { toast } = require('sonner');
+                                        if (window.innerWidth < 1024) {
+                                            toast.loading('Starting Specification Desk...');
+                                            window.dispatchEvent(new CustomEvent('openSpecDesk'));
                                         } else {
-                                            // Final fallback: scroll to bottom area
-                                            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                                            toast.info('Navigating to Specification Desk');
+                                            const el = document.getElementById('specify') || document.getElementById('facade-specification-desk');
+                                            if (el) {
+                                                el.scrollIntoView({ behavior: 'smooth' });
+                                            } else {
+                                                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                                            }
                                         }
                                     }}
                                     className="bg-transparent text-[#222] h-[60px] px-12 rounded-full border border-[#222]/20 font-semibold text-base hover:bg-[#222]/5 transition-all active:scale-95 flex items-center justify-center font-serif italic"

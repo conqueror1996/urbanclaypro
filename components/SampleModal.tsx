@@ -198,8 +198,8 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                             </p>
                                         </div>
 
-                                        {/* TRAY */}
-                                        {box.length > 0 && (
+                                         {/* TRAY */}
+                                        {box.length > 0 ? (
                                             <div className="mb-8 p-6 bg-white/60 rounded-2xl border border-white/40 shadow-sm relative overflow-hidden">
                                                 <div className="absolute top-0 left-0 w-full h-1 bg-[var(--terracotta)]/20" />
                                                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#a1887f] mb-4 flex items-center gap-2">
@@ -231,9 +231,33 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                     </a>
                                                 </div>
                                             </div>
+                                        ) : (
+                                            <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                                                <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Start with Popular Samples</h4>
+                                                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    {[
+                                                        { id: 'popular-1', name: 'Flexible Brick', color: '#b45a3c', type: 'cladding' },
+                                                        { id: 'popular-2', name: 'Terracotta Panel', color: '#8d4a31', type: 'facade' },
+                                                        { id: 'popular-3', name: 'Handmade Jali', color: '#c27d66', type: 'decorative' }
+                                                    ].map(item => (
+                                                        <button
+                                                            key={item.id}
+                                                            onClick={() => {
+                                                                const { addToBox } = require('@/context/SampleContext').useSampleBox();
+                                                                addToBox({ id: item.id, name: item.name, color: item.color, texture: '' });
+                                                            }}
+                                                            className="p-3 bg-white rounded-xl border border-gray-100 shadow-sm text-left hover:border-[var(--terracotta)] transition-all group"
+                                                        >
+                                                            <div className="w-8 h-8 rounded-lg mb-2 opacity-80 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: item.color }} />
+                                                            <p className="text-[10px] font-bold text-gray-800">{item.name}</p>
+                                                            <p className="text-[8px] text-gray-400 uppercase tracking-tighter mt-0.5">+ Add to Tray</p>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         )}
 
-                                        {/* SOCIAL PROOF - STRATEGY: TRUST INDICATORS */}
+                                        {/* SOCIAL PROOF */}
                                         <div className="flex flex-wrap gap-4 justify-center items-center mb-8 text-xs text-gray-600">
                                             <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100 text-yellow-800">
                                                 <svg className="w-3.5 h-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>

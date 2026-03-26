@@ -177,9 +177,23 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
                     <p className="text-xs text-gray-600 font-bold uppercase tracking-wider mb-2 font-sans">Total Leads</p>
-                    <div className="flex justify-between items-end">
+                    <div className="flex justify-between items-end mb-4">
                         <h3 className="text-4xl font-serif text-[var(--ink)]">{stats.total}</h3>
-                        <span className="text-[var(--ink)] bg-gray-100 text-xs px-2 py-1 rounded-full font-bold">All Time</span>
+                        <span className="text-[var(--ink)] bg-gray-100 text-xs px-2 py-1 rounded-full font-bold">This Month</span>
+                    </div>
+                    {/* Goal Progress Bar */}
+                    <div className="space-y-1.5">
+                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-tighter text-gray-400">
+                            <span>Goal Progress</span>
+                            <span>{Math.min(100, Math.round((stats.total / 100) * 100))}%</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-gray-50 rounded-full overflow-hidden">
+                            <div 
+                                className="h-full bg-[var(--terracotta)] transition-all duration-1000" 
+                                style={{ width: `${Math.min(100, (stats.total / 100) * 100)}%` }} 
+                            />
+                        </div>
+                        <p className="text-[9px] text-gray-400 italic">Target: 100 Leads/mo</p>
                     </div>
                 </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50">
