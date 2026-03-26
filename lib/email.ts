@@ -2,13 +2,19 @@ import nodemailer from 'nodemailer';
 import { getTrackingLink } from '@/lib/utils';
 import { EMAIL_STYLES, EMAIL_SIGNATURE, EMAIL_FOOTER } from './email-constants';
 
+// Helper to clean env vars from potential literal quotes or whitespace
+const cleanEnv = (val: string | undefined, fallback: string = ''): string => {
+    if (!val) return fallback;
+    return val.trim().replace(/^["'](.+)["']$/, '$1');
+};
+
 export const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    host: cleanEnv(process.env.SMTP_HOST, 'smtp.gmail.com'),
     port: parseInt(process.env.SMTP_PORT || '587'),
     secure: process.env.SMTP_SECURE === 'true',
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: cleanEnv(process.env.SMTP_USER),
+        pass: cleanEnv(process.env.SMTP_PASS),
     },
 });
 
