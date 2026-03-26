@@ -50,11 +50,11 @@ export async function getTrafficData(): Promise<TrafficReport> {
 
         // 1. General Traffic Metrics
         const query = `{
-            "today": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $todayStart]),
-            "yesterday": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $yesterdayStart && timestamp < $todayStart]),
-            "lastMonth": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $monthStart && timestamp < $monthEnd]),
-            "threeMonths": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $threeStart && timestamp < $threeEnd]),
-            "eightMonths": count(*[_type == "footprint" && !defined(vitals.lcp) && timestamp >= $eightStart && timestamp < $eightEnd]),
+            "today": count(array::unique(*[_type == "footprint" && timestamp >= $todayStart].ip)),
+            "yesterday": count(array::unique(*[_type == "footprint" && timestamp >= $yesterdayStart && timestamp < $todayStart].ip)),
+            "lastMonth": count(array::unique(*[_type == "footprint" && timestamp >= $monthStart && timestamp < $monthEnd].ip)),
+            "threeMonths": count(array::unique(*[_type == "footprint" && timestamp >= $threeStart && timestamp < $threeEnd].ip)),
+            "eightMonths": count(array::unique(*[_type == "footprint" && timestamp >= $eightStart && timestamp < $eightEnd].ip)),
             "errors": *[_type == "footprint" && defined(errors) && timestamp >= $todayStart] | order(timestamp desc) [0...5] { errors, timestamp },
             "referrers": *[_type == "footprint" && timestamp >= $monthStart] { referrer }
         }`;
