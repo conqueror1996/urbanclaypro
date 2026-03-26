@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export default function ZohoSetupPage() {
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [result, setResult] = useState<any>(null);
 
@@ -24,9 +25,19 @@ export default function ZohoSetupPage() {
     const searchParams = useSearchParams();
     const code = searchParams.get('code');
 
+    // Handle Authentication
+    useEffect(() => {
+        const auth = typeof window !== 'undefined' && localStorage.getItem('uc_admin_auth') === 'true';
+        if (!auth) {
+            router.replace('/dashboard');
+        } else {
+            setIsAuthenticated(true);
+        }
+    }, [router]);
+
     // Handle Callback from Zoho
     useEffect(() => {
-        if (code) {
+        if (code && isAuthenticated) {
             setView('setup');
             const storedId = localStorage.getItem('temp_zoho_id');
             const storedSecret = localStorage.getItem('temp_zoho_secret');
@@ -102,6 +113,10 @@ export default function ZohoSetupPage() {
             setResult({ error: err.message });
         }
     };
+
+    if (isAuthenticated === null) {
+        return <div className="min-h-screen bg-[#fcfaf9] flex items-center justify-center">Loading...</div>;
+    }
 
     return (
         <div className="min-h-screen bg-[#fcfaf9]">

@@ -116,7 +116,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
 
                 {/* LEFT: GALLERY (Sticky) */}
                 <div className="lg:w-[60%] lg:h-[85vh] lg:sticky lg:top-24 flex flex-col gap-4">
-                    <div className="flex items-center gap-4 mb-2 opacity-60 text-sm">
+                    <div className="flex items-center gap-4 mb-2 opacity-80 text-sm">
                         <Breadcrumbs range={product.range} />
                     </div>
 
@@ -161,7 +161,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                 <button
                                     key={idx}
                                     onClick={() => setActiveImageIndex(idx)}
-                                    className={`relative w-24 h-24 shrink-0 rounded-lg overflow-hidden border transition-all ${activeImageIndex === idx ? 'border-[var(--terracotta)] opacity-100' : 'border-transparent opacity-50 hover:opacity-100'}`}
+                                    className={`relative w-24 h-24 shrink-0 rounded-lg overflow-hidden border transition-all ${activeImageIndex === idx ? 'border-[var(--terracotta)] opacity-100' : 'border-transparent opacity-80 hover:opacity-100'}`}
                                 >
                                     <PremiumImage
                                         src={img}
@@ -194,7 +194,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                         <h1 className="text-5xl md:text-7xl font-serif text-[#EBE5E0] leading-[0.9] mb-6">
                             {product.title}
                         </h1>
-                        <p className="text-lg text-white/50 font-light leading-relaxed mb-10 border-l border-[var(--terracotta)] pl-6">
+                        <p className="text-lg text-white/80 font-light leading-relaxed mb-10 border-l border-[var(--terracotta)] pl-6">
                             {product.subtitle || 'Premium handcrafted clay for timeless architecture.'}
                         </p>
 
@@ -202,19 +202,19 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                         {/* Specs Grid */}
                         <div className="grid grid-cols-2 gap-x-8 gap-y-6 mb-10 text-sm">
                             <div>
-                                <span className="block text-white/30 uppercase tracking-widest text-[10px] mb-1">Dimensions</span>
+                                <span className="block text-white/60 uppercase tracking-widest text-[10px] mb-1">Dimensions</span>
                                 <span className="font-serif text-xl">{product.specs?.size || 'Custom sizes'}</span>
                             </div>
                             <div>
-                                <span className="block text-white/30 uppercase tracking-widest text-[10px] mb-1">Finish</span>
+                                <span className="block text-white/60 uppercase tracking-widest text-[10px] mb-1">Finish</span>
                                 <span className="font-serif text-xl">{selectedVariant ? selectedVariant.name : 'Standard'}</span>
                             </div>
                             <div>
-                                <span className="block text-white/30 uppercase tracking-widest text-[10px] mb-1">Coverage</span>
+                                <span className="block text-white/60 uppercase tracking-widest text-[10px] mb-1">Coverage</span>
                                 <span className="font-serif text-xl">{product.specs?.coverage || 'Varies'}</span>
                             </div>
                             <div>
-                                <span className="block text-white/30 uppercase tracking-widest text-[10px] mb-1">Lead Time</span>
+                                <span className="block text-white/60 uppercase tracking-widest text-[10px] mb-1">Lead Time</span>
                                 <span className="font-serif text-xl font-bold text-green-500">7-10 Days</span>
                             </div>
                         </div>
@@ -222,7 +222,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                         {/* Variants */}
                         {product.variants && product.variants.length > 0 && (
                             <div className="mb-10">
-                                <span className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4 block">Select Finish</span>
+                                <span className="text-xs font-bold uppercase tracking-widest text-white/60 mb-4 block">Select Finish</span>
                                 <div className="flex flex-wrap gap-3">
                                     {product.variants.map((v, i) => {
                                         const isSelected = selectedVariant?.name === v.name;
@@ -249,7 +249,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                                         />
                                                     )}
                                                 </div>
-                                                <span className={`text-xs font-bold uppercase tracking-wide ${isSelected ? 'text-[var(--terracotta)]' : 'text-white/60'}`}>{v.name}</span>
+                                                <span className={`text-xs font-bold uppercase tracking-wide ${isSelected ? 'text-[var(--terracotta)]' : 'text-white/80'}`}>{v.name}</span>
                                             </Link>
                                         )
                                     })}
@@ -263,7 +263,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                 <span className="text-4xl font-serif text-[#EBE5E0]">
                                     {product.priceRange?.split('/')[0] || 'On Request'}
                                 </span>
-                                {product.priceRange && <span className="text-sm text-white/30 mb-1">/ sq.ft</span>}
+                                {product.priceRange && <span className="text-sm text-white/60 mb-1">/ sq.ft</span>}
                             </div>
 
                             <div className="flex flex-col gap-3">
@@ -292,7 +292,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                             </div>
                         </div>
 
-                        <div className="flex gap-6 text-[10px] uppercase tracking-widest opacity-40">
+                        <div className="flex gap-6 text-[10px] uppercase tracking-widest opacity-70">
                             <span className="flex items-center gap-2"><div className="w-1 h-1 bg-white rounded-full" />Pan-India Delivery</span>
                             <span className="flex items-center gap-2"><div className="w-1 h-1 bg-white rounded-full" />Bulk Discounts</span>
                         </div>
@@ -333,7 +333,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                         <div className="md:w-1/3">
                             <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-4 block">Documentation</span>
                             <h2 className="text-3xl font-serif text-[#EBE5E0] mb-6">Technical <br />Data</h2>
-                            <p className="text-white/50 text-sm leading-relaxed mb-8">
+                            <p className="text-white/80 text-sm leading-relaxed mb-8">
                                 Detailed performance metrics, installation guides, and maintenance protocols for architects and contractors.
                             </p>
 
@@ -348,11 +348,11 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                     </div>
                                     <div>
                                         <div className="font-bold text-sm text-[#EBE5E0] group-hover:text-[var(--terracotta)] transition-colors">Download Spec Sheet</div>
-                                        <div className="text-[10px] uppercase tracking-widest text-white/30">PDF • 2.4 MB</div>
+                                        <div className="text-[10px] uppercase tracking-widest text-white/60">PDF • 2.4 MB</div>
                                     </div>
                                 </a>
                             ) : (
-                                <div className="p-4 rounded-xl border border-white/5 text-white/30 text-xs text-center border-dashed">
+                                <div className="p-4 rounded-xl border border-white/5 text-white/60 text-xs text-center border-dashed">
                                     Spec Sheet Updating...
                                 </div>
                             )}
@@ -372,7 +372,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
                                         {Object.entries(product.specs || { Absorption: '< 10%', Validated: 'ISO 9001' }).map(([key, value]) => (
                                             <div key={key} className="flex justify-between items-baseline border-b border-white/5 pb-2">
-                                                <span className="text-xs uppercase tracking-widest text-white/40">{key}</span>
+                                                <span className="text-xs uppercase tracking-widest text-white/70">{key}</span>
                                                 <span className="font-serif text-[#EBE5E0]">{value as string}</span>
                                             </div>
                                         ))}
@@ -385,12 +385,12 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                         <div className="bg-white/5 p-6 rounded-xl">
                                             <div className="text-[var(--terracotta)] mb-3"><svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg></div>
                                             <h4 className="font-bold text-sm text-[#EBE5E0] mb-2">Installation</h4>
-                                            <p className="text-xs text-white/50 leading-relaxed">Requires standard polymer-modified tile adhesive (C2TE). Ensure 5-10mm groove joints for expansion.</p>
+                                            <p className="text-xs text-white/80 leading-relaxed">Requires standard polymer-modified tile adhesive (C2TE). Ensure 5-10mm groove joints for expansion.</p>
                                         </div>
                                         <div className="bg-white/5 p-6 rounded-xl">
                                             <div className="text-[var(--terracotta)] mb-3"><svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg></div>
                                             <h4 className="font-bold text-sm text-[#EBE5E0] mb-2">Maintenance</h4>
-                                            <p className="text-xs text-white/50 leading-relaxed">Low maintenance. Washable with water. Apply hydrophobic sealer every 5 years for exteriors.</p>
+                                            <p className="text-xs text-white/80 leading-relaxed">Low maintenance. Washable with water. Apply hydrophobic sealer every 5 years for exteriors.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -407,7 +407,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                         <div className="flex items-end justify-between mb-12">
                             <div>
                                 <h2 className="text-3xl font-serif text-[#EBE5E0] mb-2">Curated Alternatives</h2>
-                                <p className="text-white/40 text-sm">Other premium selections from the {product.category?.title || 'same'} collection.</p>
+                                <p className="text-white/70 text-sm">Other premium selections from the {product.category?.title || 'same'} collection.</p>
                             </div>
                             <Link href="/products" className="text-[var(--terracotta)] text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">
                                 View Full Catalog
@@ -429,7 +429,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
                                                 shimmerColor="bg-gradient-to-r from-transparent via-white/5 to-transparent"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest">No Image</div>
+                                            <div className="w-full h-full flex items-center justify-center text-white/60 text-xs uppercase tracking-widest">No Image</div>
                                         )}
 
                                         {/* Hover Overlay */}
@@ -440,7 +440,7 @@ export default function ProductPageStudio({ product, relatedProducts, quoteUrl, 
 
                                     <div>
                                         <h3 className="font-serif text-xl text-[#EBE5E0] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{bgProduct.title}</h3>
-                                        <div className="flex justify-between items-center text-sm text-white/40">
+                                        <div className="flex justify-between items-center text-sm text-white/70">
                                             <span>{bgProduct.category?.title || 'Collection'}</span>
                                             <span>{bgProduct.priceRange ? bgProduct.priceRange.split('/')[0] : 'Inquire'}</span>
                                         </div>

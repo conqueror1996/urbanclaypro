@@ -97,7 +97,7 @@ export default function Architects() {
                                         <div className="h-8 border border-white/10 rounded"></div>
                                     </div>
                                 </div>
-                                <div className="absolute bottom-4 right-4 text-[10px] font-bold text-white/40">DWG</div>
+                                <div className="absolute bottom-4 right-4 text-[10px] font-bold text-white/70">DWG</div>
                             </motion.div>
 
                             {/* Card 3: BIM (Front) */}

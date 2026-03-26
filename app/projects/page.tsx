@@ -62,7 +62,7 @@ export default async function ProjectsPage() {
     }));
 
     return (
-        <div className="bg-[#1a1512]">
+        <div className="bg-[var(--background)] text-[var(--foreground)] min-h-screen">
             <Header />
             <ProjectsPageAnimate
                 projects={projects}

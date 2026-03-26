@@ -7,6 +7,7 @@ import Image from 'next/image';
 import TextReveal from './TextReveal';
 import HeroVisual from './HeroVisual';
 import { ShieldCheck, Clock, Zap } from 'lucide-react';
+import { useSampleBox } from '@/context/SampleContext';
 
 
 interface HeroProps {
@@ -21,6 +22,8 @@ interface HeroProps {
 export default function Hero({ data, injectedKeyword }: HeroProps) {
 
 
+
+    const { setBoxOpen } = useSampleBox();
 
     return (
         <>
@@ -57,7 +60,7 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                                 </div>
                                 <h1 className="font-serif leading-[0.95] text-[#111] tracking-tighter flex flex-col mb-8">
                                     <span className="text-[52px] md:text-[88px] font-extrabold text-balance">
-                                        India&apos;s Most <br className="hidden md:block" />
+                                        India&apos;s #1 <br className="hidden md:block" />
                                         <span className="text-[var(--terracotta)] italic">Engineered</span> <br className="hidden md:block" />
                                         Facade Systems.
                                     </span>
@@ -88,21 +91,30 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
 
                             <div className="mt-8 md:mt-10 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4">
                                 <motion.button
-                                    onClick={() => document.getElementById('quote')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="bg-[var(--terracotta)] text-white h-[60px] px-12 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center"
+                                    onClick={() => setBoxOpen(true)}
+                                    className="bg-[var(--terracotta)] text-white h-[60px] px-12 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center font-serif italic"
+                                    whileHover={{ y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    aria-label="Order Free Samples"
+                                >
+                                    Order Free Samples
+                                </motion.button>
+                                <motion.button
+                                    onClick={() => {
+                                        const el = document.getElementById('specify') || document.getElementById('facade-specification-desk');
+                                        if (el) {
+                                            el.scrollIntoView({ behavior: 'smooth' });
+                                        } else {
+                                            // Final fallback: scroll to bottom area
+                                            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                                        }
+                                    }}
+                                    className="bg-transparent text-[#222] h-[60px] px-12 rounded-full border border-[#222]/20 font-semibold text-base hover:bg-[#222]/5 transition-all active:scale-95 flex items-center justify-center font-serif italic"
                                     whileHover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     aria-label="Request Quote"
                                 >
-                                    Request a Quote
-                                </motion.button>
-                                <motion.button
-                                    onClick={() => document.getElementById('signature-collection')?.scrollIntoView({ behavior: 'smooth' })}
-                                    className="bg-transparent text-[#222] h-[60px] px-12 rounded-full border border-[#222]/20 font-semibold text-base hover:bg-[#222]/5 transition-all active:scale-95 flex items-center justify-center"
-                                    whileHover={{ y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    Explore Systems
+                                    Request Quote
                                 </motion.button>
                             </div>
                         </motion.div>

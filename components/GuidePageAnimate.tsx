@@ -52,7 +52,7 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
     ];
 
     return (
-        <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white">
+        <main className="bg-[var(--background)] text-[var(--foreground)] min-h-screen selection:bg-[var(--terracotta)] selection:text-white">
 
             {/* --- HERO SECTION --- */}
             <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
@@ -76,10 +76,10 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                     >
-                        <div className="flex justify-center mb-6 opacity-60">
+                        <div className="flex justify-center mb-6 opacity-80 text-white">
                             <Breadcrumbs items={[{ name: 'Selection Guide', href: '/guide' }]} />
                         </div>
-                        <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block">
+                        <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block drop-shadow-sm">
                             Curator's Guide
                         </span>
                         <h1 className="text-4xl md:text-6xl font-serif text-white mb-8 leading-tight drop-shadow-md">
@@ -101,77 +101,77 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
             </section>
 
             {/* --- HOW TO CHOOSE SECTION (NEW) --- */}
-            <section className="py-16 md:py-24 bg-[#14100e] relative z-10 border-t border-white/5 border-b border-white/5">
+            <section className="py-16 md:py-24 bg-white/40 relative z-10 border-t border-black/5 border-b border-black/5">
                 <div className="max-w-7xl mx-auto px-4 md:px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-serif mb-6 text-white">How to Choose</h2>
-                        <p className="text-white max-w-2xl mx-auto text-lg leading-relaxed font-light">
+                        <h2 className="text-3xl md:text-5xl font-serif mb-6 text-[var(--foreground)]">How to Choose</h2>
+                        <p className="text-[var(--foreground)]/70 max-w-2xl mx-auto text-lg leading-relaxed font-light">
                             Not all clay products are the same. Your selection should depend on 3 things:
                         </p>
                     </div>
 
                     <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 md:gap-8 pb-8 md:pb-0 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                         {/* 1. Application */}
-                        <div className="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 md:shrink bg-[#1a1512] p-6 md:p-8 border border-white/10 group hover:border-[var(--terracotta)]/50 transition-colors rounded-2xl shadow-xl flex flex-col">
-                            <div className="flex items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b border-white/5">
+                        <div className="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 md:shrink bg-white p-6 md:p-8 border border-black/5 group hover:border-[var(--terracotta)]/50 transition-colors rounded-2xl shadow-xl flex flex-col">
+                            <div className="flex items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b border-black/5">
                                 <span className="text-[var(--terracotta)] font-serif text-3xl md:text-4xl block leading-none">01</span>
-                                <h3 className="text-xl md:text-2xl font-serif text-white group-hover:text-[var(--terracotta)] transition-colors m-0">Application</h3>
+                                <h3 className="text-xl md:text-2xl font-serif text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors m-0">Application</h3>
                             </div>
                             <ul className="space-y-4 md:space-y-6 flex-1">
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Exterior facade</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Exterior facade</span>
                                     Low absorption, high durability
                                 </li>
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Interior feature wall</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Interior feature wall</span>
                                     Texture & aesthetics
                                 </li>
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Flooring</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Flooring</span>
                                     Strength & wear resistance
                                 </li>
                             </ul>
                         </div>
 
                         {/* 2. Design Intent */}
-                        <div className="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 md:shrink bg-[#1a1512] p-6 md:p-8 border border-white/10 group hover:border-[var(--terracotta)]/50 transition-colors rounded-2xl shadow-xl flex flex-col">
-                            <div className="flex items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b border-white/5">
+                        <div className="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 md:shrink bg-white p-6 md:p-8 border border-black/5 group hover:border-[var(--terracotta)]/50 transition-colors rounded-2xl shadow-xl flex flex-col">
+                            <div className="flex items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b border-black/5">
                                 <span className="text-[var(--terracotta)] font-serif text-3xl md:text-4xl block leading-none">02</span>
-                                <h3 className="text-xl md:text-2xl font-serif text-white group-hover:text-[var(--terracotta)] transition-colors m-0">Design Intent</h3>
+                                <h3 className="text-xl md:text-2xl font-serif text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors m-0">Design Intent</h3>
                             </div>
                             <ul className="space-y-4 md:space-y-6 flex-1">
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Modern</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Modern</span>
                                     Wirecut
                                 </li>
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Rustic / Heritage</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Rustic / Heritage</span>
                                     Handmade
                                 </li>
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Minimal / Industrial</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Minimal / Industrial</span>
                                     Pressed
                                 </li>
                             </ul>
                         </div>
 
                         {/* 3. Performance Needs */}
-                        <div className="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 md:shrink bg-[#1a1512] p-6 md:p-8 border border-white/10 group hover:border-[var(--terracotta)]/50 transition-colors rounded-2xl shadow-xl flex flex-col">
-                            <div className="flex items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b border-white/5">
+                        <div className="min-w-[85vw] sm:min-w-[320px] md:min-w-0 snap-center shrink-0 md:shrink bg-white p-6 md:p-8 border border-black/5 group hover:border-[var(--terracotta)]/50 transition-colors rounded-2xl shadow-xl flex flex-col">
+                            <div className="flex items-center gap-4 mb-6 md:mb-8 pb-4 md:pb-6 border-b border-black/5">
                                 <span className="text-[var(--terracotta)] font-serif text-3xl md:text-4xl block leading-none">03</span>
-                                <h3 className="text-xl md:text-2xl font-serif text-white group-hover:text-[var(--terracotta)] transition-colors m-0">Performance Needs</h3>
+                                <h3 className="text-xl md:text-2xl font-serif text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors m-0">Performance Needs</h3>
                             </div>
                             <ul className="space-y-4 md:space-y-6 flex-1">
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">High rainfall</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">High rainfall</span>
                                     Pressed
                                 </li>
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Budget-sensitive</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Budget-sensitive</span>
                                     Wirecut
                                 </li>
-                                <li className="text-sm font-light text-white">
-                                    <span className="block text-white font-medium mb-1">Premium look</span>
+                                <li className="text-sm font-light text-[var(--foreground)]/80">
+                                    <span className="block text-[var(--foreground)] font-medium mb-1">Premium look</span>
                                     Handmade
                                 </li>
                             </ul>
@@ -183,8 +183,8 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
             {/* --- THE SPECTRUM (Horizontal Scroll / Sticky) --- */}
             <section className="py-16 md:py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-4 md:px-6 mb-16 md:mb-20 text-center">
-                    <h2 className="text-4xl md:text-5xl font-serif mb-4">Material Types</h2>
-                    <p className="text-white/40 max-w-lg mx-auto">Three distinct manufacturing processes, three unique personalities.</p>
+                    <h2 className="text-4xl md:text-5xl font-serif mb-4 text-[var(--foreground)]">Material Types</h2>
+                    <p className="text-[var(--foreground)]/60 max-w-lg mx-auto">Three distinct manufacturing processes, three unique personalities.</p>
                 </div>
 
                 <div className="space-y-24 md:space-y-32 max-w-7xl mx-auto px-4 md:px-6">
@@ -203,13 +203,13 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                                 <div>
                                     <div className="flex items-center gap-4 mb-4">
                                         <span className="text-[var(--terracotta)] font-serif text-5xl">0{idx + 1}</span>
-                                        <div className="h-px w-24 bg-white/10" />
+                                        <div className="h-px w-24 bg-black/10" />
                                     </div>
-                                    <h3 className="text-4xl font-serif mb-2">{item.title}</h3>
+                                    <h3 className="text-4xl font-serif mb-2 text-[var(--foreground)]">{item.title}</h3>
                                     <p className="text-xs font-bold uppercase tracking-widest text-[var(--terracotta)]">{item.subtitle}</p>
                                 </div>
 
-                                <p className="text-white/60 leading-loose text-lg font-light border-l border-[var(--terracotta)] pl-6">
+                                <p className="text-[var(--foreground)]/70 leading-loose text-lg font-light border-l border-[var(--terracotta)] pl-6">
                                     {item.description}
                                 </p>
 
@@ -217,7 +217,7 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                                     <h4 className="text-[var(--terracotta)] text-sm font-bold uppercase tracking-[0.2em]">Use it when:</h4>
                                     <ul className="space-y-3 font-sans">
                                         {item.features.map(f => (
-                                            <li key={f} className="text-sm text-white/80 flex items-start gap-3">
+                                            <li key={f} className="text-sm text-[var(--foreground)]/80 flex items-start gap-3">
                                                 <span className="text-[var(--terracotta)] mt-[3px] text-lg font-bold leading-none shrink-0">&bull;</span>
                                                 <span className="leading-relaxed">{f}</span>
                                             </li>
@@ -225,7 +225,7 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                                     </ul>
                                 </div>
 
-                                <Link href={item.link} className="inline-block border-b border-white/30 pb-1 text-sm hover:text-[var(--terracotta)] hover:border-[var(--terracotta)] transition-colors">
+                                <Link href={item.link} className="inline-block border-b border-black/20 pb-1 text-sm text-[var(--foreground)]/80 hover:text-[var(--terracotta)] hover:border-[var(--terracotta)] transition-colors">
                                     View Collection
                                 </Link>
                             </div>

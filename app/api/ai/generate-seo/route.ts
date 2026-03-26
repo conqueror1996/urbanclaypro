@@ -1,11 +1,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSEOAttributes } from '@/lib/ai/seo-optimizer';
+import { isValidAdminToken } from '@/lib/auth-constants';
 
 export async function POST(req: NextRequest) {
     // Auth Check
     const token = req.cookies.get('uc_admin_token')?.value;
-    if (token !== 'clay2025' && token !== 'admin') {
+    if (!isValidAdminToken(token)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

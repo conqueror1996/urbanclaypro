@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
 // Reusing types roughly
@@ -23,8 +23,12 @@ interface ProjectsPageAnimateProps {
 
 export default function ProjectsPageAnimate({ projects, AtlasComponent }: ProjectsPageAnimateProps) {
     const { scrollY } = useScroll();
-    const heroY = useTransform(scrollY, [0, 500], [0, 150]);
-    const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.4]);
+    
+    // Calibrated for a 'sleek and snappy' feel: responsive yet jitter-free
+    const smoothScrollY = useSpring(scrollY, { damping: 40, stiffness: 180 });
+    
+    const heroY = useTransform(smoothScrollY, [0, 500], [0, 150]);
+    const heroOpacity = useTransform(smoothScrollY, [0, 400], [1, 0.4]);
 
     const [filter, setFilter] = useState('All');
     const categories = ['All', 'Residential', 'Commercial', 'Institutional', 'Hospitality'];
@@ -45,7 +49,7 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
     const featuredProject = categorizedProjects.find(p => p.isFeatured) || categorizedProjects[0];
 
     return (
-        <main className="bg-[#1a1512] text-[#EBE5E0] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-20">
+        <main className="bg-[var(--background)] text-[var(--foreground)] min-h-screen selection:bg-[var(--terracotta)] selection:text-white pb-20">
 
             {/* --- HERO / FEATURED PROJECT --- */}
             {featuredProject && (
@@ -60,6 +64,7 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                             src={featuredProject.imageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80'}
                             alt={featuredProject.title}
                             fill
+                            sizes="100vw"
                             className="object-cover object-center transition-transform duration-[2s] group-hover:scale-105"
                             priority
                         />
@@ -73,11 +78,11 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
                         >
-                            <div className="flex items-center gap-4 mb-6 opacity-80 text-sm">
+                            <div className="flex items-center gap-4 mb-6 opacity-80 text-sm !text-white">
                                 <span className="px-3 py-1 border border-white/20 rounded-full backdrop-blur-md uppercase tracking-widest text-[10px]">Featured Work</span>
                                 <span>{featuredProject.location}</span>
                             </div>
-                            <h1 className="text-5xl md:text-8xl font-serif !text-[#EBE5E0] drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] leading-[0.9] mb-6 max-w-4xl">
+                            <h1 className="text-5xl md:text-8xl font-serif !text-white leading-[0.9] mb-6 max-w-4xl">
                                 {featuredProject.title}
                             </h1>
                             <div className="flex items-center gap-4 group-hover:gap-8 transition-all duration-300">
@@ -106,10 +111,10 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
 
             {/* --- FILTER & GALLERY --- */}
             <section className="max-w-7xl mx-auto px-6 relative z-10">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16 border-b border-white/10 pb-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16 border-b border-black/10 pb-8">
                     <div>
-                        <h2 className="text-4xl font-serif mb-2">Curated Portfolio</h2>
-                        <p className="text-white/40 text-sm">A selection of our finest architectural collaborations.</p>
+                        <h2 className="text-4xl font-serif mb-2 text-[var(--foreground)]">Curated Portfolio</h2>
+                        <p className="text-[var(--foreground)]/60 text-sm">A selection of our finest architectural collaborations.</p>
                     </div>
 
                     {/* Filters */}
@@ -120,7 +125,7 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                                 onClick={() => setFilter(cat)}
                                 className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${filter === cat
                                     ? 'bg-[var(--terracotta)] text-white shadow-lg shadow-[var(--terracotta)]/20'
-                                    : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'
+                                    : 'bg-white border border-black/10 text-[var(--foreground)]/60 hover:bg-[var(--foreground)]/5 hover:text-[var(--foreground)]'
                                     }`}
                             >
                                 {cat}
@@ -143,16 +148,17 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
                                 className="group"
                             >
                                 <Link href={`/projects/${project.slug}`} className="block">
-                                    <div className="aspect-[3/4] md:aspect-square relative overflow-hidden rounded-xl bg-white/5 mb-4 group-hover:shadow-2xl transition-all duration-500">
+                                    <div className="aspect-[3/4] md:aspect-square relative overflow-hidden rounded-xl bg-black/5 mb-4 group-hover:shadow-2xl transition-all duration-500">
                                         {project.imageUrl ? (
                                             <Image
                                                 src={project.imageUrl}
                                                 alt={project.title}
                                                 fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                 className="object-cover transition-transform duration-700 group-hover:scale-110 grayscale-[30%] group-hover:grayscale-0"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-white/20 text-xs uppercase tracking-widest">No visual</div>
+                                            <div className="w-full h-full flex items-center justify-center text-[var(--foreground)]/30 text-xs uppercase tracking-widest">No visual</div>
                                         )}
 
                                         {/* Hover Overlay */}
@@ -165,10 +171,10 @@ export default function ProjectsPageAnimate({ projects, AtlasComponent }: Projec
 
                                     <div>
                                         <div className="flex items-center justify-between mb-1">
-                                            <h3 className="text-xl font-serif !text-[#EBE5E0] group-hover:!text-[var(--terracotta)] transition-colors">{project.title}</h3>
-                                            <span className="text-[10px] uppercase tracking-widest text-white/30 border border-white/10 px-2 py-0.5 rounded-full">{project.category}</span>
+                                            <h3 className="text-xl font-serif text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors">{project.title}</h3>
+                                            <span className="text-[10px] uppercase tracking-widest text-[var(--foreground)]/50 border border-black/10 px-2 py-0.5 rounded-full">{project.category}</span>
                                         </div>
-                                        <p className="text-sm text-white/50">{project.location || 'India'}</p>
+                                        <p className="text-sm text-[var(--foreground)]/60">{project.location || 'India'}</p>
                                     </div>
                                 </Link>
                             </motion.div>

@@ -82,13 +82,13 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 {product.title}
                             </h1>
 
-                            <p className="text-lg text-white/60 font-light leading-relaxed mb-10 max-w-xl border-l-2 border-[var(--terracotta)] pl-6">
+                            <p className="text-lg text-white/80 font-light leading-relaxed mb-10 max-w-xl border-l-2 border-[var(--terracotta)] pl-6">
                                 {product.subtitle || 'Premium handcrafted clay for timeless architecture. Engineered for durability and designed for elegance.'}
                             </p>
 
-                            <div className="flex items-center gap-4 text-xs font-mono text-white/30 uppercase tracking-widest">
+                            <div className="flex items-center gap-4 text-xs font-mono text-white/60 uppercase tracking-widest">
                                 <span>Est. 2024</span>
-                                <div className="w-12 h-px bg-white/10" />
+                                <div className="w-12 h-px bg-white/20" />
                                 <span>UrbanClay Studio</span>
                             </div>
                         </motion.div>
@@ -134,7 +134,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     >
                                         ←
                                     </button>
-                                    <span className="text-[10px] font-mono font-medium text-white/60 w-16 text-center">
+                                    <span className="text-[10px] font-mono font-medium text-white/80 w-16 text-center">
                                         {activeImageIndex + 1} / {displayImages.length}
                                     </span>
                                     <button
@@ -162,12 +162,12 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="flex items-center gap-4 mb-8">
                                 <span className="text-[var(--terracotta)] text-5xl font-serif">01</span>
                                 <div className="h-px w-24 bg-white/10" />
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">The Narrative</span>
+                                <span className="text-sm font-bold uppercase tracking-widest text-white/70">The Narrative</span>
                             </div>
                             <h2 className="text-3xl md:text-4xl font-serif mb-8 text-[#EBE5E0]">
                                 Distinctive Character
                             </h2>
-                            <div className="prose prose-invert prose-lg max-w-none text-white/60 font-light leading-loose break-words">
+                            <div className="prose prose-invert prose-lg max-w-none text-white/80 font-light leading-loose break-words">
                                 <p>{product.description || `Crafted with precision and fired to perfection, ${product.title} represents the pinnacle of terracotta engineering. Validated for harsh climates and designed for aesthetic versatility, it bridges the gap between traditional warmth and modern minimalism.`}</p>
                             </div>
                         </div>
@@ -177,14 +177,14 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="flex items-center gap-4 mb-8">
                                 <span className="text-[var(--terracotta)] text-5xl font-serif">02</span>
                                 <div className="h-px w-24 bg-white/10" />
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Technical Profile</span>
+                                <span className="text-sm font-bold uppercase tracking-widest text-white/70">Technical Profile</span>
                             </div>
 
                             <div className="bg-[#241e1a] rounded-2xl p-8 border border-white/5">
                                 <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
                                     {Object.entries(product.specs || { 'Water Absorption': '< 10%', 'Compressive Strength': '> 25 N/mm²', 'Dimensions': '230 x 75 x 18 mm', 'Coverage': '48 pcs/sq.m' }).map(([key, value]) => (
-                                        <div key={key} className="flex justify-between items-baseline border-b border-white/5 pb-4">
-                                            <span className="text-sm uppercase tracking-widest text-white/40 font-medium">{key}</span>
+                                        <div key={key} className="flex justify-between items-baseline border-b border-white/10 pb-4">
+                                            <span className="text-sm uppercase tracking-widest text-white/70 font-medium">{key}</span>
                                             <span className="font-serif text-lg text-[#EBE5E0] text-right">{value as string}</span>
                                         </div>
                                     ))}
@@ -197,13 +197,13 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             <div className="flex items-center gap-4 mb-8">
                                 <span className="text-[var(--terracotta)] text-5xl font-serif">03</span>
                                 <div className="h-px w-24 bg-white/10" />
-                                <span className="text-sm font-bold uppercase tracking-widest text-white/40">Visualizer & Estimation</span>
+                                <span className="text-sm font-bold uppercase tracking-widest text-white/70">Visualizer & Estimation</span>
                             </div>
 
                             {/* Pattern Visualizer */}
                             <div className="mb-12">
                                 <h3 className="text-2xl font-serif mb-6 text-[#EBE5E0]">Pattern Studio</h3>
-                                <p className="text-white/60 mb-6 font-light">
+                                <p className="text-white/80 mb-6 font-light">
                                     Visualize different bonding patterns and grout combinations.
                                 </p>
                                 <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
@@ -227,8 +227,8 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                             {/* Configuration Card */}
                             <div className="bg-[#241e1a] border border-white/5 p-6 rounded-2xl shadow-2xl">
-                                <div className="mb-8 border-b border-white/5 pb-6">
-                                    <span className="text-xs font-bold uppercase tracking-widest text-white/30 mb-2 block">Collection</span>
+                                <div className="mb-8 border-b border-white/10 pb-6">
+                                    <span className="text-xs font-bold uppercase tracking-widest text-white/60 mb-2 block">Collection</span>
                                     <h2 className="text-2xl font-serif text-white">{product.title}</h2>
                                     {selectedVariant && (
                                         <div className="mt-2 text-[var(--terracotta)] text-sm font-medium flex items-center gap-2">
@@ -242,7 +242,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 {product.variants && product.variants.length > 0 && (
                                     <div className="mb-8">
                                         <div className="flex justify-between items-baseline mb-4">
-                                            <span className="text-xs font-bold uppercase tracking-widest text-white/50">Select Finish</span>
+                                            <span className="text-xs font-bold uppercase tracking-widest text-white/80">Select Finish</span>
                                         </div>
                                         <div className="grid grid-cols-4 gap-3">
                                             {product.variants.map((v, i) => (
@@ -269,7 +269,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         <span className="text-3xl font-serif text-[#EBE5E0]">
                                             {product.priceRange?.split('/')[0] || 'Inquire'}
                                         </span>
-                                        {product.priceRange && <span className="text-xs text-white/40">/ sq.ft</span>}
+                                        {product.priceRange && <span className="text-xs text-white/70">/ sq.ft</span>}
                                     </div>
 
                                     {!isSampleDisabled && (
@@ -289,7 +289,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                         <span className="relative z-10">Get Quote</span>
                                     </a>
 
-                                    <p className="text-[10px] text-center text-white/30 pt-2 leading-relaxed">
+                                    <p className="text-[10px] text-center text-white/60 pt-2 leading-relaxed">
                                         Typically ships in 7-10 days. <br />Bulk volume discounts available.
                                     </p>
                                 </div>
@@ -325,7 +325,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     Curated Palette
                                 </h2>
                             </div>
-                            <p className="text-white/40 max-w-md text-sm leading-relaxed text-right md:text-left">
+                            <p className="text-white/70 max-w-md text-sm leading-relaxed text-right md:text-left">
                                 Complementary textures and tones selected to work in harmony with {product.title}.
                             </p>
                         </div>
@@ -357,9 +357,9 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                     <div className="flex justify-between items-start border-t border-white/10 pt-4 group-hover:border-[var(--terracotta)] transition-colors duration-500">
                                         <div>
                                             <h3 className="text-lg font-serif text-[#EBE5E0] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{bgProduct.title}</h3>
-                                            <p className="text-white/40 text-xs uppercase tracking-wider">{bgProduct.category?.title}</p>
+                                            <p className="text-white/70 text-xs uppercase tracking-wider">{bgProduct.category?.title}</p>
                                         </div>
-                                        <span className="text-white/20 group-hover:translate-x-1 transition-transform duration-300">→</span>
+                                        <span className="text-white/60 group-hover:translate-x-1 transition-transform duration-300">→</span>
                                     </div>
                                 </Link>
                             ))}

@@ -46,7 +46,7 @@ export const revalidate = 60;
 export default async function ArchitectsPage() {
     const data = await getArchitectsGuideData();
     return (
-        <div className="min-h-screen bg-[#1a1512] text-[#EBE5E0] selection:bg-[var(--terracotta)] selection:text-white">
+        <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--terracotta)] selection:text-white">
             <Header />
             <ArchitectPageAnimate heroImage={data?.heroImageUrl} />
             <Footer />

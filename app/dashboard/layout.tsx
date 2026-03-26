@@ -11,6 +11,7 @@ import {
     LayoutTemplate, LogOut, Search, Briefcase
 } from 'lucide-react';
 import CommandPalette from '@/components/dashboard/CommandPalette';
+import { verifyAdminPassword } from '@/lib/auth-actions';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     // ... existing state code ...
@@ -45,11 +46,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }
     }, []);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Check custom password first, then default passwords
-        const customPassword = localStorage.getItem('uc_custom_password');
-        const isValid = password === 'clay2025' || password === 'admin' || (customPassword && password === customPassword);
+        
+        const isValid = await verifyAdminPassword(password);
 
         if (isValid) {
             setIsAuthenticated(true);

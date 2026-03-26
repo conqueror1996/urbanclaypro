@@ -59,7 +59,7 @@ export default function ComparisonTable() {
         <div className="relative overflow-hidden rounded-3xl border border-[var(--ink)]/5 bg-white shadow-2xl">
             {/* Table Header */}
             <div className="grid grid-cols-3 bg-[#2A1E16] text-white p-6 md:p-8 items-center">
-                <div className="col-span-1 font-serif text-lg md:text-2xl italic text-white/50">
+                <div className="col-span-1 font-serif text-lg md:text-2xl italic text-white/70">
                     Performance Metric
                 </div>
                 <div className="col-span-1 text-center">
@@ -70,7 +70,7 @@ export default function ComparisonTable() {
                         <h3 className="font-serif text-xl md:text-3xl text-white">UrbanClay®</h3>
                     </div>
                 </div>
-                <div className="col-span-1 text-center opacity-60">
+                <div className="col-span-1 text-center opacity-80">
                     <h3 className="font-sans font-medium text-sm md:text-lg">Conventional Market</h3>
                 </div>
             </div>

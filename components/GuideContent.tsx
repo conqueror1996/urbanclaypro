@@ -207,31 +207,31 @@ export default function GuideContent({ data }: GuideContentProps) {
                                     className="flex-shrink-0 w-[85vw] md:w-auto snap-center bg-[#F6F1EB] rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_30px_rgba(42,30,22,0.08)] transition-all duration-300 overflow-hidden group border border-[#E6DED5] flex flex-col"
                                 >
                                     {/* Header */}
-                                    <div className="p-6 md:p-8 border-b border-[#E6DED5] bg-white/50 backdrop-blur-sm">
-                                        <div className="flex items-center gap-4 mb-2">
+                                    <div className="p-4 md:p-8 border-b border-[#E6DED5] bg-white/50 backdrop-blur-sm">
+                                        <div className="flex items-center gap-3 md:gap-4 mb-1 md:mb-2">
                                             <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-[#EFE7DF] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                                                 {React.cloneElement(card.icon as React.ReactElement<any>, { className: "w-5 h-5 md:w-8 md:h-8 text-[var(--terracotta)]" })}
                                             </div>
                                             <div>
-                                                <h3 className="text-xl md:text-2xl font-serif text-[#2A1E16]">{card.title}</h3>
-                                                <p className="text-xs md:text-sm text-[#7a6f66] font-medium">{card.description}</p>
+                                                <h3 className="text-lg md:text-2xl font-serif text-[#2A1E16]">{card.title}</h3>
+                                                <p className="text-[10px] md:text-sm text-[#7a6f66] font-medium">{card.description}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Features */}
-                                    <div className="p-6 md:p-8 space-y-5 flex-grow">
+                                    <div className="p-4 md:p-8 space-y-3 md:space-y-5 flex-grow">
                                         {/* Cost Row */}
-                                        <div className="flex items-center justify-between pb-4 border-b border-[#E6DED5]/60">
+                                        <div className="flex items-center justify-between pb-3 md:pb-4 border-b border-[#E6DED5]/60">
                                             <div className="flex items-center gap-2">
-                                                <svg className="w-4 h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                                <span className="text-[#5d554f] font-semibold text-sm md:text-base">Cost</span>
+                                                <svg className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                <span className="text-[#5d554f] font-semibold text-xs md:text-base">Cost</span>
                                             </div>
-                                            <div className="flex gap-1.5">
+                                            <div className="flex gap-1">
                                                 {[1, 2, 3, 4].map((level) => (
                                                     <div
                                                         key={level}
-                                                        className={`w-5 h-1.5 md:w-6 md:h-2 rounded-full ${level <= card.costLevel
+                                                        className={`w-4 h-1 md:w-6 md:h-2 rounded-full ${level <= card.costLevel
                                                             ? card.costLevel === 4 ? 'bg-[var(--terracotta)]' : card.costLevel === 3 ? 'bg-orange-400' : 'bg-yellow-400'
                                                             : 'bg-[#dcd5ce]'
                                                             }`}
@@ -239,30 +239,28 @@ export default function GuideContent({ data }: GuideContentProps) {
                                                 ))}
                                             </div>
                                         </div>
-
                                         {/* Specs Rows */}
                                         {card.specs.map((spec, i) => (
-                                            <div key={i} className={`flex items-center justify-between ${i !== card.specs.length - 1 ? 'pb-4 border-b border-[#E6DED5]/60' : ''}`}>
+                                            <div key={i} className={`flex items-center justify-between ${i !== card.specs.length - 1 ? 'pb-3 md:pb-4 border-b border-[#E6DED5]/60' : ''}`}>
                                                 <div className="flex items-center gap-2">
                                                     {spec.label === 'Water Absorption' && (
-                                                        <svg className="w-4 h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                                                        <svg className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                                                     )}
                                                     {spec.label === 'Compressive Strength' && (
-                                                        <svg className="w-4 h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                                                        <svg className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                                                     )}
                                                     {spec.label === 'Color Variation' && (
-                                                        <svg className="w-4 h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+                                                        <svg className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#a89f99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
                                                     )}
-                                                    <span className="text-[#5d554f] font-medium text-sm md:text-base">{spec.label}</span>
+                                                    <span className="text-[#5d554f] font-medium text-[11px] md:text-base">{spec.label}</span>
                                                 </div>
-                                                <span className="text-[#6B6258] text-sm md:text-base">{spec.value}</span>
+                                                <span className="text-[#6B6258] text-[11px] md:text-base">{spec.value}</span>
                                             </div>
                                         ))}
                                     </div>
-
                                     {/* CTA */}
-                                    <div className="p-6 md:p-8 pt-0 mt-auto">
-                                        <Link href={card.href} className="block w-full py-3 text-center border border-[var(--terracotta)] text-[var(--terracotta)] rounded-lg font-medium hover:bg-[var(--terracotta)] hover:text-white transition-all text-sm uppercase tracking-wider">
+                                    <div className="p-4 md:p-8 pt-0 mt-auto">
+                                        <Link href={card.href} className="block w-full py-2.5 text-center border border-[var(--terracotta)] text-[var(--terracotta)] rounded-lg font-medium hover:bg-[var(--terracotta)] hover:text-white transition-all text-xs uppercase tracking-wider">
                                             View Collection
                                         </Link>
                                     </div>

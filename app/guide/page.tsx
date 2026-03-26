@@ -47,7 +47,7 @@ export default async function SelectionGuide() {
     const guideData = await getGuideData(); // Removed old data fetch as new component handles static editorial content
 
     return (
-        <div className="bg-[#1a1512]">
+        <div className="bg-[var(--background)] text-[var(--foreground)]">
             <Header />
             <GuidePageAnimate heroImage={guideData?.heroImageUrl} />
             <Footer />

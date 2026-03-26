@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import AccessModal from '@/components/AccessModal';
 import SampleModal from '@/components/SampleModal';
@@ -14,8 +15,12 @@ interface ArchitectPageAnimateProps {
 
 export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimateProps) {
     const { scrollY } = useScroll();
-    const heroY = useTransform(scrollY, [0, 500], [0, 150]);
-    const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.4]);
+    
+    // Calibrated for a 'sleek and snappy' feel: responsive yet jitter-free
+    const smoothScrollY = useSpring(scrollY, { damping: 40, stiffness: 180 });
+    
+    const heroY = useTransform(smoothScrollY, [0, 500], [0, 150]);
+    const heroOpacity = useTransform(smoothScrollY, [0, 400], [1, 0.4]);
 
     const defaultHeroImage = "/images/architect-hero-confidence.png";
 
@@ -86,7 +91,7 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     >
-                        <div className="flex justify-center mb-8 opacity-60">
+                        <div className="flex justify-center mb-8 opacity-80 text-white">
                             <Breadcrumbs items={[{ name: 'Architects', href: '/architects' }]} />
                         </div>
                         <span className="text-[var(--terracotta)] font-medium tracking-[0.2em] uppercase text-xs mb-6 block">
@@ -120,56 +125,72 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
 
 
             {/* --- MATERIAL LIBRARY SECTION --- */}
-            <section className="py-32 bg-[var(--background)] relative z-20">
+            <section className="py-24 md:py-32 bg-[var(--background)] relative z-20">
                 <div className="max-w-7xl mx-auto px-6">
-                    <div className="flex items-end justify-between mb-20 border-b border-[var(--line)] pb-8">
-                        <div>
-                            <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)] mb-4">Material Library</h2>
-                            <p className="text-[var(--foreground)]/70 max-w-md">Everything you need to specify UrbanClay products with confidence.</p>
-                        </div>
-                        <div className="hidden md:block text-right">
-                            <div className="text-[var(--terracotta)] text-5xl font-serif">03</div>
-                            <div className="text-xs uppercase tracking-widest text-[var(--foreground)]/70 mt-1">Resource Categories</div>
-                        </div>
-                    </div>
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16 md:mb-24"
+                    >
+                        <span className="text-[var(--terracotta)] font-semibold tracking-[0.2em] uppercase text-[10px] md:text-xs mb-4 block">Professional Resources</span>
+                        <h2 className="text-4xl md:text-6xl font-serif text-[var(--ink)] mb-6">Material Library</h2>
+                        <p className="text-[var(--foreground)]/70 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                            Everything you need to specify UrbanClay products with confidence and creative freedom.
+                        </p>
+                    </motion.div>
 
-                    <div className="grid gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                         {resources.map((resource, idx) => (
                             <motion.div
                                 key={resource.id}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                                className="group relative bg-white/5 border border-white/5 hover:border-[var(--terracotta)]/50 rounded-2xl p-8 md:p-12 transition-all duration-500 overflow-hidden"
+                                transition={{ duration: 0.8, delay: idx * 0.15 }}
+                                className="group flex flex-col h-full bg-white rounded-[2rem] border border-[var(--line)] shadow-[0_4px_30px_-10px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all duration-700 overflow-hidden"
                             >
-                                <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform translate-x-4 group-hover:translate-x-0">
-                                    <div className="w-12 h-12 bg-[var(--terracotta)] rounded-full flex items-center justify-center text-white">
-                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                {/* Resource Visual */}
+                                <div className="aspect-[4/3] bg-[var(--sand)] relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-[var(--ink)]/10 to-transparent" />
+                                    {/* Abstract Visual representation of the resource type */}
+                                    <div className="absolute inset-0 flex items-center justify-center p-12">
+                                        <div className="w-full h-full border border-[var(--ink)]/5 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
+                                            <div className="text-[var(--terracotta)]/40 group-hover:text-[var(--terracotta)] transition-colors duration-500">
+                                                {React.cloneElement(resource.icon as React.ReactElement<any>, { className: "w-20 h-20 md:w-24 md:h-24 stroke-[1px]" })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Numbering */}
+                                    <div className="absolute top-6 left-6 text-xs font-bold text-[var(--ink)]/20 font-serif italic">
+                                        0{idx + 1}
                                     </div>
                                 </div>
 
-                                <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
-                                    <div className="md:col-span-1 text-[var(--foreground)]/20 group-hover:text-[var(--terracotta)] transition-colors">
-                                        {resource.icon}
-                                    </div>
-                                    <div className="md:col-span-5">
-                                        <h3 className="text-2xl font-serif text-[var(--foreground)] mb-2 group-hover:text-[var(--Ink)] transition-colors">{resource.title}</h3>
-                                        <p className="text-[var(--foreground)]/70 text-sm leading-relaxed">{resource.description}</p>
-                                    </div>
-                                    <div className="md:col-span-6 flex flex-wrap gap-3 justify-start md:justify-end">
-                                        {resource.files.map((file, i) => (
-                                            <span key={i} className="px-4 py-2 bg-[var(--line)]/50 rounded-lg text-xs font-medium text-[var(--foreground)]/70 border border-[var(--line)] group-hover:border-[var(--line)] transition-colors">
+                                {/* Content */}
+                                <div className="p-8 md:p-10 flex flex-col flex-grow">
+                                    <h3 className="text-2xl md:text-3xl font-serif text-[var(--ink)] mb-4">{resource.title}</h3>
+                                    <p className="text-[var(--foreground)]/60 text-sm leading-relaxed mb-8 flex-grow">
+                                        {resource.description}
+                                    </p>
+
+                                    <div className="space-y-3 mb-10">
+                                        {resource.files.slice(0, 3).map((file, i) => (
+                                            <div key={i} className="flex items-center gap-3 text-xs font-medium text-[var(--ink)]/70">
+                                                <span className="w-1 h-1 rounded-full bg-[var(--terracotta)]" />
                                                 {file}
-                                            </span>
+                                            </div>
                                         ))}
                                     </div>
+
+                                    <button
+                                        onClick={() => setModalOpen(true)}
+                                        className="w-full py-4 bg-[var(--ink)] text-white rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-[var(--terracotta)] transition-colors duration-500 shadow-sm"
+                                    >
+                                        Access Folder
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() => setModalOpen(true)}
-                                    className="absolute inset-0 w-full h-full z-20 cursor-pointer"
-                                    aria-label={`Access ${resource.title}`}
-                                />
                             </motion.div>
                         ))}
                     </div>
@@ -192,24 +213,24 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                         <div>
                             <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-6 block">Engineered for Excellence</span>
                             <h2 className="text-4xl md:text-6xl font-serif mb-8 leading-tight">
-                                Bespoke <br /> Manufacturing
+                                Performance <br /> & Precision
                             </h2>
                             <p className="text-lg text-[#5d554f] mb-12 leading-relaxed">
-                                We don't just sell standard bricks. Our R&D facility in Mumbai specializes in custom mold development, glaze matching, and structural clay solutions for complex facades.
+                                We don’t just manufacture clay bricks — we craft solutions built for performance, precision, and long-term durability.
                             </p>
 
                             <div className="space-y-8">
                                 <Feature
-                                    title="Custom Forms"
-                                    desc="From parametric jaalis to non-standard brick dimensions, we build molds to your exact CAD specifications."
+                                    title="Custom-Made to Fit Your Design"
+                                    desc="Every project is different. We create custom brick sizes, shapes, and patterns based on your exact drawings, so you don’t have to compromise your design vision."
                                 />
                                 <Feature
-                                    title="Performance Tested"
-                                    desc="Every batch comes with comprehensive lab reports for water absorption, efflorescence, and compressive strength."
+                                    title="Tested for Strength & Reliability"
+                                    desc="Each batch goes through quality checks for strength, water absorption, and finish — ensuring you get consistent results on-site without surprises."
                                 />
                                 <Feature
-                                    title="Sustainable Core"
-                                    desc="100% natural clay with 0% artificial pigments. High thermal mass products ideal for passive cooling strategies."
+                                    title="Built with Natural Materials"
+                                    desc="Our products are made from 100% natural clay, without artificial colors. This gives you authentic textures, long-lasting color, and better thermal performance for buildings."
                                 />
                             </div>
                         </div>

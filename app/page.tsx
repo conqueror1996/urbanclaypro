@@ -56,11 +56,11 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     }
 
     return {
-        title: "UrbanClay® | High-Precision Terracotta Facades & Clay Brick Systems | India",
-        description: "India's premier manufacturer of high-performance clay facades. Delivering flexible brick tiles, large format terracotta panels, and bespoke handmade bricks for modern architecture nationwide.",
+        title: "UrbanClay® | India's #1 Terracotta Facade & Flexible Brick Cladding Systems",
+        description: "India's premier manufacturer of high-precision clay facades. Delivering flexible brick tiles, large format terracotta panels, and bespoke handmade bricks for architectural mastery. Engineered for zero-failure performance in all Indian climates. Request Samples Online.",
         keywords: SEO_KEYWORDS,
         openGraph: {
-            title: "UrbanClay® | Premier Terracotta & Clay Facade Systems | Manufacturer India",
+            title: "UrbanClay® | India's #1 Terracotta Facade & Flexible Brick Cladding Systems",
             description: "Built for the elements. Our engineered terracotta systems ensure thermal comfort and structural longevity, designed specifically for India's diverse architectural landscape.",
         },
         alternates: {

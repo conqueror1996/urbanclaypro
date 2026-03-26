@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { writeClient as client } from '@/sanity/lib/write-client';
 import crypto from 'crypto';
+import { isValidAdminToken } from '@/lib/auth-constants';
 
 
 export async function GET(req: NextRequest) {
     // 1. Auth Check
     const token = req.cookies.get('uc_admin_token')?.value;
-    if (token !== 'clay2025' && token !== 'admin') {
+    if (!isValidAdminToken(token)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     // 1. Auth Check
     const token = req.cookies.get('uc_admin_token')?.value;
-    if (token !== 'clay2025' && token !== 'admin') {
+    if (!isValidAdminToken(token)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

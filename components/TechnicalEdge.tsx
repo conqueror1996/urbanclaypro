@@ -56,8 +56,8 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
                             </span>
 
                             <h2 className="text-3xl md:text-5xl font-serif leading-[1] mb-6 tracking-tighter text-[var(--ink)]">
-                                The Physics of <br />
-                                <span className="text-[var(--ink)]/40 italic">Perfect Facades.</span>
+                                High-Performance <br />
+                                <span className="text-[var(--ink)]/40 italic">Facade Engineering.</span>
                             </h2>
 
                             {/* Feature Grid - More compact 2-column layout */}
@@ -137,14 +137,14 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
                             <div className="flex items-center gap-5">
                                 <div>
                                     <span className="block text-3xl font-serif text-white mb-0.5 tracking-tighter">1000y<span className="text-[var(--terracotta)]">+</span></span>
-                                    <span className="text-[9px] uppercase tracking-[0.2em] text-white/40 font-black leading-none block border-t border-white/5 pt-2">
+                                    <span className="text-[9px] uppercase tracking-[0.2em] text-white/70 font-black leading-none block border-t border-white/5 pt-2">
                                         Longevity Grade
                                     </span>
                                 </div>
                                 <div className="w-px h-10 bg-white/10" />
                                 <div>
                                     <span className="block text-lg font-serif text-white">A1</span>
-                                    <span className="text-[9px] uppercase tracking-widest text-white/40">Fire Rated</span>
+                                    <span className="text-[9px] uppercase tracking-widest text-white/70">Fire Rated</span>
                                 </div>
                             </div>
                         </motion.div>

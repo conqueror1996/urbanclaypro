@@ -17,13 +17,16 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
         offset: ["start start", "end end"]
     });
 
+    // Calibrated for a 'sleek and snappy' feel: responsive yet jitter-free
+    const smoothProgress = useSpring(scrollYProgress, { damping: 40, stiffness: 180 });
+
     // Parallax Effects
-    const heroImageScale = useTransform(scrollYProgress, [0, 0.4], [1, 1.2]);
-    const heroTextY = useTransform(scrollYProgress, [0, 0.4], ["0%", "50%"]);
-    const opacityHero = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
+    const heroImageScale = useTransform(smoothProgress, [0, 0.4], [1, 1.2]);
+    const heroTextY = useTransform(smoothProgress, [0, 0.4], ["0%", "50%"]);
+    const opacityHero = useTransform(smoothProgress, [0, 0.4], [1, 0]);
 
     // Content Images (Parallax Shift)
-    const yParallax = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+    const yParallax = useTransform(smoothProgress, [0, 1], ["0%", "-10%"]);
 
     // Gallery images
     const galleryImages = project.gallery || [];
@@ -34,7 +37,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
     const remainingGallery = galleryImages.slice(2);
 
     return (
-        <article ref={containerRef} className="bg-[#FAF8F6] min-h-screen text-[#2A1E16]">
+        <article ref={containerRef} className="bg-[var(--background)] min-h-screen text-[var(--foreground)]">
             {/* 1. CINEMATIC HERO */}
             <section className="relative h-screen w-full overflow-hidden">
                 <motion.div
@@ -46,6 +49,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                             src={project.imageUrl}
                             alt={project.title}
                             fill
+                            sizes="100vw"
                             className="object-cover"
                             priority
                             quality={100}
@@ -76,7 +80,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.3 }}
-                            className="text-5xl md:text-7xl lg:text-[10rem] font-serif !text-[#EBE5E0] drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)] font-medium leading-[0.85] tracking-tight mb-8 max-w-6xl"
+                            className="text-5xl md:text-7xl lg:text-[10rem] font-serif !text-white font-medium leading-[0.85] tracking-tight mb-8 max-w-6xl"
                         >
                             {project.title}
                         </motion.h1>
@@ -101,8 +105,8 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                     transition={{ delay: 1.2, duration: 1 }}
                     className="absolute bottom-12 right-12 hidden lg:flex flex-col items-center gap-4 z-20"
                 >
-                    <span className="text-[10px] text-white/50 font-bold uppercase tracking-[0.2em] [writing-mode:vertical-lr] rotate-180">Scroll to Explore</span>
-                    <div className="w-[1px] h-16 bg-white/20 relative overflow-hidden">
+                    <span className="text-[10px] text-white/80 font-bold uppercase tracking-[0.2em] [writing-mode:vertical-lr] rotate-180">Scroll to Explore</span>
+                    <div className="w-[1px] h-16 bg-white/40 relative overflow-hidden">
                         <motion.div
                             className="w-full h-full bg-[var(--terracotta)] origin-top"
                             animate={{ scaleY: [0, 1, 0], translateY: ['-100%', '0%', '100%'] }}
@@ -113,11 +117,11 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
             </section>
 
             {/* 2. THE FUNDAMENTALS - High-End Spec Sheet Style */}
-            <section className="relative z-10 bg-[#FAF8F6] border-t border-[#2A1E16]/10">
-                <div className="max-w-[1800px] mx-auto grid grid-cols-1 md:grid-cols-12 border-b border-[#2A1E16]/10">
+            <section className="relative z-10 bg-[var(--background)] border-t border-[var(--foreground)]/10">
+                <div className="max-w-[1800px] mx-auto grid grid-cols-1 md:grid-cols-12 border-b border-[var(--foreground)]/10">
 
                     {/* Sticky Sidebar / Project Meta */}
-                    <div className="md:col-span-3 lg:col-span-3 border-r border-[#2A1E16]/10 p-8 md:p-12 lg:p-16 md:sticky md:top-24 md:h-[calc(100vh-6rem)] flex flex-col justify-between bg-[#EBE5E0]/30 backdrop-blur-3xl">
+                    <div className="md:col-span-3 lg:col-span-3 border-r border-[var(--foreground)]/10 p-8 md:p-12 lg:p-16 md:sticky md:top-24 md:h-[calc(100vh-6rem)] flex flex-col justify-between bg-[var(--background)]/30 backdrop-blur-3xl">
                         <div className="space-y-16">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
@@ -128,7 +132,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                                 <span className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--terracotta)]">
                                     <span className="w-4 h-[1px] bg-[var(--terracotta)]"></span> Typology
                                 </span>
-                                <span className="block text-xl md:text-3xl font-serif text-[#2A1E16]">{project.type || "Residential"}</span>
+                                <span className="block text-xl md:text-3xl font-serif text-[var(--foreground)]">{project.type || "Residential"}</span>
                             </motion.div>
 
                             <motion.div
@@ -141,7 +145,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                                 <span className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--terracotta)]">
                                     <span className="w-4 h-[1px] bg-[var(--terracotta)]"></span> Location
                                 </span>
-                                <span className="block text-xl md:text-3xl font-serif text-[#2A1E16]">{project.location || "New Delhi, India"}</span>
+                                <span className="block text-xl md:text-3xl font-serif text-[var(--foreground)]">{project.location || "New Delhi, India"}</span>
                             </motion.div>
 
                             <motion.div
@@ -156,7 +160,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                                 </span>
                                 <div className="flex flex-wrap gap-2">
                                     {(project.productsUsed?.slice(0, 3) || [{ title: 'Exposed Brick' }, { title: 'Terracotta' }]).map((m: any, i: number) => (
-                                        <Link href={m.slug ? `/products/${m.category || 'collection'}/${m.slug}` : '#'} key={i} className="px-4 py-2 border border-[#2A1E16]/15 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)] hover:text-white transition-colors duration-300 rounded-full text-xs font-semibold uppercase tracking-wider text-[#2A1E16]/70">
+                                        <Link href={m.slug ? `/products/${m.category || 'collection'}/${m.slug}` : '#'} key={i} className="px-4 py-2 border border-[var(--foreground)]/15 hover:border-[var(--terracotta)] hover:bg-[var(--terracotta)] hover:text-white transition-colors duration-300 rounded-full text-xs font-semibold uppercase tracking-wider text-[var(--foreground)]/70">
                                             {m.title}
                                         </Link>
                                     ))}
@@ -182,29 +186,29 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                     <div className="md:col-span-9 lg:col-span-9">
 
                         {/* A. The Statement */}
-                        <div className="p-8 md:p-16 lg:p-24 border-b border-[#2A1E16]/10 relative overflow-hidden bg-white">
+                        <div className="p-8 md:p-16 lg:p-24 border-b border-[var(--foreground)]/10 relative overflow-hidden bg-white">
                             {/* Accent Background Quote */}
-                            <div className="absolute -top-10 -left-6 md:-top-20 md:left-6 text-[15rem] md:text-[25rem] font-serif leading-none text-[#2A1E16]/[0.02] select-none pointer-events-none">
+                            <div className="absolute -top-10 -left-6 md:-top-20 md:left-6 text-[15rem] md:text-[25rem] font-serif leading-none text-[var(--foreground)]/[0.02] select-none pointer-events-none">
                                 "
                             </div>
                             <motion.h2
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                className="relative z-10 text-3xl md:text-5xl lg:text-7xl font-serif leading-[1.15] text-[#2A1E16] text-balance"
+                                className="relative z-10 text-3xl md:text-5xl lg:text-7xl font-serif leading-[1.15] text-[var(--foreground)] text-balance"
                             >
                                 {project.description?.split('.')[0] || "A masterful integration of form, function, and earthy materiality."}.
                             </motion.h2>
                         </div>
 
                         {/* B. The Editorial Flow */}
-                        <div className="bg-[#FAF8F6]">
+                        <div className="bg-[var(--background)]">
                             {/* Detailed Text Block */}
                             <div className="grid lg:grid-cols-12 gap-12 p-8 md:p-16 lg:p-24 relative">
                                 <div className="lg:col-span-5 font-serif text-2xl md:text-3xl text-[var(--terracotta)] leading-snug lg:sticky lg:top-32 self-start">
                                     "Architecture should speak of its time and place, but yearn for timelessness."
                                 </div>
-                                <div className="lg:col-span-7 text-[#2A1E16]/80 text-lg md:text-xl leading-[1.8] space-y-8 font-light max-w-3xl">
+                                <div className="lg:col-span-7 text-[var(--foreground)]/80 text-lg md:text-xl leading-[1.8] space-y-8 font-light max-w-3xl">
                                     {project.description?.split('\n').filter(p => p.length > 5).map((paragraph, i) => (
                                         <p key={i}>{paragraph}</p>
                                     )) || (
@@ -251,10 +255,10 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                                 {/* Subtle Texture */}
                                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-screen bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
-                                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-white/10 pb-8 gap-6 relative z-10">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-white/20 pb-8 gap-6 relative z-10">
                                     <h2 className="text-4xl md:text-5xl lg:text-7xl font-serif leading-none">Studio <br className="hidden md:block" /><span className="text-[var(--terracotta)] italic font-light">Palette</span></h2>
-                                    <span className="text-xs font-bold uppercase tracking-[0.2em] opacity-50 flex items-center gap-3">
-                                        <span className="w-8 h-[1px] bg-white/50"></span>
+                                    <span className="text-xs font-bold uppercase tracking-[0.2em] opacity-80 flex items-center gap-3">
+                                        <span className="w-8 h-[1px] bg-white/60"></span>
                                         Curated Materials
                                     </span>
                                 </div>
@@ -271,7 +275,7 @@ export default function ProjectDetailView({ project }: ProjectDetailViewProps) {
                                                         className="object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,1,0.5,1)]"
                                                     />
                                                 ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-white/20 font-serif italic text-sm">No Image Available</div>
+                                                    <div className="w-full h-full flex items-center justify-center text-white/40 font-serif italic text-sm">No Image Available</div>
                                                 )}
                                                 <div className="absolute inset-0 bg-gradient-to-t from-[#1a1512] via-transparent to-transparent opacity-60 pointer-events-none" />
 

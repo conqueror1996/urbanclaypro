@@ -22,13 +22,13 @@ export default function SmoothScroll() {
             if (mediaQuery.matches && !lenis) {
                 // Initialize Lenis for smooth, luxury scrolling (desktop only)
                 lenis = new Lenis({
-                    duration: 1.2, // Smooth, luxury duration
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Smooth easing
+                    duration: 0.7, // Sleek and responsive
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
                     orientation: 'vertical',
                     gestureOrientation: 'vertical',
                     smoothWheel: true,
-                    wheelMultiplier: 1, // Standard scroll speed
-                    touchMultiplier: 2,
+                    wheelMultiplier: 1.2, // Snappy response
+                    touchMultiplier: 1.8,
                     infinite: false,
                 });
 

@@ -10,6 +10,11 @@ export const SEO_KEYWORDS = [
     "terracotta facade panels",
     "exposed brick wall tiles",
     "handmade clay bricks",
+    "terracotta facade system cost",
+    "brick cladding price per sq ft",
+    "flexible clay tiles price",
+    "terracotta panel specification",
+    "wirecut bricks price Bangalore",
 
     // Core Product Keywords
     "wirecut brick",
