@@ -12,6 +12,9 @@ export interface TrafficReport {
     healthScore: number;
     avgLcp: number;
     errorCount: number;
+    growthRate: number;
+    topCities: { city: string, count: number }[];
+    topProducts: { name: string, count: number }[];
     // SEO Metrics
     seoScore: number;
     organicCount: number;
@@ -22,12 +25,9 @@ export async function getTrafficData(): Promise<TrafficReport> {
     try {
         const now = new Date();
         const getStartOfDay = (d: Date) => {
-            // Shift to IST (UTC+5:30)
             const offset = 5.5 * 60 * 60 * 1000;
             const istTime = new Date(d.getTime() + offset);
-            // reset to midnight
             istTime.setUTCHours(0, 0, 0, 0);
-            // Shift back to UTC for query
             return new Date(istTime.getTime() - offset).toISOString();
         };
 
@@ -55,21 +55,57 @@ export async function getTrafficData(): Promise<TrafficReport> {
             "lastMonth": count(array::unique(*[_type == "footprint" && timestamp >= $monthStart && timestamp < $monthEnd].ip)),
             "threeMonths": count(array::unique(*[_type == "footprint" && timestamp >= $threeStart && timestamp < $threeEnd].ip)),
             "eightMonths": count(array::unique(*[_type == "footprint" && timestamp >= $eightStart && timestamp < $eightEnd].ip)),
+            "todayPaths": *[_type == "footprint" && timestamp >= $todayStart] { path },
             "errors": *[_type == "footprint" && defined(errors) && timestamp >= $todayStart] | order(timestamp desc) [0...5] { errors, timestamp },
             "referrers": *[_type == "footprint" && timestamp >= $monthStart] { referrer }
         }`;
 
         const result = await client.fetch(query, params);
 
-        // 2. Performance Query: Get the LATEST vital for real-time feedback
-        // We only look at the most recent interaction to reflect immediate fixes
+        // 2. Trend Calculation
+        const todayCount = result.today || 0;
+        const yesterdayCount = result.yesterday || 0;
+        const growthRate = yesterdayCount > 0 ? ((todayCount - yesterdayCount) / yesterdayCount) * 100 : 0;
+
+        // 3. Geographic / Product Interest Extraction
+        const paths = result.todayPaths?.map((p: any) => p.path) || [];
+        const citiesList = ['mumbai', 'pune', 'bangalore', 'delhi', 'ahmedabad', 'hyderabad', 'chennai', 'kochi'];
+        
+        const cityCounts: Record<string, number> = {};
+        const productCounts: Record<string, number> = {};
+
+        paths.forEach((p: string) => {
+            const lowP = p.toLowerCase();
+            // Check for cities
+            citiesList.forEach(city => {
+                if (lowP.includes(city)) {
+                    cityCounts[city] = (cityCounts[city] || 0) + 1;
+                }
+            });
+            // Check for products
+            if (lowP.includes('/products/')) {
+                const parts = lowP.split('/');
+                const productName = parts[parts.length - 1] || 'Unknown';
+                productCounts[productName] = (productCounts[productName] || 0) + 1;
+            }
+        });
+
+        const topCities = Object.entries(cityCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5)
+            .map(([city, count]) => ({ city: city.charAt(0).toUpperCase() + city.slice(1), count }));
+
+        const topProducts = Object.entries(productCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3)
+            .map(([name, count]) => ({ name: name.replace(/-/g, ' '), count }));
+
+        // 4. Performance Query
         const perfQuery = `*[_type == "footprint" && defined(vitals.lcp)] | order(timestamp desc) [0...0] { "lcp": vitals.lcp }`;
         const perfData = await client.fetch(perfQuery);
-
-        // Instant LCP from the very last visitor
         const avgLcp = perfData.length > 0 ? perfData[0].lcp : 800;
 
-        // Filter out known/fixed errors from the display log
+        // 5. Error Filtering
         const rawErrors = result.errors?.map((e: any) => e.errors) || [];
         const recentErrors = rawErrors.filter((e: string) =>
             !e.includes('Minified React error #418') &&
@@ -82,51 +118,37 @@ export async function getTrafficData(): Promise<TrafficReport> {
         );
         const filteredErrorCount = recentErrors.length;
 
-        // Health Score Algo (100 = Perfect)
+        // Score Algos
         let score = 100;
         if (avgLcp > 2500) score -= 10;
-        if (avgLcp > 4000) score -= 15; // Capped penalty
         score -= (filteredErrorCount * 5);
         if (score < 0) score = 0;
 
-        // Process SEO / Referrer Data
         const referrerData = result.referrers || [];
         let organicCount = 0;
         referrerData.forEach((item: any) => {
             const ref = (item.referrer || '').toLowerCase();
-            if (ref.includes('google') || ref.includes('bing') || ref.includes('duckduckgo') || ref.includes('yahoo')) {
-                organicCount++;
-            }
+            if (ref.includes('google') || ref.includes('bing') || ref.includes('duckduckgo')) organicCount++;
         });
 
-        // SEO Score Calculation (Optimized for Health Check)
-        // Base score 90 (Architecture, Schema, Meta Tags are Perfect)
         let seoScore = 90;
-
-        // Speed Bonus (Vital for SEO)
-        // Core Web Vitals "Green" is < 2.5s. We reward that.
         if (avgLcp < 2500) seoScore += 5;
-
-        // Elite Developer Experience Bonus (Dev mode overhead considered)
-        if (avgLcp < 2000) seoScore += 5;
-
-        // Error Free Bonus
         if (filteredErrorCount === 0) seoScore += 5;
-
-        // Cap at 100
         if (seoScore > 100) seoScore = 100;
 
-
         return {
-            today: result.today || 0,
-            yesterday: result.yesterday || 0,
+            today: todayCount,
+            yesterday: yesterdayCount,
             lastMonth: result.lastMonth || 0,
             threeMonthsAgo: result.threeMonths || 0,
             eightMonthsAgo: result.eightMonths || 0,
             healthScore: avgLcp === 0 && filteredErrorCount === 0 ? 100 : score,
             avgLcp,
-            errorCount: filteredErrorCount, // Return filtered count
-            recentErrors: recentErrors,
+            errorCount: filteredErrorCount,
+            growthRate,
+            topCities,
+            topProducts,
+            recentErrors,
             seoScore,
             organicCount,
             isDemo: false

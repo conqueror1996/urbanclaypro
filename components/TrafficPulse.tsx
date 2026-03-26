@@ -155,13 +155,63 @@ export default function TrafficPulse() {
                 />
 
                 {/* TRAFFIC HERO */}
-                <MetricCard
-                    label="Today's Traffic"
-                    value={stats.today}
-                    delay={0.3}
-                    highlight={stats.errorCount === 0}
-                    subtext={`vs Yesterday: ${stats.yesterday}`}
-                />
+                <div className={`relative p-6 rounded-2xl border backdrop-blur-sm overflow-hidden flex flex-col justify-between lg:col-span-1 bg-white border-[#e9e2da] text-[#2A1E16]`}>
+                    <div className="relative z-10">
+                        <p className="text-xs font-bold uppercase tracking-wider mb-2 text-gray-600">Today&apos;s Traffic</p>
+                        <div className="flex items-baseline gap-2">
+                            <h3 className="text-3xl font-serif font-bold">{stats.today.toLocaleString()}</h3>
+                            <span className={`text-xs font-bold ${stats.growthRate >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                                {stats.growthRate >= 0 ? '↑' : '↓'} {Math.abs(stats.growthRate).toFixed(1)}%
+                            </span>
+                        </div>
+                        <p className="text-[10px] mt-1 text-gray-600">vs Yesterday: {stats.yesterday}</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* AI Insights: Regional & Product Dynamics */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                {/* REGIONAL HOTSPOTS */}
+                <div className="bg-white border border-[#e9e2da] rounded-2xl p-6">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4">Regional Hotspots</h4>
+                    <div className="space-y-3">
+                        {stats.topCities && stats.topCities.length > 0 ? stats.topCities.map((city, i) => (
+                            <div key={i} className="flex justify-between items-center text-sm">
+                                <span className="text-[#2A1E16] font-medium">{city.city}</span>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-[var(--terracotta)]" 
+                                            style={{ width: `${(city.count / stats.topCities[0].count) * 100}%` }}
+                                        />
+                                    </div>
+                                    <span className="text-xs text-gray-400 font-mono w-4">{city.count}</span>
+                                </div>
+                            </div>
+                        )) : (
+                            <p className="text-xs text-gray-400 italic">No geographic data yet today</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* PRODUCT INTEREST */}
+                <div className="bg-white border border-[#e9e2da] rounded-2xl p-6">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-4">Trending Products</h4>
+                    <div className="space-y-3">
+                        {stats.topProducts && stats.topProducts.length > 0 ? stats.topProducts.map((product, i) => (
+                            <div key={i} className="flex justify-between items-center text-sm">
+                                <span className="text-[#2A1E16] font-medium capitalize truncate max-w-[180px]">
+                                    {product.name}
+                                </span>
+                                <span className="bg-[var(--terracotta)]/5 text-[var(--terracotta)] px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                    {product.count} views
+                                </span>
+                            </div>
+                        )) : (
+                            <p className="text-xs text-gray-400 italic">No product views traced yet today</p>
+                        )}
+                    </div>
+                </div>
             </div>
 
             {/* Recent Errors Log (Only show if errors exist) */}
