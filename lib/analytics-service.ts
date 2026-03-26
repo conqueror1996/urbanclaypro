@@ -77,7 +77,8 @@ export async function getTrafficData(): Promise<TrafficReport> {
             !e.includes('Rendered more hooks') &&
             !e.includes('Hydration failed') &&
             !e.includes('ResizeObserver') &&
-            !e.includes('Script error')
+            !e.includes('Script error') &&
+            !e.includes('__firefox__')
         );
         const filteredErrorCount = recentErrors.length;
 
