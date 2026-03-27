@@ -11,7 +11,7 @@ interface ProjectAtlasProps {
 
 export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
     return (
-        <section className="relative py-8 md:py-32 bg-[var(--ink)] overflow-hidden">
+        <section className="relative py-6 md:py-32 bg-[var(--ink)] overflow-hidden">
             {/* Background Sophistication */}
             <div className="absolute inset-0 z-0">
                 {/* Subtle Grainy Overlay */}
@@ -26,7 +26,7 @@ export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-24 items-center">
+                <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-24 items-center">
                     
                     {/* Left Side: Content Evolution */}
                     <div className="space-y-4 md:space-y-12">
@@ -41,33 +41,33 @@ export default function ProjectAtlas({ projects = [] }: ProjectAtlasProps) {
                                 Atlas
                             </span>
                             
-                            <h2 className="text-2xl md:text-7xl font-serif text-white leading-tight md:leading-[1.05] tracking-tight mb-3 md:mb-8">
+                            <h2 className="text-xl md:text-7xl font-serif text-white leading-tight md:leading-[1.05] tracking-tight mb-3 md:mb-8">
                                 Building India,<br />
                                 <span className="text-white italic">One Brick </span>
                                 <span className="text-white">at a Time.</span>
                             </h2>
 
-                            <p className="text-white opacity-90 text-xs md:text-xl max-w-xl leading-relaxed font-light line-clamp-2 md:line-clamp-none">
+                            <p className="text-white opacity-80 text-[10px] md:text-xl max-w-xl leading-relaxed font-light line-clamp-2 md:line-clamp-none">
                                 Engineered for India's diverse micro-climates, trusted by elite architects across the subcontinent.
                             </p>
                         </motion.div>
 
-                        {/* Interactive Stats Cards */}
+                        {/* Interactive Stats Cards - Tightened for Mobile */}
                         <motion.div 
                             initial={{ opacity: 0, y: 15 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, delay: 0.2 }}
-                            className="flex md:grid md:grid-cols-2 gap-3 md:gap-6"
+                            className="grid grid-cols-2 gap-3 md:gap-6"
                         >
-                            <div className="flex-1 group relative p-3 md:p-8 rounded-lg md:rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md transition-all duration-500">
-                                <div className="text-xl md:text-5xl font-serif text-[var(--terracotta)] mb-0.5 md:mb-3">50+</div>
-                                <div className="text-[8px] md:text-xs text-white/40 uppercase tracking-[0.2em] font-medium font-sans">Cities</div>
+                            <div className="group relative p-3 md:p-8 rounded-lg md:rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md transition-all duration-500 hover:bg-white/[0.06] hover:border-white/[0.15]">
+                                <div className="text-xl md:text-5xl font-serif text-[var(--terracotta)] mb-0.5 md:mb-3 leading-none">50+</div>
+                                <div className="text-[7px] md:text-xs text-white/40 uppercase tracking-[0.2em] font-medium font-sans">Cities</div>
                             </div>
                             
-                            <div className="flex-1 group relative p-3 md:p-8 rounded-lg md:rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md transition-all duration-500">
-                                <div className="text-xl md:text-5xl font-serif text-[var(--terracotta)] mb-0.5 md:mb-3">600+</div>
-                                <div className="text-[8px] md:text-xs text-white/40 uppercase tracking-[0.2em] font-medium font-sans">Projects</div>
+                            <div className="group relative p-3 md:p-8 rounded-lg md:rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md transition-all duration-500 hover:bg-white/[0.06] hover:border-white/[0.15]">
+                                <div className="text-xl md:text-5xl font-serif text-[var(--terracotta)] mb-0.5 md:mb-3 leading-none">600+</div>
+                                <div className="text-[7px] md:text-xs text-white/40 uppercase tracking-[0.2em] font-medium font-sans">Projects</div>
                             </div>
                         </motion.div>
                         

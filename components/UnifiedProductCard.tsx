@@ -74,7 +74,7 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
                 className="block relative overflow-hidden"
             >
                 {/* Visual Card Container */}
-                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-transparent mb-5 transition-all duration-700">
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-transparent mb-4 transition-all duration-700">
                     {variant.imageUrl ? (
                         <Image
                             src={variant.imageUrl}
@@ -107,38 +107,36 @@ export default function UnifiedProductCard({ product, variant, index }: UnifiedP
                             <ArrowUpRight className="w-4 h-4 text-[var(--foreground)] group-hover:rotate-45 transition-transform duration-500" />
                         </div>
                     </div>
+
+                    {/* Action Palette */}
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between z-30 pointer-events-none">
+                        {!isSampleDisabled && (
+                            <button
+                                onClick={handleAddSample}
+                                className="w-8 h-8 rounded-lg bg-white/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] hover:text-white transition-all active:scale-90 group/btn shadow-lg pointer-events-auto"
+                                title="Add to Sample Tray"
+                            >
+                                <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" />
+                            </button>
+                        )}
+                        <button
+                            onClick={handleWhatsAppShare}
+                            className="w-8 h-8 rounded-lg bg-white/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--foreground)] hover:bg-emerald-500 hover:border-emerald-500 hover:text-white transition-all active:scale-90 shadow-lg ml-auto pointer-events-auto"
+                            title="Share on WhatsApp"
+                        >
+                            <MessageCircle className="w-4 h-4" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Info Text */}
-                <div className="relative z-10 p-2 transition-transform duration-500 group-hover:-translate-y-1">
-                    <h4 className="text-base font-serif text-[var(--foreground)] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{variant.name}</h4>
-                    <p className="text-[10px] text-[var(--foreground)]/70 font-bold uppercase tracking-[0.2em] opacity-80 group-hover:opacity-100">
+                <div className="relative z-10 px-1 transition-transform duration-500 group-hover:-translate-y-1">
+                    <h4 className="text-sm md:text-base font-serif text-[var(--foreground)] mb-1 group-hover:text-[var(--terracotta)] transition-colors">{variant.name}</h4>
+                    <p className="text-[9px] text-[var(--foreground)]/70 font-bold uppercase tracking-[0.2em] opacity-80 group-hover:opacity-100 truncate">
                         {product.title}
                     </p>
                 </div>
             </Link>
-
-            {/* Action Palette (Floating over the card) */}
-            <div className="absolute bottom-20 left-4 right-4 flex items-center justify-between md:opacity-0 md:group-hover:opacity-100 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-500 z-30 opacity-100 translate-y-0 text-white">
-                <div className="flex items-center gap-2">
-                    {!isSampleDisabled && (
-                        <button
-                            onClick={handleAddSample}
-                            className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--terracotta)] hover:text-white hover:border-[var(--terracotta)] transition-all active:scale-95 group/btn shadow-xl"
-                            title="Add to Sample Tray"
-                        >
-                            <Plus className="w-5 h-5 group-hover/btn:rotate-90 transition-transform duration-300" />
-                        </button>
-                    )}
-                    <button
-                        onClick={handleWhatsAppShare}
-                        className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all active:scale-95 shadow-xl"
-                        title="Share on WhatsApp"
-                    >
-                        <MessageCircle className="w-5 h-5" />
-                    </button>
-                </div>
-            </div>
         </motion.div>
     );
 }

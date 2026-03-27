@@ -74,7 +74,7 @@ export default function PremiumProductCard({ product, variant, index }: PremiumP
                 className="block relative overflow-hidden"
             >
                 {/* Visual Card Container */}
-                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[var(--sand)] mb-5 border border-[var(--line)] group-hover:border-[var(--terracotta)]/30 transition-all duration-700 shadow-sm group-hover:shadow-xl">
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-[var(--sand)] mb-4 border border-[var(--line)] group-hover:border-[var(--terracotta)]/30 transition-all duration-700 shadow-sm group-hover:shadow-xl">
                     {variant.imageUrl ? (
                         <Image
                             src={variant.imageUrl}
@@ -107,43 +107,48 @@ export default function PremiumProductCard({ product, variant, index }: PremiumP
                             <ArrowUpRight className="w-4 h-4 text-[var(--foreground)] group-hover:rotate-45 transition-transform duration-500" />
                         </div>
                     </div>
+
+                    {/* Action Palette (Now inside image container, spread to corners) */}
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between z-30 pointer-events-none">
+                        {!isSampleDisabled && (
+                            <button
+                                onClick={handleAddSample}
+                                className="w-8 h-8 rounded-lg bg-white/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] hover:text-white transition-all active:scale-90 group/btn shadow-lg pointer-events-auto"
+                                title="Add to Sample Tray"
+                            >
+                                <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" />
+                            </button>
+                        )}
+                        <button
+                            onClick={handleWhatsAppShare}
+                            className="w-8 h-8 rounded-lg bg-white/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-[var(--foreground)] hover:bg-emerald-500 hover:border-emerald-500 hover:text-white transition-all active:scale-90 shadow-lg ml-auto pointer-events-auto"
+                            title="Share on WhatsApp"
+                        >
+                            <MessageCircle className="w-4 h-4" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Info Text */}
-                <div className="relative z-10 p-2 transition-transform duration-500 group-hover:-translate-y-1">
-                    <div className="flex items-center justify-between mb-1">
-                        <h4 className="text-base font-serif text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors">{variant.name}</h4>
-                        <span className="text-[10px] font-bold text-[var(--terracotta)] flex items-center gap-1">
-                            <span className="text-[8px]">★</span> 4.9 <span className="text-[var(--foreground)]/30 font-light">(156)</span>
-                        </span>
+                <div className="relative z-10 px-1 transition-transform duration-500 group-hover:-translate-y-1">
+                    <div className="flex flex-col gap-1 mb-2">
+                        <div className="flex items-start justify-between gap-2">
+                            <h4 className="text-sm md:text-base font-serif text-[var(--foreground)] group-hover:text-[var(--terracotta)] transition-colors leading-tight flex-1">
+                                {variant.name}
+                            </h4>
+                            <span className="text-[9px] font-bold text-[var(--terracotta)] bg-[var(--terracotta)]/5 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0 mt-1">
+                                <span className="text-[7px]">★</span> 4.9
+                            </span>
+                        </div>
                     </div>
-                    <p className="text-[10px] text-[var(--foreground)]/70 font-bold uppercase tracking-[0.2em]">
-                        {product.title}
-                    </p>
+                    <div className="flex items-center justify-between">
+                        <p className="text-[9px] text-[var(--foreground)]/60 font-bold uppercase tracking-[0.2em] truncate">
+                            {product.title}
+                        </p>
+                        <span className="text-[8px] text-[var(--foreground)]/30 font-light">(156 REVIEWS)</span>
+                    </div>
                 </div>
             </Link>
-
-            {/* Action Palette (Floating over the card) */}
-            <div className="absolute bottom-20 left-4 right-4 flex items-center justify-between md:opacity-0 md:group-hover:opacity-100 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-500 z-30 opacity-100 translate-y-0 text-white">
-                <div className="flex items-center gap-2">
-                    {!isSampleDisabled && (
-                        <button
-                            onClick={handleAddSample}
-                            className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--terracotta)] hover:border-[var(--terracotta)] hover:text-white transition-all active:scale-95 group/btn shadow-xl"
-                            title="Add to Sample Tray"
-                        >
-                            <Plus className="w-5 h-5 group-hover/btn:rotate-90 transition-transform duration-300" />
-                        </button>
-                    )}
-                    <button
-                        onClick={handleWhatsAppShare}
-                        className="w-10 h-10 rounded-xl bg-[var(--background)]/80 backdrop-blur-xl border border-[var(--line)] flex items-center justify-center text-[var(--foreground)] hover:bg-emerald-500 hover:border-emerald-500 hover:text-white transition-all active:scale-95 shadow-xl"
-                        title="Share on WhatsApp"
-                    >
-                        <MessageCircle className="w-5 h-5" />
-                    </button>
-                </div>
-            </div>
         </motion.div>
     );
 }

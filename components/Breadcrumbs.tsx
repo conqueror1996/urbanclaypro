@@ -46,23 +46,23 @@ export default function Breadcrumbs({ items, range }: BreadcrumbsProps) {
 
     return (
         <nav className="flex mb-8 overflow-x-auto no-scrollbar whitespace-nowrap" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40">
-                <li className="flex items-center">
-                    <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center gap-1">
-                        <Home className="w-3 h-3" />
-                        <span>Home</span>
+            <ol className="flex items-center space-x-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--foreground)]/40 h-5">
+                <li className="flex items-center h-full">
+                    <Link href="/" className="hover:text-[var(--terracotta)] transition-colors flex items-center gap-1 h-full leading-none">
+                        <Home className="w-3 h-3 translate-y-[-0.5px]" />
+                        <span className="leading-none">Home</span>
                     </Link>
                 </li>
                 
                 {breadcrumbItems.map((item, index) => (
-                    <li key={index} className="flex items-center space-x-2">
-                        <ChevronRight className="w-3 h-3 text-[var(--foreground)]/20" />
+                    <li key={index} className="flex items-center space-x-2 h-full">
+                        <ChevronRight className="w-3 h-3 text-[var(--foreground)]/20 flex-shrink-0" />
                         {index === breadcrumbItems.length - 1 ? (
-                            <span className="text-[var(--terracotta)]" aria-current="page">
+                            <span className="text-[var(--terracotta)] leading-none inline-flex items-center h-full" aria-current="page">
                                 {item.name}
                             </span>
                         ) : (
-                            <Link href={item.href} className="hover:text-[var(--terracotta)] transition-colors">
+                            <Link href={item.href} className="hover:text-[var(--terracotta)] transition-colors leading-none inline-flex items-center h-full">
                                 {item.name}
                             </Link>
                         )}
