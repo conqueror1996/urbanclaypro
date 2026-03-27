@@ -13,12 +13,11 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
     request: NextRequest,
-    props: { params: Promise<{ orderId: string }> }
+    { params }: { params: Promise<{ orderId: string }> }
 ) {
-    const params = await props.params;
+    const { orderId } = await params;
 
     try {
-        const { orderId } = params;
         const { success, order } = await getPaymentLinkDetails(orderId);
 
         if (!success || !order) {

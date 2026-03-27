@@ -19,11 +19,10 @@ export const runtime = 'nodejs';
 
 export async function GET(
     request: NextRequest,
-    props: { params: Promise<{ siteId: string }> }
+    { params }: { params: Promise<{ siteId: string }> }
 ) {
-    const params = await props.params;
+    const { siteId } = await params;
     try {
-        const { siteId } = params;
         const searchParams = request.nextUrl.searchParams;
 
         // Customizations from UI
