@@ -2,19 +2,15 @@ import nodemailer from 'nodemailer';
 import { getTrackingLink } from '@/lib/utils';
 import { EMAIL_STYLES, EMAIL_SIGNATURE, EMAIL_FOOTER } from './email-constants';
 
-// Helper to clean env vars from potential literal quotes or whitespace
-const cleanEnv = (val: string | undefined, fallback: string = ''): string => {
-    if (!val) return fallback;
-    return val.trim().replace(/^["'](.+)["']$/, '$1');
-};
+import { cleanEnvVar } from './env-utils';
 
 export const transporter = nodemailer.createTransport({
-    host: cleanEnv(process.env.SMTP_HOST, 'smtp.gmail.com'),
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
+    host: cleanEnvVar(process.env.SMTP_HOST, 'smtp.gmail.com'),
+    port: parseInt(cleanEnvVar(process.env.SMTP_PORT, '587')),
+    secure: cleanEnvVar(process.env.SMTP_SECURE) === 'true',
     auth: {
-        user: cleanEnv(process.env.SMTP_USER),
-        pass: cleanEnv(process.env.SMTP_PASS),
+        user: cleanEnvVar(process.env.SMTP_USER),
+        pass: cleanEnvVar(process.env.SMTP_PASS),
     },
 });
 
@@ -66,7 +62,10 @@ function wrapEmailTemplate(content: string, title: string = 'Update from UrbanCl
 }
 
 export async function sendLeadAlertEmail(lead: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) return { success: false, error: 'Missing credentials' };
+    const smtpUser = cleanEnvVar(process.env.SMTP_USER);
+    const smtpPass = cleanEnvVar(process.env.SMTP_PASS);
+    
+    if (!smtpUser || !smtpPass) return { success: false, error: 'Missing credentials' };
 
     try {
         const isSerious = lead.isSerious || lead.seriousness === 'high';
@@ -104,8 +103,8 @@ export async function sendLeadAlertEmail(lead: any) {
         `;
 
         const mailOptions = {
-            from: `"UrbanClay CRM" <${process.env.SMTP_USER}>`,
-            to: process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'urbanclay@claytile.in',
+            from: `"UrbanClay CRM" <${smtpUser}>`,
+            to: cleanEnvVar(process.env.ADMIN_EMAIL) || smtpUser || 'urbanclay@claytile.in',
             subject: `${isSerious ? '🔥 Serious' : '📩 New'} Lead: ${lead.role || 'Inquiry'} | ${lead.city || lead.country || 'N/A'}`,
             html: wrapEmailTemplate(content)
         };
@@ -120,7 +119,10 @@ export async function sendLeadAlertEmail(lead: any) {
 }
 
 export async function sendLeadConfirmationEmail(lead: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) return { success: false, error: 'Missing credentials or email' };
+    const smtpUser = cleanEnvVar(process.env.SMTP_USER);
+    const smtpPass = cleanEnvVar(process.env.SMTP_PASS);
+    
+    if (!smtpUser || !smtpPass || !lead.email) return { success: false, error: 'Missing credentials or email' };
 
     try {
         const isFacadeDesk = lead.product?.includes('Facade') || lead.notes?.includes('Facade Desk');
@@ -186,7 +188,7 @@ export async function sendLeadConfirmationEmail(lead: any) {
         `;
 
         const mailOptions = {
-            from: `"UrbanClay Support" <${process.env.SMTP_USER}>`,
+            from: `"UrbanClay Support" <${smtpUser}>`,
             to: lead.email,
             subject: subject,
             html: wrapEmailTemplate(content)
@@ -203,7 +205,10 @@ export async function sendLeadConfirmationEmail(lead: any) {
 
 
 export async function sendUserConfirmationEmail(order: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !order.email) return { success: false, error: 'Missing credentials or email' };
+    const smtpUser = cleanEnvVar(process.env.SMTP_USER);
+    const smtpPass = cleanEnvVar(process.env.SMTP_PASS);
+    
+    if (!smtpUser || !smtpPass || !order.email) return { success: false, error: 'Missing credentials or email' };
 
     try {
         // DETAILED PREMIUM RECEIPT
@@ -272,7 +277,7 @@ export async function sendUserConfirmationEmail(order: any) {
         `;
 
         const mailOptions: any = {
-            from: `"UrbanClay Success" <${process.env.SMTP_USER}>`,
+            from: `"UrbanClay Success" <${smtpUser}>`,
             to: order.email,
             subject: subject,
             html: wrapEmailTemplate(content),
@@ -292,7 +297,10 @@ export async function sendUserConfirmationEmail(order: any) {
 }
 
 export async function sendSampleShippedEmail(lead: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) return { success: false, error: 'Missing credentials or email' };
+    const smtpUser = cleanEnvVar(process.env.SMTP_USER);
+    const smtpPass = cleanEnvVar(process.env.SMTP_PASS);
+    
+    if (!smtpUser || !smtpPass || !lead.email) return { success: false, error: 'Missing credentials or email' };
 
     try {
         const trackingLink = getTrackingLink(lead.shippingInfo?.courier || '', lead.shippingInfo?.trackingNumber || '');
@@ -318,7 +326,7 @@ export async function sendSampleShippedEmail(lead: any) {
         `;
 
         const mailOptions = {
-            from: `"UrbanClay Logistics" <${process.env.SMTP_USER}>`,
+            from: `"UrbanClay Logistics" <${smtpUser}>`,
             to: lead.email,
             subject: `📦 Shipping Update: Your UrbanClay Samples`,
             html: wrapEmailTemplate(content)
@@ -333,7 +341,10 @@ export async function sendSampleShippedEmail(lead: any) {
 }
 
 export async function sendSampleFollowUpEmail(lead: any) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !lead.email) return { success: false, error: 'Missing credentials or email' };
+    const smtpUser = cleanEnvVar(process.env.SMTP_USER);
+    const smtpPass = cleanEnvVar(process.env.SMTP_PASS);
+    
+    if (!smtpUser || !smtpPass || !lead.email) return { success: false, error: 'Missing credentials or email' };
 
     try {
         const content = `
@@ -356,7 +367,7 @@ export async function sendSampleFollowUpEmail(lead: any) {
         `;
 
         const mailOptions = {
-            from: `"UrbanClay Support" <${process.env.SMTP_USER}>`,
+            from: `"UrbanClay Support" <${smtpUser}>`,
             to: lead.email,
             subject: `Regarding your samples | UrbanClay`,
             html: wrapEmailTemplate(content)
@@ -377,7 +388,10 @@ export async function sendSampleRequestAlert(data: {
     city?: string;
     address: string;
 }) {
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) return { success: false, error: 'Missing credentials' };
+    const smtpUser = cleanEnvVar(process.env.SMTP_USER);
+    const smtpPass = cleanEnvVar(process.env.SMTP_PASS);
+    
+    if (!smtpUser || !smtpPass) return { success: false, error: 'Missing credentials' };
 
     try {
         const content = `
@@ -404,8 +418,8 @@ export async function sendSampleRequestAlert(data: {
         `;
 
         const mailOptions = {
-            from: `"UrbanClay Auto-Bot" <${process.env.SMTP_USER}>`,
-            to: process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'urbanclay@claytile.in',
+            from: `"UrbanClay Auto-Bot" <${smtpUser}>`,
+            to: cleanEnvVar(process.env.ADMIN_EMAIL) || smtpUser || 'urbanclay@claytile.in',
             subject: `📦 Sample Kit Request: ${data.firmName || data.contact}`,
             html: wrapEmailTemplate(content)
         };

@@ -232,27 +232,12 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                                                <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Start with Popular Samples</h4>
-                                                <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                                                    {[
-                                                        { id: 'popular-1', name: 'Flexible Brick', color: '#b45a3c', type: 'cladding' },
-                                                        { id: 'popular-2', name: 'Terracotta Panel', color: '#8d4a31', type: 'facade' },
-                                                        { id: 'popular-3', name: 'Handmade Jali', color: '#c27d66', type: 'decorative' }
-                                                    ].map(item => (
-                                                        <button
-                                                            key={item.id}
-                                                            onClick={() => {
-                                                                addToBox({ id: item.id, name: item.name, color: item.color, texture: '' });
-                                                            }}
-                                                            className="p-3 bg-white rounded-xl border border-gray-100 shadow-sm text-left hover:border-[var(--terracotta)] transition-all group"
-                                                        >
-                                                            <div className="w-8 h-8 rounded-lg mb-2 opacity-80 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: item.color }} />
-                                                            <p className="text-[10px] font-bold text-gray-800">{item.name}</p>
-                                                            <p className="text-[8px] text-gray-400 uppercase tracking-tighter mt-0.5">+ Add to Tray</p>
-                                                        </button>
-                                                    ))}
+                                            <div className="mb-10 text-center py-6 border-y border-gray-50">
+                                                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-50 text-gray-300 mb-4 ring-1 ring-gray-100">
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
                                                 </div>
+                                                <p className="text-sm font-medium text-gray-500 mb-1">Your sample tray is empty</p>
+                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest max-w-[200px] mx-auto leading-relaxed">Add up to 5 samples to your selection</p>
                                             </div>
                                         )}
 

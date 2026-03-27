@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 
 const FootprintTracker = dynamic(() => import("@/components/FootprintTracker"), { ssr: false });
@@ -12,6 +13,13 @@ const SmoothScroll = dynamic(() => import("@/components/SmoothScroll"), { ssr: f
 const SplashLoader = dynamic(() => import("@/components/SplashLoader"), { ssr: false });
 
 export default function GlobalClientFeatures() {
+    const pathname = usePathname();
+    const isStudio = pathname?.startsWith('/studio');
+
+    // Bypass ALL global UI features if in Sanity Studio to maximize performance
+    // and prevent collisions with Studio's internal scrolling and UI logic.
+    if (isStudio) return null;
+
     return (
         <>
             <SmoothScroll />

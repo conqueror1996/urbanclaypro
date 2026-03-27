@@ -125,12 +125,10 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
 
     // Image Handling - Show only current variant/product gallery, not all variants
-    // If main product has no images, auto-select first variant as fallback
+    // ALWAYS auto-select first variant as fallback to hide the generic 'Range' image
     React.useEffect(() => {
-        const mainProductImages = [product.imageUrl, ...(product.images?.map(i => typeof i === "string" ? i : i.url) || [])].filter(Boolean);
-
-        // If no variant selected AND no main product images, auto-select first variant
-        if (!selectedVariant && mainProductImages.length === 0 && product.variants && product.variants.length > 0) {
+        // If no variant selected through URL or state
+        if (!selectedVariant && product.variants && product.variants.length > 0) {
             const firstVariant = product.variants[0];
             if (firstVariant.imageUrl) {
                 setSelectedVariant(firstVariant);
@@ -140,7 +138,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
     const galleryImages = selectedVariant
         ? [selectedVariant.imageUrl, ...(selectedVariant.gallery || [])].filter(Boolean) as string[]
-        : [product.imageUrl, ...(product.images?.map(i => typeof i === "string" ? i : i.url) || [])].filter(Boolean) as string[];
+        : (product.images?.map(i => typeof i === "string" ? i : i.url) || []).filter(Boolean) as string[];
 
     const displayImages = galleryImages.length > 0 ? galleryImages : [''];
     const activeImage = displayImages[activeImageIndex] || displayImages[0];

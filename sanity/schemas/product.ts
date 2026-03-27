@@ -151,11 +151,17 @@ export default defineType({
                     name: 'variant',
                     type: 'object',
                     title: 'Variant',
+                    fieldsets: [
+                        { name: 'general', title: 'General Information', options: { columns: 2 } },
+                        { name: 'visuals', title: 'Visual Assets', options: { collapsible: true, collapsed: false } },
+                        { name: 'metadata', title: 'Metadata & Badges', options: { collapsible: true, collapsed: true } },
+                    ],
                     fields: [
                         {
                             name: 'name',
                             title: 'Variant Name',
                             type: 'string',
+                            fieldset: 'general',
                             validation: (rule) => rule.required(),
                         },
                         {
@@ -163,11 +169,13 @@ export default defineType({
                             title: 'Family Group',
                             description: 'Optional: Group variants together (e.g. "Rustic Red Series")',
                             type: 'string',
+                            fieldset: 'general',
                         },
                         {
                             name: 'color',
                             title: 'Color Family',
                             type: 'string',
+                            fieldset: 'general',
                             options: {
                                 list: [
                                     { title: 'Red / Terracotta', value: 'Red' },
@@ -183,6 +191,7 @@ export default defineType({
                             name: 'slug',
                             title: 'Variant Slug',
                             type: 'slug',
+                            fieldset: 'general',
                             options: {
                                 source: (doc, options) => {
                                     const parent = options.parent as { name?: string };
@@ -193,8 +202,9 @@ export default defineType({
                         },
                         {
                             name: 'image',
-                            title: 'Variant Image',
+                            title: 'Main Variant Image',
                             type: 'image',
+                            fieldset: 'visuals',
                             options: { hotspot: true },
                             fields: [
                                 {
@@ -206,8 +216,9 @@ export default defineType({
                         },
                         {
                             name: 'gallery',
-                            title: 'Additional Images',
+                            title: 'Additional Gallery Images',
                             type: 'array',
+                            fieldset: 'visuals',
                             of: [{ type: 'image', options: { hotspot: true } }]
                         },
                         {
@@ -215,6 +226,7 @@ export default defineType({
                             title: 'Badge',
                             description: 'Add a badge like "New", "Premium", or "Hot"',
                             type: 'string',
+                            fieldset: 'metadata',
                             options: {
                                 list: [
                                     { title: 'None', value: '' },
@@ -230,12 +242,14 @@ export default defineType({
                             title: 'Variant Specific SEO',
                             description: 'Override the default SEO for this specific color/finish',
                             type: 'seo',
+                            fieldset: 'metadata',
                         },
                         {
                             name: 'variantSpecs',
                             title: 'Variant Specifications',
                             description: 'Specific dimensions/weight for this variant (overrides main product specs)',
                             type: 'object',
+                            fieldset: 'metadata',
                             options: { collapsible: true, collapsed: true },
                             fields: [
                                 { name: 'dimensions', title: 'Overall Dimensions', type: 'string', description: 'e.g. 9.80 x 4.41 x 3.15 inches' },
