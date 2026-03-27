@@ -22,7 +22,7 @@ interface SampleModalProps {
 
 export default function SampleModal({ isOpen, onClose, initialRequirements, initialData }: SampleModalProps) {
     const [viewMode, setViewMode] = useState<'review' | 'consult'>(initialData ? 'consult' : 'review');
-    const { box, removeFromBox } = useSampleBox();
+    const { box, removeFromBox, addToBox } = useSampleBox();
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [notification, setNotification] = useState<string | null>(null);
 
@@ -243,7 +243,6 @@ export default function SampleModal({ isOpen, onClose, initialRequirements, init
                                                         <button
                                                             key={item.id}
                                                             onClick={() => {
-                                                                const { addToBox } = require('@/context/SampleContext').useSampleBox();
                                                                 addToBox({ id: item.id, name: item.name, color: item.color, texture: '' });
                                                             }}
                                                             className="p-3 bg-white rounded-xl border border-gray-100 shadow-sm text-left hover:border-[var(--terracotta)] transition-all group"
