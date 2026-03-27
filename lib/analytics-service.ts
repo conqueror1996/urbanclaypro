@@ -163,3 +163,31 @@ export async function getTrafficData(): Promise<TrafficReport> {
         };
     }
 }
+
+export async function clearRecentErrors(): Promise<{ success: boolean }> {
+    try {
+        const today = new Date();
+        const offset = 5.5 * 60 * 60 * 1000;
+        const istTime = new Date(today.getTime() + offset);
+        istTime.setUTCHours(0, 0, 0, 0);
+        const todayStart = new Date(istTime.getTime() - offset).toISOString();
+
+        // Find footprints from today with errors
+        const query = `*[_type == "footprint" && defined(errors) && timestamp >= $todayStart]._id`;
+        const ids = await client.fetch(query, { todayStart });
+
+        if (ids.length === 0) return { success: true };
+
+        // Transactionally clear error fields
+        const transaction = client.transaction();
+        ids.forEach((id: string) => {
+            transaction.patch(id, p => p.unset(['errors']));
+        });
+
+        await transaction.commit();
+        return { success: true };
+    } catch (e) {
+        console.error('Failed to clear errors:', e);
+        return { success: false };
+    }
+}

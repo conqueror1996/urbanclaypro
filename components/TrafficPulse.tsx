@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { fetchTrafficStats } from '@/app/actions/analytics';
+import { fetchTrafficStats, clearAnalyticsLogs } from '@/app/actions/analytics';
 import { TrafficReport } from '@/lib/analytics-service';
 
 export default function TrafficPulse() {
@@ -22,6 +22,22 @@ export default function TrafficPulse() {
         };
         load();
     }, []);
+
+    const handleClearLogs = async () => {
+        if (!confirm('Resolve all recent system errors?')) return;
+        setLoading(true);
+        try {
+            const res = await clearAnalyticsLogs();
+            if (res.success) {
+                const data = await fetchTrafficStats();
+                setStats(data);
+            }
+        } catch (error) {
+            console.error("Failed to clear logs", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const MetricCard = ({ label, value, delay, highlight = false, subtext }: { label: string, value: number | string, delay: number, highlight?: boolean, subtext?: string }) => (
         <motion.div
@@ -225,11 +241,20 @@ export default function TrafficPulse() {
 
             {/* Recent Errors Log (Only show if errors exist) */}
             {stats.recentErrors && stats.recentErrors.length > 0 && (
-                <div className="mt-6 p-4 bg-red-50 border border-red-100 rounded-xl">
-                    <h4 className="text-sm font-bold text-red-800 mb-2">Recent System Errors</h4>
-                    <ul className="space-y-1">
+                <div className="mt-6 p-4 bg-red-50 border border-red-100 rounded-xl relative overflow-hidden">
+                    <div className="flex justify-between items-center mb-4">
+                        <h4 className="text-sm font-bold text-red-800">Recent System Errors</h4>
+                        <button 
+                            onClick={handleClearLogs}
+                            className="text-[10px] font-bold uppercase tracking-widest text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-full transition-colors flex items-center gap-2 border border-red-200"
+                        >
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                            Resolve All
+                        </button>
+                    </div>
+                    <ul className="space-y-1 relative z-10">
                         {stats.recentErrors.map((err: string, i: number) => (
-                            <li key={i} className="text-xs text-red-600 font-mono break-all">• {err}</li>
+                            <li key={i} className="text-xs text-red-600 font-mono break-all opacity-80 select-all tracking-tighter">• {err}</li>
                         ))}
                     </ul>
                 </div>
