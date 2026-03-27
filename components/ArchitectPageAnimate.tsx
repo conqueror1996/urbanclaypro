@@ -69,8 +69,8 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
             <AccessModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
             <SampleModal isOpen={sampleModalOpen} onClose={() => setSampleModalOpen(false)} />
 
-            {/* --- HERO SECTION --- */}
-            <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden py-32">
+            {/* --- HERO SECTION: Standardized Layout --- */}
+            <section className="relative overflow-hidden">
                 {/* Background */}
                 <motion.div
                     style={{ y: heroY, opacity: heroOpacity }}
@@ -85,41 +85,49 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                     />
                 </motion.div>
 
-                <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                        <div className="flex justify-center mb-8 opacity-80 text-white">
-                            <Breadcrumbs items={[{ name: 'Architects', href: '/architects' }]} />
-                        </div>
-                        <span className="text-[var(--terracotta)] font-medium tracking-[0.2em] uppercase text-xs mb-6 block">
-                            UrbanClay Studio
-                        </span>
-                        <h1 className="text-5xl md:text-8xl font-serif text-white leading-[1.1] mb-8 drop-shadow-md">
-                            Designed for <br />
-                            <span className="italic font-light text-white">Visionaries</span>
-                        </h1>
-                        <p className="text-lg md:text-xl text-white max-w-2xl mx-auto leading-relaxed font-light mb-12 drop-shadow-md">
-                            A curated digital atelier for architects. Access high-fidelity assets, technical specifications, and bespoke manufacturing services.
-                        </p>
+                <div className="max-w-7xl mx-auto px-6 pt-[140px] pb-16 md:pt-[192px] lg:pt-[246px] lg:pb-32 relative z-50">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                            className="relative z-[60]"
+                        >
+                            <div className="flex justify-center mb-8 opacity-80 text-white">
+                                <Breadcrumbs items={[{ name: 'Architects', href: '/architects' }]} />
+                            </div>
+                            
+                            <div className="flex items-center justify-center gap-3 mb-6">
+                                <span className="h-[1px] w-6 bg-[var(--terracotta)]" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">UrbanClay Studio</span>
+                                <span className="h-[1px] w-6 bg-[var(--terracotta)]" />
+                            </div>
 
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                            <button
-                                onClick={() => setModalOpen(true)}
-                                className="px-8 py-4 bg-[var(--terracotta)] text-white rounded-full font-bold uppercase tracking-wider text-sm hover:bg-[#a85638] transition-colors min-w-[200px]"
-                            >
-                                Access Library
-                            </button>
-                            <button
-                                onClick={() => setSampleModalOpen(true)}
-                                className="px-8 py-4 bg-white/10 border border-white/20 text-[#EBE5E0] rounded-full font-bold uppercase tracking-wider text-sm hover:bg-white/20 transition-colors min-w-[200px] backdrop-blur-sm"
-                            >
-                                Request Samples
-                            </button>
-                        </div>
-                    </motion.div>
+                            <h1 className="text-5xl md:text-8xl font-serif !text-white tracking-tighter leading-[1] mb-8 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
+                                Designed for <br />
+                                <span className="italic font-light !text-white">Visionaries</span>
+                            </h1>
+
+                            <p className="text-lg md:text-[22px] font-light !text-white leading-snug max-w-2xl mx-auto mb-12 drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+                                A curated digital atelier for architects. Access high-fidelity assets, technical specifications, and bespoke manufacturing services.
+                            </p>
+
+                            <div className="mt-8 md:mt-10 flex flex-col md:flex-row items-center justify-center gap-4">
+                                <button
+                                    onClick={() => setModalOpen(true)}
+                                    className="bg-[var(--terracotta)] text-white h-[60px] px-10 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center w-full sm:w-auto"
+                                >
+                                    Access Library
+                                </button>
+                                <button
+                                    onClick={() => setSampleModalOpen(true)}
+                                    className="bg-transparent text-[#EBE5E0] h-[60px] px-10 rounded-full border border-white/20 font-semibold text-base hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center font-serif italic w-full sm:w-auto backdrop-blur-sm"
+                                >
+                                    Request Samples
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -202,24 +210,24 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
 
 
             {/* --- STUDIO SERVICES / WHY SPECIFY --- */}
-            <section className="py-32 bg-[#e2dad3] text-[#1a1512] rounded-t-[3rem] md:rounded-t-[5rem] relative overflow-hidden">
+            <section className="py-16 md:py-32 bg-[#e2dad3] text-[#1a1512] rounded-t-[3rem] md:rounded-t-[5rem] relative overflow-hidden">
                 {/* Grain Overlay */}
                 <div className="absolute inset-0 opacity-[0.15] mix-blend-multiply pointer-events-none"
                     style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
                 />
 
                 <div className="max-w-7xl mx-auto px-6 relative z-10">
-                    <div className="grid md:grid-cols-2 gap-20 items-center">
+                    <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
                         <div>
-                            <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-xs mb-6 block">Engineered for Excellence</span>
-                            <h2 className="text-4xl md:text-6xl font-serif mb-8 leading-tight">
+                            <span className="text-[var(--terracotta)] font-bold tracking-widest uppercase text-[10px] mb-4 block">Engineered for Excellence</span>
+                            <h2 className="text-3xl md:text-6xl font-serif mb-4 md:mb-8 leading-tight">
                                 Performance <br /> & Precision
                             </h2>
-                            <p className="text-lg text-[#5d554f] mb-12 leading-relaxed">
+                            <p className="text-lg text-[#5d554f] mb-8 md:mb-12 leading-relaxed">
                                 We don’t just manufacture clay bricks — we craft solutions built for performance, precision, and long-term durability.
                             </p>
 
-                            <div className="space-y-8">
+                            <div className="space-y-4 md:space-y-6">
                                 <Feature
                                     title="Custom-Made to Fit Your Design"
                                     desc="Every project is different. We create custom brick sizes, shapes, and patterns based on your exact drawings, so you don’t have to compromise your design vision."
@@ -236,9 +244,9 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                         </div>
 
 
-                        <div className="relative pl-10 pt-10">
+                        <div className="relative pl-0 md:pl-10 pt-8 md:pt-10">
                             {/* Main Detail Image with Parallax-like feel */}
-                            <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl relative group">
+                            <div className="aspect-square md:aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl relative group">
                                 <Image
                                     src="/images/bespoke-precision.png"
                                     alt="Precision Engineering - Caliper on Clay"

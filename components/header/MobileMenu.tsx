@@ -77,7 +77,7 @@ export default function MobileMenu({
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="fixed left-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-[var(--background)] shadow-2xl md:hidden z-[60] overflow-y-auto overscroll-contain border-r border-[var(--line)]"
+                className="fixed left-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-[var(--background)] shadow-2xl md:hidden z-[999] overflow-y-auto overscroll-contain border-r border-[var(--line)]"
                 data-lenis-prevent
             >
                 <div className="p-6 flex flex-col gap-6">
@@ -96,8 +96,11 @@ export default function MobileMenu({
 
                     <nav className="flex flex-col gap-2">
                         <div className="py-2">
-                            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-600 mb-4">Products</h4>
-                            <div className="pl-2 flex flex-col gap-2 border-l-2 border-gray-100">
+                            <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 flex items-center gap-2">
+                                <span className="w-4 h-px bg-gray-200" />
+                                Products
+                            </h4>
+                            <div className="pl-2 flex flex-col gap-1 border-l border-gray-100">
                                 {PRODUCT_CATEGORIES.map((cat, idx) => {
                                     const isActive = pathname === cat.href || (cat.href.includes('?') && pathname === cat.href.split('?')[0] && searchParams.toString() === cat.href.split('?')[1]);
                                     return (
@@ -105,21 +108,22 @@ export default function MobileMenu({
                                             key={idx}
                                             href={cat.href}
                                             onClick={onClose}
-                                            className={`min-h-[48px] py-3 flex items-center justify-between group active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2 ${isActive ? 'bg-gray-50' : ''}`}
+                                            className={`py-3.5 flex flex-col group active:bg-gray-50 transition-colors rounded-lg px-2 -mx-2 mb-1 ${isActive ? 'bg-gray-50' : ''}`}
                                         >
-                                            <span className={`text-base font-serif transition-colors ${isActive ? 'text-[var(--terracotta)] font-bold' : 'text-[#2A1E16] group-hover:text-[var(--terracotta)]'}`}>
+                                            <span className={`text-[13px] font-bold uppercase tracking-wider transition-colors leading-none mb-1.5 ${isActive ? 'text-[var(--terracotta)]' : 'text-[#2A1E16]'}`}>
                                                 {cat.title}
                                             </span>
-                                            <span className="text-[10px] uppercase tracking-wider text-gray-600">{cat.subtitle}</span>
+                                            <span className="text-[9px] uppercase tracking-[0.1em] text-gray-400 font-medium leading-none">{cat.subtitle}</span>
                                         </Link>
                                     );
                                 })}
                                 <Link
                                     href="/products"
                                     onClick={onClose}
-                                    className="mt-2 min-h-[44px] py-3 text-xs font-bold uppercase tracking-widest text-[var(--terracotta)] flex items-center gap-2"
+                                    className="mt-4 py-4 text-[11px] font-black uppercase tracking-[0.2em] text-[var(--terracotta)] flex items-center gap-2 group border-t border-gray-50"
                                 >
-                                    View All Products →
+                                    View All Products
+                                    <span className="group-hover:translate-x-1 transition-transform">→</span>
                                 </Link>
                             </div>
                         </div>

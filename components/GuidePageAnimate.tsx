@@ -54,8 +54,8 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
     return (
         <main className="bg-[var(--background)] text-[var(--foreground)] min-h-screen selection:bg-[var(--terracotta)] selection:text-white">
 
-            {/* --- HERO SECTION --- */}
-            <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+            {/* --- HERO SECTION: Standardized Layout --- */}
+            <section className="relative overflow-hidden">
                 <motion.div
                     style={{ y: heroY, opacity: heroOpacity }}
                     className="absolute inset-0 z-0"
@@ -64,39 +64,57 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                         src={heroImage || defaultHeroImage}
                         alt="Selection Guide Hero"
                         fill
-                        className="object-cover object-center"
+                        className="object-cover object-center brightness-[0.4]"
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-[#1a1512]/30 via-transparent to-[#1a1512]" />
                 </motion.div>
 
-                <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                    >
-                        <div className="flex justify-center mb-6 opacity-80 text-white">
-                            <Breadcrumbs items={[{ name: 'Selection Guide', href: '/guide' }]} />
-                        </div>
-                        <span className="text-[var(--terracotta)] font-bold tracking-[0.2em] uppercase text-xs mb-6 block drop-shadow-sm">
-                            Curator's Guide
-                        </span>
-                        <h1 className="text-4xl md:text-6xl font-serif text-white mb-8 leading-tight drop-shadow-md">
-                            Choose the Right Clay Material <br /><span className="italic font-light text-white">Without Guesswork</span>
-                        </h1>
-                        <p className="text-lg md:text-xl text-white max-w-2xl mx-auto leading-relaxed font-light mb-12 drop-shadow-md">
-                            Whether you're designing a modern facade, restoring heritage, or building for durability — this guide helps you select the right clay system based on performance, aesthetics, and use-case.
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 font-sans">
-                            <Link href="#comparison" className="px-8 py-4 flex items-center justify-center bg-[var(--terracotta)] text-white rounded-full font-bold tracking-[0.1em] uppercase text-sm hover:bg-[#a85638] transition-colors w-full sm:w-auto shadow-[0_4px_14px_0_rgba(202,80,45,0.39)] hover:shadow-[0_6px_20px_rgba(202,80,45,0.23)]">
-                                Compare Materials
-                            </Link>
-                            <a href="https://wa.me/918080081951" target="_blank" rel="noopener noreferrer" className="px-8 py-4 flex items-center justify-center gap-2 border border-white/30 text-white rounded-full font-bold tracking-[0.1em] uppercase text-sm hover:bg-white/10 transition-colors w-full sm:w-auto backdrop-blur-sm">
-                                Talk to an Expert
-                            </a>
-                        </div>
-                    </motion.div>
+                <div className="max-w-7xl mx-auto px-6 pt-[140px] pb-16 md:pt-[192px] lg:pt-[246px] lg:pb-32 relative z-50">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="relative z-[60]"
+                        >
+                            <div className="flex justify-center mb-8 opacity-80 text-white">
+                                <Breadcrumbs items={[{ name: 'Selection Guide', href: '/guide' }]} />
+                            </div>
+                            
+                            <div className="flex items-center justify-center gap-3 mb-6">
+                                <span className="h-[1px] w-6 bg-[var(--terracotta)]" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Curator's Guide</span>
+                                <span className="h-[1px] w-6 bg-[var(--terracotta)]" />
+                            </div>
+
+                            <h1 className="text-4xl md:text-8xl font-serif !text-white tracking-tighter leading-[1] mb-8 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
+                                Choose the Right Material <br />
+                                <span className="italic font-light !text-white">Without Guesswork</span>
+                            </h1>
+
+                            <p className="text-lg md:text-[22px] font-light !text-white leading-snug max-w-2xl mx-auto mb-12 drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+                                Whether you&apos;re designing a modern facade, restoring heritage, or building for durability — this guide helps you select the right clay system based on performance, aesthetics, and use-case.
+                            </p>
+
+                            <div className="mt-8 md:mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
+                                <Link 
+                                    href="#comparison" 
+                                    className="bg-[var(--terracotta)] text-white h-[60px] px-10 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center w-full sm:w-auto"
+                                >
+                                    Compare Materials
+                                </Link>
+                                <a 
+                                    href="https://wa.me/918080081951" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="bg-transparent text-white h-[60px] px-10 rounded-full border border-white/20 font-semibold text-base hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center font-serif italic w-full sm:w-auto backdrop-blur-sm"
+                                >
+                                    Talk to an Expert
+                                </a>
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -313,7 +331,7 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                             </div>
 
                             <div className="mt-12 bg-black/5 rounded-xl p-6 md:p-8 border border-black/5 text-center">
-                                <p className="text-[#5d554f] font-medium mb-8">Still unsure? Don't risk a wrong material choice.</p>
+                                <p className="text-[#5d554f] font-medium mb-8">Still unsure? Don&apos;t risk a wrong material choice.</p>
                                 <div className="flex flex-col gap-4 font-sans">
                                     <Link href="/project-lab" className="px-6 py-4 flex items-center justify-center bg-[#1a1512] text-white rounded-full font-bold text-sm uppercase tracking-[0.1em] hover:bg-[var(--terracotta)] transition-colors w-full">
                                         Get Sample Kit
