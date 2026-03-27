@@ -22,6 +22,11 @@ export default async function HandmadeBrickTilesPillar() {
         <PillarPageTemplate
             title="Handmade Brick Tiles"
             subtitle="Artisanal Character In Every Piece"
+            heroTitleOverride={
+                <>
+                    Enduring <span className="text-[var(--terracotta)] italic">Strength</span>. <br className="hidden md:block" /> Timeless Character.
+                </>
+            }
             description="Embrace the imperfect beauty of traditional craftsmanship. Our handmade brick tiles are individually moulded by skilled artisans, meaning no two tiles are exactly identical. The result is a facade rich with natural shadow, texture, and soul."
             heroImage={heroImage}
             specifierToolkitImage={specifierToolkitImage}

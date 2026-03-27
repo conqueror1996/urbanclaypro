@@ -22,6 +22,11 @@ export default async function ExposedBrickPillar() {
         <PillarPageTemplate
             title="Exposed Brick"
             subtitle="The Architecture of Authenticity"
+            heroTitleOverride={
+                <>
+                    Built Once. <br className="hidden md:block" /> Built <span className="text-[var(--terracotta)] italic">Right</span>.
+                </>
+            }
             description="Nothing matches the warmth, character, and timeless appeal of an authentic exposed brick wall. Our structural wirecut and facing bricks are naturally resistant to fading, boasting near-zero efflorescence and unparalleled compressive strength."
             heroImage={heroImage}
             specifierToolkitImage={specifierToolkitImage}
