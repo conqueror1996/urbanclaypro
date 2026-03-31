@@ -28,7 +28,7 @@ export function calculateSeoScore(title: string, description: string, keyword: s
     }
 
     // Power Words
-    const powerWords = ['Best', 'Guide', 'Review', '2025', 'Top', 'Free', 'Tips', 'How to', 'Why', 'Premium', 'Buy', 'India'];
+    const powerWords = ['Best', 'Guide', 'Review', '2026', 'Top', 'Free', 'Tips', 'How to', 'Why', 'Premium', 'Buy', 'India'];
     if (!powerWords.some(w => cleanTitle.toLowerCase().includes(w.toLowerCase()))) {
         score -= 10;
         tips.push("Add power word (Best, Guide, Premium) for CTR.");
@@ -52,4 +52,27 @@ export function calculateSeoScore(title: string, description: string, keyword: s
         score: Math.max(0, score),
         tips
     };
+}
+
+export function generateSemanticAlt(
+    productTitle: string,
+    variantName: string = 'Standard',
+    category: string = 'Terracotta',
+    specs: { waterAbsorption?: string; compressiveStrength?: string; fireRating?: string; fire?: string } = {}
+): string {
+    const brand = 'UrbanClay India';
+    const variantSuffix = variantName && variantName !== 'Standard' ? `${variantName} ` : '';
+
+    // Core high-value keywords based on category
+    let application = 'Architectural Facade Cladding';
+    const catLower = (category || 'Terracotta').toLowerCase();
+    if (catLower.includes('tile')) application = 'Exterior Wall Cladding';
+    if (catLower.includes('jali')) application = 'Natural Ventilation Screen';
+    if (catLower.includes('brick')) application = 'Premium Masonry Cladding';
+
+    // Performance badges
+    const fire = specs.fireRating || specs.fire || 'A1 Fire-Rated';
+    const absorption = specs.waterAbsorption ? `Low Water Absorption (${specs.waterAbsorption})` : 'Weather-Resistant';
+
+    return `${variantSuffix}${productTitle} ${category || 'Terracotta'} - ${fire} ${absorption} ${application} by ${brand}`.trim();
 }

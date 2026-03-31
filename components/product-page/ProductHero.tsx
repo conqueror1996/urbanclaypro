@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
+import { generateSemanticAlt } from '@/lib/seo-utils';
 
 interface ProductHeroProps {
     product: Product;
@@ -63,7 +64,12 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                                 {activeImage ? (
                                     <Image
                                         src={activeImage}
-                                        alt={product.title}
+                                        alt={generateSemanticAlt(
+                                            product.title, 
+                                            activeVariant?.name || 'Standard', 
+                                            product.category?.title || product.tag,
+                                            product.specs
+                                        )}
                                         fill
                                         style={{ objectFit: 'contain' }}
                                         priority
@@ -163,7 +169,12 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                                                 {v.imageUrl ? (
                                                     <Image
                                                         src={v.imageUrl}
-                                                        alt={v.name}
+                                                        alt={generateSemanticAlt(
+                                                            product.title, 
+                                                            v.name, 
+                                                            product.category?.title || product.tag,
+                                                            product.specs
+                                                        )}
                                                         fill
                                                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                                                     />

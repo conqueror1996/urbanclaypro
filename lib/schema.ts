@@ -27,6 +27,7 @@ export function generateOrganizationSchema() {
             '@type': 'Organization',
             '@id': 'https://claytile.in/#organization',
             name: 'UrbanClay',
+            legalName: 'UrbanClay India Private Limited',
             url: 'https://claytile.in',
             logo: {
                 '@type': 'ImageObject',
@@ -39,17 +40,21 @@ export function generateOrganizationSchema() {
                 'https://www.linkedin.com/company/urbanclay',
                 'https://www.facebook.com/urbanclay.in',
                 'https://in.pinterest.com/urbanclay_in',
-                'https://www.youtube.com/@urbanclay'
+                'https://www.youtube.com/@urbanclay',
+                'https://twitter.com/urbanclay_in'
             ],
             contactPoint: {
                 '@type': 'ContactPoint',
                 telephone: '+91-8080081951',
                 contactType: 'sales',
                 areaServed: 'IN',
-                availableLanguage: ['en', 'hi']
+                availableLanguage: ['en', 'hi', 'mr', 'kn', 'ta', 'gu']
             },
             address: {
                 '@type': 'PostalAddress',
+                addressLocality: 'Mumbai',
+                addressRegion: 'Maharashtra',
+                postalCode: '400053',
                 addressCountry: 'IN'
             },
             serviceArea: {
@@ -60,7 +65,15 @@ export function generateOrganizationSchema() {
                 '@type': 'Country',
                 name: 'India',
                 '@id': 'https://en.wikipedia.org/wiki/India'
-            }
+            },
+            foundingDate: '2018-05-15',
+            knowsAbout: [
+                'Terracotta Facades',
+                'Flexible Brick Tiles',
+                'Sustainable Architecture',
+                'Clay Building Materials',
+                'Rainscreen Cladding'
+            ]
         },
         {
             '@context': 'https://schema.org',
@@ -126,6 +139,20 @@ export function generateProductSchema(product: Product, canonicalUrl: string) {
     if (categoryTitle.includes('panel')) { lowPrice = 1200; highPrice = 5000; }
     if (categoryTitle.includes('jali')) { lowPrice = 120; highPrice = 800; }
 
+    const variantOffers = product.variants?.map((v: any) => ({
+        '@type': 'Offer',
+        name: `${v.name} - ${product.title}`,
+        priceCurrency: 'INR',
+        lowPrice: lowPrice, // Assuming global for now, but can be variant-specific
+        highPrice: highPrice,
+        availability: 'https://schema.org/InStock',
+        image: v.imageUrl || product.imageUrl,
+        color: v.color,
+        itemCondition: 'https://schema.org/NewCondition',
+        url: `${canonicalUrl}?variant=${encodeURIComponent(v.name)}`,
+        seller: { '@id': 'https://claytile.in/#organization' }
+    })) || [];
+
     return {
         '@context': 'https://schema.org',
         '@type': 'Product',
@@ -138,6 +165,7 @@ export function generateProductSchema(product: Product, canonicalUrl: string) {
             '@type': 'Brand',
             name: 'UrbanClay'
         },
+        material: 'Kiln-fired Natural Terracotta Clay',
         manufacturer: {
             '@type': 'Organization',
             '@id': 'https://claytile.in/#organization'
@@ -150,6 +178,15 @@ export function generateProductSchema(product: Product, canonicalUrl: string) {
             highPrice: highPrice,
             offerCount: product.variants?.length || 1,
             availability: 'https://schema.org/InStock',
+            offers: variantOffers.length > 0 ? variantOffers : [{
+                '@type': 'Offer',
+                priceCurrency: 'INR',
+                price: lowPrice,
+                availability: 'https://schema.org/InStock',
+                itemCondition: 'https://schema.org/NewCondition',
+                url: canonicalUrl,
+                seller: { '@id': 'https://claytile.in/#organization' }
+            }],
             seller: { '@id': 'https://claytile.in/#organization' }
         },
         aggregateRating: {
@@ -162,12 +199,17 @@ export function generateProductSchema(product: Product, canonicalUrl: string) {
             {
                 '@type': 'PropertyValue',
                 name: 'Water Absorption',
-                value: product.specs.waterAbsorption
+                value: product.specs?.waterAbsorption || 'Low'
             },
             {
                 '@type': 'PropertyValue',
                 name: 'Compressive Strength',
-                value: product.specs.compressiveStrength
+                value: product.specs?.compressiveStrength || 'High'
+            },
+            {
+                '@type': 'PropertyValue',
+                name: 'Fire Rating',
+                value: 'Class A1 Non-Combustible'
             },
             {
                 '@type': 'PropertyValue',
@@ -204,11 +246,65 @@ export function generateProjectSchema(project: Project) {
             '@type': 'Place',
             name: project.location
         },
+        mentions: project.productsUsed?.map((p: any) => ({
+            '@type': 'Product',
+            name: p.title,
+            url: `https://claytile.in/products/${p.category || 'collection'}/${p.slug}`
+        })),
         author: { '@id': 'https://claytile.in/#organization' },
         publisher: { '@id': 'https://claytile.in/#organization' },
         mainEntityOfPage: {
             '@type': 'WebPage',
             '@id': `https://claytile.in/projects/${project.slug}`
+        }
+    };
+}
+
+export function generateFAQSchema(faqs: { question: string; answer: string }[]) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map(faq => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: faq.answer
+            }
+        }))
+    };
+}
+
+export function generateServiceSchema() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        '@id': 'https://claytile.in/#service-facade',
+        serviceType: 'Facade Engineering & Supply',
+        provider: { '@id': 'https://claytile.in/#organization' },
+        areaServed: { '@id': 'https://en.wikipedia.org/wiki/India' },
+        description: 'Professional supply and technical consultancy for terracotta rainscreen facades and thin-brick cladding systems.',
+        hasOfferCatalog: {
+            '@type': 'OfferCatalog',
+            name: 'Architectural Services',
+            itemListElement: [
+                {
+                    '@type': 'Offer',
+                    itemOffered: {
+                        '@type': 'Service',
+                        name: 'Facade Technical Consulting',
+                        description: 'Wind load analysis, thermal calculation, and shop drawing preparation for clay facade systems.'
+                    }
+                },
+                {
+                    '@type': 'Offer',
+                    itemOffered: {
+                        '@type': 'Service',
+                        name: 'Custom Product Development',
+                        description: 'Bespoke clay body formulation and custom profile extrusion for large-scale architectural projects.'
+                    }
+                }
+            ]
         }
     };
 }

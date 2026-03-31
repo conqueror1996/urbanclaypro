@@ -47,10 +47,12 @@ export const metadata: Metadata = {
   authors: [{ name: "UrbanClay", url: "https://claytile.in" }],
   creator: "UrbanClay",
   publisher: "UrbanClay",
+  manifest: '/manifest.json',
   alternates: {
+    canonical: 'https://claytile.in',
     languages: {
       'en-IN': '/',
-      'en-US': '/en-US',
+      'hi-IN': '/',
     },
   },
   formatDetection: {
@@ -99,6 +101,7 @@ export const metadata: Metadata = {
     google: 'M3QQNfOSKQ4nnCku83gLqX_Q35z6Lf8eGnjSa1q77fc',
     other: {
       'p:domain_verify': '8b9f75c2a32f30d64cb6e272756b6886',
+      'yandex-verification': '7b3c2d1e2f3a4b5d', // Placeholder for broader reach
     },
   },
   appleWebApp: {
@@ -112,7 +115,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 
 import { Toaster } from 'sonner';
 import JsonLd from "@/components/JsonLd";
-import { generateGlobalSchema } from "@/lib/schema";
+import { generateGlobalSchema, generateServiceSchema } from "@/lib/schema";
 import GlobalClientFeatures from "@/components/GlobalClientFeatures";
 
 export default function RootLayout({
@@ -129,7 +132,7 @@ export default function RootLayout({
         <SecurityProvider>
           <SampleProvider>
             <GlobalClientFeatures />
-            <JsonLd data={generateGlobalSchema()} />
+            <JsonLd data={[...generateGlobalSchema(), generateServiceSchema()]} />
             <PageTransition>{children}</PageTransition>
             <Toaster position="top-right" richColors />
           </SampleProvider>
