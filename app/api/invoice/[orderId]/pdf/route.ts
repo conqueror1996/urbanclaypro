@@ -13,9 +13,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: Promise<any> }
+    context: { params: Promise<{ orderId: string }> }
 ) {
-    const { orderId } = await params;
+    const { orderId } = await context.params;
 
     try {
         const { success, order } = await getPaymentLinkDetails(orderId);
