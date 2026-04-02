@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/products',
         '/projects',
         '/our-story',
-        '/flexible-brick-tile',
+        '/flexible-brick-tiles',
         '/terracotta-panels',
         '/exposed-brick',
         '/handmade-brick-tiles',

@@ -9,9 +9,9 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Flexible Brick Tiles',
         subtitle: 'Ultra-Thin Cladding',
-        href: '/flexible-brick-tile',
+        href: '/flexible-brick-tiles',
         color: 'from-[#b45a3c] to-[#96472d]',
-        image: '/images/menu-exposed.jpg'
+        image: '/images/menu-flexible.jpg'
     },
     {
         title: 'Terracotta Panels',
@@ -25,21 +25,21 @@ const PRODUCT_CATEGORIES = [
         subtitle: 'Authentic Masonry',
         href: '/exposed-brick',
         color: 'from-[#d6cbb8] to-[#bfae96]',
-        image: '/images/menu-jaali.jpg'
+        image: '/images/menu-exposed.jpg'
     },
     {
         title: 'Handmade Brick Tiles',
         subtitle: 'Artisanal Beauty',
         href: '/handmade-brick-tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
-        image: '/images/menu-floor.jpg'
+        image: '/images/menu-handmade.jpg'
     },
     {
         title: 'Terracotta Jaali',
         subtitle: 'Breathable Screens',
         href: '/terracotta-jali',
         color: 'from-[#2A1E16] to-[#1a1512]',
-        image: '/images/menu-roof.jpg'
+        image: '/images/menu-jaali.jpg'
     }
 ];
 

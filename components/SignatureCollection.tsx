@@ -25,40 +25,51 @@ interface DisplayProduct {
 
 const SIGNATURE_CATEGORIES = [
     {
-        id: 'exposed-brick',
+        id: 'terracotta-panels',
         label: 'Facade Systems',
+        subtitle: 'Rainscreen Facades',
+        description: 'Large-format, precision-engineered terracotta facade systems designed for high-rise thermal efficiency and zero-failure longevity.',
+        match: (p: Product) => {
+            const title = p.title?.toLowerCase() || '';
+            const catSlug = p.category?.slug?.toLowerCase() || '';
+            return title.includes('panel') || title.includes('facade') || catSlug.includes('panel') || catSlug.includes('facade');
+        }
+    },
+    {
+        id: 'exposed-brick',
+        label: 'Exposed Brick',
         subtitle: 'Structural Masonry',
         description: 'High-precision full-depth clay bricks engineered for load-bearing and self-supporting facades with zero efflorescence.',
         match: (p: Product) => {
-            const isTile = p.category?.slug === 'brick-tile' || p.title.toLowerCase().includes('tile') || p.title.toLowerCase().includes('cladding');
-            if (isTile) return false;
-            return p.category?.slug === 'exposed-brick' || p.tag?.toLowerCase().includes('exposed') || p.title.toLowerCase().includes('exposed');
+            const title = p.title?.toLowerCase() || '';
+            const catSlug = p.category?.slug?.toLowerCase() || '';
+            const isFlex = title.includes('flexible') || catSlug.includes('flexible');
+            const isTile = title.includes('tile') || catSlug.includes('tile');
+            if (isFlex || isTile) return false;
+            return catSlug === 'exposed-brick' || catSlug === 'exposed-bricks' || title.includes('exposed');
         }
     },
     {
-        id: 'brick-tile',
-        label: 'Cladding Systems',
-        subtitle: 'Surface Veneers',
-        description: 'Industrial-grade clay tiles for high-performance wall cladding, offering the aesthetic of brick with the efficiency of a tile.',
+        id: 'flexible-brick-tiles',
+        label: 'Flexible Brick Tiles',
+        subtitle: 'Ultra-Thin Cladding',
+        description: 'Advanced 3mm bendable clay tiles that wrap around columns and curved facades with authentic brick texture and zero load.',
         match: (p: Product) => {
-            const isFloorOrRoof = p.category?.slug === 'floor-tile' || p.tag?.toLowerCase().includes('floor') || p.tag?.toLowerCase().includes('roof');
-            if (isFloorOrRoof) return false;
-            return p.category?.slug === 'brick-tile' || p.tag?.toLowerCase().includes('cladding') || p.tag?.toLowerCase().includes('tile') || p.title.toLowerCase().includes('veneer');
+            const title = p.title?.toLowerCase() || '';
+            const catSlug = p.category?.slug?.toLowerCase() || '';
+            return title.includes('flexible') || catSlug.includes('flexible');
         }
     },
     {
-        id: 'terracotta-jaali',
-        label: 'Ventilation Systems',
-        subtitle: 'Geometric Jaalis',
-        description: 'Modular terracotta jaali units designed for structural light-play, thermal regulation, and natural ventilation.',
-        match: (p: Product) => p.category?.slug === 'terracotta-jaali' || p.tag?.toLowerCase().includes('jaali') || p.title.toLowerCase().includes('jaali') || p.title.toLowerCase().includes('jali')
-    },
-    {
-        id: 'floor-tile',
-        label: 'Paving Systems',
-        subtitle: 'Natural Flooring',
-        description: 'High-density terracotta floor tiles engineered for slip-resistance and thermal comfort in heavy-traffic environments.',
-        match: (p: Product) => p.category?.slug === 'floor-tile' || p.tag?.toLowerCase().includes('floor') || p.title.toLowerCase().includes('floor')
+        id: 'handmade-brick-tiles',
+        label: 'Handmade Brick Tiles',
+        subtitle: 'Artisanal Cladding',
+        description: 'Individually hand-moulded brick veneers that capture the raw, organic beauty of traditional earth-fired ceramics.',
+        match: (p: Product) => {
+            const title = p.title?.toLowerCase() || '';
+            const catSlug = p.category?.slug?.toLowerCase() || '';
+            return title.includes('handmade') || catSlug.includes('handmade');
+        }
     }
 ];
 
@@ -288,10 +299,10 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
                             {/* View All - Bottom centered */}
                             <div className="mt-16 md:mt-24 text-center">
                                 <Link
-                                    href={`/products?category=${activeCategory.id}`}
+                                    href={`/${activeCategory.id}`}
                                     className="btn-link-dotted text-[10px] md:text-xs font-extrabold uppercase tracking-[0.2em]"
                                 >
-                                    View All {activeCategory.label}
+                                    Explore {activeCategory.label} Pillar
                                     <span>→</span>
                                 </Link>
                             </div>

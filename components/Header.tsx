@@ -16,7 +16,7 @@ const PRODUCT_CATEGORIES = [
     {
         title: 'Flexible Brick Tiles',
         subtitle: 'Ultra-Thin Cladding',
-        href: '/flexible-brick-tile',
+        href: '/flexible-brick-tiles',
         color: 'from-[#b45a3c] to-[#96472d]',
         image: '/images/flexible-brick-showcase.png'
     },
@@ -125,12 +125,12 @@ export default function Header({ hideAnnouncement = false }: { hideAnnouncement?
                                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
                                 className="w-full"
                             >
-                                <Link href="/flexible-brick-tile" className="group relative w-full block bg-[var(--background)] hover:bg-[var(--line)] transition-colors duration-500 z-50 overflow-hidden mb-2 shadow-sm border-b border-[var(--line)]">
+                                <Link href="/flexible-brick-tiles" className="group relative w-full block bg-[var(--background)] hover:bg-[var(--line)] transition-colors duration-500 z-50 overflow-hidden mb-2 shadow-sm border-b border-[var(--line)]">
                                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-2.5 flex items-center justify-center relative z-10">
                                         <span className="text-[var(--foreground)] text-[9px] sm:text-[10px] md:text-xs font-medium tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em] text-center flex items-center justify-center gap-1 sm:gap-1.5 uppercase px-2">
                                             <span className="animate-pulse origin-bottom group-hover:animate-bounce">🚀</span>
                                             <span className="opacity-90 font-bold ml-1 text-[var(--terracotta)] transition-colors hidden sm:inline">NOW TESTING:</span>
-                                            <span className="font-semibold tracking-[0.2em] ml-1">Flexible Brick Tile</span>
+                                            <span className="font-semibold tracking-[0.2em] ml-1">Flexible Brick Tiles</span>
                                             <span className="opacity-70 hidden md:inline ml-1 font-normal">– Ultra Thin 3mm Clay System</span>
                                             <span className="ml-1 transform -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 hidden sm:inline">→</span>
                                         </span>

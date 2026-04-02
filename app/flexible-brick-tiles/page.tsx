@@ -3,24 +3,34 @@ import { getProducts, getPillarHeroImage, getPillarToolkitImage, getProjectsByCa
 import PillarPageTemplate from '@/components/PillarPageTemplate';
 
 export const metadata: Metadata = {
-    title: "Flexible Brick Tiles | Ultra-Lightweight Wall Cladding India",
-    description: "Advanced flexible cladding systems offering 3mm ultra-lightweight solutions. Engineered to wrap columns and curved facades with zero structural load and maximum durability.",
+    title: "Flexible Brick Tiles | Ultra-Lightweight 3mm Wall Cladding India",
+    description: "Advanced flexible cladding systems offering 3mm ultra-lightweight solutions. Engineered to wrap columns and curved facades with zero structural load and maximum durability. Explore India's most innovative brick veneer.",
+    keywords: "flexible brick tiles price india, lightweight brick cladding, 3mm clay veneer, bendable brick tiles, curved wall cladding, UrbanClay",
     alternates: { canonical: 'https://claytile.in/flexible-brick-tiles' }
 };
 
+import { getJournalPosts } from '@/lib/journal';
+
 export default async function FlexibleBrickTilesPillar() {
-    const [products, heroImage, specifierToolkitImage, projects] = await Promise.all([
+    const [products, heroImage, specifierToolkitImage, projects, allJournals] = await Promise.all([
         getProducts(),
         getPillarHeroImage('flexible-brick-tiles', 'flexible-brick-tile').then(img => img || "/images/premium-terracotta-facade.png"),
         getPillarToolkitImage('flexible-brick-tiles', 'flexible-brick-tile'),
         getProjectsByCategory('flexible-brick-tiles'),
+        getJournalPosts()
     ]);
     const flexProducts = products.filter(p => p.category?.slug === 'flexible-brick-tile' || p.category?.slug === 'flexible-brick-tiles' || p.title.toLowerCase().includes('flexible'));
+    const flexJournals = allJournals.slice(0, 3);
 
     return (
         <PillarPageTemplate
             title="Flexible Brick Tiles"
             subtitle="The Future of Architectural Cladding"
+            heroTitleOverride={
+                <>
+                    Bend the <br className="hidden md:block" /> <span className="text-[var(--terracotta)] italic">Rules</span> of Clay.
+                </>
+            }
             description="Our newest material innovation: Flexible Brick Tiles. At just 3mm thick, these ultra-lightweight, bendable clay tiles wrap effortlessly around curved walls, circular columns, and complex geometries. Real brick texture, zero structural overhead."
             heroImage={heroImage}
             specifierToolkitImage={specifierToolkitImage}
@@ -28,6 +38,7 @@ export default async function FlexibleBrickTilesPillar() {
             slug="flexible-brick-tiles"
             products={flexProducts}
             projects={projects}
+            journals={flexJournals}
             metrics={[
                 { label: "Fire Rating", val: "Class A", detail: "Self-Extinguishing" },
                 { label: "Durability", val: "Crack Resistant", detail: "Bends 360°" },

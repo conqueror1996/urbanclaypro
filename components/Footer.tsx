@@ -53,10 +53,10 @@ export default function Footer() {
                     <FooterSection title="Collections">
                         <ul className="space-y-3 text-[13px] md:text-sm text-[var(--foreground)]/70">
                             <li><FooterLink href="/flexible-brick-tiles">Flexible Brick Tiles</FooterLink></li>
-                            <li><FooterLink href="/terracotta-panels">Terracotta Panels</FooterLink></li>
+                            <li><FooterLink href="/terracotta-panels">Facade Systems</FooterLink></li>
                             <li><FooterLink href="/exposed-brick">Wirecut Bricks</FooterLink></li>
                             <li><FooterLink href="/handmade-brick-tiles">Handmade Brick Tiles</FooterLink></li>
-                            <li><FooterLink href="/products?category=Terracotta Jali">Terracotta Jaali</FooterLink></li>
+                            <li><FooterLink href="/terracotta-jali">Terracotta Jaali</FooterLink></li>
                             <li><FooterLink href="/products">View All Catalog</FooterLink></li>
                         </ul>
                     </FooterSection>

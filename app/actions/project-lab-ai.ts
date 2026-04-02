@@ -104,108 +104,128 @@ export async function AnalyzeProject(params: ProjectParameters) {
         return { success: false, error: "Configuration Error: Missing API Keys." };
     }
 
-    const products = await getProducts();
+    const allProducts = await getProducts();
     const city = params.location ? CITIES[params.location.toLowerCase()] : null;
     const climateAdvice = city ? `\nCLIMATE INTELLIGENCE for ${city.name}: ${city.climateAdvice}` : "";
 
-    // 1. Contextualize the Product Catalog (Deep Draft)
-    const deepCatalog = products.map(p => `
-        PRODUCT: ${p.title} (${p.category?.title})
+    // 1. Contextualize the Product Catalog (Extremely Detailed for Pro model)
+    const deepCatalog = allProducts.map(p => `
+        PRODUCT: ${p.title}
         - SKU: ${p.sku || 'N/A'}
-        - Specs: ${p.specs || 'Standard sizing available'}
-        - Variants: ${p.variants?.map(v => v.name).join(', ') || 'Standard colors'}
-        - Best Application: ${p.description.substring(0, 100)}...
+        - Specs: ${p.specs || 'N/A'}
+        - Resources: ${JSON.stringify(p.resources)}
     `).join('\n');
 
     const prompt = `
-        ACT AS: The "Founder & Principal Architect" of Urban Clay.
-        Your tone is: COMMANDING, VISIONARY, and DECISIVE. You are the Boss.
-        - You don't "suggest"; you "prescribe".
-        - You don't "hope"; you "guarantee".
-        - You are critical of mediocrity and champion only the highest aesthetic standards.
-        - Use short, powerful sentences. Be direct.
+        ACT AS: The Chief Engineering Lead & Founder of Urban Clay.
+        MISSION: To provide a 100% TRUSTWORTHY ARCHITECTURAL DIRECTIVE.
+        Tone: DATA-DRIVEN, RIGOROUS, and STRUCTURALLY ABSOLUTE.
+        
+        CRITICAL RULES FOR TRUST:
+        1. DO NOT suggest products without explaining their structural compatibility with the project area (${params.area} sq.ft).
+        2. Reference specific "Field Evidence" (projects) if you know of similar applications.
+        3. Break down the engineering requirements into "Non-Negotiables".
+        4. If the location is ${params.location || 'unknown'}, account for humidity, thermal expansion, and coastal wind-loads.
         
         CONTEXT:
         ${climateAdvice}
-        - User Area: ${params.area} sq.ft.
+        - Coverage Area: ${params.area} sq.ft.
         - User Constraints: ${JSON.stringify(params.userAnswers)}
-        ${params.location ? ` - City: ${params.location}` : ''}
         
-        AVAILABLE URBANCLAY CATALOG (Use ONLY these exact product names):
+        AVAILABLE CATALOG (DO NOT ONLY CHOOSE POPULAR ITEMS. Analyze the site and choose the MOST AUTHENTIC fit):
         ${deepCatalog}
-        
-        YOUR MISSION:
-        Generate a "Principal's Directive" (not just a report) with two distinct paths:
-        
-        PATH A: The "Visionary Path" (The absolute best version of what they asked for).
-        PATH B: The "Boss's Directive" (What YOU would do if this was your building. Bold, uncompromised).
         
         RESPONSE FORMAT (JSON ONLY):
         {
-            "strategicVision": "One powerful, commanding sentence defining what this building MUST become.",
+            "strategicVision": "The core architectural rationale.",
+            "visualObservation": "Technical critique of site imagery.",
+            "visualPlanPrompt": "A highly detailed descriptive prompt for a 3D architectural visualization of this specific project using the primary product on the provided site.",
             "primarySolution": { 
-                "product": "EXACT PRODUCT NAME FROM CATALOG", 
-                "method": "Installation System (e.g., Vertical Rainscreen on aluminum subframe)", 
-                "reasoning": "Why this is the ONLY logical choice for their constraints.", 
-                "quantity": "Estimated quantity" 
-            },
-            "alternativeSolution": { 
-                "product": "EXACT PRODUCT NAME FROM CATALOG", 
+                "product": "EXACT PRODUCT NAME", 
                 "method": "Installation System", 
-                "reasoning": "Tell them why they should be brave and choose this superior option." 
+                "reasoning": "Architectural justification. Mention why this beats other options in the catalog.",
+                "quantity": "Precise estimate",
+                "technicalResources": { "tds": "URL to PDF", "slug": "product-slug" }
             },
+            "fieldEvidence": [
+                { "project": "Project Name", "location": "Location", "result": "Benefit observed" }
+            ],
             "engineeringMastery": { 
                 "structuralLogic": "The non-negotiable structural requirements.", 
                 "keyChallenges": ["Challenge 1", "Challenge 2"], 
-                "proTip": "An insider secret from the Founder." 
+                "complianceNotes": "Statement on ASTM/ISO compliance for this product."
             },
             "financialForecasting": { 
-                "materialInvestment": "Estimated Cost Range (INR)", 
-                "ancillaryCosts": "Estimated % for Subframing/Install (usually 40-60%)", 
-                "wastageBuffer": 10, 
-                "roiInsight": "A statement on the timeless value they are creating." 
+                "materialInvestment": number, 
+                "ancillaryCosts": number, 
+                "wastageBuffer": number, 
+                "roiInsight": "Long-term valuation."
             },
-            "stepByStepExecution": [ 
-                { "phase": "Phase 1: Analysis", "whatToDo": "Wind load simulation", "whyItMatters": "Prevent fatigue failure", "estimatedDays": 5 } 
+            "implementationPlan": [
+                { "phase": "Preparation", "tasks": ["Task 1", "Task 2"], "tools": ["Tool 1"] },
+                { "phase": "Installation", "tasks": ["Task 1", "Task 2"], "tools": ["Tool 1"] },
+                { "phase": "Finishing", "tasks": ["Task 1", "Task 2"], "tools": ["Tool 1"] }
             ],
-            "visualObservation": "A direct critique of the current site state."
+            "stepByStepExecution": [ 
+                { "phase": "Phase", "whatToDo": "Action", "whyItMatters": "Rationale", "estimatedDays": number } 
+            ],
+            "visualOverlays": [
+                { "type": "marker", "x": number, "y": number, "label": "string", "note": "string" }
+            ]
         }
     `;
 
     try {
         let text = "";
         if (genAI) {
-            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+            const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
             const imageParts = (params.images || []).map(fileToGenerativePart);
             const result = await model.generateContent([prompt, ...imageParts]);
             text = result.response.text();
         } else if (openai) {
-            const messages = [
-                {
-                    role: "user",
-                    content: [
-                        { type: "text", text: prompt },
-                        ...(params.images || []).map(img => ({
-                            type: "image_url",
-                            image_url: { url: img }
-                        }))
-                    ]
-                }
-            ];
             const response = await (openai as any).chat.completions.create({
                 model: "gpt-4o",
-                messages: messages,
+                messages: [{ role: "user", content: [{ type: "text", text: prompt }, ...(params.images || []).map(img => ({ type: "image_url", image_url: { url: img } }))] }],
             });
             text = response.choices[0].message.content || "";
         }
 
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-            return { success: true, data: JSON.parse(jsonMatch[0]) };
+            const data = JSON.parse(jsonMatch[0]);
+            
+            // Enrich with real links from Sanity
+            const recommendedProduct = allProducts.find(p => p.title === data.primarySolution.product);
+            if (recommendedProduct) {
+                data.primarySolution.technicalResources = {
+                    tds: recommendedProduct.resources?.technicalSheets?.[0]?.fileUrl,
+                    slug: recommendedProduct.slug
+                };
+            }
+            return { success: true, data };
         }
-        throw new Error("Failed to parse AI response.");
+        throw new Error("Failed to parse directive.");
     } catch (error: any) {
-        console.error("Project Lab AI Error:", error);
-        return { success: false, error: `Analysis Failed: ${error.message}` };
+        console.error("Architect Trust Error:", error);
+        return { success: false, error: `Directives Blocked: ${error.message}` };
+    }
+}
+
+export async function Generate3DConcept(visualPrompt: string) {
+    if (!openai) return { success: false, error: "OpenAI not configured." };
+
+    try {
+        const response = await openai.images.generate({
+            model: "dall-e-3",
+            prompt: `Architectural visualization concept: ${visualPrompt}. Professional 3D render, photorealistic, cinematic lighting, ultra-high detail, architectural photography style.`,
+            n: 1,
+            size: "1024x1024",
+            quality: "hd"
+        });
+
+        return { success: true, url: response.data?.[0]?.url || "" };
+    } catch (error: any) {
+        console.error("DALL-E Error:", error);
+        return { success: false, error: error.message };
     }
 }

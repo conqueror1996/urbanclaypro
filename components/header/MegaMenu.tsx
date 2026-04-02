@@ -2,15 +2,16 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const PRODUCT_CATEGORIES = [
     {
         title: 'Flexible Brick Tiles',
         subtitle: 'Ultra-Thin Cladding',
-        href: '/flexible-brick-tile',
-        color: 'from-[#b45a3c] to-[#96472d]',
-        image: '/images/menu-exposed.jpg'
+        href: '/flexible-brick-tiles',
+        color: 'from-[#b45a3c]/80 to-[#96472d]/80',
+        image: '/images/menu-flexible.jpg'
     },
     {
         title: 'Terracotta Panels',
@@ -24,21 +25,21 @@ const PRODUCT_CATEGORIES = [
         subtitle: 'Authentic Masonry',
         href: '/exposed-brick',
         color: 'from-[#d6cbb8] to-[#bfae96]',
-        image: '/images/menu-jaali.jpg'
+        image: '/images/menu-exposed.jpg'
     },
     {
         title: 'Handmade Brick Tiles',
         subtitle: 'Artisanal Beauty',
         href: '/handmade-brick-tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
-        image: '/images/menu-floor.jpg'
+        image: '/images/menu-handmade.jpg'
     },
     {
         title: 'Terracotta Jaali',
         subtitle: 'Breathable Screens',
         href: '/terracotta-jali',
         color: 'from-[#2A1E16] to-[#1a1512]',
-        image: '/images/menu-roof.jpg'
+        image: '/images/menu-jaali.jpg'
     }
 ];
 
@@ -82,11 +83,17 @@ export default function MegaMenu({ onClose, onMouseEnter, onMouseLeave }: MegaMe
                                 className="group block relative rounded-xl overflow-hidden aspect-[3/4] hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
                                 onClick={onClose}
                             >
-                                {/* Background / Placeholder Image */}
-                                <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} opacity-80 transition-transform duration-700 group-hover:scale-110`} />
+                                {/* Background Image with Fallback Gradient */}
+                                <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} z-0`} />
+                                <Image
+                                    src={cat.image}
+                                    alt={cat.title}
+                                    fill
+                                    className="object-cover opacity-60 mix-blend-overlay group-hover:scale-110 transition-transform duration-700 z-0"
+                                />
 
                                 {/* Overlay Content */}
-                                <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/40 to-transparent">
+                                <div className="absolute inset-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10">
                                     <p className="text-[10px] font-black uppercase tracking-wider mb-1 opacity-90 !text-white">
                                         {cat.subtitle}
                                     </p>

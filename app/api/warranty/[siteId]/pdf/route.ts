@@ -19,7 +19,7 @@ export const runtime = 'nodejs';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: Promise<{ siteId: string }> }
+    { params }: { params: Promise<any> }
 ) {
     const { siteId } = await params;
     try {

@@ -131,6 +131,17 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  // Redirects
+  redirects: async () => {
+    return [
+      {
+        source: '/flexible-brick-tile',
+        destination: 'https://claytile.in/flexible-brick-tiles',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);

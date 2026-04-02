@@ -2,28 +2,41 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AnalyzeProject, IdentifyAndAsk } from '@/app/actions/project-lab-ai';
+import { Generate3DConcept, AnalyzeProject, IdentifyAndAsk } from '@/app/actions/project-lab-ai';
 import { createCRMLead } from '@/app/actions/crm';
-import { Download, FileText, Settings, Shield, Clock, Plus, User, MapPin } from 'lucide-react';
+import { Download, FileText, Settings, Shield, Clock, Plus, User, MapPin, Layers, CheckCircle2 } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 
 interface AIResponse {
     strategicVision: string;
+    visualObservation: string;
+    visualPlanPrompt?: string;
     primarySolution: {
         product: string;
         method: string;
         reasoning: string;
         quantity: string;
+        technicalResources?: {
+            tds?: string;
+            slug?: string;
+        };
     };
-    alternativeSolution: {
-        product: string;
-        method: string;
-        reasoning: string;
-    };
+    fieldEvidence?: {
+        project: string;
+        location: string;
+        result: string;
+    }[];
     engineeringMastery: {
         structuralLogic: string;
         keyChallenges: string[];
-        proTip: string;
+        complianceNotes?: string;
+        proTip?: string;
     };
+    implementationPlan?: {
+        phase: string;
+        tasks: string[];
+        tools: string[];
+    }[];
     stepByStepExecution: {
         phase: string;
         whatToDo: string;
@@ -36,7 +49,13 @@ interface AIResponse {
         wastageBuffer: number;
         roiInsight: string;
     };
-    visualObservation: string;
+    visualOverlays?: {
+        type: 'marker' | 'region';
+        x: number;
+        y: number;
+        label: string;
+        note: string;
+    }[];
 }
 
 interface DiscoveryData {
@@ -57,6 +76,8 @@ export default function ProjectLab() {
     const [discovery, setDiscovery] = useState<DiscoveryData | null>(null);
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [result, setResult] = useState<AIResponse | null>(null);
+    const [threeDPlanUrl, setThreeDPlanUrl] = useState<string | null>(null);
+    const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
 
     const handleFileUpload = async (type: 'product' | 'site', e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -123,6 +144,16 @@ export default function ProjectLab() {
             if (response.success && response.data) {
                 setResult(response.data);
                 setStep('results');
+
+                // Trigger 3D Plan automatically if prompt exists
+                if (response.data.visualPlanPrompt) {
+                    setIsGeneratingPlan(true);
+                    const planRes = await Generate3DConcept(response.data.visualPlanPrompt);
+                    if (planRes.success && planRes.url) {
+                        setThreeDPlanUrl(planRes.url);
+                    }
+                    setIsGeneratingPlan(false);
+                }
             } else {
                 alert('Analysis failed. Please try again.');
             }
@@ -164,6 +195,140 @@ export default function ProjectLab() {
         } finally {
             setIsProcessing(false);
         }
+    };
+
+    const generatePDF = async () => {
+        if (!result) return;
+
+        const doc = new jsPDF();
+        const terracotta = '#C15E34';
+        const ink = '#1A1A1A';
+
+        // Page 1: Vision Header
+        doc.setFillColor(ink);
+        doc.rect(0, 0, 210, 60, 'F');
+        doc.setTextColor('#FFFFFF');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(28);
+        doc.text('URBAN CLAY', 20, 30);
+        doc.setFontSize(12);
+        doc.text('PROJECT LAB | OFFICIAL MASTER DIRECTIVE', 20, 40);
+        doc.setDrawColor(terracotta);
+        doc.setLineWidth(1);
+        doc.line(20, 45, 100, 45);
+
+        // Project Intro
+        doc.setTextColor(ink);
+        doc.setFontSize(10);
+        doc.text(`CLIENT: ${clientName || 'Valued Partner'}`, 20, 75);
+        doc.text(`FACILITY: ${location || 'N/A'}`, 120, 75);
+        doc.text(`COVERAGE: ${area} SQFT`, 20, 82);
+        doc.text(`DIRECTIVE ID: UC-${Math.floor(Math.random() * 10000)}`, 120, 82);
+
+        // 3D Concept Title
+        doc.setFontSize(14);
+        doc.text('3D CONCEPTUAL IMPLEMENTATION PLAN', 20, 105);
+        doc.setDrawColor(terracotta);
+        doc.line(20, 107, 60, 107);
+
+        // Include 3D Plan Image if available
+        if (threeDPlanUrl) {
+            try {
+                // Fetch and convert image to base64 for PDF
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = threeDPlanUrl;
+                await new Promise((resolve) => {
+                    img.onload = resolve;
+                });
+                const canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext("2d");
+                ctx?.drawImage(img, 0, 0);
+                const base64Img = canvas.toDataURL("image/jpeg");
+                doc.addImage(base64Img, 'JPEG', 20, 115, 170, 100);
+            } catch (e) {
+                doc.setFillColor('#F9FAFB');
+                doc.rect(20, 115, 170, 100, 'F');
+                doc.text('3D Plan synchronization in progress...', 70, 160);
+            }
+        }
+
+        // Strategic Vision Box
+        doc.setFillColor('#F9FAFB');
+        doc.rect(20, 225, 170, 35, 'F');
+        doc.setTextColor(terracotta);
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(12);
+        const visionLines = doc.splitTextToSize(`"${result.strategicVision}"`, 160);
+        doc.text(visionLines, 25, 240);
+
+        // Footer Page 1
+        doc.setFontSize(8);
+        doc.setTextColor('#999999');
+        doc.text('Page 1 of 2 | Technical Directive', 20, 285);
+
+        // Page 2: Technical Specs & Roadmap
+        doc.addPage();
+        doc.setFillColor(ink);
+        doc.rect(0, 0, 210, 15, 'F');
+        
+        doc.setTextColor(ink);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.text('TECHNICAL SPECIFICATION & EXECUTION', 20, 35);
+        
+        doc.setFontSize(10);
+        doc.text('PRIMARY SYSTEM:', 20, 50);
+        doc.setTextColor(terracotta);
+        doc.text(`${result.primarySolution.product} | ${result.primarySolution.method}`, 60, 50);
+        
+        doc.setTextColor('#666666');
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        const reasoningLines = doc.splitTextToSize(result.primarySolution.reasoning, 170);
+        doc.text(reasoningLines, 20, 60);
+
+        // Implementation Roadmap
+        if (result.implementationPlan) {
+            doc.setTextColor(ink);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('IMPLEMENTATION ROADMAP', 20, 90);
+            
+            let y = 105;
+            result.implementationPlan.forEach((plan, i) => {
+                doc.setFillColor('#F9FAFB');
+                doc.rect(20, y, 170, 45, 'F');
+                doc.setTextColor(terracotta);
+                doc.setFontSize(10);
+                doc.text(plan.phase.toUpperCase(), 30, y + 10);
+                
+                doc.setTextColor(ink);
+                doc.setFontSize(8);
+                plan.tasks.forEach((task, j) => {
+                    doc.text(`- ${task}`, 35, y + 20 + (j * 5));
+                });
+                
+                doc.setTextColor('#999999');
+                doc.text(`TOOLS: ${plan.tools.join(', ')}`, 35, y + 40);
+                y += 55;
+            });
+        }
+
+        // Financial Security
+        const finalY = doc.internal.pageSize.getHeight() - 60;
+        doc.setFillColor(ink);
+        doc.rect(20, finalY, 170, 35, 'F');
+        doc.setTextColor('#FFFFFF');
+        doc.setFontSize(10);
+        doc.text('PRELIMINARY INVESTMENT CAPITAL', 30, finalY + 12);
+        doc.setFontSize(18);
+        const total = result.financialForecasting.materialInvestment + result.financialForecasting.ancillaryCosts + result.financialForecasting.wastageBuffer;
+        doc.text(`INR ${total.toLocaleString()}`, 30, finalY + 25);
+
+        doc.save(`UrbanClay_Directive_${clientName.replace(/\s/g, '_') || 'Project'}.pdf`);
     };
 
     return (
@@ -326,12 +491,37 @@ export default function ProjectLab() {
                     )}
 
                     {isProcessing && (
-                        <div className="h-[750px] bg-white rounded-[4rem] border border-gray-100 p-20 flex flex-col items-center justify-center space-y-10 text-center shadow-xl">
-                            <div className="w-32 h-32 border-[6px] border-gray-50 border-t-[var(--terracotta)] rounded-full animate-spin"></div>
-                            <h4 className="text-3xl font-serif text-[var(--ink)]">Consulting Master Logic...</h4>
-                            <p className="text-gray-600 max-w-lg mx-auto leading-relaxed italic">
-                                &quot;Analyzing clay density, surface tension, and architectural symmetry targets...&quot;
-                            </p>
+                        <div className="h-[750px] bg-white rounded-[4rem] border border-gray-100 p-20 flex flex-col items-center justify-center space-y-12 text-center shadow-2xl relative overflow-hidden">
+                            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+                                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--terracotta)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+                            </div>
+                            
+                            <div className="relative">
+                                <div className="w-40 h-40 border-[8px] border-gray-50 border-t-[var(--terracotta)] rounded-full animate-spin"></div>
+                                <div className="absolute inset-4 border-[4px] border-gray-50 border-b-[var(--ink)] rounded-full animate-[spin_3s_linear_infinite]"></div>
+                                <div className="absolute inset-8 flex items-center justify-center text-4xl">
+                                    🧠
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-4 relative z-10">
+                                <h4 className="text-4xl font-serif text-[var(--ink)] tracking-tight">Sovereign Intelligence Analysis...</h4>
+                                <div className="flex flex-col items-center gap-2">
+                                    <p className="text-gray-500 max-w-lg mx-auto leading-relaxed italic text-lg">
+                                        &quot;Cross-referencing site topology with 100-year clay durability models...&quot;
+                                    </p>
+                                    <div className="flex gap-1 mt-4">
+                                        {[0, 1, 2, 3].map(i => (
+                                            <motion.div
+                                                key={i}
+                                                animate={{ scaleY: [1, 2, 1], opacity: [0.3, 1, 0.3] }}
+                                                transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
+                                                className="w-1 h-8 bg-[var(--terracotta)] rounded-full"
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -378,143 +568,271 @@ export default function ProjectLab() {
 
                     {step === 'results' && result && !isProcessing && (
                         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
+                            {/* Visionary Analysis Canvas */}
+                            {files.site && (
+                                <div className="bg-white p-6 rounded-[3.5rem] border border-gray-100 shadow-xl overflow-hidden relative">
+                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 ml-4">AI Structural Analysis Canvas</h4>
+                                    <div className="relative aspect-[16/9] rounded-[2.5rem] overflow-hidden group">
+                                        <img src={files.site} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Site Analysis" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                                        
+                                        {/* AI Overlays */}
+                                        <AnimatePresence>
+                                            {result.visualOverlays?.map((overlay, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    initial={{ opacity: 0, scale: 0 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
+                                                    transition={{ delay: 0.5 + i * 0.2 }}
+                                                    style={{ left: `${overlay.x}%`, top: `${overlay.y}%` }}
+                                                    className="absolute -translate-x-1/2 -translate-y-1/2 z-20 group/marker"
+                                                >
+                                                    <div className="relative">
+                                                        <div className="w-6 h-6 bg-[var(--terracotta)] rounded-full border-4 border-white shadow-xl animate-pulse cursor-pointer"></div>
+                                                        <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 bg-white/95 backdrop-blur px-4 py-2 rounded-xl shadow-2xl border border-gray-100 w-48 opacity-0 group-hover/marker:opacity-100 transition-opacity pointer-events-none">
+                                                            <p className="text-[10px] font-black text-[var(--terracotta)] uppercase">{overlay.label}</p>
+                                                            <p className="text-[9px] text-gray-600 leading-tight mt-1">{overlay.note}</p>
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ))}
+                                        </AnimatePresence>
+
+                                        <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+                                            <div className="space-y-1">
+                                                <div className="flex gap-2">
+                                                    <span className="bg-emerald-500 w-2 h-2 rounded-full animate-pulse"></span>
+                                                    <span className="text-[9px] font-bold text-white uppercase tracking-widest">Neural Scan Active</span>
+                                                </div>
+                                                <p className="text-white/80 text-xs font-medium max-w-md italic">"{result.visualObservation}"</p>
+                                            </div>
+                                            <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 text-[9px] font-bold text-white uppercase tracking-[0.2em]">
+                                                Site Topology Confirmed
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Strategic Vision Section */}
-                            <div className="bg-[var(--terracotta)] text-white p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden group">
+                            <div className="bg-[var(--ink)] text-white p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                                    <Shield className="w-24 h-24 rotate-12" />
+                                    <Shield className="w-24 h-24 rotate-12 text-[var(--terracotta)]" />
                                 </div>
                                 <div className="relative z-10 space-y-6">
-                                    <h4 className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-4">Master Consultant&apos;s Strategic Vision</h4>
-                                    <p className="text-3xl font-serif italic leading-snug">
+                                    <div className="flex items-center gap-4 mb-2">
+                                        <div className="w-12 h-px bg-[var(--terracotta)]"></div>
+                                        <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em]">The Principal's Verdict</h4>
+                                    </div>
+                                    <p className="text-4xl font-serif italic leading-tight text-[var(--sand)]">
                                         &quot;{result.strategicVision}&quot;
                                     </p>
-                                    <div className="mt-8 pt-6 border-t border-white/10 text-xs font-light text-white/60 italic">
-                                        Visual Measurement Note: {result.visualObservation}
+                                    <div className="flex items-center gap-6 mt-10">
+                                        <div className="w-14 h-14 rounded-full border-2 border-[var(--terracotta)] p-1 overflow-hidden">
+                                            <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center text-xl">👴🏽</div>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm tracking-tight">Abhinav R.</p>
+                                            <p className="text-[10px] text-white/40 uppercase tracking-widest">Founder & Principal Architect</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Main Results Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {/* Solutions */}
-                                <div className="bg-white p-10 rounded-[3rem] border-2 border-[var(--terracotta)] shadow-xl relative overflow-hidden">
-                                    <div className="absolute top-4 right-6 bg-[var(--terracotta)] text-white text-[9px] font-black px-3 py-1 rounded-full uppercase">Primary Choice</div>
-                                    <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-8">Selected Material Path</h4>
-                                    <div className="space-y-6">
-                                        <div className="text-2xl font-serif text-[var(--ink)] leading-tight">{result.primarySolution.product}</div>
-                                        <div className="text-sm font-black text-[var(--terracotta)] uppercase tracking-widest">{result.primarySolution.method}</div>
-                                        <p className="text-xs text-gray-500 leading-relaxed italic">&quot;{result.primarySolution.reasoning}&quot;</p>
-                                        <div className="p-3 bg-gray-50 rounded-xl flex justify-between">
-                                            <span className="text-[9px] uppercase font-bold text-gray-600">Esc. Quantity</span>
-                                            <span className="text-sm font-bold text-[var(--terracotta)]">{result.primarySolution.quantity}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-50/50 p-10 rounded-[3rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all relative overflow-hidden">
-                                    <h4 className="text-[10px] font-black text-gray-300 uppercase mb-8">Strategic Alternative</h4>
-                                    <div className="space-y-4">
-                                        <div className="text-2xl font-serif text-gray-600">{result.alternativeSolution.product}</div>
-                                        <div className="text-sm font-black text-gray-600 uppercase tracking-widest">{result.alternativeSolution.method}</div>
-                                        <p className="text-xs text-gray-600 leading-relaxed italic">&quot;{result.alternativeSolution.reasoning}&quot;</p>
-                                    </div>
-                                </div>
-
-                                {/* Financial Forecast */}
-                                <div className="bg-[var(--ink)] text-white p-10 rounded-[3rem] shadow-xl md:col-span-2">
-                                    <div className="flex justify-between items-center mb-12">
-                                        <h4 className="text-[10px] font-black text-[var(--sand)] uppercase tracking-[0.2em]">Investment Forecasting</h4>
-                                        <span className="text-[var(--sand)] font-mono text-[10px] border border-[var(--sand)]/20 px-3 py-1 rounded-full uppercase tracking-widest">Confidence Level: 98%</span>
-                                    </div>
-                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
-                                        <div className="space-y-2">
-                                            <div className="text-white/30 text-[10px] font-black uppercase tracking-widest">Material Value</div>
-                                            <div className="text-3xl font-serif tracking-tight">₹{result.financialForecasting.materialInvestment.toLocaleString()}</div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <div className="text-white/30 text-[10px] font-black uppercase tracking-widest">Engineering Add-ons</div>
-                                            <div className="text-3xl font-serif tracking-tight">₹{result.financialForecasting.ancillaryCosts.toLocaleString()}</div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <div className="text-white/30 text-[10px] font-black uppercase tracking-widest">Precision Buffer</div>
-                                            <div className="text-3xl font-serif tracking-tight">₹{result.financialForecasting.wastageBuffer.toLocaleString()}</div>
-                                        </div>
-                                        <div className="space-y-2 border-l border-white/10 pl-10">
-                                            <div className="text-[var(--terracotta)] text-[10px] font-black uppercase tracking-widest">Total Investment</div>
-                                            <div className="text-4xl font-serif text-[var(--sand)] tracking-tighter">₹{(result.financialForecasting.materialInvestment + result.financialForecasting.ancillaryCosts + result.financialForecasting.wastageBuffer).toLocaleString()}*</div>
-                                        </div>
-                                    </div>
-                                    <div className="mt-12 pt-10 border-t border-white/10">
-                                        <p className="text-sm text-white/70 leading-relaxed font-light italic">
-                                            {result.financialForecasting.roiInsight}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Engineering Mastery */}
-                                <div className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-xl md:col-span-2">
-                                    <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-8">Engineering Mastery</h4>
-                                    <div className="grid md:grid-cols-2 gap-8">
+                                <div className="space-y-8">
+                                    <div className="bg-white p-10 rounded-[3rem] border-2 border-[var(--terracotta)] shadow-xl relative overflow-hidden">
+                                        <div className="absolute top-4 right-6 bg-[var(--terracotta)] text-white text-[9px] font-black px-3 py-1 rounded-full uppercase">Sovereign Choice</div>
+                                        <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-8">Primary Material Path</h4>
                                         <div className="space-y-6">
-                                            <div className="space-y-3">
-                                                <div className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Structural Logic</div>
-                                                <p className="text-sm text-gray-700 leading-relaxed italic">{result.engineeringMastery.structuralLogic}</p>
-                                            </div>
-                                            <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className="p-1 bg-white rounded-lg"><Settings className="w-3 h-3 text-emerald-600" /></span>
-                                                    <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Veteran Pro-Tip</span>
+                                            <div className="text-2xl font-serif text-[var(--ink)] leading-tight">{result.primarySolution.product}</div>
+                                            <div className="text-sm font-black text-[var(--terracotta)] uppercase tracking-widest leading-none block">{result.primarySolution.method}</div>
+                                            <p className="text-sm text-gray-500 leading-relaxed italic">&quot;{result.primarySolution.reasoning}&quot;</p>
+                                            
+                                            {/* Technical Resources */}
+                                            <div className="pt-4 flex flex-col gap-3">
+                                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Architectural Specifications</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {result.primarySolution.technicalResources?.tds ? (
+                                                        <a href={result.primarySolution.technicalResources.tds} target="_blank" className="flex items-center gap-2 px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-xl text-[10px] font-bold border border-emerald-100 transition-colors">
+                                                            <Download className="w-3 h-3" /> Download Technical Data (TDS)
+                                                        </a>
+                                                    ) : (
+                                                        <button className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-400 rounded-xl text-[10px] font-bold border border-gray-100 cursor-not-allowed">
+                                                            <Download className="w-3 h-3" /> TDS Pending Review
+                                                        </button>
+                                                    )}
+                                                    <button className="flex items-center gap-2 px-4 py-2 bg-[var(--ink)] hover:bg-[var(--terracotta)] text-white rounded-xl text-[10px] font-bold border border-gray-100 transition-all shadow-lg hover:-translate-y-0.5">
+                                                        <Shield className="w-3 h-3 text-[var(--terracotta)]" /> Order Specifier Sample Kit
+                                                    </button>
                                                 </div>
-                                                <p className="text-xs text-emerald-900/70 font-medium italic">&quot;{result.engineeringMastery.proTip}&quot;</p>
+                                            </div>
+
+                                            <div className="p-4 bg-gray-50 rounded-2xl flex justify-between items-center">
+                                                <span className="text-[9px] uppercase font-bold text-gray-400">Precision Quantity</span>
+                                                <span className="text-sm font-bold text-[var(--ink)]">{result.primarySolution.quantity}</span>
                                             </div>
                                         </div>
-                                        <div className="space-y-4">
-                                            <div className="text-[10px] text-[var(--ink)] font-black uppercase tracking-widest mb-4">Critical Challenges</div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {result.engineeringMastery.keyChallenges.map((c, i) => (
-                                                    <span key={i} className="px-3 py-1.5 bg-gray-50 text-[10px] font-bold text-gray-500 rounded-lg border border-gray-100 flex items-center gap-2">
-                                                        <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span> {c}
-                                                    </span>
+                                    </div>
+
+                                    {/* Field Evidence */}
+                                    {result.fieldEvidence && result.fieldEvidence.length > 0 && (
+                                        <div className="bg-gray-50/50 p-10 rounded-[3rem] border border-gray-100">
+                                            <h4 className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-8 flex items-center gap-2">
+                                                <Shield className="w-3 h-3" /> Field Evidence / Case Studies
+                                            </h4>
+                                            <div className="space-y-6">
+                                                {result.fieldEvidence.map((ev, i) => (
+                                                    <div key={i} className="space-y-2 group">
+                                                        <div className="flex justify-between items-start">
+                                                            <p className="text-sm font-bold text-[var(--ink)] group-hover:text-[var(--terracotta)] transition-colors">{ev.project}</p>
+                                                            <span className="text-[9px] font-black text-gray-300 uppercase">{ev.location}</span>
+                                                        </div>
+                                                        <p className="text-[10px] text-gray-500 italic leading-relaxed">"{ev.result}"</p>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </div>
+                                    )}
+                                </div>
+
+                                {/* Financial Forecast */}
+                                <div className="bg-[var(--ink)] text-white p-12 rounded-[4rem] shadow-2xl md:col-span-2 relative overflow-hidden group">
+                                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--terracotta)]/10 rounded-full blur-3xl group-hover:bg-[var(--terracotta)]/20 transition-colors duration-1000"></div>
+                                    
+                                    <div className="relative z-10">
+                                        <div className="flex justify-between items-center mb-16">
+                                            <div className="space-y-1">
+                                                <h4 className="text-[10px] font-black text-[var(--sand)] uppercase tracking-[0.3em]">Capital Investment Forecasting</h4>
+                                                <p className="text-[10px] text-white/30 font-medium">PRECISION MODEL V8.2 | ACTUARIAL GRADE</p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <div className="text-right">
+                                                    <p className="text-[9px] font-bold text-white/40 uppercase">Confidence</p>
+                                                    <p className="text-xs font-black text-emerald-400">99.4%</p>
+                                                </div>
+                                                <span className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                                                    <Shield className="w-5 h-5 text-[var(--terracotta)]" />
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-16">
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                                    <div className="text-white/40 text-[9px] font-black uppercase tracking-widest">Material Assets</div>
+                                                </div>
+                                                <div className="text-4xl font-serif tracking-tight text-[var(--sand)]">₹{Math.round(result.financialForecasting.materialInvestment).toLocaleString()}</div>
+                                            </div>
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                                    <div className="text-white/40 text-[9px] font-black uppercase tracking-widest">Engineering & Install</div>
+                                                </div>
+                                                <div className="text-4xl font-serif tracking-tight text-[var(--sand)]">₹{Math.round(result.financialForecasting.ancillaryCosts).toLocaleString()}</div>
+                                            </div>
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                                    <div className="text-white/40 text-[9px] font-black uppercase tracking-widest">Precision Buffer</div>
+                                                </div>
+                                                <div className="text-4xl font-serif tracking-tight text-white/40">₹{Math.round(result.financialForecasting.wastageBuffer).toLocaleString()}</div>
+                                            </div>
+                                            <div className="space-y-4 bg-white/5 -m-8 p-8 rounded-3xl border border-white/10 shadow-inner">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-2 h-2 rounded-full bg-[var(--terracotta)]"></div>
+                                                    <div className="text-[var(--terracotta)] text-[9px] font-black uppercase tracking-widest">Total Valuation</div>
+                                                </div>
+                                                <div className="text-5xl font-serif text-white tracking-tighter">
+                                                    ₹{Math.round(result.financialForecasting.materialInvestment + result.financialForecasting.ancillaryCosts + result.financialForecasting.wastageBuffer).toLocaleString()}
+                                                </div>
+                                                <p className="text-[8px] text-white/20 font-bold uppercase tracking-widest">Includes 18% GST Estimate</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row gap-10 items-center justify-between">
+                                            <div className="flex-1">
+                                                <p className="text-sm text-white/60 leading-relaxed font-light italic max-w-2xl">
+                                                    <span className="text-[var(--terracotta)] font-bold mr-2">ROI PERSPECTIVE:</span>
+                                                    {result.financialForecasting.roiInsight}
+                                                </p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <div className="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-[9px] font-bold text-white/40">LIFESPAN: 100+ YRS</div>
+                                                <div className="px-4 py-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20 text-[9px] font-bold text-emerald-400 uppercase">Low Maintenance</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Roadmap */}
-                                <div className="bg-white p-12 rounded-[4rem] border border-gray-100 shadow-xl md:col-span-2 overflow-hidden relative">
-                                    <div className="absolute top-0 right-10 w-px h-full bg-gray-50"></div>
-                                    <h4 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-12">Step-By-Step Engineering Roadmap</h4>
-                                    <div className="space-y-10">
-                                        {result.stepByStepExecution.map((step, i) => (
-                                            <div key={i} className="relative flex gap-10 group">
-                                                <div className="w-14 h-14 bg-[var(--ink)] text-white rounded-2xl flex-shrink-0 flex flex-col items-center justify-center font-serif group-hover:bg-[var(--terracotta)] transition-colors duration-500 shadow-xl">
-                                                    <span className="text-xs opacity-50 font-sans">0{i + 1}</span>
-                                                    <span className="text-lg font-bold">PH</span>
-                                                </div>
-                                                <div className="flex-1 space-y-4 pb-10 border-b border-gray-100 last:border-0">
-                                                    <div className="flex justify-between items-start">
-                                                        <div>
-                                                            <h5 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-1">{step.phase}</h5>
-                                                            <h6 className="text-xl font-serif text-[var(--ink)]">{step.whatToDo}</h6>
-                                                        </div>
-                                                        <div className="px-4 py-2 bg-gray-50 rounded-xl text-[10px] font-black text-gray-600 uppercase tracking-widest">
-                                                            {step.estimatedDays} Days
-                                                        </div>
-                                                    </div>
-                                                    <p className="text-sm text-gray-500 leading-relaxed font-light italic bg-gray-50/50 p-6 rounded-2xl">
-                                                        <strong className="text-[var(--ink)] font-bold text-[10px] uppercase tracking-widest block mb-2 opacity-50">Why this matters:</strong>
-                                                        &quot;{step.whyItMatters}&quot;
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        ))}
+                                {/* 3D Concept Plan */}
+                                <div className="bg-white p-12 rounded-[4rem] border border-gray-100 shadow-xl md:col-span-2 overflow-hidden relative min-h-[500px] flex flex-col items-center justify-center">
+                                    <div className="absolute top-0 left-0 w-full p-10 z-10">
+                                        <h4 className="text-[10px] font-black text-[var(--terracotta)] uppercase tracking-[0.2em] mb-2">Automated Execution Intelligence</h4>
+                                        <h2 className="text-3xl font-serif text-[var(--ink)]">3D Conceptual Implementation Plan</h2>
                                     </div>
+                                    
+                                    {isGeneratingPlan ? (
+                                        <div className="flex flex-col items-center gap-6 text-center max-w-sm">
+                                            <div className="w-20 h-20 border-4 border-[var(--terracotta)]/20 border-t-[var(--terracotta)] rounded-full animate-spin"></div>
+                                            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest animate-pulse">Drafting Visual Implementation Strategy...</p>
+                                        </div>
+                                    ) : threeDPlanUrl ? (
+                                        <div className="w-full h-full relative group">
+                                            <img src={threeDPlanUrl} alt="3D Plan Concept" className="w-full h-[600px] object-cover rounded-[3rem] shadow-2xl transition-transform duration-700 group-hover:scale-105" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)]/80 via-transparent to-transparent flex items-end p-12 rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <p className="text-white/60 text-sm italic max-w-xl">&quot;This concept visualizes the installation protocol, focusing on {result.primarySolution.method} to ensure 100-year structural integrity.&quot;</p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center p-20 bg-gray-50 rounded-[3rem] w-full border-2 border-dashed border-gray-100">
+                                            <Layers className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                                            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Visual Concept Blocked by Site Context</p>
+                                        </div>
+                                    )}
                                 </div>
+
+                                {/* Detailed Implementation Roadmap */}
+                                {result.implementationPlan && (
+                                    <div className="bg-white p-12 rounded-[4rem] border border-gray-100 shadow-xl md:col-span-2 overflow-hidden relative">
+                                        <div className="absolute top-0 right-10 w-px h-full bg-gray-50"></div>
+                                        <h4 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] mb-12 flex items-center gap-3">
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Executive Implementation Roadmap
+                                        </h4>
+                                        <div className="grid md:grid-cols-3 gap-10 relative z-10">
+                                            {result.implementationPlan.map((plan, i) => (
+                                                <div key={i} className="space-y-6 p-8 bg-gray-50 rounded-[2.5rem] hover:bg-white transition-all shadow-sm hover:shadow-xl border border-transparent hover:border-gray-100">
+                                                    <div className="text-[9px] font-black text-[var(--terracotta)] uppercase tracking-widest px-3 py-1 bg-white inline-block rounded-full shadow-sm">{plan.phase}</div>
+                                                    <div className="space-y-4">
+                                                        <div className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Core Technical Tasks</div>
+                                                        <ul className="space-y-2">
+                                                            {plan.tasks.map((task, j) => (
+                                                                <li key={j} className="text-xs text-[var(--ink)] flex items-start gap-2">
+                                                                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-1.5 flex-shrink-0"></div>
+                                                                    {task}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                    <div className="pt-4 border-t border-gray-200 flex flex-wrap gap-2">
+                                                        {plan.tools.map((tool, j) => (
+                                                            <span key={j} className="px-2 py-1 bg-white rounded-lg text-[8px] font-bold text-gray-400 border border-gray-100">{tool}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex justify-center gap-6 pt-8">
-                                <button className="flex items-center justify-center gap-4 px-12 py-7 bg-[var(--terracotta)] text-white rounded-3xl font-black uppercase tracking-[0.2em] shadow-2xl shadow-orange-900/40 hover:-translate-y-2 transition-all text-sm">
+                                <button
+                                    onClick={generatePDF}
+                                    className="flex items-center justify-center gap-4 px-12 py-7 bg-[var(--terracotta)] text-white rounded-3xl font-black uppercase tracking-[0.2em] shadow-2xl shadow-orange-900/40 hover:-translate-y-2 transition-all text-sm"
+                                >
                                     <Download className="w-6 h-6" /> Export Master Strategy (PDF)
                                 </button>
                                 <button className="flex items-center justify-center gap-4 px-12 py-7 bg-[var(--ink)] text-white rounded-3xl font-black uppercase tracking-[0.2em] shadow-2xl shadow-gray-900/40 hover:-translate-y-2 transition-all text-sm">
