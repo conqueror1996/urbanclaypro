@@ -60,6 +60,7 @@ const ptComponents = {
                             src={urlForImage(value).width(1200).url()}
                             alt={value.alt || 'UrbanClay Journal Image'}
                             fill
+                            sizes="(max-width: 768px) 100vw, 1200px"
                             className="object-cover transition-transform duration-700 group-hover:scale-[1.01]"
                         />
                     </div>
@@ -203,6 +204,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                                 src={post.mainImage || post.imageUrl || ''}
                                 alt={`${post.title} - UrbanClay Journal`}
                                 fill
+                                sizes="(max-width: 768px) 100vw, 1400px"
                                 className="object-cover w-full h-full transform hover:scale-105 transition-transform duration-[2s] ease-out"
                                 priority
                             />

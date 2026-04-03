@@ -34,7 +34,7 @@ export default function TechnicalEdge({ imageUrl }: TechnicalEdgeProps) {
     ];
 
     return (
-        <section className="py-16 md:py-20 bg-[#F9F8F6] text-[var(--ink)] overflow-hidden relative border-y border-[var(--line)]/50">
+        <section className="py-24 md:py-32 lg:py-40 min-h-[90vh] flex items-center bg-[#F9F8F6] text-[var(--ink)] overflow-hidden relative border-y border-[var(--line)]/50">
             {/* Background Engineering Grid - Subtle contrast for light theme */}
             <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
                 style={{ backgroundImage: 'radial-gradient(var(--ink) 1px, transparent 0)', backgroundSize: '60px 60px' }} />

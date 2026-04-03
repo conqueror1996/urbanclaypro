@@ -650,31 +650,31 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             {/* FAQ Column */}
                             <div className="space-y-4">
                                 <h3 className="text-2xl font-serif text-[var(--foreground)] mb-6">Common Questions</h3>
-                                {[
+                                {(product.faq && product.faq.length > 0 ? product.faq : [
                                     {
-                                        q: `Is ${product.title} suitable for exterior use in high-rainfall areas?`,
-                                        a: `Yes, ${product.title} is fired at temperatures exceeding 1000°C, making it highly resistant to water absorption and weathering. We recommend applying a breathable silicone sealant for extreme coastal climates.`
+                                        question: `Is ${product.title} suitable for exterior use in high-rainfall areas?`,
+                                        answer: `Yes, ${product.title} is fired at temperatures exceeding 1000°C, making it highly resistant to water absorption and weathering. We recommend applying a breathable silicone sealant for extreme coastal climates.`
                                     },
                                     {
-                                        q: "Do I need special adhesive for installation?",
-                                        a: "For brick tiles, we recommend a high-performance polymer-modified thin-set adhesive (Type 2 or higher) compliant with IS 15477 standards."
+                                        question: "Do I need special adhesive for installation?",
+                                        answer: "For brick tiles, we recommend a high-performance polymer-modified thin-set adhesive (Type 2 or higher) compliant with IS 15477 standards."
                                     },
                                     {
-                                        q: "How does it compare to cement blocks?",
-                                        a: `Unlike cement, ${product.title} is a natural thermal insulator. It resists heat transfer, keeping interiors cooler by up to 5°C in Indian summers.`
+                                        question: "How does it compare to cement blocks?",
+                                        answer: `Unlike cement, ${product.title} is a natural thermal insulator. It resists heat transfer, keeping interiors cooler by up to 5°C in Indian summers.`
                                     },
                                     {
-                                        q: "What is the lead time for delivery?",
-                                        a: "Standard profiles are typically in stock for immediate dispatch. Custom sizes or large project orders (above 5000 sq.ft) may require 3-4 weeks."
+                                        question: "What is the lead time for delivery?",
+                                        answer: "Standard profiles are typically in stock for immediate dispatch. Custom sizes or large project orders (above 5000 sq.ft) may require 3-4 weeks."
                                     }
-                                ].map((faq, i) => (
+                                ]).map((faq, i) => (
                                     <details key={i} className="group/faq bg-[var(--background)] border border-[var(--line)] rounded-xl overflow-hidden open:bg-[var(--line)]/20 transition-colors">
                                         <summary className="p-4 cursor-pointer font-medium text-[var(--foreground)] flex justify-between items-center select-none marker:content-none">
-                                            {faq.q}
+                                            {faq.question}
                                             <span className="text-[var(--terracotta)] text-xl group-open/faq:rotate-45 transition-transform">+</span>
                                         </summary>
                                         <div className="px-4 pb-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
-                                            {faq.a}
+                                            {faq.answer}
                                         </div>
                                     </details>
                                 ))}

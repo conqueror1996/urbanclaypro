@@ -164,6 +164,7 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
                             src={imageUrl}
                             alt={alt || "UrbanClay Architectural Terracotta"}
                             fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-contain"
                             containerClassName="w-full h-full"
                             priority
@@ -173,6 +174,7 @@ export default function HeroVisual({ imageUrl, alt }: HeroVisualProps) {
                             src="/images/engineered-facade-masterpiece.png"
                             alt="UrbanClay Engineered Facade Masterpiece"
                             fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-contain mix-blend-multiply"
                             priority
                         />

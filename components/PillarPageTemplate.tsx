@@ -344,9 +344,9 @@ export default function PillarPageTemplate({
                         <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-4 mb-10">
                             {[
                                 { title: "Technical Data Sheet", format: "PDF", type: "Specs & Tests", icon: FileText },
-                                { title: "CAD Blocks Library", format: "DWG", type: "2D Detail Views", icon: Maximize2 },
-                                { title: "BIM / Revit Library", format: "RFA", type: "3D Digital Twins", icon: Layers },
-                                { title: "Specification BOQ", format: "DOCS", type: "Bidding Reference", icon: FileText }
+                                { title: "Installation Guide", format: "PDF", type: "Step-by-Step", icon: Layers },
+                                { title: "Product Catalog", format: "PDF", type: "Visual Details", icon: Maximize2 },
+                                { title: "Physical Samples", format: "BOX", type: "Express Delivery", icon: ShieldCheck }
                             ].map((item, i) => (
                                 <button 
                                     key={i} 

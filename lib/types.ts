@@ -29,6 +29,10 @@ export interface Product {
     priceTier?: string;
     description: string;
     distinctiveCharacter?: string;
+    faq?: {
+        question: string;
+        answer: string;
+    }[];
     images?: any[];
     imageUrl?: string;
     variants?: {

@@ -6,6 +6,7 @@ export default defineType({
     type: 'document',
     groups: [
         { name: 'editorial', title: 'Editorial', default: true },
+        { name: 'faq', title: 'FAQ' },
         { name: 'variants', title: 'Variants & Images' },
         { name: 'specs', title: 'Specifications' },
         { name: 'downloads', title: 'Downloads' },
@@ -114,6 +115,23 @@ export default defineType({
             type: 'text',
             group: 'editorial',
             rows: 5,
+        }),
+        defineField({
+            name: 'faq',
+            title: 'Common Questions',
+            type: 'array',
+            group: 'faq',
+            of: [
+                {
+                    type: 'object',
+                    name: 'faqItem',
+                    fields: [
+                        { name: 'question', type: 'string', title: 'Question' },
+                        { name: 'answer', type: 'text', title: 'Answer', rows: 3 }
+                    ]
+                }
+            ],
+            description: 'Add specific FAQs for this product to override the generic ones.'
         }),
         defineField({
             name: 'seo',

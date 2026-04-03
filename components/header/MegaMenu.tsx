@@ -11,35 +11,35 @@ const PRODUCT_CATEGORIES = [
         subtitle: 'Ultra-Thin Cladding',
         href: '/flexible-brick-tiles',
         color: 'from-[#b45a3c]/80 to-[#96472d]/80',
-        image: '/images/menu-flexible.jpg'
+        image: '/images/megamenu/menu_flexible_brick_1775251589486.png'
     },
     {
         title: 'Terracotta Panels',
         subtitle: 'Rainscreen Facades',
         href: '/terracotta-panels',
         color: 'from-[#8c7b70] to-[#5d554f]',
-        image: '/images/menu-cladding.jpg'
+        image: '/images/megamenu/menu_terracotta_panel_1775251606050.png'
     },
     {
         title: 'Exposed Bricks',
         subtitle: 'Authentic Masonry',
         href: '/exposed-brick',
         color: 'from-[#d6cbb8] to-[#bfae96]',
-        image: '/images/menu-exposed.jpg'
+        image: '/images/megamenu/menu_exposed_brick_smooth_1775251795568.png'
     },
     {
         title: 'Handmade Brick Tiles',
         subtitle: 'Artisanal Beauty',
         href: '/handmade-brick-tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
-        image: '/images/menu-handmade.jpg'
+        image: '/images/megamenu/menu_handmade_brick_1775251638671.png'
     },
     {
         title: 'Terracotta Jaali',
         subtitle: 'Breathable Screens',
         href: '/terracotta-jali',
         color: 'from-[#2A1E16] to-[#1a1512]',
-        image: '/images/menu-jaali.jpg'
+        image: '/images/megamenu/menu_terracotta_jaali_1775251656687.png'
     }
 ];
 
@@ -89,7 +89,9 @@ export default function MegaMenu({ onClose, onMouseEnter, onMouseLeave }: MegaMe
                                     src={cat.image}
                                     alt={cat.title}
                                     fill
-                                    className="object-cover opacity-60 mix-blend-overlay group-hover:scale-110 transition-transform duration-700 z-0"
+                                    sizes="(max-width: 768px) 100vw, 300px"
+                                    unoptimized={process.env.NODE_ENV === 'development'}
+                                    className="object-cover opacity-50 group-hover:scale-110 group-hover:opacity-60 transition-all duration-700 z-0"
                                 />
 
                                 {/* Overlay Content */}
