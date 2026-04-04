@@ -80,7 +80,7 @@ export default function MegaMenu({ onClose, onMouseEnter, onMouseLeave }: MegaMe
                             <Link
                                 key={idx}
                                 href={cat.href}
-                                className="group block relative rounded-xl overflow-hidden aspect-[3/4] hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
+                                className="group block relative rounded-xl overflow-hidden aspect-[3/4] hover:shadow-xl transition-all duration-500 hover:-translate-y-1 transform-gpu"
                                 onClick={onClose}
                             >
                                 {/* Background Image with Fallback Gradient */}
@@ -91,15 +91,16 @@ export default function MegaMenu({ onClose, onMouseEnter, onMouseLeave }: MegaMe
                                     fill
                                     sizes="(max-width: 768px) 100vw, 300px"
                                     unoptimized={process.env.NODE_ENV === 'development'}
-                                    className="object-cover opacity-50 group-hover:scale-110 group-hover:opacity-60 transition-all duration-700 z-0"
+                                    priority
+                                    className="object-cover opacity-50 group-hover:scale-110 group-hover:opacity-60 transition-all duration-700 z-[1] transform-gpu"
                                 />
 
                                 {/* Overlay Content */}
-                                <div className="absolute inset-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10">
-                                    <p className="text-[10px] font-black uppercase tracking-wider mb-1 opacity-90 !text-white">
+                                <div className="absolute inset-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none">
+                                    <p className="text-[10px] font-black uppercase tracking-wider mb-1 opacity-90 !text-white transform-gpu">
                                         {cat.subtitle}
                                     </p>
-                                    <h4 className="font-serif text-lg leading-tight !text-white group-hover:underline decoration-1 underline-offset-4">
+                                    <h4 className="font-serif text-lg leading-tight !text-white group-hover:underline decoration-1 underline-offset-4 transform-gpu">
                                         {cat.title}
                                     </h4>
                                 </div>
