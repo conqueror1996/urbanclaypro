@@ -1,13 +1,14 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useTransition } from 'react';
 import { trackFootprint } from '@/app/actions/track';
 import { useReportWebVitals } from 'next/web-vitals';
 
 export default function FootprintTracker() {
     const pathname = usePathname();
     const lastTrackedPath = useRef('');
+    const [isPending, startTransition] = useTransition();
 
     // Store vitals for the current page view
     const vitals = useRef<{ lcp?: number; cls?: number; fid?: number; ttfb?: number; fcp?: number }>({});
@@ -32,22 +33,25 @@ export default function FootprintTracker() {
         vitals.current = {};
 
         // 1. Log Initial Page View immediately
-        trackFootprint(pathname, { referrer: document.referrer });
+        startTransition(() => {
+            trackFootprint(pathname, { referrer: document.referrer });
+        });
 
         // 2. Schedule Vitals Log (Wait for LCP/CLS to settle, ~3-4 seconds)
         const vitalsTimer = setTimeout(() => {
             const hasData = Object.keys(vitals.current).length > 0;
             if (hasData) {
-                // We send a second "enrichment" footprint or just another ping with data
-                // For simplicity in this actionable "Hero" request, we just log it as a separate detailed event
-                // ideally we would update the previous record, but insert is safer for fire-and-forget
-                trackFootprint(pathname, { vitals: vitals.current, referrer: document.referrer });
+                startTransition(() => {
+                    trackFootprint(pathname, { vitals: vitals.current, referrer: document.referrer });
+                });
             }
         }, 1000);
 
         // 3. Error Listener (Global)
         const handleError = (event: ErrorEvent) => {
-            trackFootprint(pathname, { errors: event.message, referrer: document.referrer });
+            startTransition(() => {
+                trackFootprint(pathname, { errors: event.message, referrer: document.referrer });
+            });
         };
         window.addEventListener('error', handleError);
 

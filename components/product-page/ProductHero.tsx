@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product, generateArtisticDescription } from '@/lib/products';
+import { Product } from '@/lib/products';
+import { generateArtisticDescription } from '@/lib/catalogue-content';
 import { useSampleBox } from '@/context/SampleContext';
 import { generateSemanticAlt } from '@/lib/seo-utils';
 
