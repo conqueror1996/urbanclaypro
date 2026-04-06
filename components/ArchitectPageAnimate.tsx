@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import UrbanClayImage from '@/components/UrbanClayImage';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -76,7 +77,7 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                     style={{ y: heroY, opacity: heroOpacity }}
                     className="absolute inset-0 z-0"
                 >
-                    <Image
+                    <UrbanClayImage
                         src={heroImage || defaultHeroImage}
                         alt="Architectural Confidence - Delivered Project"
                         fill
@@ -247,7 +248,7 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                         <div className="relative pl-0 md:pl-10 pt-8 md:pt-10">
                             {/* Main Detail Image with Parallax-like feel */}
                             <div className="aspect-square md:aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl relative group">
-                                <Image
+                                <UrbanClayImage
                                     src="/images/bespoke-precision.png"
                                     alt="Precision Engineering - Caliper on Clay"
                                     fill

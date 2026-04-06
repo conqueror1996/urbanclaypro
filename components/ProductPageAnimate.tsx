@@ -20,7 +20,7 @@ import SocialShare from '@/components/SocialShare';
 //     ssr: false,
 //     loading: () => <div className="w-full h-full bg-[#1a1512] animate-pulse rounded-3xl" />
 // });
-import { generateLuxurySpecs } from '@/lib/catalogue-content';
+import { generateLuxurySpecs, generateArtisticDescription } from '@/lib/catalogue-content';
 import QuoteModal from '@/components/QuoteModal'; // Assuming this exists or used by QuoteUrl logic
 
 interface ProductPageAnimateProps {

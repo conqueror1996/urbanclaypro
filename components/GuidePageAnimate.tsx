@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import UrbanClayImage from '@/components/UrbanClayImage';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -60,7 +61,7 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                     style={{ y: heroY, opacity: heroOpacity }}
                     className="absolute inset-0 z-0"
                 >
-                    <Image
+                    <UrbanClayImage
                         src={heroImage || defaultHeroImage}
                         alt="Selection Guide Hero"
                         fill
@@ -209,7 +210,7 @@ export default function GuidePageAnimate({ heroImage }: GuidePageAnimateProps) {
                     {spectrumItems.map((item, idx) => (
                         <div key={idx} className={`flex flex-col md:flex-row gap-8 md:gap-24 items-center ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                             <div className="flex-1 relative aspect-[4/5] w-full md:w-auto rounded-[2rem] overflow-hidden group shadow-2xl">
-                                <Image
+                                <UrbanClayImage
                                     src={item.image}
                                     alt={item.title}
                                     fill
