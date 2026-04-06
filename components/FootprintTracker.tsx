@@ -1,17 +1,29 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useTransition } from 'react';
-import { trackFootprint } from '@/app/actions/track';
+import { useEffect, useRef } from 'react';
 import { useReportWebVitals } from 'next/web-vitals';
 
 export default function FootprintTracker() {
     const pathname = usePathname();
     const lastTrackedPath = useRef('');
-    const [isPending, startTransition] = useTransition();
 
     // Store vitals for the current page view
     const vitals = useRef<{ lcp?: number; cls?: number; fid?: number; ttfb?: number; fcp?: number }>({});
+
+    // Robust fetch-based tracking function (bypasses Server Action sync issues)
+    const track = async (path: string, extraData?: any) => {
+        try {
+            await fetch('/api/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ path, extraData }),
+                keepalive: true, // Crucial for fire-and-forget during page unloading
+            });
+        } catch (e) {
+            // Silently fail for tracking
+        }
+    };
 
     // Web Vitals Hook (Standard Next.js 13+)
     useReportWebVitals((metric) => {
@@ -33,25 +45,19 @@ export default function FootprintTracker() {
         vitals.current = {};
 
         // 1. Log Initial Page View immediately
-        startTransition(() => {
-            trackFootprint(pathname, { referrer: document.referrer });
-        });
+        track(pathname, { referrer: document.referrer });
 
         // 2. Schedule Vitals Log (Wait for LCP/CLS to settle, ~3-4 seconds)
         const vitalsTimer = setTimeout(() => {
             const hasData = Object.keys(vitals.current).length > 0;
             if (hasData) {
-                startTransition(() => {
-                    trackFootprint(pathname, { vitals: vitals.current, referrer: document.referrer });
-                });
+                track(pathname, { vitals: vitals.current, referrer: document.referrer });
             }
         }, 1000);
 
         // 3. Error Listener (Global)
         const handleError = (event: ErrorEvent) => {
-            startTransition(() => {
-                trackFootprint(pathname, { errors: event.message, referrer: document.referrer });
-            });
+            track(pathname, { errors: event.message, referrer: document.referrer });
         };
         window.addEventListener('error', handleError);
 
