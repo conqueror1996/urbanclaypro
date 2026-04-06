@@ -1,4 +1,4 @@
-'use client';
+'use client'; // Trigger deployment after reconnect
 
 import React from 'react';
 import Link from 'next/link';
