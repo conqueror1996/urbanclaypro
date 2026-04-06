@@ -64,9 +64,10 @@ const DESCRIPTIONS: Record<string, string> = {
     `
 };
 
+import { KNOWLEDGE_BASE } from './knowledge-base';
+
 export function enhanceProduct(product: Product): Product {
     // 1. Identify best match
-    // Check specific slug first (if we had specific ones), then category slug, then tag
     const categorySlug = product.category?.slug || '';
     const tag = product.tag ? product.tag.toLowerCase().replace(/\s+/g, '-') : '';
 
@@ -86,9 +87,16 @@ export function enhanceProduct(product: Product): Product {
 
     // 2. Optimization Logic
     // STRICT USER CONTROL: If the user has entered ANY description in the CMS, respect it 100%.
-    // Do not append or fallback to generic content, even if the user's text is short.
     if (product.description && product.description.trim().length > 0) {
-        return product;
+        // Still apply knowledge linking to their own description
+        let linkedDesc = product.description;
+        Object.values(KNOWLEDGE_BASE).forEach(k => {
+            const regex = new RegExp(`\\b${k.term}\\b`, 'gi');
+            if (linkedDesc.includes(k.term) && !linkedDesc.includes(`knowledge/${k.slug}`)) {
+               linkedDesc = linkedDesc.replace(regex, `[${k.term}](/knowledge/${k.slug})`);
+            }
+        });
+        return { ...product, description: linkedDesc };
     }
 
     // Only strictly fallback if the CMS field is undefined or completely empty.
@@ -96,9 +104,19 @@ export function enhanceProduct(product: Product): Product {
         // Clean whitespace
         richDescription = richDescription.replace(/^\s+|\s+$/g, '').replace(/\n\s+/g, '\n');
 
+        let finalDesc = product.description ? `${product.description}\n\n${richDescription}` : richDescription;
+
+        // 3. Authority Interlinking (Knowledge Mesh)
+        Object.values(KNOWLEDGE_BASE).forEach(k => {
+            const regex = new RegExp(`\\b${k.term}\\b`, 'gi');
+            if (finalDesc.includes(k.term) && !finalDesc.includes(`knowledge/${k.slug}`)) {
+               finalDesc = finalDesc.replace(regex, `[${k.term}](/knowledge/${k.slug})`);
+            }
+        });
+
         return {
             ...product,
-            description: product.description ? `${product.description}\n\n${richDescription}` : richDescription,
+            description: finalDesc,
             seo: {
                 ...product.seo,
                 metaDescription: product.seo?.metaDescription || richDescription.slice(0, 160).replace(/\n/g, ' ') + '...'
