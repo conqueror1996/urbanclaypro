@@ -95,22 +95,22 @@ export function generateArtisticDescription(product: { title: string; tag?: stri
     const title = product.title;
 
     if (category.includes('flexible') || category.includes('tile')) {
-        return `High-performance ${title} tiles. Lightweight, weather-resistant, and engineered for rapid architectural installation.`;
+        return `High-performance ${title}. Lightweight, weather-resistant, and engineered for rapid installation.`;
     }
     if (category.includes('jaali') || category.includes('breeze')) {
-        return `Precision-crafted ${title} screens. Designed for natural ventilation, light filtering, and distinctive architectural voids.`;
+        return `Precision-crafted ${title} screens for natural ventilation and distinctive architectural light filtering.`;
     }
     if (category.includes('brick') || category.includes('exposed')) {
-        return `Sintered clay ${title} units. Authentic, high-thermal-mass bricks for commanding facades and timeless heritage aesthetics.`;
+        return `Sintered clay ${title} units. Authentic, high-thermal-mass bricks for commanding facades.`;
     }
     if (category.includes('panel') || category.includes('facade')) {
-        return `Advanced ${title} facade systems. Large-format terracotta panels for energy-efficient, rainscreen-optimized buildings.`;
+        return `Advanced ${title} facade systems. Large-format terracotta panels for energy-efficient architecture.`;
     }
 
     // Fallback based on name fragments if category is missing/generic
     const lowerName = title.toLowerCase();
-    if (lowerName.includes('block')) return `Sculptural ${title} units. Bridging the gap between structural integrity and tectonic lightness.`;
+    if (lowerName.includes('block')) return `Sculptural ${title} units. A perfect synthesis of structural integrity and tectonic lightness.`;
     if (lowerName.includes('red')) return `Rich, earth-toned ${title}. Naturally fired for deep color saturation and extreme durability.`;
 
-    return `Premium ${title} by UrbanClay. A sophisticated synthesis of ancient earth and modern precision engineering.`;
+    return `Premium ${title} by UrbanClay. A sophisticated synthesis of ancient earth and modern precision.`;
 }
