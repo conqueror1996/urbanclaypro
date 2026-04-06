@@ -233,7 +233,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
 
                             {/* Body: Breathable, High Readability */}
                             <p className="text-base md:text-xl text-[var(--foreground)]/70 font-light leading-relaxed mb-6 lg:mb-10 max-w-xl border-l-[3px] border-[var(--terracotta)] pl-6">
-                                {product.subtitle || 'Premium handcrafted clay for timeless architecture. Engineered for durability and designed for elegance.'}
+                                {product.subtitle || generateArtisticDescription(product)}
                             </p>
 
                             {/* Micro: Origin Data */}

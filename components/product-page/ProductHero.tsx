@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Product } from '@/lib/products';
+import { Product, generateArtisticDescription } from '@/lib/products';
 import { useSampleBox } from '@/context/SampleContext';
 import { generateSemanticAlt } from '@/lib/seo-utils';
 
@@ -44,7 +44,7 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                     {product.tag || 'Collection'}
                 </span>
                 <h1 className="text-3xl md:text-4xl font-serif text-[#2A1E16] leading-[1.1] mb-2">{product.title}</h1>
-                <p className="text-[#5d554f]">{product.subtitle}</p>
+                <p className="text-[#5d554f]">{product.subtitle || generateArtisticDescription(product)}</p>
             </div>
 
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-20 items-start">
@@ -120,7 +120,7 @@ export default function ProductHero({ product, quoteUrl, otherVariants, selected
                             {product.title}
                         </h1>
                         <p className="text-lg text-[#5d554f] font-light leading-relaxed">
-                            {product.subtitle || 'Premium handcrafted clay for timeless architecture.'}
+                            {product.subtitle || generateArtisticDescription(product)}
                         </p>
                     </div>
 
