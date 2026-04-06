@@ -20,7 +20,29 @@ export function generateGlobalSchema() {
     ];
 }
 
+import { CITIES } from './locations';
+
 export function generateOrganizationSchema() {
+    const regionalOffices = Object.values(CITIES).map(city => ({
+        '@type': 'LocalBusiness',
+        'name': `UrbanClay ${city.name}`,
+        'image': 'https://claytile.in/urbanclay-logo.png',
+        'telephone': '+91-8080081951',
+        'url': `https://claytile.in/${city.slug}`,
+        'address': {
+            '@type': 'PostalAddress',
+            'addressLocality': city.name,
+            'addressRegion': city.region,
+            'addressCountry': 'IN'
+        },
+        'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': city.coordinates.lat,
+            'longitude': city.coordinates.lng
+        },
+        'areaServed': city.areasServed.map(a => ({ '@type': 'Place', 'name': a }))
+    }));
+
     return [
         {
             '@context': 'https://schema.org',
@@ -50,6 +72,7 @@ export function generateOrganizationSchema() {
                 areaServed: 'IN',
                 availableLanguage: ['en', 'hi', 'mr', 'kn', 'ta', 'gu']
             },
+            subOrganization: regionalOffices.slice(0, 5), // Include top 5 as sub-orgs
             address: {
                 '@type': 'PostalAddress',
                 addressLocality: 'Mumbai',
@@ -89,12 +112,9 @@ export function generateOrganizationSchema() {
                 addressRegion: 'Maharashtra',
                 addressCountry: 'IN'
             },
-            areaServed: [
-                'Maharashtra', 'Karnataka', 'Tamil Nadu', 'Kerala', 'Telangana', 'Andhra Pradesh',
-                'Gujarat', 'Rajasthan', 'Delhi', 'Uttar Pradesh', 'West Bengal', 'Punjab', 'Haryana'
-            ].map(state => ({
+            areaServed: Object.values(CITIES).map(city => ({
                 '@type': 'AdministrativeArea',
-                name: state,
+                name: city.name,
                 addressCountry: 'IN'
             })),
             geo: {
@@ -116,7 +136,8 @@ export function generateOrganizationSchema() {
                     closes: '19:00'
                 }
             ]
-        }
+        },
+        ...regionalOffices.slice(5) // Spread the rest as individual local businesses
     ];
 }
 
