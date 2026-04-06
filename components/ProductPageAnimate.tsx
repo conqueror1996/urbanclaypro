@@ -652,28 +652,28 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                                 <h3 className="text-2xl font-serif text-[var(--foreground)] mb-6">Common Questions</h3>
                                 {(product.faq && product.faq.length > 0 ? product.faq : [
                                     {
-                                        question: `Is ${product.title} suitable for exterior use in high-rainfall areas?`,
-                                        answer: `Yes, ${product.title} is fired at temperatures exceeding 1000°C, making it highly resistant to water absorption and weathering. We recommend applying a breathable silicone sealant for extreme coastal climates.`
+                                        question: `Is ${product.title} suitable for exterior facades?`,
+                                        answer: `${product.title} is high-fired terracotta, engineered to withstand extreme weather, UV radiation, and heavy rain, making it an ideal choice for durable India-centric facades.`
                                     },
                                     {
-                                        question: "Do I need special adhesive for installation?",
-                                        answer: "For brick tiles, we recommend a high-performance polymer-modified thin-set adhesive (Type 2 or higher) compliant with IS 15477 standards."
+                                        question: `What is the thickness and size of ${product.title}?`,
+                                        answer: `This collection features a standard thickness of ${product.specs?.thickness || 'approx. 15-20mm'}, making it lightweight for easy installation while retaining the rugged look of full-sized bricks.`
                                     },
                                     {
-                                        question: "How does it compare to cement blocks?",
-                                        answer: `Unlike cement, ${product.title} is a natural thermal insulator. It resists heat transfer, keeping interiors cooler by up to 5°C in Indian summers.`
+                                        question: "How do I maintain the natural look?",
+                                        answer: "We recommend a simple water-based sealer after installation to protect against dust. The natural clay color is permanent and will not fade over time."
                                     },
                                     {
-                                        question: "What is the lead time for delivery?",
-                                        answer: "Standard profiles are typically in stock for immediate dispatch. Custom sizes or large project orders (above 5000 sq.ft) may require 3-4 weeks."
+                                        question: "How can I order a sample?",
+                                        answer: "You can order a sample box directly from this page. We'll ship it to your location so you can evaluate the texture and color in your actual project site lighting."
                                     }
                                 ]).map((faq, i) => (
-                                    <details key={i} className="group/faq bg-[var(--background)] border border-[var(--line)] rounded-xl overflow-hidden open:bg-[var(--line)]/20 transition-colors">
-                                        <summary className="p-4 cursor-pointer font-medium text-[var(--foreground)] flex justify-between items-center select-none marker:content-none">
-                                            {faq.question}
-                                            <span className="text-[var(--terracotta)] text-xl group-open/faq:rotate-45 transition-transform">+</span>
+                                    <details key={i} className="group/faq bg-[var(--background)] border border-[var(--line)] rounded-xl overflow-hidden open:bg-[var(--line)]/20 transition-all duration-300">
+                                        <summary className="p-4 cursor-pointer font-medium text-[var(--foreground)] flex justify-between items-center select-none marker:content-none hover:bg-[var(--line)]/10 transition-colors">
+                                            <span className="pr-8">{faq.question}</span>
+                                            <span className="text-[var(--terracotta)] text-xl group-open/faq:rotate-45 transition-transform shrink-0">+</span>
                                         </summary>
-                                        <div className="px-4 pb-4 text-[var(--foreground)]/70 text-sm leading-relaxed">
+                                        <div className="px-4 pb-4 text-[var(--foreground)]/70 text-sm leading-relaxed border-t border-[var(--line)]/10 pt-4">
                                             {faq.answer}
                                         </div>
                                     </details>

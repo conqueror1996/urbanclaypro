@@ -302,12 +302,15 @@ export default async function SmartProductRouter({ params, searchParams }: PageP
         const variantName = typeof variant === 'string' ? variant : undefined;
         const selectedVariant = variantName ? product.variants?.find((v: any) => v.name === variantName) : null;
 
-        // Generate dynamic FAQs for this product category
-        const faqs = getCategoryFaqs(product.category?.title || product.tag || 'Terracotta', product.title);
+        // Generate unique FAQs for this product (Prioritize CMS > Dynamic Category)
+        const productFaqs = (product.faq && product.faq.length > 0) 
+            ? product.faq 
+            : getCategoryFaqs(product.category?.title || product.tag || 'Terracotta', product.title);
+
         const faqJsonLd = {
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
-            'mainEntity': faqs.map(f => ({
+            'mainEntity': productFaqs.map((f: any) => ({
                 '@type': 'Question',
                 'name': f.question,
                 'acceptedAnswer': {
