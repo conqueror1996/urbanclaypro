@@ -96,64 +96,65 @@ export default function Footer() {
                     </FooterSection>
                 </div>
 
-                {/* Presence: Horizontal SEO Cloud (Improved Alignment) */}
+                {/* Presence: Horizontal SEO Cloud (Improved Mobile Flow) */}
                 <div className="pt-8 md:pt-12 border-[var(--line)] md:border-t">
-                    <div className="flex flex-col md:flex-row md:items-start gap-8 md:gap-16">
-                        <div className="shrink-0">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--terracotta)] mb-4">Regional Presence</h3>
-                            <p className="text-[10px] text-[var(--foreground)]/40 md:max-w-[120px] leading-relaxed uppercase tracking-widest">Architectural delivery hubs across India</p>
+                    <FooterSection title="Regional Presence">
+                        <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-16">
+                            <div className="shrink-0 hidden lg:block">
+                                <p className="text-[10px] text-[var(--foreground)]/40 md:max-w-[120px] leading-relaxed uppercase tracking-widest">Architectural delivery hubs across India</p>
+                            </div>
+                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mt-4 md:mt-0">
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">South India</p>
+                                    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/bangalore">Bangalore</FooterLink></li>
+                                        <li><FooterLink href="/hyderabad">Hyderabad</FooterLink></li>
+                                        <li><FooterLink href="/chennai">Chennai</FooterLink></li>
+                                        <li><FooterLink href="/kochi">Kochi</FooterLink></li>
+                                        <li><FooterLink href="/karnataka">Karnataka</FooterLink></li>
+                                        <li><FooterLink href="/kerala">Kerala</FooterLink></li>
+                                        <li><FooterLink href="/tamil-nadu">Tamil Nadu</FooterLink></li>
+                                        <li><FooterLink href="/andhra-pradesh">Andhra Pradesh</FooterLink></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">West India</p>
+                                    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/mumbai">Mumbai</FooterLink></li>
+                                        <li><FooterLink href="/pune">Pune</FooterLink></li>
+                                        <li><FooterLink href="/goa">Goa</FooterLink></li>
+                                        <li><FooterLink href="/ahmedabad">Ahmedabad</FooterLink></li>
+                                        <li><FooterLink href="/surat">Surat</FooterLink></li>
+                                        <li><FooterLink href="/maharashtra">Maharashtra</FooterLink></li>
+                                        <li><FooterLink href="/gujarat">Gujarat</FooterLink></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">North India</p>
+                                    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/delhi">Delhi NCR</FooterLink></li>
+                                        <li><FooterLink href="/jaipur">Jaipur</FooterLink></li>
+                                        <li><FooterLink href="/lucknow">Lucknow</FooterLink></li>
+                                        <li><FooterLink href="/punjab">Punjab</FooterLink></li>
+                                        <li><FooterLink href="/haryana">Haryana</FooterLink></li>
+                                        <li><FooterLink href="/rajasthan">Rajasthan</FooterLink></li>
+                                        <li><FooterLink href="/uttar-pradesh">Uttar Pradesh</FooterLink></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">East & Central</p>
+                                    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
+                                        <li><FooterLink href="/kolkata">Kolkata</FooterLink></li>
+                                        <li><FooterLink href="/west-bengal">West Bengal</FooterLink></li>
+                                        <li><FooterLink href="/odisha">Odisha</FooterLink></li>
+                                        <li><FooterLink href="/bihar">Bihar</FooterLink></li>
+                                        <li><FooterLink href="/madhya-pradesh">Madhya Pradesh</FooterLink></li>
+                                        <li><FooterLink href="/raipur">Raipur</FooterLink></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex-1 grid grid-cols-2 lg:grid-cols-4 gap-8">
-                            <div>
-                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">South India</p>
-                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
-                                    <li><FooterLink href="/bangalore">Bangalore</FooterLink></li>
-                                    <li><FooterLink href="/hyderabad">Hyderabad</FooterLink></li>
-                                    <li><FooterLink href="/chennai">Chennai</FooterLink></li>
-                                    <li><FooterLink href="/kochi">Kochi</FooterLink></li>
-                                    <li><FooterLink href="/karnataka">Karnataka</FooterLink></li>
-                                    <li><FooterLink href="/kerala">Kerala</FooterLink></li>
-                                    <li><FooterLink href="/tamil-nadu">Tamil Nadu</FooterLink></li>
-                                    <li><FooterLink href="/andhra-pradesh">Andhra Pradesh</FooterLink></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">West India</p>
-                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
-                                    <li><FooterLink href="/mumbai">Mumbai</FooterLink></li>
-                                    <li><FooterLink href="/pune">Pune</FooterLink></li>
-                                    <li><FooterLink href="/goa">Goa</FooterLink></li>
-                                    <li><FooterLink href="/ahmedabad">Ahmedabad</FooterLink></li>
-                                    <li><FooterLink href="/surat">Surat</FooterLink></li>
-                                    <li><FooterLink href="/maharashtra">Maharashtra</FooterLink></li>
-                                    <li><FooterLink href="/gujarat">Gujarat</FooterLink></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">North India</p>
-                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
-                                    <li><FooterLink href="/delhi">Delhi NCR</FooterLink></li>
-                                    <li><FooterLink href="/jaipur">Jaipur</FooterLink></li>
-                                    <li><FooterLink href="/lucknow">Lucknow</FooterLink></li>
-                                    <li><FooterLink href="/punjab">Punjab</FooterLink></li>
-                                    <li><FooterLink href="/haryana">Haryana</FooterLink></li>
-                                    <li><FooterLink href="/rajasthan">Rajasthan</FooterLink></li>
-                                    <li><FooterLink href="/uttar-pradesh">Uttar Pradesh</FooterLink></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <p className="font-bold text-[9px] uppercase tracking-widest text-[var(--foreground)]/40 mb-3 border-b border-[var(--line)] pb-2">East & Central</p>
-                                <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] text-[var(--foreground)]/60">
-                                    <li><FooterLink href="/kolkata">Kolkata</FooterLink></li>
-                                    <li><FooterLink href="/west-bengal">West Bengal</FooterLink></li>
-                                    <li><FooterLink href="/odisha">Odisha</FooterLink></li>
-                                    <li><FooterLink href="/bihar">Bihar</FooterLink></li>
-                                    <li><FooterLink href="/madhya-pradesh">Madhya Pradesh</FooterLink></li>
-                                    <li><FooterLink href="/raipur">Raipur</FooterLink></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    </FooterSection>
                 </div>
 
                 <div className="mt-12 md:mt-24 pt-8 border-t border-[var(--line)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--foreground)]/80 text-center md:text-left">
