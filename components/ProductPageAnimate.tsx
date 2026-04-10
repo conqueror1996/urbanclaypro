@@ -20,7 +20,7 @@ import SocialShare from '@/components/SocialShare';
 //     ssr: false,
 //     loading: () => <div className="w-full h-full bg-[#1a1512] animate-pulse rounded-3xl" />
 // });
-import { generateLuxurySpecs, generateArtisticDescription } from '@/lib/catalogue-content';
+import { generateLuxurySpecs, generateArtisticDescription, generateUniqueNarrative } from '@/lib/catalogue-content';
 import QuoteModal from '@/components/QuoteModal'; // Assuming this exists or used by QuoteUrl logic
 
 interface ProductPageAnimateProps {
@@ -548,7 +548,7 @@ export default function ProductPageAnimate({ product, relatedProducts, quoteUrl,
                             Distinctive Character
                         </h2>
                         <div className="prose prose-invert prose-lg md:prose-xl max-w-none text-[var(--foreground)] leading-loose font-light">
-                            <p>{product.distinctiveCharacter || product.category?.description || product.description || `Crafted with precision and fired to perfection, ${product.title} represents the pinnacle of terracotta engineering.`}</p>
+                            <p>{generateUniqueNarrative(product)}</p>
                         </div>
                     </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import { getLeadsData, getLeadHistory } from '@/app/actions/dashboard-data';
 import { motion, AnimatePresence } from 'framer-motion';
 import { updateLeadStatus, deleteLead, addAdminNote } from '@/app/actions/manage-lead';
 import { generateSalesEmail } from '@/app/actions/generate-draft';
@@ -74,10 +74,10 @@ export default function LeadsDashboard() {
         if (selectedLead?.ip) {
             const fetchHistory = async () => {
                 try {
-                    // Fetch last 10 visited pages
-                    const q = `*[_type == "footprint" && ip == $ip && !defined(errors)] | order(timestamp desc) [0...10] { path, timestamp }`;
-                    const history = await client.fetch(q, { ip: selectedLead.ip });
-                    setLeadHistory(history);
+                    const res = await getLeadHistory(selectedLead.ip!);
+                    if (res.success && res.history) {
+                        setLeadHistory(res.history);
+                    }
                 } catch (e) {
                     console.error("Failed to fetch history", e);
                 }
@@ -94,36 +94,23 @@ export default function LeadsDashboard() {
     const fetchLeads = async () => {
         setLoading(true);
         try {
-            // Updated Query to fetch ALL fields AND Footprint count
-            const query = `{
-                "leads": *[_type == "lead"] | order(submittedAt desc) {
-                    _id, role, firmName, product, city, quantity, timeline,
-                    contact, email, address, notes, requirement,
-                    isSerious, status, submittedAt,
+            const res = await getLeadsData();
+            if (res.success && res.leads && res.products) {
+                // Map product images to leads
+                const leadsWithImages = res.leads.map((lead: any) => {
+                    let img = '/images/catalogue-icon.png';
+                    if (lead.product !== 'General Catalogue') {
+                        const productMatch = res.products.find((p: any) => p.title === lead.product);
+                        if (productMatch) img = productMatch.imageUrl;
+                    }
+                    return { ...lead, productImage: img };
+                });
 
-                    isSampleRequest, sampleItems, fulfillmentStatus, shippingInfo,
-                    adminNotes, ip
-                },
-                "products": *[_type == "product"]{title, "imageUrl": images[0].asset->url},
-                "footprintsCount": count(*[_type == "footprint"])
-            }`;
-            const data = await client.fetch(query);
-
-            // Map product images to leads
-            const leadsWithImages = data.leads.map((lead: any) => {
-                let img = '/images/catalogue-icon.png';
-                if (lead.product !== 'General Catalogue') {
-                    const productMatch = data.products.find((p: any) => p.title === lead.product);
-                    if (productMatch) img = productMatch.imageUrl;
-                }
-                return { ...lead, productImage: img };
-            });
-
-            setLeads(leadsWithImages);
-            // Store footprint count in a new state variable or just use a ref/temp for now. 
-            // Better to add to stats object.
-            setTrafficCount(data.footprintsCount || 0);
-
+                setLeads(leadsWithImages);
+                setTrafficCount(res.footprintsCount || 0);
+            } else {
+                console.error('Failed to fetch leads:', res.error);
+            }
         } catch (error) {
             console.error('Error fetching leads:', error);
         } finally {

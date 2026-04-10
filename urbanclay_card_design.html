@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanClay | Professional Executive Identity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clay: #B14A2A;
+            --ink: #1a1512;
+            --beige: #F9F7F2;
+            --muted: #8C7B70;
+            --card-width: 504px; /* 3.5 inches at 144dpi */
+            --card-height: 288px; /* 2.0 inches at 144dpi */
+        }
+
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Manrope', sans-serif;
+            gap: 60px;
+            padding: 40px;
+            color: var(--ink);
+        }
+
+        .card {
+            width: var(--card-width);
+            height: var(--card-height);
+            background-color: var(--beige);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.15), 0 18px 36px -18px rgba(0,0,0,0.2);
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 40px 80px -12px rgba(177, 74, 42, 0.15);
+        }
+
+        /* Front Side: Pure Brand Power */
+        .card.front {
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at 50% 50%, rgba(177, 74, 42, 0.03) 0%, transparent 70%);
+        }
+
+        .logo-main {
+            width: 220px;
+            height: auto;
+            filter: contrast(1.05);
+        }
+
+        /* Back Side: Precision Professionalism */
+        .card.back {
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+            justify-content: space-between;
+        }
+
+        .back-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .identity-block h2 {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+        }
+
+        .identity-block p {
+            margin: 2px 0 0;
+            color: var(--clay);
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+        }
+
+        .logo-back-mini {
+            width: 100px;
+            height: auto;
+            opacity: 0.9;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-item .label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .detail-item .value {
+            font-size: 11px;
+            line-height: 1.5;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .detail-item .value.address {
+            font-weight: 500;
+            font-size: 10px;
+            color: rgba(26, 21, 18, 0.8);
+        }
+
+        /* Decorative Accent */
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--clay), #d8b09a);
+            opacity: 0.8;
+        }
+
+        .presentation-notes {
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .presentation-notes h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .presentation-notes p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--clay);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-notes">
+        <span class="tag">Executive Identity V2</span>
+        <h1>UrbanClay Architectural Premium</h1>
+        <p>This design utilizes the <strong>original UrbanClay logo</strong> and adopts the precise typographic hierarchy found on your website. The color palette is calibrated for high-end print on sustainably sourced paper stock.</p>
+    </div>
+
+    <!-- FRONT: Impact Branding -->
+    <div class="card front">
+        <img src="public/urbanclay-logo.png" alt="UrbanClay Logo" class="logo-main">
+    </div>
+
+    <!-- BACK: Precision Identity -->
+    <div class="card back">
+        <div class="back-top">
+            <div class="identity-block">
+                <h2>Rahul Maurya</h2>
+                <p>Sr. Sales Executive</p>
+            </div>
+            <img src="public/urbanclay-logo.png" alt="UrbanClay Logo" class="logo-back-mini">
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-item">
+                <span class="label">Primary Connection</span>
+                <span class="value">+91 80800 81951</span>
+                <span class="value" style="color: var(--clay); font-weight: 800; font-size: 13px; margin-top: 4px; display: block;">claytile.in</span>
+                <span class="value" style="font-size: 9px; opacity: 0.6">urbanclay@claytile.in</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Headquarters</span>
+                <span class="value address">
+                    203 Anurag Business Center,<br>
+                    Chembur, Mumbai, MS<br>
+                    India – 400071
+                </span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

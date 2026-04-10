@@ -1,4 +1,4 @@
-import { client } from '@/sanity/lib/client';
+import { writeClient as client } from '@/sanity/lib/write-client';
 
 export interface TrafficReport {
     today: number;

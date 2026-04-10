@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
-import { updateStockQuantity } from '@/app/actions/manage-stock';
+import { updateStockQuantity, getStocksData } from '@/app/actions/manage-stock';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, Package, TrendingUp, Search, History, Edit2, Plus, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
@@ -36,13 +35,13 @@ export default function StockDashboard() {
 
     const fetchStocks = async () => {
         try {
-            const query = `*[_type == "stock"] {
-                _id, quantity, unit, location, minStockLevel, lastUpdated, history,
-                product->{title, "imageUrl": images[0].asset->url, priceRange}
-            } | order(quantity asc)`;
-            const data = await client.fetch(query);
-            setStocks(data);
-            setFilteredStocks(data);
+            const res = await getStocksData();
+            if (res.success && res.data) {
+                setStocks(res.data);
+                setFilteredStocks(res.data);
+            } else {
+                console.error('Failed to fetch stocks:', res.error);
+            }
         } catch (error) {
             console.error('Error fetching stocks:', error);
         } finally {

@@ -4,11 +4,14 @@ import React from 'react';
 import Image from 'next/image';
 import UrbanClayImage from '@/components/UrbanClayImage';
 import Link from 'next/link';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import AccessModal from '@/components/AccessModal';
 import SampleModal from '@/components/SampleModal';
 import ArchitectsToolkit from '@/components/ArchitectsToolkit';
+import MaterialMatcher from '@/components/MaterialMatcher';
+import { useInView } from 'react-intersection-observer';
+
 
 interface ArchitectPageAnimateProps {
     heroImage?: string | null;
@@ -151,56 +154,7 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
                         {resources.map((resource, idx) => (
-                            <motion.div
-                                key={resource.id}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: idx * 0.15 }}
-                                className="group flex flex-col h-full bg-white rounded-[2rem] border border-[var(--line)] shadow-[0_4px_30px_-10px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all duration-700 overflow-hidden"
-                            >
-                                {/* Resource Visual */}
-                                <div className="aspect-[4/3] bg-[var(--sand)] relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-[var(--ink)]/10 to-transparent" />
-                                    {/* Abstract Visual representation of the resource type */}
-                                    <div className="absolute inset-0 flex items-center justify-center p-12">
-                                        <div className="w-full h-full border border-[var(--ink)]/5 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
-                                            <div className="text-[var(--terracotta)]/40 group-hover:text-[var(--terracotta)] transition-colors duration-500">
-                                                {React.cloneElement(resource.icon as React.ReactElement<any>, { className: "w-20 h-20 md:w-24 md:h-24 stroke-[1px]" })}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Numbering */}
-                                    <div className="absolute top-6 left-6 text-xs font-bold text-[var(--ink)]/20 font-serif italic">
-                                        0{idx + 1}
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="p-8 md:p-10 flex flex-col flex-grow">
-                                    <h3 className="text-2xl md:text-3xl font-serif text-[var(--ink)] mb-4">{resource.title}</h3>
-                                    <p className="text-[var(--foreground)]/60 text-sm leading-relaxed mb-8 flex-grow">
-                                        {resource.description}
-                                    </p>
-
-                                    <div className="space-y-3 mb-10">
-                                        {resource.files.slice(0, 3).map((file, i) => (
-                                            <div key={i} className="flex items-center gap-3 text-xs font-medium text-[var(--ink)]/70">
-                                                <span className="w-1 h-1 rounded-full bg-[var(--terracotta)]" />
-                                                {file}
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <button
-                                        onClick={() => setModalOpen(true)}
-                                        className="w-full py-4 bg-[var(--ink)] text-white rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-[var(--terracotta)] transition-colors duration-500 shadow-sm"
-                                    >
-                                        Access Folder
-                                    </button>
-                                </div>
-                            </motion.div>
+                            <MaterialCard key={resource.id} resource={resource} idx={idx} setModalOpen={setModalOpen} />
                         ))}
                     </div>
                 </div>
@@ -208,6 +162,26 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
 
             {/* --- TOOLKIT: INTERACTIVE VISUALIZER --- */}
             <ArchitectsToolkit />
+
+            {/* --- AI DESIGN STUDIO: MATERIAL MATCHER --- */}
+            <section className="py-24 md:py-32 bg-white relative z-20">
+                <div className="max-w-7xl mx-auto px-6">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16 md:mb-24"
+                    >
+                        <span className="text-[var(--terracotta)] font-semibold tracking-widest uppercase text-[10px] md:text-xs mb-4 block">Experimental Features</span>
+                        <h2 className="text-4xl md:text-6xl font-serif text-[var(--ink)] mb-6">AI Design Studio</h2>
+                        <p className="text-[var(--foreground)]/70 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                            Sync your architectural vision. Upload a site reference and let our AI match it to the UrbanClay palette.
+                        </p>
+                    </motion.div>
+
+                    <MaterialMatcher />
+                </div>
+            </section>
 
 
             {/* --- STUDIO SERVICES / WHY SPECIFY --- */}
@@ -299,6 +273,96 @@ export default function ArchitectPageAnimate({ heroImage }: ArchitectPageAnimate
                 </div>
             </section>
         </main>
+    );
+}
+
+
+function MaterialCard({ resource, idx, setModalOpen }: { resource: any, idx: number, setModalOpen: any }) {
+    const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+    const [isLoaded, setIsLoaded] = React.useState(false);
+
+    React.useEffect(() => {
+        if (inView) {
+            const timer = setTimeout(() => setIsLoaded(true), 1200); // Deliberate delay to show 'craftsmanship' loading
+            return () => clearTimeout(timer);
+        }
+    }, [inView]);
+
+    return (
+        <div ref={ref}>
+            <AnimatePresence mode="wait">
+                {!isLoaded ? (
+                    <motion.div
+                        key="skeleton"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="group flex flex-col h-full bg-white rounded-[2rem] border border-[var(--line)] overflow-hidden"
+                    >
+                        <div className="aspect-[4/3] bg-gray-100 animate-pulse flex items-center justify-center p-12">
+                            <div className="w-full h-full border border-gray-200 rounded-2xl" />
+                        </div>
+                        <div className="p-8 md:p-10 flex flex-col flex-grow">
+                            <div className="h-8 bg-gray-100 rounded-md w-2/3 mb-4 animate-pulse" />
+                            <div className="h-4 bg-gray-50 rounded-md w-full mb-2 animate-pulse" />
+                            <div className="h-4 bg-gray-50 rounded-md w-5/6 mb-8 animate-pulse" />
+                            <div className="space-y-3 mb-10">
+                                <div className="h-3 bg-gray-50 rounded-md w-1/3 animate-pulse" />
+                                <div className="h-3 bg-gray-50 rounded-md w-1/2 animate-pulse" />
+                            </div>
+                            <div className="h-12 bg-gray-200 rounded-xl w-full animate-pulse" />
+                        </div>
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="content"
+                        initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                        className="group flex flex-col h-full bg-white rounded-[2rem] border border-[var(--line)] shadow-[0_4px_30px_-10px_rgba(0,0,0,0.03)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.06)] transition-all duration-700 overflow-hidden"
+                    >
+                        {/* Resource Visual */}
+                        <div className="aspect-[4/3] bg-[var(--sand)] relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--ink)]/10 to-transparent" />
+                            <div className="absolute inset-0 flex items-center justify-center p-12">
+                                <div className="w-full h-full border border-[var(--ink)]/5 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-700">
+                                    <div className="text-[var(--terracotta)]/40 group-hover:text-[var(--terracotta)] transition-colors duration-500">
+                                        {React.cloneElement(resource.icon as React.ReactElement<any>, { className: "w-20 h-20 md:w-24 md:h-24 stroke-[1px]" })}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="absolute top-6 left-6 text-xs font-bold text-[var(--ink)]/20 font-serif italic">
+                                0{idx + 1}
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-8 md:p-10 flex flex-col flex-grow">
+                            <h3 className="text-2xl md:text-3xl font-serif text-[var(--ink)] mb-4">{resource.title}</h3>
+                            <p className="text-[var(--foreground)]/60 text-sm leading-relaxed mb-8 flex-grow">
+                                {resource.description}
+                            </p>
+
+                            <div className="space-y-3 mb-10">
+                                {resource.files.slice(0, 3).map((file: string, i: number) => (
+                                    <div key={i} className="flex items-center gap-3 text-xs font-medium text-[var(--ink)]/70">
+                                        <span className="w-1 h-1 rounded-full bg-[var(--terracotta)]" />
+                                        {file}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => setModalOpen(true)}
+                                className="w-full py-4 bg-[var(--ink)] text-white rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-[var(--terracotta)] transition-colors duration-500 shadow-sm"
+                            >
+                                Access Folder
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
     );
 }
 

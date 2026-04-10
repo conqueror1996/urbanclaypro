@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Types for our Toolkit Configuration
@@ -22,6 +22,28 @@ export default function ArchitectsToolkit() {
     const [groutColor, setGroutColor] = useState<GroutColor>('#e5e5e5');
     const [showDimensions, setShowDimensions] = useState(false);
     const [activeTab, setActiveTab] = useState<'tone' | 'bond' | 'grout'>('tone');
+
+    // Persistence: Load from localStorage
+    useEffect(() => {
+        const saved = localStorage.getItem('urbanclay_toolkit_state');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                if (parsed.tone) setTone(parsed.tone);
+                if (parsed.bond) setBond(parsed.bond);
+                if (parsed.groutSize !== undefined) setGroutSize(parsed.groutSize);
+                if (parsed.groutColor) setGroutColor(parsed.groutColor);
+            } catch (e) {
+                console.error('Failed to load toolkit state', e);
+            }
+        }
+    }, []);
+
+    // Persistence: Save to localStorage
+    useEffect(() => {
+        const state = { tone, bond, groutSize, groutColor };
+        localStorage.setItem('urbanclay_toolkit_state', JSON.stringify(state));
+    }, [tone, bond, groutSize, groutColor]);
 
     // Configuration Data
     const brickTones = [
@@ -237,18 +259,7 @@ export default function ArchitectsToolkit() {
 
 // Sub-component to handle the complex CSS Grid / Flex logic for patterns
 function BrickWall({ tone, bond, groutSize, brickColor }: { tone: BrickTone, bond: BondPattern, groutSize: number, brickColor: string }) {
-
-    // We simulate a wall by creating rows
-    // Standard Brick: 230mm x 75mm
-    // We use relative units (rem or %) or just CSS Grid fr units.
-    // Let's use CSS Grid for robustness.
-
-    // Actually, for patterns like Flemish/English which vary per row, 
-    // we might need row-based rendering.
-
     const rows = 12; // Adjusted for new proportions
-
-    // Grout spacing in pixels (scaled)
     const gap = groutSize * 0.4;
 
     return (
@@ -269,38 +280,24 @@ function BrickWall({ tone, bond, groutSize, brickColor }: { tone: BrickTone, bon
 }
 
 function Row({ rowIdx, bond, brickColor, gap, height, tone }: any) {
-    // Generate brick sequence for this row based on bond
     let bricks: ('stretcher' | 'header')[] = [];
 
     if (bond === 'stack') {
         bricks = Array(15).fill('stretcher');
     } else if (bond === 'stretcher') {
-        // Offset every other row
         bricks = Array(15).fill('stretcher');
     } else if (bond === 'flemish') {
-        // Alternating Header/Stretcher
-        // Row 1: S H S H...
-        // Row 2: Might be offset? Usually Flemish is same pattern per row but offset to center header over stretcher.
-        // Simplified Flemish: S H S H...
         bricks = Array(12).fill(null).flatMap(() => ['stretcher', 'header']);
     } else if (bond === 'english') {
-        // Row 1: S S S...
-        // Row 2: H H H...
         bricks = rowIdx % 2 === 0 ? Array(15).fill('stretcher') : Array(25).fill('header');
     }
 
-    // Offset logic for Stretcher/Flemish
     const isOffset = (bond === 'stretcher' || bond === 'flemish' || bond === 'stack' === false) && rowIdx % 2 !== 0;
-
-    // CSS Texture classes for realism
     const textureBase = "relative rounded-[3px] shadow-sm";
-
-    // We handle offset by margin-left on the first brick or using a transform
-    // Using a flex row
 
     return (
         <div
-            className="flex w-[120%] -ml-[10%] flex-shrink-0" // flex-shrink-0 prevents vertical squishing
+            className="flex w-[120%] -ml-[10%] flex-shrink-0" 
             style={{
                 gap: `${gap}px`,
                 height: `${height}px`,
@@ -309,7 +306,6 @@ function Row({ rowIdx, bond, brickColor, gap, height, tone }: any) {
             }}
         >
             {bricks.map((type, i) => {
-                // Deterministic subtle variation to prevent hydration mismatch
                 const pseudoRandom = (rowIdx * 17 + i * 31) % 100;
                 const randomLight = pseudoRandom > 50 ? 'brightness-105' : 'brightness-95';
                 const width = type === 'stretcher' ? `${BRICK_WIDTH_STRETCHER}px` : `${BRICK_WIDTH_HEADER}px`;
@@ -321,11 +317,9 @@ function Row({ rowIdx, bond, brickColor, gap, height, tone }: any) {
                         style={{
                             width: width,
                             flexShrink: 0,
-                            // Add a subtle texture overlay
                             backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.05\'/%3E%3C/svg%3E")'
                         }}
                     >
-                        {/* Optional inner shadow for depth */}
                         <div className="absolute inset-0 shadow-[inset_0_1px_4px_rgba(0,0,0,0.2)] rounded-[2px]" />
                     </div>
                 );
@@ -333,4 +327,3 @@ function Row({ rowIdx, bond, brickColor, gap, height, tone }: any) {
         </div>
     );
 }
-

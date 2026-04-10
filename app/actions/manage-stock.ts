@@ -61,3 +61,18 @@ export async function createStockRecord(productId: string, quantity: number, loc
         return { success: false, error: 'Failed to create stock' };
     }
 }
+
+export async function getStocksData() {
+    try {
+        const query = `*[_type == "stock"] {
+            _id, quantity, unit, location, minStockLevel, lastUpdated, history,
+            product->{title, "imageUrl": images[0].asset->url, priceRange}
+        } | order(quantity asc)`;
+        
+        const data = await writeClient.fetch(query);
+        return { success: true, data };
+    } catch (error) {
+        console.error('Error fetching stocks in server action:', error);
+        return { success: false, error: 'Failed to fetch stocks' };
+    }
+}

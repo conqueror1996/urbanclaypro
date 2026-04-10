@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import { serverFetch } from '@/app/actions/dashboard-data';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Labour {
@@ -28,8 +28,10 @@ export default function LabourDashboard() {
                 _id, name, trade, phone, dailyRate, status,
                 currentSite->{name}
             } | order(name asc)`;
-            const data = await client.fetch(query);
-            setLabours(data);
+            const res = await serverFetch(query);
+            if (res.success) {
+                setLabours(res.data);
+            }
         } catch (error) {
             console.error('Error fetching labours:', error);
         } finally {

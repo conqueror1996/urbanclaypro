@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getProducts, getDashboardProducts, getDashboardCategories } from '@/lib/products';
+import { Settings, Plus } from 'lucide-react';
+import { getDashboardProducts, getDashboardCategories } from '@/lib/products';
 import type { Product } from '@/lib/products';
+import { getAdminProductsAndCategories } from '@/app/actions/dashboard-data';
 import VariantCreator from '@/components/admin/VariantCreator';
 import VariantEditor from '@/components/admin/VariantEditor';
 import DeleteConfirmationModal from '@/components/admin/DeleteConfirmationModal';
@@ -34,21 +36,21 @@ export default function ProductDashboardPage() {
     const refresh = async () => {
         setIsLoading(true);
         try {
-            const [pData, cData] = await Promise.all([
-                getDashboardProducts(),
-                getDashboardCategories()
-            ]);
-            setProducts(pData);
-            setCategories(cData);
+            const res = await getAdminProductsAndCategories();
+            if (res.success && res.products && res.categories) {
+                setProducts(res.products);
+                setCategories(res.categories);
 
-            if (selectedProduct) {
-                // keep selected product in sync
-                const updated = pData.find(p => p._id === selectedProduct._id);
-                if (updated) setSelectedProduct(updated);
-            }
-            if (selectedCategory) {
-                const updatedCat = cData.find(c => c._id === selectedCategory._id);
-                if (updatedCat) setSelectedCategory(updatedCat);
+                if (selectedProduct) {
+                    const updated = res.products.find(p => p._id === selectedProduct._id);
+                    if (updated) setSelectedProduct(updated);
+                }
+                if (selectedCategory) {
+                    const updatedCat = res.categories.find(c => c._id === selectedCategory._id);
+                    if (updatedCat) setSelectedCategory(updatedCat);
+                }
+            } else {
+                console.error('Failed to fetch admin data:', res.error);
             }
         } catch (e) {
             console.error(e);
@@ -115,7 +117,7 @@ export default function ProductDashboardPage() {
                         onClick={() => { setSelectedProduct(null); setViewMode('create'); }}
                         className="w-8 h-8 bg-[var(--terracotta)] text-white rounded-full flex items-center justify-center hover:bg-[#a85638] transition-colors shadow-lg shadow-orange-900/20"
                     >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                        <Plus className="w-5 h-5" />
                     </button>
                 </div>
 
@@ -148,7 +150,7 @@ export default function ProductDashboardPage() {
                                         className="p-1.5 hover:bg-white rounded-lg transition-all text-[var(--terracotta)] shadow-sm border border-gray-100 bg-white"
                                         title="Edit Category details (Hero Background, etc.)"
                                     >
-                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                        <Settings className="w-4 h-4" />
                                     </button>
                                 </div>
 
@@ -182,7 +184,7 @@ export default function ProductDashboardPage() {
                                                     className="opacity-0 group-hover/range:opacity-100 p-1 hover:bg-blue-50 rounded transition-all text-blue-400"
                                                     title="Edit Pillar Page content for this sub-category"
                                                 >
-                                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                                    <Settings className="w-3 h-3" />
                                                 </button>
                                             </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import { getProductMetadata } from '@/app/actions/dashboard-data';
 import Link from 'next/link';
 
 interface ProductIssue {
@@ -19,63 +19,53 @@ export default function MetadataHealthWidget() {
     useEffect(() => {
         const checkMetadata = async () => {
             try {
-                const query = `*[_type == "product"]{
-                    _id,
-                    title,
-                    "slug": slug.current,
-                    "seoTitle": seo.metaTitle,
-                    "seoDesc": seo.metaDescription,
-                    "seoImage": seo.openGraphImage,
-                    "variants": variants[]{ name, "image": image },
-                    description
-                }`;
+                const res = await getProductMetadata();
+                if (res.success && res.data) {
+                    const products = res.data;
+                    setTotalProducts(products.length);
 
-                const products = await client.fetch(query);
-                setTotalProducts(products.length);
+                    const detectedIssues: ProductIssue[] = [];
 
-                const detectedIssues: ProductIssue[] = [];
+                    products.forEach((p: any) => {
+                        const productIssues: string[] = [];
 
-                products.forEach((p: any) => {
-                    const productIssues: string[] = [];
+                        // 1. Check Title
+                        if (!p.seoTitle) {
+                            productIssues.push('Missing Meta Title');
+                        } else if (p.seoTitle.length < 30) {
+                            productIssues.push('Meta Title too short (<30 chars)');
+                        } else if (p.seoTitle.length > 60) {
+                            productIssues.push('Meta Title too long (>60 chars)');
+                        }
 
-                    // 1. Check Title
-                    if (!p.seoTitle) {
-                        productIssues.push('Missing Meta Title');
-                    } else if (p.seoTitle.length < 30) {
-                        productIssues.push('Meta Title too short (<30 chars)');
-                    } else if (p.seoTitle.length > 60) {
-                        productIssues.push('Meta Title too long (>60 chars)');
-                    }
+                        // 2. Check Description
+                        if (!p.seoDesc) {
+                            if (!p.description) productIssues.push('Missing Meta Description');
+                        } else if (p.seoDesc.length < 50) {
+                            productIssues.push('Meta Description too short (<50 chars)');
+                        } else if (p.seoDesc.length > 160) {
+                            productIssues.push('Meta Description too long (>160 chars)');
+                        }
 
-                    // 2. Check Description
-                    if (!p.seoDesc) {
-                        // Fallback check: is there a main description used as fallback?
-                        if (!p.description) productIssues.push('Missing Meta Description');
-                        // Accepted fallback - no penalty
-                    } else if (p.seoDesc && p.seoDesc.length < 50) {
-                        productIssues.push('Meta Description too short (<50 chars)');
-                    } else if (p.seoDesc && p.seoDesc.length > 160) {
-                        productIssues.push('Meta Description too long (>160 chars)');
-                    }
+                        // 3. Check Images
+                        if (!p.seoImage && (!p.variants || p.variants.length === 0)) {
+                            productIssues.push('No Social Share Image');
+                        }
 
-                    // 3. Check Images
-                    if (!p.seoImage && (!p.variants || p.variants.length === 0)) {
-                        productIssues.push('No Social Share Image');
-                    }
+                        if (productIssues.length > 0) {
+                            detectedIssues.push({
+                                id: p._id,
+                                title: p.title,
+                                slug: p.slug,
+                                issues: productIssues
+                            });
+                        }
+                    });
 
-                    if (productIssues.length > 0) {
-                        detectedIssues.push({
-                            id: p._id,
-                            title: p.title,
-                            slug: p.slug,
-                            issues: productIssues
-                        });
-                    }
-                });
-
-                setIssues(detectedIssues);
+                    setIssues(detectedIssues);
+                }
             } catch (error) {
-                console.error("Failed to fetch product metadata", error);
+                console.error('Failed to fetch product metadata', error);
             } finally {
                 setLoading(false);
             }
@@ -112,7 +102,7 @@ export default function MetadataHealthWidget() {
                         <div key={item.id} className="p-3 bg-red-50/50 border border-red-100 rounded-lg group hover:bg-red-50 transition-colors">
                             <div className="flex justify-between items-start mb-2">
                                 <Link
-                                    href={`/studio/structure/product;${item.id}`} // Link to Sanity Studio (Deep linking if configured, else just illustrative)
+                                    href={`/studio/structure/product;${item.id}`}
                                     target="_blank"
                                     className="font-bold text-[var(--ink)] text-sm hover:text-[var(--terracotta)] hover:underline"
                                 >
@@ -133,7 +123,7 @@ export default function MetadataHealthWidget() {
                 </div>
             )}
 
-            <Link href="/dashboard/seo" className="block w-full mt-3 bg-[var(--ink)] text-white py-2 rounded-lg text-xs font-bold hover:bg-black transition-colors">
+            <Link href="/dashboard/seo" className="block w-full mt-3 bg-[var(--ink)] text-white py-2 rounded-lg text-xs font-bold hover:bg-black transition-colors text-center">
                 Make Edits in SEO Manager →
             </Link>
             <div className="mt-4 pt-4 border-t border-gray-100 text-center">

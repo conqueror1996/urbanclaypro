@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import { serverFetch } from '@/app/actions/dashboard-data';
 import { motion } from 'framer-motion';
 
 interface Site {
@@ -21,8 +21,10 @@ export default function SitesDashboard() {
     const fetchSites = async () => {
         try {
             const query = `*[_type == "site"] | order(startDate desc)`;
-            const data = await client.fetch(query);
-            setSites(data);
+            const res = await serverFetch(query);
+            if (res.success) {
+                setSites(res.data);
+            }
         } catch (error) {
             console.error('Error fetching sites:', error);
         } finally {

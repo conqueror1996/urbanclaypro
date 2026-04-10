@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import { serverFetch } from '@/app/actions/dashboard-data';
 import { motion } from 'framer-motion';
 
 interface Dispute {
@@ -23,8 +23,10 @@ export default function DisputesDashboard() {
                 _id, title, priority, status, dateRaised,
                 relatedTo->{_type, name, contact, title}
             } | order(dateRaised desc)`;
-            const data = await client.fetch(query);
-            setDisputes(data);
+            const res = await serverFetch(query);
+            if (res.success) {
+                setDisputes(res.data);
+            }
         } catch (error) {
             console.error('Error fetching disputes:', error);
         } finally {

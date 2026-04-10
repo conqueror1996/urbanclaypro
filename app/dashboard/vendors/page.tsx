@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { client } from '@/sanity/lib/client';
+import { serverFetch } from '@/app/actions/dashboard-data';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Vendor {
@@ -27,8 +27,10 @@ export default function VendorsDashboard() {
         setLoading(true);
         try {
             const query = `*[_type == "vendor"] | order(name asc)`;
-            const data = await client.fetch(query);
-            setVendors(data);
+            const res = await serverFetch(query);
+            if (res.success) {
+                setVendors(res.data);
+            }
         } catch (error) {
             console.error('Error fetching vendors:', error);
         } finally {
