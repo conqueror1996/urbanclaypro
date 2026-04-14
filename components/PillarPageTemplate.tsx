@@ -570,7 +570,7 @@ export default function PillarPageTemplate({
                     </div>
 
                     {/* Embedded form - we pass a prop to clean up its internal padding/border */}
-                    <QuoteForm isEmbedded={true} />
+                    <QuoteForm isEmbedded={true} keyword={keyword} />
                 </div>
             </section>
 

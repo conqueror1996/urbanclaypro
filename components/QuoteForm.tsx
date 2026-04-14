@@ -10,16 +10,17 @@ import { ArrowRight } from 'lucide-react';
 interface QuoteFormProps {
     mode?: 'default' | 'export';
     isEmbedded?: boolean;
+    keyword?: string;
 }
 
-export default function QuoteForm({ mode = 'default', isEmbedded = false }: QuoteFormProps) {
+export default function QuoteForm({ mode = 'default', isEmbedded = false, keyword }: QuoteFormProps) {
     const searchParams = useSearchParams();
     const [currentStep, setCurrentStep] = useState(1);
     const [productDropdownOpen, setProductDropdownOpen] = useState(false);
 
     const [formData, setFormData] = useState({
         role: 'Architect',
-        product: 'Exposed Brick Tiles',
+        product: keyword || 'Flexible Brick Tiles',
         firmName: '',
         city: '',
         country: '',
@@ -150,7 +151,7 @@ Sent from UrbanClay ${mode === 'export' ? 'Global' : ''}`;
                         {mode === 'export' ? 'Global Export Division' : 'The Technical Desk'}
                     </span>
                     <h2 className="text-2xl md:text-3xl lg:text-4xl text-[var(--foreground)] mb-3 md:mb-6">
-                        {mode === 'export' ? 'Logistics' : "Let's Build"} <br className="hidden md:block" /> <span className="italic text-[var(--foreground)]/70">{mode === 'export' ? 'Simplified.' : 'Details.'}</span>
+                        {keyword ? `Quote for ${keyword}` : (mode === 'export' ? 'Logistics' : "Let's Build")} <br className="hidden md:block" /> <span className="italic text-[var(--foreground)]/70">{mode === 'export' ? 'Simplified.' : 'Details.'}</span>
                     </h2>
                     <p className="text-sm md:text-base text-[var(--foreground)]/80 leading-relaxed font-light line-clamp-2 md:line-clamp-none">
                         {mode === 'export'
@@ -265,11 +266,15 @@ Sent from UrbanClay ${mode === 'export' ? 'Global' : ''}`;
                                                     className="absolute top-full left-0 right-0 mt-2 bg-[var(--background)] rounded-xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.15)] border border-[var(--line)] overflow-hidden py-2 max-h-[300px] overflow-y-auto z-50"
                                                 >
                                                     {[
+                                                        'Flexible Brick Tiles',
                                                         'Exposed Wirecut Bricks',
                                                         'Brick Cladding Tiles',
-                                                        'Terracotta Jaali Panels',
-                                                        'Clay Facade Systems',
-                                                        'Terracotta Floor Tiles'
+                                                        'Terracotta Jali Panels',
+                                                        'Clay Facade Panels',
+                                                        'Perforated Bricks',
+                                                        'Terracotta Wall Tile',
+                                                        'Clay Flooring Tile',
+                                                        'Dry Brick Tile'
                                                     ].map((option) => (
                                                         <button
                                                             key={option}

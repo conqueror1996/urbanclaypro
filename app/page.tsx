@@ -57,7 +57,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
     return {
         title: "UrbanClay® | India's #1 Terracotta Facade & Flexible Brick Cladding Systems",
-        description: "India's premier manufacturer of high-precision clay facades. Delivering flexible brick tiles, large format terracotta panels, and bespoke handmade bricks for architectural mastery. Engineered for zero-failure performance in all Indian climates. Explore our product collection.",
+        description: "India's premier manufacturer of high-precision clay facade panels. Specializing in flexible brick tiles, brick claddings, terracotta wall tile, and wirecut perforated bricks for architectural mastery. Engineered for zero-failure performance with dry brick tile and clay flooring tile solutions. Explore India's most advanced terracotta jali and cladding systems.",
         keywords: SEO_KEYWORDS,
         openGraph: {
             title: "UrbanClay® | India's #1 Terracotta Facade & Flexible Brick Cladding Systems",
@@ -114,7 +114,7 @@ export default async function Home({ searchParams }: Props) {
                 url: 'https://claytile.in',
                 logo: 'https://claytile.in/urbanclay-logo.png',
                 image: 'https://claytile.in/urbanclay-logo.png',
-                description: 'Leading manufacturer and supplier of premium terracotta tiles, clay brick tiles, jaali panels, and architectural cladding across India. Serving architects, builders, and contractors nationwide.',
+                description: 'Leading manufacturer of premium clay brick tile, flexible brick tile, terracotta jali, and architectural brick claddings across India. Specializing in wirecut bricks, perforated bricks, and clay facade panels for high-performance building elevations. Nationwide delivery for terracotta wall tile, clay flooring tile, and dry brick tile systems.',
 
                 // Contact Information
                 telephone: '+91-8080081951',

@@ -19,11 +19,17 @@ export default function TrustBar({ firms }: TrustBarProps) {
     const displayFirms = (firms && firms.length > 0) ? firms : DEFAULT_LOGOS;
 
     return (
-        <section className="section-padding border-y border-[var(--line)] overflow-hidden">
+        <section className="section-padding border-y border-[var(--line)] overflow-hidden bg-white/50 backdrop-blur-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <p className="text-center text-[10px] uppercase tracking-[0.2em] md:tracking-[0.2em] text-[#777] font-semibold mb-6 md:mb-12">
-                    Trusted by India&apos;s leading Architectural Firms
-                </p>
+                <div className="flex flex-col items-center mb-10 md:mb-16">
+                    <span className="text-[var(--terracotta)] font-black tracking-[0.3em] uppercase text-[10px] mb-4">Masterpiece Portfolio</span>
+                    <h2 className="text-center text-3xl md:text-5xl font-serif text-[var(--ink)] tracking-tight mb-4">
+                        The National Specification <br /> <span className="italic opacity-60">Standard.</span>
+                    </h2>
+                    <p className="text-center text-[10px] uppercase tracking-[0.2em] md:tracking-[0.2em] text-[#777] font-semibold max-w-lg mx-auto leading-relaxed">
+                        Preferred by India&apos;s leading AD100 Firms <br className="hidden md:block" /> for high-precision architectural facades.
+                    </p>
+                </div>
 
                 <div className="md:hidden overflow-hidden -mx-6">
                     <motion.div

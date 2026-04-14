@@ -25,6 +25,17 @@ interface DisplayProduct {
 
 const SIGNATURE_CATEGORIES = [
     {
+        id: 'flexible-brick-tiles',
+        label: 'Flexible Brick Tiles',
+        subtitle: 'Ultra-Thin Cladding',
+        description: 'Advanced 3mm bendable clay tiles that wrap around columns and curved facades with authentic brick texture and zero load.',
+        match: (p: Product) => {
+            const title = p.title?.toLowerCase() || '';
+            const catSlug = p.category?.slug?.toLowerCase() || '';
+            return title.includes('flexible') || catSlug.includes('flexible');
+        }
+    },
+    {
         id: 'terracotta-panels',
         label: 'Facade Systems',
         subtitle: 'Rainscreen Facades',
@@ -47,17 +58,6 @@ const SIGNATURE_CATEGORIES = [
             const isTile = title.includes('tile') || catSlug.includes('tile');
             if (isFlex || isTile) return false;
             return catSlug === 'exposed-brick' || catSlug === 'exposed-bricks' || title.includes('exposed');
-        }
-    },
-    {
-        id: 'flexible-brick-tiles',
-        label: 'Flexible Brick Tiles',
-        subtitle: 'Ultra-Thin Cladding',
-        description: 'Advanced 3mm bendable clay tiles that wrap around columns and curved facades with authentic brick texture and zero load.',
-        match: (p: Product) => {
-            const title = p.title?.toLowerCase() || '';
-            const catSlug = p.category?.slug?.toLowerCase() || '';
-            return title.includes('flexible') || catSlug.includes('flexible');
         }
     },
     {
@@ -118,7 +118,7 @@ export default function SignatureCollection({ products }: SignatureCollectionPro
             // Especially for 'brick-tile' as requested
             let selectedItems = items;
 
-            if (cat.id === 'brick-tile' && items.length > 0) {
+            if (cat.id === 'flexible-brick-tiles' && items.length > 0) {
                 const groups: Record<string, DisplayProduct[]> = {};
 
                 // Group by Family (priority) or Subtitle (Product Name)

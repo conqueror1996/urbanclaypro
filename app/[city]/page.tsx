@@ -45,13 +45,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = truncate(data.metaDescription || `Discover architectural-grade terracotta tiles, flexible brick cladding, and jali panels in ${data.name}. Engineered for the ${data.region || ''} Indian climate. Pan-India delivery.`, 155);
 
     const cityKeywords = [
-        `Terracotta Tiles ${data.name}`,
+        `Flexible Brick Tile ${data.name}`,
+        `Perforated Bricks ${data.name}`,
         `Brick Cladding Tiles ${data.name}`,
-        `Flexible Brick Veneers ${data.name}`,
-        `Terracotta Facade Panels ${data.name}`,
+        `Terracotta Jali ${data.name}`,
+        `Clay Facade Panel ${data.name}`,
+        `Terracotta Tiles ${data.name}`,
         `Exposed Bricks ${data.name}`,
-        `Clay Jali Blocks ${data.name}`,
-        `Best Tiles for ${data.name} Climate`
+        `Best Cladding for ${data.name} Climate`
     ];
 
     return {

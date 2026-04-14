@@ -1,6 +1,19 @@
 export const SEO_KEYWORDS = [
     // God Level Core Keywords
     "flexible brick tile",
+    "clay brick tile",
+    "brick claddings",
+    "teracotta wall tile",
+    "terracotta wall tile",
+    "perforated bricks",
+    "wirecut brick",
+    "clay facade panel",
+    "tercotta jali",
+    "terracotta jali",
+    "walll cladding",
+    "wall cladding",
+    "clay flooring tile",
+    "dry brick tile",
     "teracotta panel",
     "terracotta panel",
     "exposed brick",
@@ -206,6 +219,23 @@ export const SEO_KEYWORDS = [
     "High-end project materials India", "Architects choice clay tiles", "Zero maintenance exterior wall cladding",
     "Modern Contemporary elevation", "Rustic Industrial interior brick", "Traditional South Indian home design",
     "Minimalist facade solutions", "Brutalist architecture brickwork"
+];
+
+// --- BRAND IDENTITY SYSTEM ---
+export const BRAND_TAGLINE = "India's #1 Specification Grade Clay Facades";
+export const BRAND_PROMISE = "Zero Efflorescence. Zero Maintenance. 1000y+ Durability.";
+
+export const INDIAN_CERTIFICATIONS = [
+    { name: "IGBC", label: "Indian Green Building Council", detail: "Platinum Rated Material" },
+    { name: "GRIHA", label: "Green Rating for Integrated Habitat Assessment", detail: "Certified Sustainable" },
+    { name: "ASTM", label: "American Society for Testing and Materials", detail: "Global Performance Standard" },
+    { name: "A1 FIRE", label: "Non-Combustible Material", detail: "Safe for High-Rise Facades" }
+];
+
+export const INDIAN_CLIMATE_ADAPTATIONS = [
+    { goal: "Monsoon Proof", feature: "Low Water Absorption (<10%)", benefit: "No Dampness or Moss" },
+    { goal: "Heat Insulation", feature: "High Thermal Inertia", benefit: "Reduces Indoor Temp by 4-6°C" },
+    { goal: "Salt Resistant", feature: "Kiln Fired @ 1100°C", benefit: "Perfect for Coastal Areas (Mumbai, Chennai)" }
 ];
 
 // --- PROGRAMMATIC SEO DATA ---

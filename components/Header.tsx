@@ -186,6 +186,11 @@ export default function Header({ hideAnnouncement = false }: { hideAnnouncement?
 
                 {/* Desktop CTA */}
                 <div className="hidden md:flex items-center gap-4 relative z-50">
+                    <div className="hidden lg:flex flex-col items-end mr-2 text-right">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-[var(--foreground)]/40 mb-0.5">Specifier Hotline</span>
+                        <a href="tel:+918080081951" className="text-[11px] font-bold text-[var(--ink)] hover:text-[var(--terracotta)] transition-colors">+91 80800 81951</a>
+                    </div>
+
                     <button
                         onClick={() => setBoxOpen(true)}
                         className={`

@@ -20,23 +20,30 @@ export default function Sustainability() {
                             Clay is the ultimate circular material. Sourced from the earth and refined by fire, it is designed to outlast the structures it protects. No toxic binders, no plastics—just pure, timeless geology.
                         </p>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
                             <div>
-                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-2">Low</span>
-                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-semibold">Carbon Footprint</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">IGBC</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-black">Platinum Ready</span>
                             </div>
                             <div>
-                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-2">Bio</span>
-                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-semibold">Degradable</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">GRIHA</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-black">Certified</span>
                             </div>
                             <div>
-                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-2">High</span>
-                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-semibold">Recyclability</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">Low</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-black">Embodied CO2</span>
                             </div>
                             <div>
-                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-2">0%</span>
-                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-semibold">Chemical Waste</span>
+                                <span className="block text-2xl md:text-3xl font-serif text-[var(--ink)] mb-1">0%</span>
+                                <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-[var(--ink)]/60 font-black">Chemical Waste</span>
                             </div>
+                        </div>
+
+                        <div className="p-6 bg-white/40 border border-white/60 rounded-2xl backdrop-blur-md">
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-[var(--ink)] mb-2">Architectural Standard in India</h4>
+                            <p className="text-xs text-[var(--ink)]/60 leading-relaxed font-medium">
+                                UrbanClay systems are purpose-built for the Indian tropical climate, ensuring zero efflorescence during monsoons and high thermal insulation during extreme summers.
+                            </p>
                         </div>
                     </div>
 

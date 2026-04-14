@@ -118,6 +118,8 @@ import JsonLd from "@/components/JsonLd";
 import { generateGlobalSchema, generateServiceSchema } from "@/lib/schema";
 import GlobalClientFeatures from "@/components/GlobalClientFeatures";
 
+import MakeInIndiaBadge from "@/components/MakeInIndiaBadge";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -133,6 +135,7 @@ export default function RootLayout({
           <SampleProvider>
             <GlobalClientFeatures />
             <JsonLd data={[...generateGlobalSchema(), generateServiceSchema()]} />
+            <MakeInIndiaBadge />
             <PageTransition>{children}</PageTransition>
             <Toaster position="top-right" richColors />
           </SampleProvider>

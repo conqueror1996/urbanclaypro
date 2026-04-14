@@ -56,6 +56,46 @@ export const KNOWLEDGE_BASE: Record<string, KnowledgeEntry> = {
         technicalDetail: 'Our Terracotta Facade Panels are designed for ventilated rainscreen systems. The air cavity between the panel and the building wall allows for moisture dissipation and additional thermal insulation.',
         relatedProductCategory: 'facades',
         importance: 'High'
+    },
+    'perforated-bricks': {
+        term: 'Perforated Bricks',
+        slug: 'perforated-bricks',
+        definition: 'Bricks with cylindrical holes or perforations that reduce weight and improve insulation.',
+        technicalDetail: 'Perforated clay bricks offer superior thermal insulation compared to solid bricks. The air trapped in the holes acts as a thermal barrier, making them ideal for the intense heat of Northern and Central India.',
+        relatedProductCategory: 'exposed-bricks',
+        importance: 'Medium'
+    },
+    'flexible-brick': {
+        term: 'Flexible Brick Tile',
+        slug: 'flexible-brick',
+        definition: 'A lightweight cladding material made from clay and binders that can bend around curved surfaces.',
+        technicalDetail: 'Often called MCB (Modified Clay Brick), these tiles are only 3mm thick yet retain the authentic texture of real brick. They are perfect for retrofitting existing structures without adding dead weight.',
+        relatedProductCategory: 'flexible-brick-tiles',
+        importance: 'High'
+    },
+    'extrusion': {
+        term: 'Extrusion',
+        slug: 'extrusion',
+        definition: 'The process of shaping clay by forcing it through a die to create consistent profiles.',
+        technicalDetail: 'Our high-pressure extrusion process ensures density and precision in wirecut bricks and terracotta panels, eliminating internal air pockets that could lead to structural failure.',
+        relatedProductCategory: 'terracotta-panels',
+        importance: 'Medium'
+    },
+    'leed-certification': {
+        term: 'LEED Certification',
+        slug: 'leed-certification',
+        definition: 'A globally recognized green building rating system.',
+        technicalDetail: 'UrbanClay products contribute to LEED points in categories like Material & Resources (MR) and Indoor Environmental Quality (EQ) due to their 100% natural composition and low VOC emissions.',
+        relatedProductCategory: 'sustainability',
+        importance: 'Medium'
+    },
+    'v-cladding': {
+        term: 'Ventilated Cladding',
+        slug: 'v-cladding',
+        definition: 'A facade system where air can circulate behind the outer panels.',
+        technicalDetail: 'Essential for high-rise buildings in humid Indian coastal regions. The ventilation prevents moisture buildup, protects the building envelope, and significantly reduces cooling costs.',
+        relatedProductCategory: 'facades',
+        importance: 'High'
     }
 };
 
