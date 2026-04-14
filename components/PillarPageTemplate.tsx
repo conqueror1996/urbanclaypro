@@ -305,7 +305,7 @@ export default function PillarPageTemplate({
                                     return product.variants.map((variant) => ({ product, variant }));
                                 }
                                 return [{ product, variant: { name: 'Standard', imageUrl: product.imageUrl } }];
-                            }).slice(0, 8).map(({ product, variant }, i) => (
+                            }).map(({ product, variant }, i) => (
                                 <PremiumProductCard
                                     key={`${product._id}-${i}`}
                                     product={product}

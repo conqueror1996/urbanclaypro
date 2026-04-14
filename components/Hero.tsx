@@ -90,19 +90,16 @@ export default function Hero({ data, injectedKeyword }: HeroProps) {
                             </motion.p>
 
                             <div className="mt-8 md:mt-10 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-4">
-                                <motion.button
-                                    onClick={() => {
-                                        const { toast } = require('sonner');
-                                        toast.success('Opening Sample Tray');
-                                        setBoxOpen(true);
-                                    }}
-                                    className="bg-[var(--terracotta)] text-white h-[60px] px-12 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center font-serif italic"
-                                    whileHover={{ y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    aria-label="Order Free Samples"
-                                >
-                                    Order Free Samples
-                                </motion.button>
+                                <Link href="/products" className="contents">
+                                    <motion.button
+                                        className="bg-[var(--terracotta)] text-white h-[60px] px-12 rounded-full font-semibold text-base tracking-[0.3px] shadow-lg hover:shadow-xl hover:bg-[#a85638] transition-all active:scale-95 flex items-center justify-center font-serif italic"
+                                        whileHover={{ y: -2 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        aria-label="Explore products"
+                                    >
+                                        Explore products
+                                    </motion.button>
+                                </Link>
                                 <motion.button
                                     onClick={() => {
                                         const { toast } = require('sonner');

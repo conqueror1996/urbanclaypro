@@ -62,13 +62,17 @@ const SIGNATURE_CATEGORIES = [
     },
     {
         id: 'handmade-brick-tiles',
-        label: 'Handmade Brick Tiles',
+        label: 'Handmade Cladding',
         subtitle: 'Artisanal Cladding',
         description: 'Individually hand-moulded brick veneers that capture the raw, organic beauty of traditional earth-fired ceramics.',
         match: (p: Product) => {
             const title = p.title?.toLowerCase() || '';
             const catSlug = p.category?.slug?.toLowerCase() || '';
-            return title.includes('handmade') || catSlug.includes('handmade');
+            const range = p.range?.toLowerCase() || '';
+            const tag = p.tag?.toLowerCase() || '';
+            const terms = ['handmade', 'handcrafted', 'artisanal', 'antique', 'rustic'];
+            const searchText = [title, catSlug, range, tag].join(' ');
+            return terms.some(t => searchText.includes(t));
         }
     }
 ];

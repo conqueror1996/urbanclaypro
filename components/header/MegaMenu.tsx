@@ -28,8 +28,8 @@ const PRODUCT_CATEGORIES = [
         image: '/images/megamenu/menu_exposed_brick_smooth_1775251795568.png'
     },
     {
-        title: 'Handmade Brick Tiles',
-        subtitle: 'Artisanal Beauty',
+        title: 'Handmade Cladding',
+        subtitle: 'Artisanal Brick Tiles',
         href: '/handmade-brick-tiles',
         color: 'from-[#EBE5E0] to-[#d6cbb8]',
         image: '/images/megamenu/menu_handmade_brick_1775251638671.png'

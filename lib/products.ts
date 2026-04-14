@@ -11,7 +11,7 @@ try {
         apiVersion: '2024-11-28',
         dataset: 'production',
         projectId: '22qqjddz',
-        useCdn: true, // Enable CDN for production speed
+        useCdn: false, // Disable CDN for immediate updates
     });
 } catch (e) {
     console.error("Sanity client creation failed:", e);
@@ -92,7 +92,7 @@ const productBySlugQuery = groq`*[_type == "product" && slug.current == $slug][0
 export async function getProducts(): Promise<Product[]> {
     try {
         console.log('Fetching products from Sanity...');
-        const products = await client.fetch(productsQuery, {}, { next: { revalidate: 60 } });
+        const products = await client.fetch(productsQuery, {}, { next: { revalidate: 0 } });
 
         if (!products || products.length === 0) {
             console.warn('No products found in Sanity.');
